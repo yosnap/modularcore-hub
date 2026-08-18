@@ -1,6 +1,6 @@
 ---
 title: "Phase 3: CLI Thin Client"
-status: todo
+status: done
 priority: P1
 effort: "5-6d"
 dependencies: [2]
@@ -70,13 +70,13 @@ Resolución de `target`: descriptor da `target` relativo; CLI lo re-mapea contra
 
 ## Success Criteria
 
-- [ ] `modularcore init` genera config correcta detectando framework.
-- [ ] `modularcore add hello-core` escribe archivos, instala deps, genera `.env.example`.
-- [ ] `registryDependencies` se resuelven recursivamente sin duplicar.
-- [ ] `update`/`diff` muestran cambios, backup `.orig` y piden confirmación por archivo.
-- [ ] `target` con `..` o fuera del root se rechaza; el CLI nunca toca `.env` real.
-- [ ] `add` interrumpido deja estado consistente / reporta lo escrito.
-- [ ] Tests verdes contra un registry local; init→componente <5 min.
+- [x] `modularcore init` genera config correcta detectando framework.
+- [x] `modularcore add hello-core` escribe archivos, instala deps, genera `.env.example`.
+- [x] `registryDependencies` se resuelven recursivamente sin duplicar.
+- [x] `update`/`diff` muestran cambios, backup `.orig` y piden confirmación por archivo.
+- [x] `target` con `..` o fuera del root se rechaza; el CLI nunca toca `.env` real.
+- [x] `add` interrumpido deja estado consistente / reporta lo escrito.
+- [x] Tests verdes contra un registry local; init→componente <5 min.
 
 ## Red Team Hardening (aplicado)
 
