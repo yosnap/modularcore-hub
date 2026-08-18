@@ -1,0 +1,13 @@
+node_modules
+dist
+build
+.turbo
+.svelte-kit
+coverage
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
+# Markdown de planificación/documentación: formato gestionado por sus propios skills
+plans/
+docs/
+*.md

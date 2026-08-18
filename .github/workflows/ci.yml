@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [develop, main]
+
+env:
+  # Node/pnpm fijos: reproducibilidad del build (§ non-funcional Fase 1).
+  NODE_VERSION: '20'
+
+jobs:
+  # Job (a) — unit/mock, SIN secretos. Corre en TODO PR, incluidos forks.
+  # Hardening SA3 (red-team): nunca exponer secretos a PRs de fork.
+  unit:
+    name: Build · Typecheck · Lint · Test (unit/mock)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Test (unit/mock)
+        run: pnpm test
+
+  # Job (b) — smokes con secretos reales. Solo en push a ramas protegidas
+  # (develop/main), NUNCA en pull_request de fork (hardening SA3).
+  # Requiere MinIO (Media Picker) + CLOUDINARY_* + OPENROUTER_API_KEY
+  # (decisión S1: smokes bloqueantes). Sin secretos configurados, este job
+  # falla — comportamiento buscado hasta que las Fases 4/5 añadan smokes.
+  smokes:
+    name: Smoke tests (real providers)
+    if: github.event_name == 'push' && contains(fromJson('["refs/heads/develop", "refs/heads/main"]'), github.ref)
+    runs-on: ubuntu-latest
+    services:
+      minio:
+        image: bitnami/minio:latest
+        env:
+          MINIO_ROOT_USER: modularcore
+          MINIO_ROOT_PASSWORD: modularcore-dev
+          MINIO_DEFAULT_BUCKETS: modularcore-media
+        ports:
+          - 9000:9000
+    env:
+      S3_ENDPOINT: http://localhost:9000
+      S3_ACCESS_KEY_ID: modularcore
+      S3_SECRET_ACCESS_KEY: modularcore-dev
+      S3_BUCKET: modularcore-media
+      CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+      CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+      CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Test (smoke, real providers)
+        run: pnpm test:smoke
