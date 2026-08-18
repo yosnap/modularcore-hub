@@ -1,5 +1,10 @@
 packages:
   - "packages/*"
   - "apps/*"
+  # fixtures/* are Phase 2 spike targets (throwaway apps that receive injected copy-code),
+  # not publishable/shared packages, so they are kept standalone with their own
+  # `pnpm install --ignore-workspace` instead of joining this workspace.
 allowBuilds:
   esbuild: true
+minimumReleaseAgeExclude:
+  - '@sveltejs/kit@2.70.3'

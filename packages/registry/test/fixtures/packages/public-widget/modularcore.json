@@ -1,0 +1,22 @@
+{
+  "name": "public-widget",
+  "version": "1.0.0",
+  "title": "Public Widget",
+  "type": "frontend-component",
+  "category": "test-fixture",
+  "frameworks": ["react"],
+  "visibility": "public",
+  "peerDependencies": { "react": ">=18" },
+  "dependencies": [],
+  "registryDependencies": [],
+  "envVariables": [],
+  "description": "Fixture used by build-registry.test.ts",
+  "files": [
+    {
+      "path": "src/widget.tsx",
+      "target": "src/modularcore/public-widget/widget.tsx",
+      "type": "component",
+      "encoding": "utf8"
+    }
+  ]
+}

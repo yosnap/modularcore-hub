@@ -1,9 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
-    "build": {
+    "build:registry": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".svelte-kit/**"]
+      "outputs": ["static/registry/**"]
+    },
+    "build": {
+      "dependsOn": ["^build", "build:registry"],
+      "outputs": ["dist/**", ".svelte-kit/**", "build/**"]
     },
     "typecheck": {
       "dependsOn": ["^build"],
@@ -21,6 +25,7 @@
       "outputs": []
     },
     "dev": {
+      "dependsOn": ["^build", "build:registry"],
       "cache": false,
       "persistent": true
     }

@@ -1,0 +1,22 @@
+{
+  "name": "hello-core",
+  "version": "0.1.0",
+  "title": "Hello Core",
+  "type": "headless-core",
+  "category": "spike",
+  "frameworks": ["react", "svelte"],
+  "visibility": "internal",
+  "peerDependencies": {},
+  "dependencies": [],
+  "registryDependencies": [],
+  "envVariables": [],
+  "description": "Trivial framework-agnostic component used to spike the registry copy-code pipeline.",
+  "files": [
+    {
+      "path": "src/hello.ts",
+      "target": "src/modularcore/hello-core/hello.ts",
+      "type": "component",
+      "encoding": "utf8"
+    }
+  ]
+}
