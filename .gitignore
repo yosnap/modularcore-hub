@@ -6,6 +6,7 @@ dist/
 build/
 .svelte-kit/
 apps/web/static/registry/
+fixtures/*/src/modularcore/
 
 # Turborepo
 .turbo/
