@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.svelte-kit/
+apps/web/static/registry/
+
+# Turborepo
+.turbo/
+
+# Vitest / coverage
+coverage/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Editor / OS
+.DS_Store
+*.log
+
+# Changesets pre-release state (local only)
+.changeset/pre.json
