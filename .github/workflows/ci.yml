@@ -52,15 +52,6 @@ jobs:
     name: Smoke tests (real providers)
     if: github.event_name == 'push' && contains(fromJson('["refs/heads/develop", "refs/heads/main"]'), github.ref)
     runs-on: ubuntu-latest
-    services:
-      minio:
-        image: bitnami/minio:latest
-        env:
-          MINIO_ROOT_USER: modularcore
-          MINIO_ROOT_PASSWORD: modularcore-dev
-          MINIO_DEFAULT_BUCKETS: modularcore-media
-        ports:
-          - 9000:9000
     env:
       S3_ENDPOINT: http://localhost:9000
       S3_ACCESS_KEY_ID: modularcore
@@ -80,6 +71,21 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
 
+      # MinIO como contenedor manual (no `services:`): la imagen oficial
+      # minio/minio necesita el comando `server /data`, que el bloque
+      # `services:` de Actions no permite sobrescribir. El bucket
+      # (`S3_BUCKET`) lo crea cada smoke test contra esta instancia.
+      - name: Start MinIO
+        run: |
+          docker run -d --name minio -p 9000:9000 \
+            -e MINIO_ROOT_USER="$S3_ACCESS_KEY_ID" \
+            -e MINIO_ROOT_PASSWORD="$S3_SECRET_ACCESS_KEY" \
+            minio/minio server /data
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:9000/minio/health/live && break
+            sleep 1
+          done
+
       - name: Install
         run: pnpm install --frozen-lockfile
 
@@ -88,3 +94,7 @@ jobs:
 
       - name: Test (smoke, real providers)
         run: pnpm test:smoke
+
+      - name: Stop MinIO
+        if: always()
+        run: docker rm -f minio
