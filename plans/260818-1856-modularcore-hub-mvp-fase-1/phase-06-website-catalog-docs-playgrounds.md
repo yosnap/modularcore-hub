@@ -1,6 +1,6 @@
 ---
 title: "Phase 6: Website Catalog Docs Playgrounds"
-status: todo
+status: done
 priority: P2
 effort: "5-6d"
 dependencies: [2, 4, 5]
@@ -61,12 +61,12 @@ Docs por componente: markdown en el paquete (`packages/{name}/README.md` o `docs
 
 ## Success Criteria
 
-- [ ] Catálogo lista ≥2 componentes desde `index.json`.
-- [ ] Cada componente muestra docs, frameworks, envVariables e instrucciones manual + CLI.
-- [ ] Playground AI Chat streamea vía proxy server-side sin exponer la key.
-- [ ] Playground Media Picker funciona sin filtrar credenciales.
-- [ ] `/registry/index.json|{name}.json|{name}.tar.gz` accesibles con content-type correcto.
-- [ ] `pnpm build` de la web verde.
+- [x] Catálogo lista ≥2 componentes desde `index.json`.
+- [x] Cada componente muestra docs, frameworks, envVariables e instrucciones manual + CLI.
+- [x] Playground AI Chat streamea vía proxy server-side sin exponer la key.
+- [x] Playground Media Picker funciona sin filtrar credenciales.
+- [x] `/registry/index.json|{name}.json|{name}.tar.gz` accesibles con content-type correcto.
+- [x] `pnpm build` de la web verde.
 
 ## Risk Assessment
 
