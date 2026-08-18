@@ -36,12 +36,19 @@ packages/cli/                 # @modularcore/cli (bin: modularcore)
 
 `modularcore.json` de proyecto:
 ```jsonc
-{ "registryUrl":"https://hub.../registry",
+{ "registryUrl":"http://localhost:5173/registry",  // configurable; sin default de producción (deploy fuera de alcance, Validación S1)
   "framework":"react",
   "paths":{"components":"src/components","lib":"src/lib/modularcore"},
   "installed":{"media-picker":"1.0.0"} }
 ```
+Deploy del registry **fuera de alcance** (§9): en dev apunta al servidor local (SvelteKit); el usuario configura `registryUrl` cuando exista un host público. (Validación S1)
 Resolución de `target`: descriptor da `target` relativo; CLI lo re-mapea contra `paths` si aplica. `.env.example`: append idempotente (no duplica keys). Credenciales nunca se piden ni guardan.
+
+**Guardas de seguridad/robustez (predict):**
+- **Path clamp:** todo `target` resuelto DEBE quedar dentro del root del proyecto (cwd). Rechazar `..`/rutas absolutas que escapen → error claro (anti path-traversal).
+- **Solo `.env.example`:** el CLI nunca lee ni escribe `.env` real (evita fugas). Genera/append únicamente `.env.example`.
+- **Atomicidad/idempotencia:** `add` es re-ejecutable; ante fallo (npm o red) reporta qué se escribió y deja estado consistente (o revierte lo escrito). `update` crea backup `.orig` del archivo antes de sobreescribir, además del diff con confirmación.
+- **Reutilización DRY:** la resolución de descriptor + escritura de `files` usa el **módulo compartido** definido en Fase 2 (el mismo del spike), no lógica duplicada.
 
 ## Related Code Files
 
@@ -66,8 +73,17 @@ Resolución de `target`: descriptor da `target` relativo; CLI lo re-mapea contra
 - [ ] `modularcore init` genera config correcta detectando framework.
 - [ ] `modularcore add hello-core` escribe archivos, instala deps, genera `.env.example`.
 - [ ] `registryDependencies` se resuelven recursivamente sin duplicar.
-- [ ] `update`/`diff` muestran cambios y piden confirmación por archivo.
+- [ ] `update`/`diff` muestran cambios, backup `.orig` y piden confirmación por archivo.
+- [ ] `target` con `..` o fuera del root se rechaza; el CLI nunca toca `.env` real.
+- [ ] `add` interrumpido deja estado consistente / reporta lo escrito.
 - [ ] Tests verdes contra un registry local; init→componente <5 min.
+
+## Red Team Hardening (aplicado)
+
+- **SA2 — Instalación de deps segura:** `add` instala `dependencies` con **`--ignore-scripts` por defecto**; exige semver pin en el descriptor; valida cada paquete contra allowlist mantenida en el registry; muestra paquetes+versiones y **pide confirmación** antes de invocar el package manager. (Evita postinstall RCE / dependency-confusion.)
+- **AD2 — Gate de compatibilidad de framework:** `add` rechaza con error explícito si el framework del proyecto ∉ `descriptor.frameworks`; además valida `peerDependencies` (versión instalada de React/Svelte) y **aborta antes de escribir** si no satisface el rango. `init` promptea selección ante ambigüedad (0/>1 frameworks, o cwd = root del workspace) en vez de adivinar.
+- **AD7 — Entorno del CLI:** `package.json` del CLI declara `engines:{node:">=18"}`; fallo temprano con mensaje claro si `fetch` global no existe. KPI <5 min instrumentado separando tiempo de red/`npm install` del tiempo del CLI (o reformulado excluyendo el install).
+- **FMA7 — Errores del registry-client:** detectar respuestas no-JSON/404 y emitir error accionable ("registry no generado: corre `pnpm build:registry`").
 
 ## Risk Assessment
 

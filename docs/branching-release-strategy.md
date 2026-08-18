@@ -39,7 +39,10 @@ El PRD §12 exige versionado semántico **por componente** con Changesets. Es un
 
 - El tag `vX.Y.0` marca "fase X liberada a `main`"; **no** implica que los paquetes compartan ese número.
 - Los paquetes se versionan/publican con Changesets según su propio semver (independiente por paquete). `apps/*` privadas quedan fuera de Changesets (`ignore`).
-- Al cortar una release de fase: primero se consumen los changesets pendientes (bump + changelog por paquete), luego se hace el merge a `main` y el tag de hito.
+
+**⚠️ Red-team FMA3 — `changeset version` es repo-wide.** Con las fases 3/4/5 en paralelo integrando a `develop`, `changeset version` consumiría TODOS los changesets acumulados (no solo los de la fase que se libera), causando version-drift entre el eje de hito (`vX.Y.0`) y el eje de paquete. Regla adoptada: **versionar por paquete al mergear cada rama de fase a `develop`** (consumir sus changesets en ese merge), desacoplando el bump de Changesets del corte de release/tag de hito. Alternativa válida: **serializar** las releases de fase (no acumular fases sin liberar en `develop`). No hacer `changeset version` en el corte de release asumiendo que solo afecta a una fase.
+
+- Al cortar una release de fase: el bump de paquetes ya ocurrió al mergear (regla FMA3); el corte solo hace merge `develop → main` + tag de hito + `changeset publish` de lo pendiente.
 
 ## Ciclo por fase (operativo)
 

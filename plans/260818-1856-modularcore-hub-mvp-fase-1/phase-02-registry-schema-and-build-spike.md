@@ -39,16 +39,24 @@ scripts/inject-spike.mjs     # spike de inyección → fixtures/vite-react, fixt
 fixtures/                     # apps mínimas destino del spike (React+Vite, Svelte)
 ```
 
-Descriptor (§6) validado por zod:
+Descriptor (§6) validado por zod (incluye campos añadidos por red-team, marcados ⊕):
 ```jsonc
 { "name","version","title","type","category","frameworks",
+  "visibility":"public",                 // ⊕ FMA2: "internal" excluye del index público
+  "peerDependencies":{"svelte":">=5","react":">=18"}, // ⊕ AD1: gate de versión en `add`
   "dependencies":[], "registryDependencies":[],
   "envVariables":[{"key","description","required"}],
-  "files":[{"path","target","type"}] }
+  "files":[{"path","target","type","encoding":"utf8"}] } // ⊕ AD3: utf8|base64
 ```
 `type ∈ {frontend-component, headless-core, snippet}` (extensible a `agent-tool`).
 `index.json` = array resumido (name,title,category,version,frameworks,description).
 `{name}.json` = descriptor completo con `files[].content` inline (para copy-code sin descomprimir).
+
+**Naturaleza dual de los paquetes (predict — Architect):** cada `packages/{componente}` es a la vez (a) paquete **importable** (con `exports` + build) para consumo interno del website/tests/playground, y (b) **copy-code source** cuyo mismo source alimenta `files[]` del descriptor. Una sola fuente de archivos; no duplicar. El builder del registry lee ese source; el website importa el paquete por `exports`.
+
+**Módulo compartido resolve+write (predict — DRY):** la lógica de resolver un descriptor y escribir sus `files` al `target` vive en un módulo reutilizable (p.ej. `@modularcore/registry` o lib compartida). El **spike de inyección (paso 5) y el CLI (Fase 3) reutilizan ese módulo** — el spike no duplica lógica throwaway.
+
+**Integridad (predict — Security, opcional/nota):** considerar `hash` (sha256) por archivo en el descriptor para que el CLI avise ante mismatch. No bloqueante en MVP (HTTPS a host propio); dejar anotado.
 
 ## Related Code Files
 
@@ -76,6 +84,15 @@ Descriptor (§6) validado por zod:
 - [ ] Endpoints devuelven los 3 recursos con content-type correcto.
 - [ ] `hello-core` inyectado compila y corre en Vite+React **y** en Svelte.
 - [ ] Report go/no-go escrito con evidencia (comandos + salida).
+
+## Red Team Hardening (aplicado)
+
+- **SA1 (Critical) — Clamp del `path` en el builder:** `build-registry.ts` DEBE resolver cada `files[].path` y asertar que queda dentro de `packages/{name}/` (rechazar `..`, rutas absolutas y symlinks que escapen). Refinamiento zod que rechaza traversal en `path`. Falla el build ante violación. Evita inyectar secretos del runner (p.ej. `../../.env`) al `{name}.json` público.
+- **AD1 (Critical) — Versión de framework en el schema:** añadir `peerDependencies` (o `frameworkVersion` con rango semver) al descriptor. Requerido para que `add` (Fase 3) valide la versión instalada de React/Svelte antes de escribir runes/hooks.
+- **FMA2 — `hello-core` no se publica:** añadir `visibility: "internal" | "public"` (default public) al schema; `hello-core` es `internal` y el builder lo excluye del `index.json`. Assert de que el índice no lo contiene.
+- **AD3 — Encoding de `files[]`:** añadir `encoding: "utf8" | "base64"` por archivo. El builder detecta binarios → base64; el CLI decodifica según encoding. Política explícita de line-endings (preservar) para que `diff`/`update` (Fase 3) sea fiable.
+- **FMA6 — Emisión atómica + validación:** emitir a un directorio temporal y `rename` atómico al final. Paso de validación post-build: cada entrada de `index.json` tiene su `{name}.json` y `{name}.tar.gz` presentes y no vacíos.
+- **FMA7 — Registry en dev:** `predev` corre `build:registry` (o watcher) antes de servir; sin él `/registry/*` no existe.
 
 ## Risk Assessment
 

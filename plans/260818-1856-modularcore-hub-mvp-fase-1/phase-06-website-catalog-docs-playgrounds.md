@@ -53,7 +53,7 @@ Docs por componente: markdown en el paquete (`packages/{name}/README.md` o `docs
 1. Consolidar `apps/web` (skeleton de Fase 2) con layout mínimo + navegación.
 2. Catálogo `/`: cargar `index.json`, listar tarjetas (title/category/frameworks/version).
 3. `/c/[name]`: descriptor + docs markdown + bloques de install (manual curl + `modularcore add`).
-4. `api/chat/+server.ts`: proxy a OpenRouter con key del dueño (env server-side) + rate limit básico + streaming passthrough.
+4. `api/chat/+server.ts`: proxy a OpenRouter con key del dueño (env server-side). **Hardening (predict):** rate-limit por IP/sesión, **cap de max tokens** por request, **lista de modelos permitidos** (allowlist), **function-calling/tools DESHABILITADOS** en el playground público, y **streaming passthrough real** (`ReadableStream`, sin bufferizar la respuesta completa).
 5. Playground AI Chat: montar el componente real apuntando a `/api/chat`.
 6. Playground Media Picker: demo con provider mock/demo (sin credenciales reales expuestas).
 7. Servir endpoints `/registry/*` desde la app (verificar content-types y caché).
@@ -71,5 +71,6 @@ Docs por componente: markdown en el paquete (`packages/{name}/README.md` o `docs
 ## Risk Assessment
 
 - **Fuga de la key del dueño** → solo server-side en `+server.ts`; nunca en payload cliente; rate limit + límite de tokens.
-- **Coste del playground abierto** → rate limit por IP/sesión, tope de tokens por request.
+- **Coste/abuso del playground abierto** → rate limit por IP/sesión, tope de tokens por request, allowlist de modelos, **tools deshabilitados** (no ejecutar function-calling server-side con la key del dueño). (predict — Security)
+- **Playground “muerto” por buffering** → passthrough streaming real extremo a extremo. (predict — Performance)
 - **Docs desincronizadas** → docs viven en el paquete y se leen en build; una sola fuente.
