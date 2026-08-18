@@ -5,7 +5,7 @@ node_modules/
 dist/
 build/
 .svelte-kit/
-apps/web/static/registry/
+apps/web/registry-data/
 fixtures/*/src/modularcore/
 
 # Turborepo
