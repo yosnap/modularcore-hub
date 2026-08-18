@@ -28,5 +28,13 @@ export default tseslint.config(
       globals: { ...globals.browser },
     },
   },
+  {
+    // core/ is isomorphic (browser primitives like OffscreenCanvas + a Node-only DNS guard
+    // behind a runtime feature check), so it gets both global sets.
+    files: ['packages/media-picker/{core,adapters,test}/**'],
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node },
+    },
+  },
   eslintConfigPrettier,
 );
