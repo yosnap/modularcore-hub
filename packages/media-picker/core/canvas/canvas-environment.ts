@@ -25,6 +25,17 @@ export interface Canvas2DContext {
     dw: number,
     dh: number,
   ): void;
+  /**
+   * Transform primitives used by `canvas/transform.ts` (rotate/flip). Both real
+   * implementations behind this structural interface — the browser's OffscreenCanvas 2D
+   * context and `node-canvas`'s context — implement the standard Canvas2D transform API, so
+   * this only widens the type surface already available at runtime; it adds no new behavior.
+   */
+  save(): void;
+  restore(): void;
+  translate(x: number, y: number): void;
+  rotate(angleRadians: number): void;
+  scale(x: number, y: number): void;
 }
 
 export interface CanvasHandle {

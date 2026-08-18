@@ -1,5 +1,6 @@
 import type {
   ListedObject,
+  ListPage,
   StorageProvider,
   UploadResult,
 } from '@modularcore/media-picker/provider';
@@ -32,18 +33,21 @@ export function createDemoStorageProvider(): StorageProvider {
       const result: UploadResult = { key, url, size: file.size, contentType };
       return result;
     },
-    async list(prefix) {
+    async list(options): Promise<ListPage> {
       const entries: ListedObject[] = [];
       for (const [key, entry] of store) {
-        if (prefix && !key.startsWith(prefix)) continue;
+        if (options?.folder && !key.startsWith(options.folder)) continue;
+        if (options?.mimeTypes && !options.mimeTypes.includes(entry.contentType)) continue;
         entries.push({
           key,
           url: entry.url,
           size: entry.blob.size,
           lastModified: entry.lastModified,
+          mimeType: entry.contentType,
         });
       }
-      return entries;
+      // In-memory demo store never grows large enough to warrant real pagination.
+      return { items: entries };
     },
     async remove(key) {
       const entry = store.get(key);

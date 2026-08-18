@@ -1,4 +1,10 @@
-import type { ListedObject, StorageProvider, UploadResult } from '../provider.js';
+import type {
+  ListOptions,
+  ListPage,
+  StorageFolder,
+  StorageProvider,
+  UploadResult,
+} from '../provider.js';
 
 export interface CloudinarySignedParams {
   apiKey: string;
@@ -23,8 +29,10 @@ export type CloudinaryConfig =
       cloudName: string;
       resourceType?: 'image' | 'video' | 'raw' | 'auto';
       getSignedParams: (file: Blob) => Promise<CloudinarySignedParams>;
-      list?: (prefix?: string) => Promise<ListedObject[]>;
+      list?: (options?: ListOptions) => Promise<ListPage>;
       remove?: (key: string) => Promise<void>;
+      listFolders?: () => Promise<StorageFolder[]>;
+      createFolder?: (name: string) => Promise<StorageFolder>;
     }
   | {
       mode: 'unsigned-dev-only';
@@ -35,8 +43,10 @@ export type CloudinaryConfig =
        * an unsigned preset is public by design. Never use in production.
        */
       unsignedUploadPreset: string;
-      list?: (prefix?: string) => Promise<ListedObject[]>;
+      list?: (options?: ListOptions) => Promise<ListPage>;
       remove?: (key: string) => Promise<void>;
+      listFolders?: () => Promise<StorageFolder[]>;
+      createFolder?: (name: string) => Promise<StorageFolder>;
     };
 
 function uploadEndpoint(cloudName: string, resourceType: string): string {
@@ -71,7 +81,7 @@ export function createCloudinaryProvider(config: CloudinaryConfig): StorageProvi
 
   const resourceType = config.resourceType ?? 'auto';
 
-  return {
+  const provider: StorageProvider = {
     async upload(file, options): Promise<UploadResult> {
       const form = await buildUploadForm(config, file);
       const response = await fetch(uploadEndpoint(config.cloudName, resourceType), {
@@ -96,14 +106,14 @@ export function createCloudinaryProvider(config: CloudinaryConfig): StorageProvi
         contentType: options?.contentType ?? body.format ?? body.resource_type,
       };
     },
-    async list(prefix) {
+    async list(options) {
       if (!config.list) {
         throw new Error(
           'media-picker(cloudinary): list() requires a `list` hook backed by your server ' +
             '(the Admin API needs the API secret, which the browser must never hold)',
         );
       }
-      return config.list(prefix);
+      return config.list(options);
     },
     async remove(key) {
       if (!config.remove) {
@@ -117,4 +127,12 @@ export function createCloudinaryProvider(config: CloudinaryConfig): StorageProvi
       return `https://res.cloudinary.com/${config.cloudName}/${resourceType}/upload/${key}`;
     },
   };
+
+  if (config.listFolders) {
+    provider.listFolders = () => config.listFolders!();
+  }
+  if (config.createFolder) {
+    provider.createFolder = (name) => config.createFolder!(name);
+  }
+  return provider;
 }
