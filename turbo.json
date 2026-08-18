@@ -3,7 +3,7 @@
   "tasks": {
     "build:registry": {
       "dependsOn": ["^build"],
-      "outputs": ["static/registry/**"]
+      "outputs": ["registry-data/**"]
     },
     "build": {
       "dependsOn": ["^build", "build:registry"],
