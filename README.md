@@ -6,7 +6,7 @@ y `plans/260818-1856-modularcore-hub-mvp-fase-1/` para el plan de implementació
 
 ## Quickstart
 
-Requisitos: **Node ≥20**, **pnpm ≥9** (vía [corepack](https://nodejs.org/api/corepack.html)).
+Requisitos: **Node ≥22.13**, **pnpm 11.x** (vía [corepack](https://nodejs.org/api/corepack.html)).
 
 ```bash
 corepack enable

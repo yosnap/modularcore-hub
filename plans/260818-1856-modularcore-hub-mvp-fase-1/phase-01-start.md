@@ -19,7 +19,7 @@ Monorepo reproducible con pnpm Workspaces + Turborepo + Changesets, TS base comp
 - Funcional: CI (GitHub Actions) corre build+typecheck+lint+test en push/PR.
 - Funcional: **Vitest** configurado en modo workspace (jsdom para DOM/canvas; soporta React y Svelte) como runner estándar del monorepo. (Validación S1)
 - Funcional: **CI con smokes requeridos** (Validación S1) — el workflow provee las credenciales para los smoke tests de Fases 4/5: **MinIO como servicio docker de CI** + secretos `CLOUDINARY_*` y `OPENROUTER_API_KEY`. Sin ellos CI falla (comportamiento buscado).
-- No funcional: Node ≥20, pnpm ≥9. `.env.example` raíz. `.gitignore` correcto (node_modules, .turbo, dist, .svelte-kit, .env, apps/web/static/registry build output).
+- No funcional: Node ≥22.13, pnpm 11.x (revisado en implementación — Node 20 entra en deprecación en GitHub Actions; pnpm 11 lo requiere). `.env.example` raíz. `.gitignore` correcto (node_modules, .turbo, dist, .svelte-kit, .env, apps/web/static/registry build output).
 - No funcional: ningún archivo de config supera límites razonables; TS `strict: true`. Scope npm `@modularcore/*`, binario CLI `modularcore` (Validación S1).
 
 ## Architecture
