@@ -1,6 +1,6 @@
 ---
 title: "Phase 5: AI Chat"
-status: todo
+status: done
 priority: P1
 effort: "6-8d"
 dependencies: [2]
@@ -72,12 +72,12 @@ Config: `{ baseURL, apiKey, models:[...], systemPrompt, tools:[], history:'local
 
 ## Success Criteria
 
-- [ ] Streaming real vía OpenRouter renderiza tokens incrementales; cancelable.
-- [ ] Cambiar `baseURL/model` conmuta de proveedor sin tocar el core.
-- [ ] Fallback pasa al siguiente modelo ante fallo.
-- [ ] Function calling ejecuta un tool y realimenta el resultado.
-- [ ] Historial local y backend-agnostic funcionan.
-- [ ] Instalable vía CLI; `.env.example` con la key. Ningún archivo >1000 líneas.
+- [x] Streaming real vía OpenRouter renderiza tokens incrementales; cancelable.
+- [x] Cambiar `baseURL/model` conmuta de proveedor sin tocar el core.
+- [x] Fallback pasa al siguiente modelo ante fallo.
+- [x] Function calling ejecuta un tool y realimenta el resultado.
+- [x] Historial local y backend-agnostic funcionan.
+- [x] Instalable vía CLI; `.env.example` con la key. Ningún archivo >1000 líneas.
 
 ## Red Team Hardening (aplicado)
 
