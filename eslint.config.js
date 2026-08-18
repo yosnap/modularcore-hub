@@ -36,5 +36,14 @@ export default tseslint.config(
       globals: { ...globals.browser, ...globals.node },
     },
   },
+  {
+    // core/ai-chat is isomorphic (fetch/ReadableStream/AbortController/crypto are shared, but
+    // `localStorage` in core/history/local.ts and DOM projection in adapters/web are browser
+    // primitives), so it gets both global sets like media-picker above.
+    files: ['packages/ai-chat/{core,adapters,ui,test}/**'],
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node },
+    },
+  },
   eslintConfigPrettier,
 );
