@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "turbo run build",
+    "build:registry": "turbo run build:registry",
     "typecheck": "turbo run typecheck",
     "test": "vitest run --passWithNoTests",
     "test:smoke": "turbo run test:smoke",
@@ -18,13 +19,16 @@
     "dev": "turbo run dev",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "inject:spike": "node scripts/inject-spike.mjs"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
     "@eslint/js": "^9.0.0",
+    "@modularcore/registry": "workspace:*",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.0.0",
+    "globals": "^17.11.0",
     "jsdom": "^25.0.0",
     "prettier": "^3.3.0",
     "turbo": "^2.0.0",

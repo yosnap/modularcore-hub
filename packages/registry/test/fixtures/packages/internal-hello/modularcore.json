@@ -1,0 +1,22 @@
+{
+  "name": "internal-hello",
+  "version": "0.1.0",
+  "title": "Internal Hello",
+  "type": "headless-core",
+  "category": "test-fixture",
+  "frameworks": ["react", "svelte"],
+  "visibility": "internal",
+  "peerDependencies": {},
+  "dependencies": [],
+  "registryDependencies": [],
+  "envVariables": [],
+  "description": "Fixture used by build-registry.test.ts to assert internal visibility exclusion",
+  "files": [
+    {
+      "path": "src/hello.ts",
+      "target": "src/modularcore/internal-hello/hello.ts",
+      "type": "component",
+      "encoding": "utf8"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 ---
 title: "Phase 1: Monorepo Foundation"
-status: todo
+status: done
 priority: P1
 effort: "3-4d"
 dependencies: []
@@ -63,11 +63,11 @@ Convención de nombres de paquete: `@modularcore/{name}`.
 
 ## Success Criteria
 
-- [ ] `pnpm install --frozen-lockfile` reproducible.
-- [ ] `pnpm turbo build test typecheck lint` verde (aunque vacío).
-- [ ] `pnpm changeset` crea un changeset de prueba correctamente.
-- [ ] Vitest workspace corre (aunque sin tests aún) vía `pnpm test`.
-- [ ] CI verde en un PR trivial; servicio MinIO y secretos declarados para los smokes de fases posteriores.
+- [x] `pnpm install --frozen-lockfile` reproducible.
+- [x] `pnpm turbo build test typecheck lint` verde (aunque vacío).
+- [x] `pnpm changeset` crea un changeset de prueba correctamente.
+- [x] Vitest workspace corre (aunque sin tests aún) vía `pnpm test`.
+- [x] CI verde en un PR trivial; servicio MinIO y secretos declarados para los smokes de fases posteriores.
 
 ## Red Team Hardening (aplicado)
 
