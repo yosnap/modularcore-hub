@@ -1,0 +1,30 @@
+# Red-team review — Fase 6 (website catalog/docs/playgrounds)
+
+Rama: `feat/0.6.0-website-catalog-docs-playgrounds` (working tree, sin commitear).
+
+## Resumen
+
+No se encontraron hallazgos críticos, altos ni medios. La implementación cumple los 11 puntos de hardening solicitados y todos los gates de calidad están en verde. Se documentan dos observaciones informativas de bajo riesgo, ninguna bloqueante.
+
+## Verificación punto por punto
+
+1. **Fuga de la API key** — Verificado limpio. `env.OPENROUTER_API_KEY` se lee solo vía `$env/dynamic/private` en `apps/web/src/routes/api/chat/+server.ts:21` y se pasa por `ChatProxyDeps.apiKey`. El único `console.error` (`chat-proxy-handler.ts:81-84`) registra explícitamente solo `err.message`, nunca la key ni el cuerpo crudo del error upstream. La respuesta al cliente en error siempre es un mensaje genérico (`errorBody: { error: '...' }`), nunca el texto de error de OpenRouter. `chat-config.ts` (sin secretos) es el único módulo de `$lib` importado por el playground cliente.
+2. **Tools/function-calling deshabilitados** — Verificado. `parseChatRequestBody` (`chat-proxy-request.ts:43-84`) construye `ParsedChatRequest` sin leer `tools`/`tool_choice` de `rawBody` en ningún punto — el tipo de retorno ni siquiera tiene esos campos, por lo que estructuralmente no pueden propagarse a `requestUpstream`. El único lugar donde `ChatCompletionRequestOptions.tools` se usa es `client.ts:93`, y el proxy nunca pasa ese campo.
+3. **Allowlist de modelos antes del upstream** — Verificado. `isAllowedModel` se comprueba dentro de `parseChatRequestBody`, que se ejecuta y puede lanzar `ChatRequestError(400, ...)` (`chat-proxy-request.ts:64-70`) antes de que `handleChatProxyRequest` invoque `requestUpstream` (línea 73 de `chat-proxy-handler.ts`, posterior al parseo). Un modelo no permitido nunca golpea OpenRouter.
+4. **Cap de tokens aplicado realmente** — Verificado. `maxTokens = Math.min(candidate.max_tokens, MAX_TOKENS_CAP)` y se inyecta como `extraBody: { max_tokens: parsed.maxTokens }` en la llamada real a `requestUpstream` (`chat-proxy-handler.ts:74`), que termina en `body = { ...(config.extraBody ?? {}) }` del request real (`client.ts:87-92`). No es validación decorativa.
+5. **Rate limiting bloquea de verdad** — Verificado. `createRateLimiter` (`chat-rate-limiter.ts`) usa ventana fija in-memory; `isRateLimited` empuja el timestamp y retorna `recent.length > maxRequests`, y `handleChatProxyRequest` corta con `429` antes de tocar la key o el body (primera comprobación de la función, línea 40). Clave: `deps.clientIp = getClientAddress()` de SvelteKit — con `adapter-node` sin `ADDRESS_HEADER`/`XFF_DEPTH` configurados (no se tocó `svelte.config.js` en ese sentido), `getClientAddress()` usa la IP del socket TCP real, no un header spoofeable por el cliente. Correcto por defecto.
+6. **Streaming passthrough real** — Verificado. `requestChatCompletionStream` retorna el `Response` crudo del fetch a OpenRouter (solo valida `response.ok`/`response.body` sin leer el stream en el camino feliz — el único `.text()` ocurre en la rama de error `!response.ok`, que descarta la respuesta de todos modos). `+server.ts` reenvía `result.upstream.body` directo como `Response.body`. No hay `await response.text()/.json()` en el camino de éxito.
+7. **Endpoint del registry — path traversal** — Verificado sin bypass. `VALID_FILENAME = /^[a-z0-9-]+\.(?:json|tar\.gz)$/i` solo admite alfanumérico/guion antes de la extensión; cualquier intento de traversal (`../`, `%2e%2e%2f`, etc.) decodificado por el router de SvelteKit contendría `.`/`/` que el regex rechaza, y además `[file]` es un segmento único de ruta (una barra literal en la URL nunca llega a esta ruta). `resolve()` se hace sobre un nombre ya validado.
+8. **Renderizado Markdown** — Verificado. `docs.ts` lee únicamente `packages/*/README.md` (contenido propio del repo, no input de usuario) vía `import.meta.glob`, y pasa por `renderMarkdownToHtml` de `@modularcore/ai-chat` (que escapa HTML antes de aplicar cualquier markup). Única ocurrencia de `{@html}` en `apps/web/src` es `c/[name]/+page.svelte:82`, correctamente comentada y respaldada por el escapado. No hay una segunda ruta de renderizado insegura.
+9. **Demo Media Picker** — Verificado limpio. `demo-storage-provider.ts` es 100% in-memory (`Map` + `URL.createObjectURL`/`revokeObjectURL`), sin fetch de red ni credenciales de ningún tipo.
+10. **Calidad general** — Todos los archivos nuevos/modificados de Fase 6 están muy por debajo de 1000 líneas (el más largo es `+page.svelte` de `c/[name]` con 115 líneas). `svelte-check`/`tsc --noEmit` en verde sin warnings; no se detectó `any` en los archivos revisados.
+11. **Regresión** — Todo verde desde la raíz: `pnpm build` (7/7 tasks, full turbo), `pnpm test` (30 archivos, 199 tests OK, incluye los 3 nuevos suites `chat-proxy-handler.test.ts`, `chat-proxy-request.test.ts`, `chat-rate-limiter.test.ts`), `pnpm typecheck` (9/9 OK, `web:typecheck` 0 errores/0 warnings), `pnpm lint` (exit 0), `pnpm format:check` (exit 0).
+
+## Observaciones informativas (no bloqueantes)
+
+- **Rate limiter en memoria de proceso único**: ya documentado explícitamente en el propio código (`chat-rate-limiter.ts:1-6`) como limitación aceptada de MVP (no compartido entre réplicas, se resetea en restart). Correcto para el alcance actual; solo relevante si el deploy pasa a multi-instancia.
+- **`getClientAddress()` depende de la topología de despliegue**: el código no configura `ADDRESS_HEADER`/`trustProxy`, así que por defecto usa la IP del socket (seguro contra spoofing). Si en producción se coloca un reverse proxy de confianza delante (nginx/Cloudflare) sin configurar `ADDRESS_HEADER`, todo el tráfico se verá con la IP del proxy y el rate limit efectivamente limitará a "todos los usuarios juntos" en vez de por IP real — no es una vulnerabilidad de este diff, pero es una nota operativa a tener en cuenta al desplegar detrás de un proxy.
+
+## Preguntas sin resolver
+
+Ninguna. No se requiere acción antes de mergear esta fase desde el punto de vista de seguridad/hardening solicitado.
