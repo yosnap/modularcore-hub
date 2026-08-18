@@ -1,0 +1,18 @@
+[
+  {
+    "name": "hello-core",
+    "title": "Hello Core",
+    "category": "test-fixture",
+    "version": "1.0.0",
+    "frameworks": ["react", "svelte"],
+    "description": "Trivial framework-agnostic fixture used by CLI end-to-end tests."
+  },
+  {
+    "name": "widget",
+    "title": "Widget",
+    "category": "test-fixture",
+    "version": "1.0.0",
+    "frameworks": ["react"],
+    "description": "Fixture with an npm dependency and a registryDependency."
+  }
+]
