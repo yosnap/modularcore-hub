@@ -1,0 +1,23 @@
+{
+  "name": "base-lib",
+  "version": "1.0.0",
+  "title": "Base Lib",
+  "type": "headless-core",
+  "category": "test-fixture",
+  "frameworks": ["react"],
+  "visibility": "internal",
+  "peerDependencies": {},
+  "dependencies": [],
+  "registryDependencies": [],
+  "envVariables": [],
+  "description": "registryDependencies leaf fixture.",
+  "files": [
+    {
+      "path": "src/base.ts",
+      "target": "src/modularcore/base-lib/base.ts",
+      "type": "component",
+      "encoding": "utf8",
+      "content": "export const base = 'base-lib';\n"
+    }
+  ]
+}

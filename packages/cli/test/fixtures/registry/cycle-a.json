@@ -1,0 +1,23 @@
+{
+  "name": "cycle-a",
+  "version": "1.0.0",
+  "title": "Cycle A",
+  "type": "headless-core",
+  "category": "test-fixture",
+  "frameworks": ["react"],
+  "visibility": "internal",
+  "peerDependencies": {},
+  "dependencies": [],
+  "registryDependencies": ["cycle-b"],
+  "envVariables": [],
+  "description": "Cycle fixture: a -> b -> a.",
+  "files": [
+    {
+      "path": "src/a.ts",
+      "target": "src/modularcore/cycle-a/a.ts",
+      "type": "component",
+      "encoding": "utf8",
+      "content": "export const a = 'a';\n"
+    }
+  ]
+}
