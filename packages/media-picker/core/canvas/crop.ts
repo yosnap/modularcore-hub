@@ -9,10 +9,61 @@ export interface CropRect {
   height: number;
 }
 
+export type AspectRatioPreset = 'free' | '1:1' | '16:9' | '4:3' | '3:2';
+export type AspectRatio = AspectRatioPreset | number;
+
 export interface CropOptions {
   rect: CropRect;
+  /**
+   * When set to anything but `'free'`, `rect` is treated as a starting point (its `x`/`y`
+   * and `width` are kept, `height` is recomputed from the ratio) rather than the exact crop
+   * area, then clamped to fit inside the source image. `'free'` (the default) uses `rect`
+   * as-is, matching the pre-existing behavior.
+   */
+  aspect?: AspectRatio;
   mimeType?: string;
   quality?: number;
+}
+
+const ASPECT_RATIO_PRESETS: Record<Exclude<AspectRatioPreset, 'free'>, number> = {
+  '1:1': 1,
+  '16:9': 16 / 9,
+  '4:3': 4 / 3,
+  '3:2': 3 / 2,
+};
+
+/** Resolves an `AspectRatio` to a numeric width/height ratio, or `null` for `'free'`. */
+export function resolveAspectRatio(aspect: AspectRatio | undefined): number | null {
+  if (aspect === undefined || aspect === 'free') return null;
+  return typeof aspect === 'number' ? aspect : ASPECT_RATIO_PRESETS[aspect];
+}
+
+/**
+ * Recomputes `rect`'s height from `ratio` (keeping `x`/`y`/`width`), then clamps the result
+ * to fit inside `imageWidth`x`imageHeight` — shrinking width if the recomputed height would
+ * overflow, and vice versa, always preserving the target ratio.
+ */
+export function applyAspectRatio(
+  rect: CropRect,
+  ratio: number,
+  imageWidth: number,
+  imageHeight: number,
+): CropRect {
+  if (!Number.isFinite(ratio) || ratio <= 0) {
+    throw new Error('media-picker: aspect ratio must be a positive finite number');
+  }
+  let { width, height } = rect;
+  const { x, y } = rect;
+  height = width / ratio;
+  if (y + height > imageHeight) {
+    height = imageHeight - y;
+    width = height * ratio;
+  }
+  if (x + width > imageWidth) {
+    width = imageWidth - x;
+    height = width / ratio;
+  }
+  return { x, y, width, height };
 }
 
 function assertValidRect(rect: CropRect): void {
@@ -37,10 +88,16 @@ export async function cropImage(
   options: CropOptions,
   env: CanvasEnvironment = getDefaultCanvasEnvironment(),
 ): Promise<Blob> {
-  const { rect, mimeType = 'image/png', quality } = options;
-  assertValidRect(rect);
+  const { mimeType = 'image/png', quality } = options;
+  assertValidRect(options.rect);
 
   const image = await env.loadImage(source);
+  const ratio = resolveAspectRatio(options.aspect);
+  const rect =
+    ratio === null
+      ? options.rect
+      : applyAspectRatio(options.rect, ratio, image.width, image.height);
+  assertValidRect(rect);
   if (rect.x + rect.width > image.width || rect.y + rect.height > image.height) {
     throw new Error(
       `media-picker: crop rect (${rect.x},${rect.y},${rect.width}x${rect.height}) exceeds ` +

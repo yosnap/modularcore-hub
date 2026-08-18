@@ -94,6 +94,18 @@
       "encoding": "utf8"
     },
     {
+      "path": "core/canvas/transform.ts",
+      "target": "src/modularcore/media-picker/core/canvas/transform.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/library-state.ts",
+      "target": "src/modularcore/media-picker/core/library-state.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
       "path": "core/providers/s3-compatible.ts",
       "target": "src/modularcore/media-picker/core/providers/s3-compatible.ts",
       "type": "headless-core",
@@ -115,6 +127,66 @@
       "path": "adapters/svelte/create-media-picker.svelte.ts",
       "target": "src/modularcore/media-picker/adapters/svelte/create-media-picker.svelte.ts",
       "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/MediaLibraryGrid.tsx",
+      "target": "src/modularcore/media-picker/ui/react/MediaLibraryGrid.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/FolderSelect.tsx",
+      "target": "src/modularcore/media-picker/ui/react/FolderSelect.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/MimeTypeFilter.tsx",
+      "target": "src/modularcore/media-picker/ui/react/MimeTypeFilter.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/ImageEditor.tsx",
+      "target": "src/modularcore/media-picker/ui/react/ImageEditor.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/BulkActionsBar.tsx",
+      "target": "src/modularcore/media-picker/ui/react/BulkActionsBar.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/MediaLibraryGrid.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/MediaLibraryGrid.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/FolderSelect.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/FolderSelect.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/MimeTypeFilter.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/MimeTypeFilter.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/ImageEditor.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/ImageEditor.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/BulkActionsBar.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/BulkActionsBar.svelte",
+      "type": "ui",
       "encoding": "utf8"
     }
   ]

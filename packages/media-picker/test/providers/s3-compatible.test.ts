@@ -89,6 +89,44 @@ describe('createS3CompatibleProvider (mock provider, no network)', () => {
     await expect(provider.remove('k')).rejects.toThrow(/requires a `remove` hook/);
   });
 
+  it('list() forwards ListOptions to the configured hook and returns its ListPage', async () => {
+    const list = vi.fn(async () => ({
+      items: [{ key: 'a', url: 'u', size: 1 }],
+      nextCursor: 'c2',
+    }));
+    const provider = createS3CompatibleProvider({
+      publicUrlBase: 'https://cdn.example.com',
+      getUploadUrl: async () => ({ url: 'x', key: 'k' }),
+      list,
+    });
+    const page = await provider.list({ folder: 'f1', mimeTypes: ['image/png'] });
+    expect(list).toHaveBeenCalledWith({ folder: 'f1', mimeTypes: ['image/png'] });
+    expect(page).toEqual({ items: [{ key: 'a', url: 'u', size: 1 }], nextCursor: 'c2' });
+  });
+
+  it('listFolders/createFolder are absent unless the hooks are configured', () => {
+    const provider = createS3CompatibleProvider({
+      publicUrlBase: 'https://cdn.example.com',
+      getUploadUrl: async () => ({ url: 'x', key: 'k' }),
+    });
+    expect(provider.listFolders).toBeUndefined();
+    expect(provider.createFolder).toBeUndefined();
+  });
+
+  it('listFolders/createFolder delegate to the configured hooks', async () => {
+    const listFolders = vi.fn(async () => [{ id: 'f1', name: 'Folder 1' }]);
+    const createFolder = vi.fn(async () => ({ id: 'f2', name: 'New' }));
+    const provider = createS3CompatibleProvider({
+      publicUrlBase: 'https://cdn.example.com',
+      getUploadUrl: async () => ({ url: 'x', key: 'k' }),
+      listFolders,
+      createFolder,
+    });
+    expect(await provider.listFolders!()).toEqual([{ id: 'f1', name: 'Folder 1' }]);
+    expect(await provider.createFolder!('New')).toEqual({ id: 'f2', name: 'New' });
+    expect(createFolder).toHaveBeenCalledWith('New');
+  });
+
   it('getUrl builds a public URL from publicUrlBase + key', () => {
     const provider = createS3CompatibleProvider({
       publicUrlBase: 'https://cdn.example.com/',
