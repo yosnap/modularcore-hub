@@ -1,6 +1,6 @@
 ---
 title: "Phase 4: Universal Media Picker"
-status: todo
+status: done
 priority: P1
 effort: "6-8d"
 dependencies: [2]
@@ -71,12 +71,12 @@ El usuario elige provider por config; cambiar de S3 a Cloudinary = cambiar la in
 
 ## Success Criteria
 
-- [ ] Subida local + URL + biblioteca contra S3-compatible (MinIO) funciona.
-- [ ] Upload a Cloudinary funciona con preset.
-- [ ] Crop + compresión producen output esperado (dimensiones/tamaño).
-- [ ] Cambiar de provider = solo cambiar config/instancia (misma API).
-- [ ] Instalable vía CLI (`modularcore add media-picker`) con `.env.example` generado.
-- [ ] Ningún archivo del paquete >1000 líneas.
+- [x] Subida local + URL + biblioteca contra S3-compatible (MinIO) funciona.
+- [x] Upload a Cloudinary funciona con preset.
+- [x] Crop + compresión producen output esperado (dimensiones/tamaño).
+- [x] Cambiar de provider = solo cambiar config/instancia (misma API).
+- [x] Instalable vía CLI (`modularcore add media-picker`) con `.env.example` generado.
+- [x] Ningún archivo del paquete >1000 líneas.
 
 ## Red Team Hardening (aplicado)
 

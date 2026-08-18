@@ -1,0 +1,92 @@
+{
+  "name": "@modularcore/ai-chat",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/core/chat.js",
+  "types": "./dist/core/chat.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/core/chat.d.ts",
+      "default": "./dist/core/chat.js"
+    },
+    "./client": {
+      "types": "./dist/core/client.d.ts",
+      "default": "./dist/core/client.js"
+    },
+    "./stream": {
+      "types": "./dist/core/stream.d.ts",
+      "default": "./dist/core/stream.js"
+    },
+    "./fallback": {
+      "types": "./dist/core/fallback.d.ts",
+      "default": "./dist/core/fallback.js"
+    },
+    "./tokens": {
+      "types": "./dist/core/tokens.d.ts",
+      "default": "./dist/core/tokens.js"
+    },
+    "./tools": {
+      "types": "./dist/core/tools.d.ts",
+      "default": "./dist/core/tools.js"
+    },
+    "./history/types": {
+      "types": "./dist/core/history/types.d.ts",
+      "default": "./dist/core/history/types.js"
+    },
+    "./history/local": {
+      "types": "./dist/core/history/local.d.ts",
+      "default": "./dist/core/history/local.js"
+    },
+    "./history/backend": {
+      "types": "./dist/core/history/backend.d.ts",
+      "default": "./dist/core/history/backend.js"
+    },
+    "./react": {
+      "types": "./dist/adapters/react/use-chat.d.ts",
+      "default": "./dist/adapters/react/use-chat.js"
+    },
+    "./svelte": {
+      "types": "./dist/adapters/svelte/create-chat.svelte.d.ts",
+      "default": "./dist/adapters/svelte/create-chat.svelte.js"
+    },
+    "./web": {
+      "types": "./dist/adapters/web/chat-element.d.ts",
+      "default": "./dist/adapters/web/chat-element.js"
+    },
+    "./markdown": {
+      "types": "./dist/ui/markdown.d.ts",
+      "default": "./dist/ui/markdown.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:smoke": "vitest run --config vitest.smoke.config.ts"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "svelte": ">=5"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "@types/react": "^19.2.0",
+    "react": "^19.2.8",
+    "svelte": "^5.56.9"
+  }
+}
