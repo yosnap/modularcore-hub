@@ -1,0 +1,113 @@
+{
+  "name": "ai-chat",
+  "version": "0.1.0",
+  "title": "AI Chat",
+  "type": "headless-core",
+  "category": "ai",
+  "frameworks": ["react", "svelte", "web"],
+  "visibility": "public",
+  "peerDependencies": {
+    "react": ">=18",
+    "svelte": ">=5"
+  },
+  "dependencies": ["zod"],
+  "registryDependencies": [],
+  "envVariables": [
+    {
+      "key": "OPENROUTER_API_KEY",
+      "description": "API key for OpenRouter, the default OpenAI-compatible provider (baseURL https://openrouter.ai/api/v1). BYOK — passed by your app into ChatConfig.apiKey, never hardcoded in this component.",
+      "required": false
+    },
+    {
+      "key": "OPENAI_API_KEY",
+      "description": "API key used only if you set LLM_BASE_URL to point at OpenAI directly instead of OpenRouter.",
+      "required": false
+    },
+    {
+      "key": "LLM_BASE_URL",
+      "description": "Optional override for ChatConfig.baseURL. Defaults to OpenRouter; set to any OpenAI-compatible /chat/completions endpoint (OpenAI, LiteLLM, self-hosted gateway).",
+      "required": false
+    }
+  ],
+  "description": "Headless AI chat core (OpenAI-compatible streaming, model fallback, token estimation, function calling with human-in-the-loop confirmation, local/backend history) with React, Svelte, and framework-free Web adapters. BYOK — the API key always comes from your app's config, never hardcoded.",
+  "files": [
+    {
+      "path": "core/client.ts",
+      "target": "src/modularcore/ai-chat/core/client.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/stream.ts",
+      "target": "src/modularcore/ai-chat/core/stream.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/chat.ts",
+      "target": "src/modularcore/ai-chat/core/chat.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/fallback.ts",
+      "target": "src/modularcore/ai-chat/core/fallback.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/tokens.ts",
+      "target": "src/modularcore/ai-chat/core/tokens.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/tools.ts",
+      "target": "src/modularcore/ai-chat/core/tools.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/history/types.ts",
+      "target": "src/modularcore/ai-chat/core/history/types.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/history/local.ts",
+      "target": "src/modularcore/ai-chat/core/history/local.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/history/backend.ts",
+      "target": "src/modularcore/ai-chat/core/history/backend.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/markdown.ts",
+      "target": "src/modularcore/ai-chat/ui/markdown.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/react/use-chat.ts",
+      "target": "src/modularcore/ai-chat/adapters/react/use-chat.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/svelte/create-chat.svelte.ts",
+      "target": "src/modularcore/ai-chat/adapters/svelte/create-chat.svelte.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/web/chat-element.ts",
+      "target": "src/modularcore/ai-chat/adapters/web/chat-element.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    }
+  ]
+}

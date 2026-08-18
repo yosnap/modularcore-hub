@@ -70,6 +70,25 @@ importers:
         specifier: ^8.2.1
         version: 8.2.1(@types/node@22.20.1)
 
+  packages/ai-chat:
+    dependencies:
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
+    devDependencies:
+      '@types/node':
+        specifier: ^22.13.0
+        version: 22.20.1
+      '@types/react':
+        specifier: ^19.2.0
+        version: 19.2.18
+      react:
+        specifier: ^19.2.8
+        version: 19.2.8
+      svelte:
+        specifier: ^5.56.9
+        version: 5.56.9(@typescript-eslint/types@8.67.0)
+
   packages/cli:
     dependencies:
       '@clack/prompts':
