@@ -36,7 +36,13 @@ describe('writeRegistryEntryFiles', () => {
     const results = await writeRegistryEntryFiles(
       {
         files: [
-          { path: 'src/hello.ts', target: 'src/hello.ts', type: 'component', encoding: 'utf8', content: 'export const x = 1;\n' },
+          {
+            path: 'src/hello.ts',
+            target: 'src/hello.ts',
+            type: 'component',
+            encoding: 'utf8',
+            content: 'export const x = 1;\n',
+          },
           {
             path: 'assets/logo.png',
             target: 'assets/logo.png',

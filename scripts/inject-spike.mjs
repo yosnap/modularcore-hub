@@ -16,7 +16,10 @@ const repoRoot = resolve(scriptDir, '..');
 const registryDir = resolve(repoRoot, 'apps', 'web', 'static', 'registry');
 const componentName = 'hello-core';
 
-const targets = [resolve(repoRoot, 'fixtures', 'vite-react'), resolve(repoRoot, 'fixtures', 'svelte')];
+const targets = [
+  resolve(repoRoot, 'fixtures', 'vite-react'),
+  resolve(repoRoot, 'fixtures', 'svelte'),
+];
 
 async function loadEntry() {
   const raw = await readFile(resolve(registryDir, `${componentName}.json`), 'utf8');

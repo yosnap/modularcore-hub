@@ -21,7 +21,14 @@ function validDescriptor() {
     dependencies: [],
     registryDependencies: [],
     envVariables: [{ key: 'API_KEY', description: 'API key', required: true }],
-    files: [{ path: 'src/sample.tsx', target: 'src/modularcore/sample.tsx', type: 'component', encoding: 'utf8' }],
+    files: [
+      {
+        path: 'src/sample.tsx',
+        target: 'src/modularcore/sample.tsx',
+        type: 'component',
+        encoding: 'utf8',
+      },
+    ],
   };
 }
 
@@ -64,7 +71,14 @@ describe('registryDescriptorSchema', () => {
   it('rejects target path traversal', () => {
     const descriptor = {
       ...validDescriptor(),
-      files: [{ path: 'src/sample.tsx', target: '../../outside.tsx', type: 'component', encoding: 'utf8' }],
+      files: [
+        {
+          path: 'src/sample.tsx',
+          target: '../../outside.tsx',
+          type: 'component',
+          encoding: 'utf8',
+        },
+      ],
     };
     const result = registryDescriptorSchema.safeParse(descriptor);
     expect(result.success).toBe(false);
@@ -73,7 +87,9 @@ describe('registryDescriptorSchema', () => {
   it('rejects an invalid encoding value', () => {
     const descriptor = {
       ...validDescriptor(),
-      files: [{ path: 'src/sample.tsx', target: 'src/out.tsx', type: 'component', encoding: 'latin1' }],
+      files: [
+        { path: 'src/sample.tsx', target: 'src/out.tsx', type: 'component', encoding: 'latin1' },
+      ],
     };
     const result = registryDescriptorSchema.safeParse(descriptor);
     expect(result.success).toBe(false);

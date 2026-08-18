@@ -7,7 +7,13 @@ import { buildTarball } from '../src/tarball.js';
 describe('buildTarball', () => {
   it('produces a gzip-compressed buffer embedding the file content', async () => {
     const tarball = await buildTarball([
-      { path: 'src/hello.ts', target: 'src/hello.ts', type: 'component', encoding: 'utf8', content: 'export const hi = 1;\n' },
+      {
+        path: 'src/hello.ts',
+        target: 'src/hello.ts',
+        type: 'component',
+        encoding: 'utf8',
+        content: 'export const hi = 1;\n',
+      },
     ]);
 
     expect(tarball[0]).toBe(0x1f);

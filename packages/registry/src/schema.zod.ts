@@ -14,9 +14,9 @@ function isSafeRelativePath(value: string): boolean {
   return !segments.includes('..');
 }
 
-const safeRelativePathSchema = z
-  .string()
-  .refine(isSafeRelativePath, { message: 'Path must be relative and must not contain ".." or an absolute prefix' });
+const safeRelativePathSchema = z.string().refine(isSafeRelativePath, {
+  message: 'Path must be relative and must not contain ".." or an absolute prefix',
+});
 
 export const envVariableSchema = z.object({
   key: z.string().min(1),

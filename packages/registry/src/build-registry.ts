@@ -1,5 +1,15 @@
 import { randomUUID } from 'node:crypto';
-import { mkdir, mkdtemp, readFile, readdir, realpath, rename, rm, stat, writeFile } from 'node:fs/promises';
+import {
+  mkdir,
+  mkdtemp,
+  readFile,
+  readdir,
+  realpath,
+  rename,
+  rm,
+  stat,
+  writeFile,
+} from 'node:fs/promises';
 import { dirname, join, resolve, sep } from 'node:path';
 
 import { registryDescriptorSchema } from './schema.zod.js';
@@ -66,7 +76,9 @@ async function assertSafeSourcePath(componentRealDir: string, filePath: string):
   }
   const prefix = componentRealDir.endsWith(sep) ? componentRealDir : componentRealDir + sep;
   if (real !== componentRealDir && !real.startsWith(prefix)) {
-    throw new Error(`Refusing to read outside package root: "${filePath}" escapes ${componentRealDir}`);
+    throw new Error(
+      `Refusing to read outside package root: "${filePath}" escapes ${componentRealDir}`,
+    );
   }
   return real;
 }
@@ -98,7 +110,10 @@ async function readEntryFile(
   return { ...file, content };
 }
 
-async function buildEntry(descriptor: RegistryDescriptorParsed, componentDir: string): Promise<RegistryEntry> {
+async function buildEntry(
+  descriptor: RegistryDescriptorParsed,
+  componentDir: string,
+): Promise<RegistryEntry> {
   const componentRealDir = await realpath(componentDir);
   const files: RegistryFileWithContent[] = [];
   for (const file of descriptor.files) {
@@ -140,7 +155,10 @@ async function validateBuildOutput(dir: string, componentNames: string[]): Promi
  * `index.json` (FMA2). Output is staged in a temp dir and moved into place with a single
  * `rename` (FMA6) so partial builds are never visible at `outputDir`.
  */
-export async function buildRegistry({ packagesRoot, outputDir }: BuildRegistryOptions): Promise<BuildRegistrySummary> {
+export async function buildRegistry({
+  packagesRoot,
+  outputDir,
+}: BuildRegistryOptions): Promise<BuildRegistrySummary> {
   const componentDirs = await findComponentDirs(packagesRoot);
   if (componentDirs.length === 0) {
     throw new Error(`No components with modularcore.json found under ${packagesRoot}`);

@@ -21,13 +21,17 @@ export function resolveWriteTargetPath(projectRoot: string, fileTarget: string):
   const resolved = resolve(root, fileTarget);
   const rootWithSep = root.endsWith('/') ? root : `${root}/`;
   if (resolved !== root && !resolved.startsWith(rootWithSep)) {
-    throw new Error(`Refusing to write outside target root: "${fileTarget}" escapes "${projectRoot}"`);
+    throw new Error(
+      `Refusing to write outside target root: "${fileTarget}" escapes "${projectRoot}"`,
+    );
   }
   return resolved;
 }
 
 function decodeFileContent(file: RegistryFileWithContent): Buffer {
-  return file.encoding === 'base64' ? Buffer.from(file.content, 'base64') : Buffer.from(file.content, 'utf8');
+  return file.encoding === 'base64'
+    ? Buffer.from(file.content, 'base64')
+    : Buffer.from(file.content, 'utf8');
 }
 
 /**

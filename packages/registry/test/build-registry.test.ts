@@ -29,7 +29,11 @@ describe('buildRegistry', () => {
 
     const index = JSON.parse(await readFile(join(outputDir, 'index.json'), 'utf8'));
     expect(index).toEqual([
-      expect.objectContaining({ name: 'public-widget', category: 'test-fixture', version: '1.0.0' }),
+      expect.objectContaining({
+        name: 'public-widget',
+        category: 'test-fixture',
+        version: '1.0.0',
+      }),
     ]);
 
     const widgetEntry = JSON.parse(await readFile(join(outputDir, 'public-widget.json'), 'utf8'));
@@ -45,7 +49,9 @@ describe('buildRegistry', () => {
     const index = JSON.parse(await readFile(join(outputDir, 'index.json'), 'utf8'));
     expect(index.some((entry: { name: string }) => entry.name === 'internal-hello')).toBe(false);
 
-    const internalEntry = JSON.parse(await readFile(join(outputDir, 'internal-hello.json'), 'utf8'));
+    const internalEntry = JSON.parse(
+      await readFile(join(outputDir, 'internal-hello.json'), 'utf8'),
+    );
     expect(internalEntry.visibility).toBe('internal');
     const tarStat = await stat(join(outputDir, 'internal-hello.tar.gz'));
     expect(tarStat.size).toBeGreaterThan(0);
@@ -64,9 +70,15 @@ describe('buildRegistry', () => {
     const invalidRoot = await mkdtemp(join(tmpdir(), 'modularcore-invalid-packages-'));
     const componentDir = join(invalidRoot, 'broken');
     await mkdir(componentDir, { recursive: true });
-    await writeFile(join(componentDir, 'modularcore.json'), JSON.stringify({ name: 'broken' }), 'utf8');
+    await writeFile(
+      join(componentDir, 'modularcore.json'),
+      JSON.stringify({ name: 'broken' }),
+      'utf8',
+    );
 
-    await expect(buildRegistry({ packagesRoot: invalidRoot, outputDir })).rejects.toThrow(/Invalid descriptor/);
+    await expect(buildRegistry({ packagesRoot: invalidRoot, outputDir })).rejects.toThrow(
+      /Invalid descriptor/,
+    );
 
     await rm(invalidRoot, { recursive: true, force: true });
   });
@@ -90,7 +102,9 @@ describe('buildRegistry', () => {
         category: 'test-fixture',
         frameworks: ['react'],
         visibility: 'public',
-        files: [{ path: 'src/linked.ts', target: 'src/linked.ts', type: 'component', encoding: 'utf8' }],
+        files: [
+          { path: 'src/linked.ts', target: 'src/linked.ts', type: 'component', encoding: 'utf8' },
+        ],
       }),
       'utf8',
     );
@@ -107,7 +121,10 @@ describe('buildRegistry', () => {
     await mkdir(join(componentDir, 'src'), { recursive: true });
     // Invalid UTF-8 byte sequence (lone continuation byte) — cannot round-trip through
     // Buffer.toString('utf8') without silent U+FFFD substitution.
-    await writeFile(join(componentDir, 'src', 'asset.bin'), Buffer.from([0x89, 0x50, 0x4e, 0x47, 0xff, 0xfe]));
+    await writeFile(
+      join(componentDir, 'src', 'asset.bin'),
+      Buffer.from([0x89, 0x50, 0x4e, 0x47, 0xff, 0xfe]),
+    );
     await writeFile(
       join(componentDir, 'modularcore.json'),
       JSON.stringify({
@@ -118,12 +135,16 @@ describe('buildRegistry', () => {
         category: 'test-fixture',
         frameworks: ['react'],
         visibility: 'public',
-        files: [{ path: 'src/asset.bin', target: 'src/asset.bin', type: 'asset', encoding: 'utf8' }],
+        files: [
+          { path: 'src/asset.bin', target: 'src/asset.bin', type: 'asset', encoding: 'utf8' },
+        ],
       }),
       'utf8',
     );
 
-    await expect(buildRegistry({ packagesRoot: binaryRoot, outputDir })).rejects.toThrow(/binary\/invalid UTF-8/);
+    await expect(buildRegistry({ packagesRoot: binaryRoot, outputDir })).rejects.toThrow(
+      /binary\/invalid UTF-8/,
+    );
 
     await rm(binaryRoot, { recursive: true, force: true });
   });

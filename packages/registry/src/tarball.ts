@@ -20,9 +20,14 @@ export async function buildTarball(files: RegistryFileWithContent[]): Promise<Bu
   });
 
   for (const file of files) {
-    const content = file.encoding === 'base64' ? Buffer.from(file.content, 'base64') : Buffer.from(file.content, 'utf8');
+    const content =
+      file.encoding === 'base64'
+        ? Buffer.from(file.content, 'base64')
+        : Buffer.from(file.content, 'utf8');
     await new Promise<void>((resolveEntry, rejectEntry) => {
-      tarPack.entry({ name: file.target }, content, (error) => (error ? rejectEntry(error) : resolveEntry()));
+      tarPack.entry({ name: file.target }, content, (error) =>
+        error ? rejectEntry(error) : resolveEntry(),
+      );
     });
   }
   tarPack.finalize();
