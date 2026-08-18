@@ -1,6 +1,6 @@
 {
   "name": "@modularcore/media-picker",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "main": "./dist/core/media-picker.js",
@@ -26,6 +26,14 @@
       "types": "./dist/core/canvas/compress.d.ts",
       "default": "./dist/core/canvas/compress.js"
     },
+    "./canvas/transform": {
+      "types": "./dist/core/canvas/transform.d.ts",
+      "default": "./dist/core/canvas/transform.js"
+    },
+    "./library-state": {
+      "types": "./dist/core/library-state.d.ts",
+      "default": "./dist/core/library-state.js"
+    },
     "./providers/s3-compatible": {
       "types": "./dist/core/providers/s3-compatible.d.ts",
       "default": "./dist/core/providers/s3-compatible.js"
@@ -41,10 +49,32 @@
     "./svelte": {
       "types": "./dist/adapters/svelte/create-media-picker.svelte.d.ts",
       "default": "./dist/adapters/svelte/create-media-picker.svelte.js"
-    }
+    },
+    "./ui/react/MediaLibraryGrid": {
+      "types": "./dist/ui/react/MediaLibraryGrid.d.ts",
+      "default": "./dist/ui/react/MediaLibraryGrid.js"
+    },
+    "./ui/react/FolderSelect": {
+      "types": "./dist/ui/react/FolderSelect.d.ts",
+      "default": "./dist/ui/react/FolderSelect.js"
+    },
+    "./ui/react/MimeTypeFilter": {
+      "types": "./dist/ui/react/MimeTypeFilter.d.ts",
+      "default": "./dist/ui/react/MimeTypeFilter.js"
+    },
+    "./ui/react/ImageEditor": {
+      "types": "./dist/ui/react/ImageEditor.d.ts",
+      "default": "./dist/ui/react/ImageEditor.js"
+    },
+    "./ui/react/BulkActionsBar": {
+      "types": "./dist/ui/react/BulkActionsBar.d.ts",
+      "default": "./dist/ui/react/BulkActionsBar.js"
+    },
+    "./ui/svelte/*": "./ui/svelte/*"
   },
   "files": [
-    "dist"
+    "dist",
+    "ui/svelte"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",

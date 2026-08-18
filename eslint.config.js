@@ -13,6 +13,10 @@ export default tseslint.config(
       '**/.svelte-kit/**',
       '**/coverage/**',
       '**/node_modules/**',
+      // Raw copy-code source for consuming projects' own Svelte toolchain (no svelte-eslint-parser
+      // installed here — this monorepo's own build/typecheck never compiles these directly either,
+      // see packages/media-picker/tsconfig.json).
+      '**/*.svelte',
     ],
   },
   js.configs.recommended,

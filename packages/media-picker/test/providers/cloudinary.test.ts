@@ -108,4 +108,41 @@ describe('createCloudinaryProvider (mock provider, no network)', () => {
     await expect(provider.list()).rejects.toThrow(/requires a `list` hook/);
     await expect(provider.remove('k')).rejects.toThrow(/requires a `remove` hook/);
   });
+
+  it('list() forwards ListOptions to the configured hook and returns its ListPage', async () => {
+    const list = vi.fn(async () => ({ items: [{ key: 'a', url: 'u', size: 1 }] }));
+    const provider = createCloudinaryProvider({
+      mode: 'signed',
+      cloudName: 'demo',
+      getSignedParams: async () => ({ apiKey: 'k', timestamp: 1, signature: 's' }),
+      list,
+    });
+    const page = await provider.list({ scope: 'mine' });
+    expect(list).toHaveBeenCalledWith({ scope: 'mine' });
+    expect(page).toEqual({ items: [{ key: 'a', url: 'u', size: 1 }] });
+  });
+
+  it('listFolders/createFolder are absent unless the hooks are configured', () => {
+    const provider = createCloudinaryProvider({
+      mode: 'signed',
+      cloudName: 'demo',
+      getSignedParams: async () => ({ apiKey: 'k', timestamp: 1, signature: 's' }),
+    });
+    expect(provider.listFolders).toBeUndefined();
+    expect(provider.createFolder).toBeUndefined();
+  });
+
+  it('listFolders/createFolder delegate to the configured hooks', async () => {
+    const listFolders = vi.fn(async () => [{ id: 'f1', name: 'Folder 1' }]);
+    const createFolder = vi.fn(async () => ({ id: 'f2', name: 'New' }));
+    const provider = createCloudinaryProvider({
+      mode: 'signed',
+      cloudName: 'demo',
+      getSignedParams: async () => ({ apiKey: 'k', timestamp: 1, signature: 's' }),
+      listFolders,
+      createFolder,
+    });
+    expect(await provider.listFolders!()).toEqual([{ id: 'f1', name: 'Folder 1' }]);
+    expect(await provider.createFolder!('New')).toEqual({ id: 'f2', name: 'New' });
+  });
 });

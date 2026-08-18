@@ -71,4 +71,59 @@ describe('cropImage (real pixels via node-canvas — AD6, not mocked)', () => {
       /Canvas API is not available/,
     );
   });
+
+  describe('aspect ratio presets', () => {
+    it('"1:1" recomputes height from width, producing a square crop', async () => {
+      const source = createQuadrantImageBlob(200, 100);
+      const result = await cropImage(
+        source,
+        { rect: { x: 0, y: 0, width: 80, height: 50 }, aspect: '1:1' },
+        env,
+      );
+      const buffer = Buffer.from(await result.arrayBuffer());
+      const decoded = await loadImage(buffer);
+      expect(decoded.width).toBe(80);
+      expect(decoded.height).toBe(80);
+    });
+
+    it('a numeric ratio is honored directly', async () => {
+      const source = createQuadrantImageBlob(200, 100);
+      const result = await cropImage(
+        source,
+        { rect: { x: 0, y: 0, width: 40, height: 999 }, aspect: 2 },
+        env,
+      );
+      const buffer = Buffer.from(await result.arrayBuffer());
+      const decoded = await loadImage(buffer);
+      expect(decoded.width).toBe(40);
+      expect(decoded.height).toBe(20);
+    });
+
+    it('clamps the recomputed rect to the source bounds instead of throwing', async () => {
+      const source = createQuadrantImageBlob(200, 100);
+      // width=200 at x=0 with a 1:1 ratio would need height=200, but the source is only 100 tall.
+      const result = await cropImage(
+        source,
+        { rect: { x: 0, y: 0, width: 200, height: 10 }, aspect: '1:1' },
+        env,
+      );
+      const buffer = Buffer.from(await result.arrayBuffer());
+      const decoded = await loadImage(buffer);
+      expect(decoded.width).toBe(decoded.height);
+      expect(decoded.height).toBeLessThanOrEqual(100);
+    });
+
+    it('"free" (the default) uses rect as-is, unchanged from pre-v2 behavior', async () => {
+      const source = createQuadrantImageBlob(200, 100);
+      const result = await cropImage(
+        source,
+        { rect: { x: 0, y: 0, width: 30, height: 70 }, aspect: 'free' },
+        env,
+      );
+      const buffer = Buffer.from(await result.arrayBuffer());
+      const decoded = await loadImage(buffer);
+      expect(decoded.width).toBe(30);
+      expect(decoded.height).toBe(70);
+    });
+  });
 });

@@ -1,11 +1,23 @@
 import { compressImage } from './canvas/compress.js';
 import { cropImage } from './canvas/crop.js';
+import { flip, rotate90 } from './canvas/transform.js';
+import { mergeLibraryPage, toggleSelection } from './library-state.js';
 import { fromLibrary, fromLocalFile, fromRemoteUrl } from './sources.js';
 
 import type { CompressOptions } from './canvas/compress.js';
 import type { CropOptions } from './canvas/crop.js';
+import type { FlipAxis, RotateDirection, TransformOptions } from './canvas/transform.js';
+import type { LibraryItem, MediaPickerConfig } from './library-state.js';
 import type { RemoteUrlSourceOptions } from './sources.js';
-import type { StorageProvider, UploadOptions, UploadResult } from './provider.js';
+import type {
+  ListOptions,
+  StorageFolder,
+  StorageProvider,
+  UploadOptions,
+  UploadResult,
+} from './provider.js';
+
+export type { LibraryItem, MediaPickerConfig } from './library-state.js';
 
 export type MediaPickerStatus =
   'idle' | 'cropping' | 'compressing' | 'uploading' | 'done' | 'error';
@@ -16,6 +28,15 @@ export interface MediaPickerState {
   result: UploadResult | null;
   error: Error | null;
   progress: number | null;
+  /** Accumulated library picks. Holds at most one item unless the picker was built with `multiple: true`. */
+  selection: LibraryItem[];
+  libraryItems: LibraryItem[];
+  libraryNextCursor: string | null;
+  libraryLoading: boolean;
+  libraryError: Error | null;
+  folders: StorageFolder[];
+  foldersLoading: boolean;
+  foldersError: Error | null;
 }
 
 export type MediaPickerListener = (state: MediaPickerState) => void;
@@ -23,6 +44,8 @@ export type MediaPickerListener = (state: MediaPickerState) => void;
 export interface MediaPickerDeps {
   cropImage: typeof cropImage;
   compressImage: typeof compressImage;
+  rotate90: typeof rotate90;
+  flip: typeof flip;
   fromRemoteUrl: typeof fromRemoteUrl;
   fromLibrary: typeof fromLibrary;
 }
@@ -33,6 +56,14 @@ const initialState: MediaPickerState = {
   result: null,
   error: null,
   progress: null,
+  selection: [],
+  libraryItems: [],
+  libraryNextCursor: null,
+  libraryLoading: false,
+  libraryError: null,
+  folders: [],
+  foldersLoading: false,
+  foldersError: null,
 };
 
 /**
@@ -51,13 +82,27 @@ export class MediaPicker {
   // moved past (classic out-of-order-resolution bug: no cancellation, so the stale promise
   // still settles, it just must not win).
   private generation = 0;
+  // Separate from `generation` on purpose: a slow crop()/upload() and a slow listLibrary()/
+  // listFolders() are unrelated concerns (one owns the single working blob, the other owns
+  // the library browsing view), so a listing call must not drop an in-flight crop's result
+  // and vice versa. Each still gets its own last-one-wins guard via `runLibrary` below —
+  // "same pattern as `run()`/`commitIfCurrent`", just scoped to library state instead of
+  // sharing the blob-generation counter.
+  private libraryGeneration = 0;
+  private readonly config: Required<MediaPickerConfig>;
 
-  constructor(deps: Partial<MediaPickerDeps> = {}) {
+  constructor(deps: Partial<MediaPickerDeps> = {}, config: MediaPickerConfig = {}) {
     this.deps = {
       cropImage: deps.cropImage ?? cropImage,
       compressImage: deps.compressImage ?? compressImage,
+      rotate90: deps.rotate90 ?? rotate90,
+      flip: deps.flip ?? flip,
       fromRemoteUrl: deps.fromRemoteUrl ?? fromRemoteUrl,
       fromLibrary: deps.fromLibrary ?? fromLibrary,
+    };
+    this.config = {
+      multiple: config.multiple ?? false,
+      maxSelection: config.maxSelection ?? Infinity,
     };
   }
 
@@ -136,6 +181,24 @@ export class MediaPicker {
     this.commitIfCurrent(gen, { status: 'idle', blob });
   }
 
+  /** Rotates the current working blob 90°. Part of the image-editor pipeline (rotate/flip/crop), same "one blob at a time" state machine as crop()/compress(). */
+  async rotate(direction: RotateDirection, options?: TransformOptions): Promise<void> {
+    if (!this.state.blob) throw new Error('media-picker: rotate() called with no source loaded');
+    const source = this.state.blob;
+    const [blob, gen] = await this.run('cropping', () =>
+      this.deps.rotate90(source, direction, options),
+    );
+    this.commitIfCurrent(gen, { status: 'idle', blob });
+  }
+
+  /** Flips the current working blob across `axis`. See `rotate()`. */
+  async flip(axis: FlipAxis, options?: TransformOptions): Promise<void> {
+    if (!this.state.blob) throw new Error('media-picker: flip() called with no source loaded');
+    const source = this.state.blob;
+    const [blob, gen] = await this.run('cropping', () => this.deps.flip(source, axis, options));
+    this.commitIfCurrent(gen, { status: 'idle', blob });
+  }
+
   async upload(provider: StorageProvider, options?: UploadOptions): Promise<UploadResult> {
     if (!this.state.blob) throw new Error('media-picker: upload() called with no source loaded');
     const source = this.state.blob;
@@ -154,7 +217,108 @@ export class MediaPicker {
 
   reset(): void {
     this.generation++;
+    this.libraryGeneration++;
     this.setState({ ...initialState });
+  }
+
+  /**
+   * Toggles `item` in/out of the accumulated `selection` (see `toggleSelection` in
+   * `library-state.ts` for the exact rules, including what happens at `maxSelection`).
+   * Synchronous and does not touch `generation` — selection is independent of the single
+   * working blob the crop/compress/upload pipeline operates on.
+   */
+  toggleLibrarySelection(item: LibraryItem): void {
+    const { selection } = toggleSelection(this.state.selection, item, this.config);
+    this.setState({ selection });
+  }
+
+  clearSelection(): void {
+    this.setState({ selection: [] });
+  }
+
+  /** Returns a snapshot of the current selection. Does not clear it — call `clearSelection()` separately if desired. */
+  confirmSelection(): LibraryItem[] {
+    return [...this.state.selection];
+  }
+
+  /**
+   * Runs a library-scoped async `action` (listLibrary/listFolders), tagging it with the
+   * `libraryGeneration` active when it started — same last-one-wins pattern as `run()`, kept
+   * in a separate counter (see the field comment above). `onSettled` always runs so loading
+   * flags get cleared even for a superseded call; the caller decides what to store from
+   * `result`/`error` and whether that decision only applies `ifCurrent`.
+   */
+  private async runLibrary<T>(
+    action: () => Promise<T>,
+    onSettled: (
+      outcome: { result: T; error: null } | { result: null; error: Error },
+      ifCurrent: (patch: Partial<MediaPickerState>) => void,
+    ) => void,
+  ): Promise<void> {
+    const gen = ++this.libraryGeneration;
+    const ifCurrent = (patch: Partial<MediaPickerState>): void => {
+      if (gen === this.libraryGeneration) this.setState(patch);
+    };
+    try {
+      const result = await action();
+      onSettled({ result, error: null }, ifCurrent);
+    } catch (error) {
+      const normalized = error instanceof Error ? error : new Error(String(error));
+      onSettled({ result: null, error: normalized }, ifCurrent);
+    }
+  }
+
+  /**
+   * Lists library items from `provider`. A page fetched with `options.cursor` is appended to
+   * the existing `libraryItems` (pagination); one fetched without a cursor replaces them
+   * (fresh listing, e.g. after switching folders). Guarded so a slow response cannot
+   * overwrite a newer one — e.g. the user switches folders again before the first list()
+   * resolves.
+   */
+  async listLibrary(provider: StorageProvider, options?: ListOptions): Promise<void> {
+    this.setState({ libraryLoading: true, libraryError: null });
+    const previousItems = this.state.libraryItems;
+    await this.runLibrary(
+      () => provider.list(options),
+      (outcome, ifCurrent) => {
+        if (outcome.error) {
+          ifCurrent({ libraryLoading: false, libraryError: outcome.error });
+          return;
+        }
+        const { items, nextCursor } = mergeLibraryPage(
+          previousItems,
+          outcome.result,
+          !!options?.cursor,
+        );
+        ifCurrent({ libraryItems: items, libraryNextCursor: nextCursor, libraryLoading: false });
+      },
+    );
+  }
+
+  async listFolders(provider: StorageProvider): Promise<void> {
+    if (!provider.listFolders) {
+      throw new Error('media-picker: listFolders() called but the provider does not implement it');
+    }
+    this.setState({ foldersLoading: true, foldersError: null });
+    await this.runLibrary(
+      () => provider.listFolders!(),
+      (outcome, ifCurrent) => {
+        if (outcome.error) {
+          ifCurrent({ foldersLoading: false, foldersError: outcome.error });
+          return;
+        }
+        ifCurrent({ folders: outcome.result, foldersLoading: false });
+      },
+    );
+  }
+
+  async createFolder(provider: StorageProvider, name: string): Promise<StorageFolder> {
+    if (!provider.createFolder) {
+      throw new Error('media-picker: createFolder() called but the provider does not implement it');
+    }
+    const folder = await provider.createFolder(name);
+    this.setState({ folders: [...this.state.folders, folder] });
+    return folder;
   }
 }
 

@@ -1,7 +1,7 @@
 ---
 title: "ModularCore Hub MVP Fase 1"
 description: "Hub de componentes headless multi-proveedor con distribución propia: Registry HTTP estático + CLI + Media Picker + AI Chat + Website."
-status: pending
+status: done
 priority: P1
 effort: "6-8 semanas"
 tags: [monorepo, sveltekit, registry, cli, headless, copy-code]
@@ -35,7 +35,7 @@ Un **Registry HTTP como única fuente de verdad** (JSON/tarballs estáticos gene
 | 3 | [CLI Thin Client](./phase-03-cli-thin-client.md) | 2 | `feat/0.3.0-cli-thin-client` | `v0.3.0` | Done |
 | 4 | [Universal Media Picker](./phase-04-universal-media-picker.md) | 2 | `feat/0.4.0-universal-media-picker` | `v0.4.0` | Done |
 | 5 | [AI Chat](./phase-05-ai-chat.md) | 2 | `feat/0.5.0-ai-chat` | `v0.5.0` | Done |
-| 6 | [Website Catalog Docs Playgrounds](./phase-06-website-catalog-docs-playgrounds.md) | 2,4,5 | `feat/0.6.0-website-catalog-docs-playgrounds` | `v0.6.0` | Pending |
+| 6 | [Website Catalog Docs Playgrounds](./phase-06-website-catalog-docs-playgrounds.md) | 2,4,5 | `feat/0.6.0-website-catalog-docs-playgrounds` | `v0.6.0` | Done |
 
 **Ruta crítica:** 1 → 2 (spike go/no-go, bloqueante) → {3, 4, 5 en paralelo} → 6.
 Fases 3, 4 y 5 tienen ownership de archivos disjunto (`packages/cli`, `packages/media-picker`, `packages/ai-chat`) → paralelizables tras la Fase 2.

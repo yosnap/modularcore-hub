@@ -1,4 +1,11 @@
-import type { ListedObject, StorageProvider, UploadOptions, UploadResult } from '../provider.js';
+import type {
+  ListOptions,
+  ListPage,
+  StorageFolder,
+  StorageProvider,
+  UploadOptions,
+  UploadResult,
+} from '../provider.js';
 
 export interface S3PresignedTarget {
   url: string;
@@ -20,8 +27,11 @@ export interface S3CompatibleConfig {
   /** Base used to build public URLs, e.g. `https://cdn.example.com` or a bucket endpoint. */
   publicUrlBase: string;
   /** Listing/removal need standing credentials — proxy them through your own backend too. */
-  list?: (prefix?: string) => Promise<ListedObject[]>;
+  list?: (options?: ListOptions) => Promise<ListPage>;
   remove?: (key: string) => Promise<void>;
+  /** Folders are a flat list (no nesting) — proxy them through your own backend as well. */
+  listFolders?: () => Promise<StorageFolder[]>;
+  createFolder?: (name: string) => Promise<StorageFolder>;
 }
 
 function buildPublicUrl(publicUrlBase: string, key: string): string {
@@ -55,7 +65,7 @@ async function postUpload(
 }
 
 export function createS3CompatibleProvider(config: S3CompatibleConfig): StorageProvider {
-  return {
+  const provider: StorageProvider = {
     async upload(file, options): Promise<UploadResult> {
       const target = await config.getUploadUrl(file, options);
       const response =
@@ -74,14 +84,14 @@ export function createS3CompatibleProvider(config: S3CompatibleConfig): StorageP
         contentType: options?.contentType ?? file.type,
       };
     },
-    async list(prefix) {
+    async list(options) {
       if (!config.list) {
         throw new Error(
           'media-picker(s3-compatible): list() requires a `list` hook backed by your server ' +
             '(bucket listing needs standing credentials the browser must never hold)',
         );
       }
-      return config.list(prefix);
+      return config.list(options);
     },
     async remove(key) {
       if (!config.remove) {
@@ -95,4 +105,12 @@ export function createS3CompatibleProvider(config: S3CompatibleConfig): StorageP
       return buildPublicUrl(config.publicUrlBase, key);
     },
   };
+
+  if (config.listFolders) {
+    provider.listFolders = () => config.listFolders!();
+  }
+  if (config.createFolder) {
+    provider.createFolder = (name) => config.createFolder!(name);
+  }
+  return provider;
 }

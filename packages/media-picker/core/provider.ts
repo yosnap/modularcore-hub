@@ -26,11 +26,44 @@ export interface ListedObject {
   url: string;
   size: number;
   lastModified?: Date;
+  mimeType?: string;
+  width?: number;
+  height?: number;
+}
+
+/**
+ * `scope` is UX-only: the client passes `'mine' | 'all'` purely to drive a filter toggle in
+ * the UI. The core never decides who may see what — the SAME trust boundary as
+ * `getUploadUrl` (see `providers/s3-compatible.ts`/`providers/cloudinary.ts`): a real
+ * authorization decision requires the caller's identity, which only the user's own backend
+ * (behind the `list` hook) can verify. A provider that ignores `scope` entirely is a valid
+ * implementation of this interface.
+ */
+export interface ListOptions {
+  folder?: string;
+  scope?: 'mine' | 'all';
+  mimeTypes?: string[];
+  cursor?: string;
+  limit?: number;
+}
+
+/** Cursor-based pagination: `nextCursor` is `undefined` once there is nothing more to page. */
+export interface ListPage {
+  items: ListedObject[];
+  nextCursor?: string;
+}
+
+export interface StorageFolder {
+  id: string;
+  name: string;
 }
 
 export interface StorageProvider {
   upload(file: Blob, options?: UploadOptions): Promise<UploadResult>;
-  list(prefix?: string): Promise<ListedObject[]>;
+  list(options?: ListOptions): Promise<ListPage>;
   remove(key: string): Promise<void>;
   getUrl(key: string): string;
+  /** Folders are a flat list (no nesting/tree) — matches the reference UX this v2 is based on. */
+  listFolders?(): Promise<StorageFolder[]>;
+  createFolder?(name: string): Promise<StorageFolder>;
 }
