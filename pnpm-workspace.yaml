@@ -5,6 +5,7 @@ packages:
   # not publishable/shared packages, so they are kept standalone with their own
   # `pnpm install --ignore-workspace` instead of joining this workspace.
 allowBuilds:
+  canvas: true
   esbuild: true
 minimumReleaseAgeExclude:
   - '@sveltejs/kit@2.70.3'

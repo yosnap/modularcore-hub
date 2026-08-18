@@ -1,0 +1,121 @@
+{
+  "name": "media-picker",
+  "version": "0.1.0",
+  "title": "Universal Media Picker",
+  "type": "headless-core",
+  "category": "media",
+  "frameworks": ["react", "svelte"],
+  "visibility": "public",
+  "peerDependencies": {
+    "react": ">=18",
+    "svelte": ">=5"
+  },
+  "dependencies": [],
+  "registryDependencies": [],
+  "envVariables": [
+    {
+      "key": "S3_ENDPOINT",
+      "description": "S3-compatible endpoint (AWS/MinIO) used by YOUR backend's presigned-URL signing endpoint. Never read by the client bundle — the core only ever calls the `getUploadUrl` hook you implement.",
+      "required": true
+    },
+    {
+      "key": "S3_ACCESS_KEY_ID",
+      "description": "S3-compatible access key used by your backend to sign presigned PUT/POST URLs. Never sent to the browser.",
+      "required": true
+    },
+    {
+      "key": "S3_SECRET_ACCESS_KEY",
+      "description": "S3-compatible secret key used by your backend to sign presigned PUT/POST URLs. Never sent to the browser.",
+      "required": true
+    },
+    {
+      "key": "S3_BUCKET",
+      "description": "Bucket name your backend signs presigned URLs against.",
+      "required": true
+    },
+    {
+      "key": "CLOUDINARY_CLOUD_NAME",
+      "description": "Cloudinary cloud name. Used both by your signing backend and to build public delivery URLs.",
+      "required": true
+    },
+    {
+      "key": "CLOUDINARY_API_KEY",
+      "description": "Cloudinary API key used by your backend to compute signed-upload params. Never sent to the browser.",
+      "required": true
+    },
+    {
+      "key": "CLOUDINARY_API_SECRET",
+      "description": "Cloudinary API secret used by your backend to compute signed-upload params. Never sent to the browser.",
+      "required": true
+    }
+  ],
+  "description": "Headless media picker (local/URL/library sources, canvas crop + compress, S3-compatible and Cloudinary providers) with React and Svelte adapters. Credentials always live in your own signing backend, never in this component.",
+  "files": [
+    {
+      "path": "core/provider.ts",
+      "target": "src/modularcore/media-picker/core/provider.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/media-picker.ts",
+      "target": "src/modularcore/media-picker/core/media-picker.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/sources.ts",
+      "target": "src/modularcore/media-picker/core/sources.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/net/ssrf-guard.ts",
+      "target": "src/modularcore/media-picker/core/net/ssrf-guard.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/canvas/canvas-environment.ts",
+      "target": "src/modularcore/media-picker/core/canvas/canvas-environment.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/canvas/crop.ts",
+      "target": "src/modularcore/media-picker/core/canvas/crop.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/canvas/compress.ts",
+      "target": "src/modularcore/media-picker/core/canvas/compress.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/providers/s3-compatible.ts",
+      "target": "src/modularcore/media-picker/core/providers/s3-compatible.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/providers/cloudinary.ts",
+      "target": "src/modularcore/media-picker/core/providers/cloudinary.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/react/use-media-picker.ts",
+      "target": "src/modularcore/media-picker/adapters/react/use-media-picker.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/svelte/create-media-picker.svelte.ts",
+      "target": "src/modularcore/media-picker/adapters/svelte/create-media-picker.svelte.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    }
+  ]
+}
