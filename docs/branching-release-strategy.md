@@ -70,11 +70,10 @@ gh release create v0.2.0 --generate-notes   # (si hay remoto)
 
 ## Estado actual y pendientes
 
-- ✅ Repo con commit baseline en `main`; rama `develop` creada.
-- ⏳ **Sin remoto GitHub aún.** Hasta añadir uno (`git remote add origin …`):
-  - Los PRs (`gh pr create`), releases (`gh release`) y la protección de ramas quedan pendientes.
-  - El flujo local funciona: ramas de fase → `merge --no-ff` a `develop` → release a `main` + tag local.
-- ⏳ Al añadir remoto: aplicar protección de `main` y `develop` (revisar `~/.claude/skills/branching-avanzado/references/assets/branch-protection.json`).
+- ✅ Remoto GitHub: [`yosnap/modularcore-hub`](https://github.com/yosnap/modularcore-hub) (público). `main` es la rama por defecto.
+- ✅ Release `v0.0.0` publicada (baseline de planeación, previa a Fase 1).
+- ✅ Protección de ramas activa en `main` y `develop`: PR con 1 aprobación requerida, sin push directo, sin force-push, sin borrado. `enforce_admins=false` — el único colaborador (admin) mergea sus propios PR vía bypass de admin (`gh pr merge --admin` o el botón "Merge without waiting for requirements").
+- ⏳ Próximo: abrir `chore/0.1.0-monorepo-foundation` desde `develop` para arrancar la Fase 1.
 
 ## Seguridad
 
