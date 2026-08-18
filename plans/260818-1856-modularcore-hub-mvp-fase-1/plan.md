@@ -31,7 +31,7 @@ Un **Registry HTTP como única fuente de verdad** (JSON/tarballs estáticos gene
 | # | Phase | Depende de | Rama | Tag | Status |
 |---|-------|-----------|------|-----|--------|
 | 1 | [Monorepo Foundation](./phase-01-start.md) | — | `chore/0.1.0-monorepo-foundation` | `v0.1.0` | Done |
-| 2 | [Registry Schema and Build Spike](./phase-02-registry-schema-and-build-spike.md) | 1 | `feat/0.2.0-registry-schema-build-spike` | `v0.2.0` | Pending |
+| 2 | [Registry Schema and Build Spike](./phase-02-registry-schema-and-build-spike.md) | 1 | `feat/0.2.0-registry-schema-build-spike` | `v0.2.0` | Done |
 | 3 | [CLI Thin Client](./phase-03-cli-thin-client.md) | 2 | `feat/0.3.0-cli-thin-client` | `v0.3.0` | Pending |
 | 4 | [Universal Media Picker](./phase-04-universal-media-picker.md) | 2 | `feat/0.4.0-universal-media-picker` | `v0.4.0` | Pending |
 | 5 | [AI Chat](./phase-05-ai-chat.md) | 2 | `feat/0.5.0-ai-chat` | `v0.5.0` | Pending |

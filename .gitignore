@@ -25,3 +25,6 @@ coverage/
 
 # Changesets pre-release state (local only)
 .changeset/pre.json
+
+# Local agent memory (Claude Code subagents)
+.claude/agent-memory/

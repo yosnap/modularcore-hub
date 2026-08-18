@@ -1,6 +1,6 @@
 ---
 title: "Phase 2: Registry Schema and Build Spike"
-status: todo
+status: done
 priority: P1
 effort: "4-5d"
 dependencies: [1]
@@ -79,11 +79,11 @@ Descriptor (§6) validado por zod (incluye campos añadidos por red-team, marcad
 
 ## Success Criteria
 
-- [ ] Descriptor inválido falla el build con error claro (zod).
-- [ ] `pnpm build:registry` emite `index.json`, `hello-core.json`, `hello-core.tar.gz`.
-- [ ] Endpoints devuelven los 3 recursos con content-type correcto.
-- [ ] `hello-core` inyectado compila y corre en Vite+React **y** en Svelte.
-- [ ] Report go/no-go escrito con evidencia (comandos + salida).
+- [x] Descriptor inválido falla el build con error claro (zod).
+- [x] `pnpm build:registry` emite `index.json`, `hello-core.json`, `hello-core.tar.gz`.
+- [x] Endpoints devuelven los 3 recursos con content-type correcto.
+- [x] `hello-core` inyectado compila y corre en Vite+React **y** en Svelte.
+- [x] Report go/no-go escrito con evidencia (comandos + salida).
 
 ## Red Team Hardening (aplicado)
 

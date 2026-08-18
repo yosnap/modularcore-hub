@@ -1,0 +1,29 @@
+{
+  "name": "hello-core",
+  "version": "1.0.0",
+  "title": "Hello Core",
+  "type": "headless-core",
+  "category": "test-fixture",
+  "frameworks": ["react", "svelte"],
+  "visibility": "public",
+  "peerDependencies": {},
+  "dependencies": [],
+  "registryDependencies": [],
+  "envVariables": [
+    {
+      "key": "HELLO_CORE_GREETING",
+      "description": "Greeting used by hello-core",
+      "required": false
+    }
+  ],
+  "description": "Trivial framework-agnostic fixture used by CLI end-to-end tests.",
+  "files": [
+    {
+      "path": "src/hello.ts",
+      "target": "src/modularcore/hello-core/hello.ts",
+      "type": "component",
+      "encoding": "utf8",
+      "content": "export function hello(): string {\n  return 'hello from modularcore';\n}\n"
+    }
+  ]
+}
