@@ -16,7 +16,8 @@
   "dependencies": {
     "@modularcore/ai-chat": "workspace:*",
     "@modularcore/media-picker": "workspace:*",
-    "@modularcore/registry": "workspace:*"
+    "@modularcore/registry": "workspace:*",
+    "undici": "^8.10.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-node": "^5.5.7",

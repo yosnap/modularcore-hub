@@ -56,6 +56,9 @@ importers:
       '@modularcore/registry':
         specifier: workspace:*
         version: link:../../packages/registry
+      undici:
+        specifier: ^8.10.0
+        version: 8.10.0
     devDependencies:
       '@sveltejs/adapter-node':
         specifier: ^5.5.7
