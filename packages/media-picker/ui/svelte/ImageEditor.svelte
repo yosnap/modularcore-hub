@@ -79,6 +79,17 @@
     <p role="alert">{picker.state.error.message}</p>
   {/if}
   {#if previewUrl}
-    <img src={previewUrl} alt="Editor preview" style="transform:scale({zoom});max-width:100%" />
+    <!--
+      overflow:hidden here is containment, not styling — without it a zoomed-in transform:scale()
+      preview visually spills past its own box (transforms don't reserve layout space) and
+      overlaps whatever renders after this component.
+    -->
+    <div style="overflow:hidden;max-width:100%;max-height:70vh">
+      <img
+        src={previewUrl}
+        alt="Editor preview"
+        style="transform:scale({zoom});transform-origin:center;max-width:100%;display:block"
+      />
+    </div>
   {/if}
 </div>

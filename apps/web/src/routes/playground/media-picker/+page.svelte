@@ -61,9 +61,19 @@
 <h2>1. Cargar una imagen</h2>
 <p>Tres fuentes: archivo local, URL remota (con guard SSRF real), o desde la biblioteca abajo.</p>
 <input type="file" accept="image/*" onchange={handleFileChange} />
+<!--
+  `fromRemoteUrl` (the core action `resolveUrl` feeds) does `new URL(url)` with no base, so a
+  relative path throws "Invalid URL" — the proxy URL must be absolute. `allowHttp` is safe here
+  specifically because the client-side SSRF guard is only ever validating OUR OWN same-origin
+  proxy endpoint (protocol-only in the browser; see core/net/ssrf-guard.ts), never the actual
+  attacker-controlled target — that real validation happens server-side inside the proxy
+  handler regardless of what protocol reaches it.
+-->
 <RemoteUrlLoader
   {picker}
-  resolveUrl={(url) => `/api/media/fetch-url?url=${encodeURIComponent(url)}`}
+  allowHttp
+  resolveUrl={(url) =>
+    `${window.location.origin}/api/media/fetch-url?url=${encodeURIComponent(url)}`}
 />
 <p>
   <small>
