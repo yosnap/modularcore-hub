@@ -115,11 +115,21 @@ export function ImageEditor({ picker }: ImageEditorProps): JSX.Element {
       </div>
       {error ? <p role="alert">{error.message}</p> : null}
       {previewUrl ? (
-        <img
-          src={previewUrl}
-          alt="Editor preview"
-          style={{ transform: `scale(${zoom})`, maxWidth: '100%' }}
-        />
+        // `overflow: hidden` here is containment, not styling — without it a zoomed-in
+        // `transform: scale()` preview visually spills past its own box (transforms don't
+        // reserve layout space) and overlaps whatever renders after this component.
+        <div style={{ overflow: 'hidden', maxWidth: '100%', maxHeight: '70vh' }}>
+          <img
+            src={previewUrl}
+            alt="Editor preview"
+            style={{
+              transform: `scale(${zoom})`,
+              transformOrigin: 'center',
+              maxWidth: '100%',
+              display: 'block',
+            }}
+          />
+        </div>
       ) : null}
     </div>
   );

@@ -17,6 +17,12 @@
      * restriction. `resolveUrl` lets the app rewrite the typed URL into a same-origin server
      * proxy (e.g. `/api/media/fetch-url?url=...`) that runs `fromRemoteUrl` server-side, where
      * the SSRF guard's DNS/IP checks are also fully active (they no-op in the browser).
+     *
+     * MUST return an absolute URL — `fromRemoteUrl` does `new URL(url)` with no base, so a
+     * relative path throws `TypeError: Invalid URL`. Build it with `window.location.origin`.
+     * The proxy target itself is same-origin/trusted, so pass `allowHttp` alongside this if
+     * the app can run over plain http (e.g. local dev) — the real SSRF validation happens
+     * server-side against the actual attacker-controlled URL, not against this proxy call.
      */
     resolveUrl?: (url: string) => string;
   } = $props();
