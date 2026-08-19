@@ -25,6 +25,28 @@
     return () => URL.revokeObjectURL(url);
   });
 
+  // Without this, `rect` stayed at its hardcoded {100,100} default no matter how large the
+  // loaded image was — selecting an aspect ratio and clicking "Apply crop" against a
+  // 1200×775 photo silently produced a ~100×56px sliver from the top-left corner, which reads
+  // as "the aspect ratio doesn't do anything" even though the crop math is correct. Reset the
+  // rect to the full decoded image whenever a new blob loads, so the default crop is
+  // "the whole image" and the aspect ratio option reshapes THAT, not an arbitrary corner.
+  $effect(() => {
+    const blob = picker.state.blob;
+    if (!blob) return;
+    let cancelled = false;
+    createImageBitmap(blob)
+      .then((bitmap) => {
+        if (cancelled) return;
+        rect = { x: 0, y: 0, width: bitmap.width, height: bitmap.height };
+        bitmap.close();
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  });
+
   /** Zoom narrows the crop rect toward its own center (zoom 2 = crop the middle half); it
    * never touches image pixels directly — this is the only place that translates the zoom
    * slider into the rect actually sent to `picker.crop()`, so the preview's `scale()`

@@ -51,6 +51,27 @@ export function ImageEditor({ picker }: ImageEditorProps): JSX.Element {
     return () => URL.revokeObjectURL(url);
   }, [blob]);
 
+  // Without this, `rect` stayed at its hardcoded {100,100} default no matter how large the
+  // loaded image was — selecting an aspect ratio and clicking "Apply crop" against a
+  // 1200×775 photo silently produced a ~100×56px sliver from the top-left corner, which reads
+  // as "the aspect ratio doesn't do anything" even though the crop math is correct. Reset the
+  // rect to the full decoded image whenever a new blob loads, so the default crop is
+  // "the whole image" and the aspect ratio option reshapes THAT, not an arbitrary corner.
+  useEffect(() => {
+    if (!blob) return;
+    let cancelled = false;
+    createImageBitmap(blob)
+      .then((bitmap) => {
+        if (cancelled) return;
+        setRect({ x: 0, y: 0, width: bitmap.width, height: bitmap.height });
+        bitmap.close();
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [blob]);
+
   const handleApplyCrop = (): void => {
     void picker.crop({ rect: applyZoom(rect, zoom), aspect });
   };
