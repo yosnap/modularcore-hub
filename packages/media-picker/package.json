@@ -1,6 +1,6 @@
 {
   "name": "@modularcore/media-picker",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "main": "./dist/core/media-picker.js",
@@ -69,6 +69,10 @@
     "./ui/react/BulkActionsBar": {
       "types": "./dist/ui/react/BulkActionsBar.d.ts",
       "default": "./dist/ui/react/BulkActionsBar.js"
+    },
+    "./ui/react/RemoteUrlLoader": {
+      "types": "./dist/ui/react/RemoteUrlLoader.d.ts",
+      "default": "./dist/ui/react/RemoteUrlLoader.js"
     },
     "./ui/svelte/*": "./ui/svelte/*"
   },
