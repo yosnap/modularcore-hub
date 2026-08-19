@@ -17,6 +17,13 @@ export interface RemoteUrlLoaderProps {
    * `fromRemoteUrl` server-side, where the SSRF guard's DNS/IP checks are also fully active
    * (they no-op in the browser — see `core/net/ssrf-guard.ts`). Defaults to the identity
    * function, matching the pre-proxy behavior.
+   *
+   * MUST return an absolute URL — `fromRemoteUrl` does `new URL(url)` with no base, so a
+   * relative path (e.g. `/api/media/fetch-url?...`) throws `TypeError: Invalid URL`. Build it
+   * with `window.location.origin`. The proxy target itself is same-origin/trusted, so pass
+   * `allowHttp` alongside this if the app can run over plain http (e.g. local dev) — the real
+   * SSRF validation happens server-side against the actual attacker-controlled URL, not
+   * against this proxy call.
    */
   resolveUrl?: (url: string) => string;
 }
