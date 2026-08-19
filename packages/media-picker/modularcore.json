@@ -160,6 +160,12 @@
       "encoding": "utf8"
     },
     {
+      "path": "ui/react/RemoteUrlLoader.tsx",
+      "target": "src/modularcore/media-picker/ui/react/RemoteUrlLoader.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
       "path": "ui/svelte/MediaLibraryGrid.svelte",
       "target": "src/modularcore/media-picker/ui/svelte/MediaLibraryGrid.svelte",
       "type": "ui",
@@ -186,6 +192,12 @@
     {
       "path": "ui/svelte/BulkActionsBar.svelte",
       "target": "src/modularcore/media-picker/ui/svelte/BulkActionsBar.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/RemoteUrlLoader.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/RemoteUrlLoader.svelte",
       "type": "ui",
       "encoding": "utf8"
     }

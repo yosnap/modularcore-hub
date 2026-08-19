@@ -70,6 +70,10 @@
       "types": "./dist/ui/react/BulkActionsBar.d.ts",
       "default": "./dist/ui/react/BulkActionsBar.js"
     },
+    "./ui/react/RemoteUrlLoader": {
+      "types": "./dist/ui/react/RemoteUrlLoader.d.ts",
+      "default": "./dist/ui/react/RemoteUrlLoader.js"
+    },
     "./ui/svelte/*": "./ui/svelte/*"
   },
   "files": [
