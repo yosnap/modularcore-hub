@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- ModularCore Hub isotype: isometric cube = one composable "core module" -->
+  <path d="M100,20 L170,60 L100,100 L30,60 Z" fill="#8B5CF6"/>
+  <path d="M30,60 L100,100 L100,180 L30,140 Z" fill="#6366F1"/>
+  <path d="M170,60 L100,100 L100,180 L170,140 Z" fill="#4338CA"/>
+</svg>

@@ -18,6 +18,7 @@ coverage/
 .env
 .env.local
 .env.*.local
+docs/data.md
 
 # Editor / OS
 .DS_Store
