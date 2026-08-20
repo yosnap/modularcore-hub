@@ -1,39 +1,39 @@
 :root {
   /* Primary (indigo) */
-  --mc-primary-50: #EEF2FF;
-  --mc-primary-100: #E0E7FF;
-  --mc-primary-200: #C7D2FE;
-  --mc-primary-300: #A5B4FC;
-  --mc-primary-400: #818CF8;
-  --mc-primary-500: #6366F1;
-  --mc-primary-600: #4F46E5;
-  --mc-primary-700: #4338CA;
-  --mc-primary-800: #3730A3;
-  --mc-primary-900: #312E81;
+  --mc-primary-50: #eef2ff;
+  --mc-primary-100: #e0e7ff;
+  --mc-primary-200: #c7d2fe;
+  --mc-primary-300: #a5b4fc;
+  --mc-primary-400: #818cf8;
+  --mc-primary-500: #6366f1;
+  --mc-primary-600: #4f46e5;
+  --mc-primary-700: #4338ca;
+  --mc-primary-800: #3730a3;
+  --mc-primary-900: #312e81;
 
   /* Accents */
-  --mc-accent-violet: #8B5CF6;
-  --mc-accent-cyan: #06B6D4;
-  --mc-accent-emerald: #10B981;
+  --mc-accent-violet: #8b5cf6;
+  --mc-accent-cyan: #06b6d4;
+  --mc-accent-emerald: #10b981;
 
   /* Neutrals */
-  --mc-neutral-0: #FFFFFF;
-  --mc-neutral-50: #F8FAFC;
-  --mc-neutral-100: #F1F5F9;
-  --mc-neutral-200: #E2E8F0;
-  --mc-neutral-300: #CBD5E1;
-  --mc-neutral-400: #94A3B8;
-  --mc-neutral-500: #64748B;
+  --mc-neutral-0: #ffffff;
+  --mc-neutral-50: #f8fafc;
+  --mc-neutral-100: #f1f5f9;
+  --mc-neutral-200: #e2e8f0;
+  --mc-neutral-300: #cbd5e1;
+  --mc-neutral-400: #94a3b8;
+  --mc-neutral-500: #64748b;
   --mc-neutral-600: #475569;
   --mc-neutral-700: #334155;
-  --mc-neutral-800: #1E293B;
-  --mc-neutral-900: #0F172A;
+  --mc-neutral-800: #1e293b;
+  --mc-neutral-900: #0f172a;
 
   /* Semantic */
-  --mc-success: #10B981;
-  --mc-warning: #F59E0B;
-  --mc-danger: #EF4444;
-  --mc-info: #0EA5E9;
+  --mc-success: #10b981;
+  --mc-warning: #f59e0b;
+  --mc-danger: #ef4444;
+  --mc-info: #0ea5e9;
 
   /* Typography */
   --mc-font-display: 'Geist', 'Inter', 'Helvetica Neue', Arial, sans-serif;
