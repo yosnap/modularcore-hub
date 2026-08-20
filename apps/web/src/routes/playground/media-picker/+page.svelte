@@ -127,7 +127,10 @@
 <div class="style-switcher">
   <label>
     Estilo del componente
-    <select bind:value={styleVariant}>
+    <select
+      bind:value={styleVariant}
+      class="rounded-md border border-input bg-background px-2 py-1 text-sm"
+    >
       <option value="headless">Sin estilo (headless)</option>
       <option value="tailwind">Tailwind</option>
       <option value="shadcn">Shadcn</option>
@@ -144,7 +147,12 @@
 
 <h2>1. Cargar una imagen</h2>
 <p>Tres fuentes: archivo local, URL remota (con guard SSRF real), o desde la biblioteca abajo.</p>
-<input type="file" accept="image/*" onchange={handleFileChange} />
+<input
+  type="file"
+  accept="image/*"
+  onchange={handleFileChange}
+  class="text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary-foreground hover:file:bg-primary/90"
+/>
 <!--
   `fromRemoteUrl` (the core action `resolveUrl` feeds) does `new URL(url)` with no base, so a
   relative path throws "Invalid URL" — the proxy URL must be absolute. `allowHttp` is safe here
@@ -181,7 +189,12 @@
   <p class="error">{picker.state.error.message}</p>
 {/if}
 {#if picker.state.blob}
-  <button type="button" onclick={handleUpload} disabled={picker.state.status === 'uploading'}>
+  <button
+    type="button"
+    onclick={handleUpload}
+    disabled={picker.state.status === 'uploading'}
+    class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
+  >
     Subir (demo)
   </button>
 {/if}
@@ -199,6 +212,7 @@
     <select
       bind:value={scope}
       onchange={refreshLibrary}
+      class="rounded-md border border-input bg-background px-2 py-1 text-sm"
     >
       <option value="mine">Mine</option>
       <option value="all">All (admin)</option>
@@ -221,7 +235,13 @@
       refreshLibrary();
     }}
   />
-  <button type="button" onclick={refreshLibrary}>Refrescar</button>
+  <button
+    type="button"
+    onclick={refreshLibrary}
+    class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+  >
+    Refrescar
+  </button>
 </div>
 <ActiveMediaLibraryGrid {picker} />
 <ActiveBulkActionsBar
@@ -235,7 +255,7 @@
 
 <style>
   .error {
-    color: #b00020;
+    color: var(--mc-danger);
   }
   .result img {
     max-width: 320px;
@@ -255,7 +275,7 @@
     flex-direction: column;
     gap: 0.35rem;
     padding: 0.75rem 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid var(--mc-neutral-200);
     border-radius: 8px;
     margin-bottom: 1rem;
   }

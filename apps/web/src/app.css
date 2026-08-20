@@ -10,6 +10,16 @@
 @import 'tailwindcss/utilities' layer(utilities);
 
 /*
+ * Brand kit (docs/brand-guide.md is the source of truth). Imported for its --mc-font-* custom
+ * properties, referenced directly below in @theme inline and @layer base. --mc-color-* tokens
+ * are NOT re-used via var() here: the semantic tokens below (--primary, --ring, etc.) are
+ * consumed as raw HSL triplets by `hsl(var(--x))` in @theme inline, while brand-tokens.css
+ * stores colors as hex — mixing the two formats would break `hsl(#6366f1)`. Each semantic color
+ * value is instead the pre-computed HSL equivalent of its --mc-* source, noted in a comment.
+ */
+@import '../../../assets/brand-tokens.css';
+
+/*
  * Tailwind's automatic content detection does not scan `node_modules` (the pnpm workspace
  * symlink `@modularcore/media-picker` included) — without these `@source` directives, none of
  * the Tailwind utility classes used inside the `tailwind/*` and `shadcn/*` component variants
@@ -51,51 +61,99 @@
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+
+  /* Brand typography (docs/brand-guide.md §4), exposed as font-sans/font-display/font-mono */
+  --font-sans: var(--mc-font-body);
+  --font-display: var(--mc-font-display);
+  --font-mono: var(--mc-font-mono);
 }
 
 @layer base {
+  /*
+   * Semantic tokens remapped to the brand palette (docs/brand-guide.md §3). Each value is the
+   * HSL equivalent of its --mc-* source (brand-tokens.css stores hex; --theme-inline above wraps
+   * these in hsl(), which requires an HSL triplet, not a hex literal — see import comment).
+   */
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
+    --background: 0 0% 100%; /* mc-neutral-0 #FFFFFF */
+    --foreground: 222.2 47.4% 11.2%; /* mc-neutral-900 #0F172A */
+    --card: 0 0% 100%; /* mc-neutral-0 */
+    --card-foreground: 222.2 47.4% 11.2%; /* mc-neutral-900 */
+    --popover: 0 0% 100%; /* mc-neutral-0 */
+    --popover-foreground: 222.2 47.4% 11.2%; /* mc-neutral-900 */
+    --primary: 238.7 83.5% 66.7%; /* mc-primary-500 #6366F1 */
+    --primary-foreground: 0 0% 100%; /* mc-neutral-0 */
+    --secondary: 210 40% 96.1%; /* mc-neutral-100 #F1F5F9 */
+    --secondary-foreground: 222.2 47.4% 11.2%; /* mc-neutral-900 */
+    --muted: 210 40% 96.1%; /* mc-neutral-100 */
+    --muted-foreground: 215.4 16.3% 46.9%; /* mc-neutral-500 #64748B */
+    --accent: 210 40% 96.1%; /* mc-neutral-100 */
+    --accent-foreground: 243.4 75.3% 58.6%; /* mc-primary-600 #4F46E5, branded hover emphasis */
+    --destructive: 0 84.2% 60.2%; /* mc-danger #EF4444 */
+    --destructive-foreground: 0 0% 100%; /* mc-neutral-0 */
+    --border: 214.3 31.8% 91.4%; /* mc-neutral-200 #E2E8F0 */
+    --input: 214.3 31.8% 91.4%; /* mc-neutral-200 */
+    --ring: 238.7 83.5% 66.7%; /* mc-primary-500 */
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --background: 222.2 47.4% 11.2%; /* mc-neutral-900 #0F172A */
+    --foreground: 210 40% 98%; /* mc-neutral-50 #F8FAFC */
+    --card: 217.2 32.6% 17.5%; /* mc-neutral-800 #1E293B */
+    --card-foreground: 210 40% 98%; /* mc-neutral-50 */
+    --popover: 217.2 32.6% 17.5%; /* mc-neutral-800 */
+    --popover-foreground: 210 40% 98%; /* mc-neutral-50 */
+    --primary: 238.7 83.5% 66.7%; /* mc-primary-500, same hue both themes */
+    --primary-foreground: 0 0% 100%; /* mc-neutral-0 */
+    --secondary: 217.2 32.6% 17.5%; /* mc-neutral-800 */
+    --secondary-foreground: 210 40% 98%; /* mc-neutral-50 */
+    --muted: 217.2 32.6% 17.5%; /* mc-neutral-800 */
+    --muted-foreground: 215 20.2% 65.1%; /* mc-neutral-400 #94A3B8 */
+    --accent: 217.2 32.6% 17.5%; /* mc-neutral-800 */
+    --accent-foreground: 229.7 93.6% 81.8%; /* mc-primary-300 #A5B4FC, branded hover emphasis */
+    --destructive: 0 62.8% 30.6%; /* darkened danger red, not brand-defined for dark mode */
+    --destructive-foreground: 210 40% 98%; /* mc-neutral-50 */
+    --border: 215.3 25% 26.7%; /* mc-neutral-700 #334155 */
+    --input: 215.3 25% 26.7%; /* mc-neutral-700 */
+    --ring: 234.5 89.5% 73.9%; /* mc-primary-400 #818CF8, lighter for dark-bg visibility */
+  }
+
+  body {
+    font-family: var(--mc-font-body);
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--background));
+    line-height: 1.6;
+  }
+
+  a {
+    color: var(--mc-primary-600);
+  }
+
+  a:hover {
+    color: var(--mc-primary-700);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--mc-font-display);
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--mc-font-mono);
   }
 }
