@@ -4,10 +4,7 @@
   "title": "Universal Media Picker",
   "type": "headless-core",
   "category": "media",
-  "frameworks": [
-    "react",
-    "svelte"
-  ],
+  "frameworks": ["react", "svelte"],
   "visibility": "public",
   "peerDependencies": {
     "react": ">=18",
