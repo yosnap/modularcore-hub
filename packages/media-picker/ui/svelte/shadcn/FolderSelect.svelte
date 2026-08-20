@@ -1,0 +1,64 @@
+<script lang="ts">
+  import '../../shadcn-theme.css';
+  import type { MediaPickerRune } from '../../../adapters/svelte/create-media-picker.svelte.js';
+  import type { StorageProvider } from '../../../core/provider.js';
+
+  let {
+    picker,
+    provider,
+    value = '',
+    onChange,
+  }: {
+    picker: MediaPickerRune;
+    provider: StorageProvider;
+    value?: string;
+    onChange: (folderId: string) => void;
+  } = $props();
+
+  let newFolderName = $state('');
+  const canCreate = typeof provider.createFolder === 'function';
+
+  async function handleCreate(): Promise<void> {
+    const name = newFolderName.trim();
+    if (!name) return;
+    const folder = await picker.createFolder(provider, name);
+    newFolderName = '';
+    onChange(folder.id);
+  }
+</script>
+
+<!-- Native <select>, same rationale as the React shadcn variant: preserves value/onChange
+     parity across all variants without pulling in bits-ui's Select primitive. -->
+<div class="flex flex-wrap items-center gap-2">
+  <select
+    {value}
+    disabled={picker.state.foldersLoading}
+    onchange={(event) => onChange(event.currentTarget.value)}
+    class="rounded-md border border-input bg-background px-2 py-1.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+  >
+    <option value="">All folders</option>
+    {#each picker.state.folders as folder (folder.id)}
+      <option value={folder.id}>{folder.name}</option>
+    {/each}
+  </select>
+  {#if picker.state.foldersError}
+    <p role="alert" class="text-sm text-destructive">{picker.state.foldersError.message}</p>
+  {/if}
+  {#if canCreate}
+    <span class="flex items-center gap-2">
+      <input
+        type="text"
+        bind:value={newFolderName}
+        placeholder="New folder"
+        class="rounded-md border border-input bg-background px-2 py-1.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+      />
+      <button
+        type="button"
+        onclick={handleCreate}
+        class="rounded-md border border-input bg-secondary px-3 py-1.5 text-sm text-secondary-foreground hover:bg-accent"
+      >
+        Create
+      </button>
+    </span>
+  {/if}
+</div>

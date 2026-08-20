@@ -1,0 +1,117 @@
+/**
+ * Shared plain CSS for the vanilla style variant (React + Svelte). No framework, no build step
+ * required — a consumer without a bundler can drop a `<link rel="stylesheet" href="vanilla-
+ * styles.css">` straight into their HTML. Classes are prefixed `mc-` to avoid colliding with a
+ * consumer project's own class names.
+ */
+
+.mc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+}
+
+.mc-grid__item {
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  padding: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.mc-grid__item--selected {
+  border: 2px solid #18181b;
+}
+
+.mc-grid__thumb {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  display: block;
+}
+
+.mc-alert {
+  color: #b00020;
+  font-size: 0.875rem;
+}
+
+.mc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.mc-select,
+.mc-input {
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 0.875rem;
+}
+
+.mc-button {
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  background: #fafafa;
+  cursor: pointer;
+}
+
+.mc-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mc-mime-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mc-mime-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #d4d4d8;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.8125rem;
+}
+
+.mc-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.mc-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mc-editor__actions,
+.mc-editor__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.mc-editor__preview {
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 70vh;
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+}
+
+.mc-editor__preview img {
+  max-width: 100%;
+  display: block;
+}

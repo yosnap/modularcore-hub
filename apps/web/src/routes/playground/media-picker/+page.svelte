@@ -2,12 +2,34 @@
   import { onMount } from 'svelte';
 
   import { createMediaPicker } from '@modularcore/media-picker/svelte';
-  import BulkActionsBar from '@modularcore/media-picker/ui/svelte/BulkActionsBar.svelte';
-  import FolderSelect from '@modularcore/media-picker/ui/svelte/FolderSelect.svelte';
-  import ImageEditor from '@modularcore/media-picker/ui/svelte/ImageEditor.svelte';
-  import MediaLibraryGrid from '@modularcore/media-picker/ui/svelte/MediaLibraryGrid.svelte';
-  import MimeTypeFilter from '@modularcore/media-picker/ui/svelte/MimeTypeFilter.svelte';
-  import RemoteUrlLoader from '@modularcore/media-picker/ui/svelte/RemoteUrlLoader.svelte';
+
+  import BulkActionsBarHeadless from '@modularcore/media-picker/ui/svelte/BulkActionsBar.svelte';
+  import FolderSelectHeadless from '@modularcore/media-picker/ui/svelte/FolderSelect.svelte';
+  import ImageEditorHeadless from '@modularcore/media-picker/ui/svelte/ImageEditor.svelte';
+  import MediaLibraryGridHeadless from '@modularcore/media-picker/ui/svelte/MediaLibraryGrid.svelte';
+  import MimeTypeFilterHeadless from '@modularcore/media-picker/ui/svelte/MimeTypeFilter.svelte';
+  import RemoteUrlLoaderHeadless from '@modularcore/media-picker/ui/svelte/RemoteUrlLoader.svelte';
+
+  import BulkActionsBarTailwind from '@modularcore/media-picker/ui/svelte/tailwind/BulkActionsBar.svelte';
+  import FolderSelectTailwind from '@modularcore/media-picker/ui/svelte/tailwind/FolderSelect.svelte';
+  import ImageEditorTailwind from '@modularcore/media-picker/ui/svelte/tailwind/ImageEditor.svelte';
+  import MediaLibraryGridTailwind from '@modularcore/media-picker/ui/svelte/tailwind/MediaLibraryGrid.svelte';
+  import MimeTypeFilterTailwind from '@modularcore/media-picker/ui/svelte/tailwind/MimeTypeFilter.svelte';
+  import RemoteUrlLoaderTailwind from '@modularcore/media-picker/ui/svelte/tailwind/RemoteUrlLoader.svelte';
+
+  import BulkActionsBarShadcn from '@modularcore/media-picker/ui/svelte/shadcn/BulkActionsBar.svelte';
+  import FolderSelectShadcn from '@modularcore/media-picker/ui/svelte/shadcn/FolderSelect.svelte';
+  import ImageEditorShadcn from '@modularcore/media-picker/ui/svelte/shadcn/ImageEditor.svelte';
+  import MediaLibraryGridShadcn from '@modularcore/media-picker/ui/svelte/shadcn/MediaLibraryGrid.svelte';
+  import MimeTypeFilterShadcn from '@modularcore/media-picker/ui/svelte/shadcn/MimeTypeFilter.svelte';
+  import RemoteUrlLoaderShadcn from '@modularcore/media-picker/ui/svelte/shadcn/RemoteUrlLoader.svelte';
+
+  import BulkActionsBarVanilla from '@modularcore/media-picker/ui/svelte/vanilla/BulkActionsBar.svelte';
+  import FolderSelectVanilla from '@modularcore/media-picker/ui/svelte/vanilla/FolderSelect.svelte';
+  import ImageEditorVanilla from '@modularcore/media-picker/ui/svelte/vanilla/ImageEditor.svelte';
+  import MediaLibraryGridVanilla from '@modularcore/media-picker/ui/svelte/vanilla/MediaLibraryGrid.svelte';
+  import MimeTypeFilterVanilla from '@modularcore/media-picker/ui/svelte/vanilla/MimeTypeFilter.svelte';
+  import RemoteUrlLoaderVanilla from '@modularcore/media-picker/ui/svelte/vanilla/RemoteUrlLoader.svelte';
 
   import { createDemoStorageProvider } from '$lib/demo-storage-provider';
 
@@ -20,6 +42,50 @@
   let scope = $state<'mine' | 'all'>('mine');
   let folder = $state('');
   let mimeTypes = $state<string[]>([]);
+
+  type StyleVariant = 'headless' | 'tailwind' | 'shadcn' | 'vanilla';
+  // Default: 'shadcn' (see plan.md → Validation Log, Sesión 1) — the playground opens already
+  // showing the Shadcn theme rather than the unstyled headless mode.
+  let styleVariant = $state<StyleVariant>('shadcn');
+
+  // Switching `styleVariant` swaps which component implementation renders — `picker` itself is
+  // untouched, so state (loaded image, selection, folders) survives the switch.
+  const ActiveBulkActionsBar = $derived(
+    { headless: BulkActionsBarHeadless, tailwind: BulkActionsBarTailwind, shadcn: BulkActionsBarShadcn, vanilla: BulkActionsBarVanilla }[
+      styleVariant
+    ],
+  );
+  const ActiveFolderSelect = $derived(
+    { headless: FolderSelectHeadless, tailwind: FolderSelectTailwind, shadcn: FolderSelectShadcn, vanilla: FolderSelectVanilla }[
+      styleVariant
+    ],
+  );
+  const ActiveImageEditor = $derived(
+    { headless: ImageEditorHeadless, tailwind: ImageEditorTailwind, shadcn: ImageEditorShadcn, vanilla: ImageEditorVanilla }[
+      styleVariant
+    ],
+  );
+  const ActiveMediaLibraryGrid = $derived(
+    {
+      headless: MediaLibraryGridHeadless,
+      tailwind: MediaLibraryGridTailwind,
+      shadcn: MediaLibraryGridShadcn,
+      vanilla: MediaLibraryGridVanilla,
+    }[styleVariant],
+  );
+  const ActiveMimeTypeFilter = $derived(
+    { headless: MimeTypeFilterHeadless, tailwind: MimeTypeFilterTailwind, shadcn: MimeTypeFilterShadcn, vanilla: MimeTypeFilterVanilla }[
+      styleVariant
+    ],
+  );
+  const ActiveRemoteUrlLoader = $derived(
+    {
+      headless: RemoteUrlLoaderHeadless,
+      tailwind: RemoteUrlLoaderTailwind,
+      shadcn: RemoteUrlLoaderShadcn,
+      vanilla: RemoteUrlLoaderVanilla,
+    }[styleVariant],
+  );
 
   function refreshLibrary(): void {
     void picker.listLibrary(demoProvider, {
@@ -58,6 +124,24 @@
   propio backend de firma.
 </p>
 
+<div class="style-switcher">
+  <label>
+    Estilo del componente
+    <select bind:value={styleVariant}>
+      <option value="headless">Sin estilo (headless)</option>
+      <option value="tailwind">Tailwind</option>
+      <option value="shadcn">Shadcn</option>
+      <option value="vanilla">CSS plano</option>
+    </select>
+  </label>
+  <small>
+    La descarga del componente (<code>modularcore add media-picker</code> o el tarball del
+    catálogo) incluye las 3 variantes con estilo + la headless — este selector solo cambia el
+    preview en vivo. Usá los imports de <code>ui/{'{'}react,svelte{'}'}/{'{'}tailwind,shadcn,vanilla{'}'}</code>
+    según cuál prefieras en tu proyecto.
+  </small>
+</div>
+
 <h2>1. Cargar una imagen</h2>
 <p>Tres fuentes: archivo local, URL remota (con guard SSRF real), o desde la biblioteca abajo.</p>
 <input type="file" accept="image/*" onchange={handleFileChange} />
@@ -69,7 +153,7 @@
   attacker-controlled target — that real validation happens server-side inside the proxy
   handler regardless of what protocol reaches it.
 -->
-<RemoteUrlLoader
+<ActiveRemoteUrlLoader
   {picker}
   allowHttp
   resolveUrl={(url) =>
@@ -86,7 +170,7 @@
 
 <h2>2. Editar (crop / rotate / flip / zoom)</h2>
 {#if picker.state.blob}
-  <ImageEditor {picker} />
+  <ActiveImageEditor {picker} />
 {:else}
   <p><em>Cargá una imagen arriba para editarla.</em></p>
 {/if}
@@ -120,7 +204,7 @@
       <option value="all">All (admin)</option>
     </select>
   </label>
-  <FolderSelect
+  <ActiveFolderSelect
     {picker}
     provider={demoProvider}
     value={folder}
@@ -129,7 +213,7 @@
       refreshLibrary();
     }}
   />
-  <MimeTypeFilter
+  <ActiveMimeTypeFilter
     options={['image/png', 'image/jpeg', 'image/webp']}
     selected={mimeTypes}
     onChange={(next) => {
@@ -139,8 +223,8 @@
   />
   <button type="button" onclick={refreshLibrary}>Refrescar</button>
 </div>
-<MediaLibraryGrid {picker} />
-<BulkActionsBar
+<ActiveMediaLibraryGrid {picker} />
+<ActiveBulkActionsBar
   {picker}
   multiple
   onConfirm={(items) => {
@@ -165,5 +249,14 @@
     flex-wrap: wrap;
     align-items: flex-end;
     margin-bottom: 0.5rem;
+  }
+  .style-switcher {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 1rem;
   }
 </style>
