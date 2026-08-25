@@ -1,20 +1,17 @@
 import { copyFile, readFile, writeFile } from 'node:fs/promises';
 
-import { resolveWriteTargetPath, writeRegistryEntryFiles } from '@modularcore/registry';
-
 import { CliError } from './errors.js';
 
-import type {
-  EnvVariableDescriptor,
-  RegistryFileWithContent,
-  WriteResult,
-} from '@modularcore/registry';
+import type { EnvVariableDescriptor, RegistryFileWithContent } from '@modularcore/registry';
 
 /**
  * Descriptor authors write conventional targets (`src/components/...`,
  * `src/modularcore/...`); the CLI remaps those prefixes onto the project's configured
  * `paths` from `modularcore.json` (`init`'s defaults make this a no-op unless the user
- * customized `paths`). Any other target is left untouched.
+ * customized `paths`). Any other target is left untouched. This remap is CLI-specific (it
+ * depends on `modularcore.json`'s `paths`), so it stays here rather than in
+ * `@modularcore/registry-client`; callers must apply it before calling that package's
+ * `resolveTargetPath`/`writeFilesTracked`.
  */
 export function remapTarget(target: string, paths: Record<string, string>): string {
   const remaps: Array<[string, string | undefined]> = [
@@ -29,56 +26,10 @@ export function remapTarget(target: string, paths: Record<string, string>): stri
   return target;
 }
 
-/** Applies the `paths` remap and the shared anti-path-traversal clamp in one step. */
-export function resolveTargetPath(
-  cwd: string,
-  fileTarget: string,
-  paths: Record<string, string>,
-): string {
-  return resolveWriteTargetPath(cwd, remapTarget(fileTarget, paths));
-}
-
 export function decodeFileContent(file: RegistryFileWithContent): Buffer {
   return file.encoding === 'base64'
     ? Buffer.from(file.content, 'base64')
     : Buffer.from(file.content, 'utf8');
-}
-
-export interface TrackedWriteError extends Error {
-  filesWritten: WriteResult[];
-}
-
-export function isTrackedWriteError(error: unknown): error is TrackedWriteError {
-  return error instanceof Error && 'filesWritten' in error;
-}
-
-/**
- * Writes one file at a time (instead of delegating the whole `files[]` array to
- * `writeRegistryEntryFiles` in one call) so that on failure mid-way (disk full, bad
- * target) the caller can report exactly which files were already written instead of an
- * opaque exception — required by the "add interrumpido deja estado consistente" success
- * criterion. Still reuses `writeRegistryEntryFiles` per file for the clamp+decode logic.
- */
-export async function writeFilesTracked(
-  files: RegistryFileWithContent[],
-  projectRoot: string,
-  paths: Record<string, string>,
-): Promise<WriteResult[]> {
-  const written: WriteResult[] = [];
-  for (const file of files) {
-    const remapped = { ...file, target: remapTarget(file.target, paths) };
-    try {
-      const [result] = await writeRegistryEntryFiles({ files: [remapped] }, projectRoot);
-      if (result) written.push(result);
-    } catch (error) {
-      const wrapped = new Error(
-        `Fallo escribiendo "${remapped.target}": ${(error as Error).message}`,
-      ) as TrackedWriteError;
-      wrapped.filesWritten = written;
-      throw wrapped;
-    }
-  }
-  return written;
 }
 
 function parseEnvExampleKeys(content: string): Set<string> {

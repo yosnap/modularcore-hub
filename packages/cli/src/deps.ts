@@ -2,7 +2,7 @@ import semver from 'semver';
 
 import { CompatibilityError, DependencyCycleError } from './errors.js';
 
-import type { RegistryClient } from './registry-client.js';
+import type { RegistryClient } from '@modularcore/registry-client';
 import type { RegistryEntry } from '@modularcore/registry';
 
 /**

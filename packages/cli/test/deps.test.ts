@@ -6,7 +6,7 @@ import {
   resolveRegistryDependencies,
 } from '../src/deps.js';
 import { CompatibilityError, DependencyCycleError } from '../src/errors.js';
-import { createRegistryClient } from '../src/registry-client.js';
+import { createRegistryClient } from '@modularcore/registry-client';
 import { startFixtureRegistryServer } from './helpers/load-fixture-registry.js';
 
 import type { TestRegistryServer } from './helpers/test-registry-server.js';

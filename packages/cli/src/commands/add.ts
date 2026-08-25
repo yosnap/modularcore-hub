@@ -5,11 +5,12 @@ import {
   installedPeerVersion,
   readPackageJson,
 } from '../framework-detect.js';
-import { appendEnvExample, isTrackedWriteError, writeFilesTracked } from '../files.js';
+import { appendEnvExample, remapTarget } from '../files.js';
 import { installNpmDependencies } from '../install.js';
 import { CliError } from '../errors.js';
+import { isTrackedWriteError, writeFilesTracked } from '@modularcore/registry-client';
 
-import type { RegistryClient } from '../registry-client.js';
+import type { RegistryClient } from '@modularcore/registry-client';
 import type { PromptAdapter } from '../prompts.js';
 import type { WriteResult } from '@modularcore/registry';
 
@@ -66,7 +67,11 @@ export async function runAdd(
   const filesWritten: WriteResult[] = [];
   try {
     for (const entry of entries) {
-      const written = await writeFilesTracked(entry.files, cwd, config.paths);
+      const remappedFiles = entry.files.map((file) => ({
+        ...file,
+        target: remapTarget(file.target, config.paths),
+      }));
+      const written = await writeFilesTracked(remappedFiles, cwd);
       filesWritten.push(...written);
     }
   } catch (error) {
