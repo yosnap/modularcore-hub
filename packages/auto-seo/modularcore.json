@@ -1,0 +1,52 @@
+{
+  "name": "auto-seo",
+  "version": "0.1.0",
+  "title": "Auto SEO (JSON-LD)",
+  "type": "headless-core",
+  "category": "seo",
+  "frameworks": ["agnostic"],
+  "visibility": "public",
+  "peerDependencies": {},
+  "dependencies": ["zod"],
+  "registryDependencies": [],
+  "envVariables": [],
+  "description": "Headless, framework-agnostic core to generate Schema.org structured data as JSON-LD (Article, Product, Organization, BreadcrumbList, WebSite, LocalBusiness, FAQPage). No classes, no framework dependency. Scope (MVP, v1) is JSON-LD only — OpenGraph and social card previews are out of scope.",
+  "files": [
+    {
+      "path": "core/index.ts",
+      "target": "src/modularcore/auto-seo/core/index.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/create-schema.ts",
+      "target": "src/modularcore/auto-seo/core/create-schema.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/create-graph.ts",
+      "target": "src/modularcore/auto-seo/core/create-graph.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/stringify.ts",
+      "target": "src/modularcore/auto-seo/core/stringify.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/validate.ts",
+      "target": "src/modularcore/auto-seo/core/validate.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/schema-types.ts",
+      "target": "src/modularcore/auto-seo/core/schema-types.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    }
+  ]
+}
