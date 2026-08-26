@@ -233,4 +233,22 @@ Sin contradicciones sin resolver. Plan apto para implementación tras revisión 
    como no confiable; el saneamiento (XSS, url allowlist, etc.) permanece dentro del paquete Modals
    (RT-S1/S2 se mantienen Críticos y resueltos como ya especifica el plan).
 
+## PR Code Review (2026-08-26, PR #17)
+
+`/code-review` sobre el PR, dos pasadas.
+
+**Pasada 1 — 8 hallazgos, 5 corregidos antes de mergear (commit `a4a2976`):**
+1. `dismiss()` no podía retirar un overlay aún visible tras un `load()` que lo sacaba de `pending` (se limpia en cada `load()`) — botón de cerrar "muerto". Fix: resuelve el config también desde `state.active`/`state.toasts` como fallback.
+2. `showInternal()` no era idempotente entre `load()`s — un toast `frequency: 'always'` cuyo trigger se reprograma puede duplicarse. Fix: comprueba también si el config ya está visible, no solo `shownIds`.
+3. `isWithinDateWindow()` fallaba en abierto ante una fecha inválida (`NaN` en la comparación) — ahora falla en cerrado.
+4. `safeHref`/`safeImageSrc` rechazaban toda URL relativa (`new URL()` sin base) — un CTA interno (`/pricing`) dejaba de navegar. Fix: acepta rutas raíz-relativas.
+5. `prefers-reduced-motion` solo estaba conectado en `ModalOverlay.tsx` (React) pese a que el README lo documenta a nivel de paquete — conectado en los 4 componentes React restantes y los 6 Svelte, reusando `ui/a11y/reduced-motion.ts` (ya agnóstico de framework).
+
+**Pasada 2 (tras los fixes) — 6 hallazgos:**
+- 🔴 **Confirmado bug en mi propio fix del punto 4**: `isSafeRelativePath` bloqueaba `//evil.com` pero no `/\evil.com` — WHATWG normaliza `\` como `/` en esquemas especiales, así que ese input también resuelve a host `evil.com`, sorteando el check de string. Fix (commit `ccb3ec1`): comparar el **host resuelto** contra el host de la base dummy, no el patrón del string de entrada — cierra este y cualquier otro truco de normalización del parser estructuralmente.
+- Corregidos también (commit `59ecf28`, con aprobación del usuario): `showInternal()` sobrescribía el ocupante de un slot compartido (p. ej. `modal`+`fullscreen`) sin `dismiss()`/tracking — ahora se descarta correctamente con una nueva acción `'replaced'` antes de mostrar el nuevo. El focus-trap de `ModalOverlay`/`FullscreenOverlay` (React + Svelte) solo se inicializaba al montar — no se reactivaba si la instancia del componente se reusaba para un config distinto en el mismo slot; ahora reacciona al cambio de `config.id`.
+- **Pendiente como deuda técnica documentada, no corregido (duplicación sin bug funcional):** Escape-key copiado en los 5 componentes overlay de Svelte (React ya lo extrajo a `use-escape-key.ts`); `TopBanner`/`BottomBanner`/`SlideIn` son wrappers casi idénticos ×6 (3 React + 3 Svelte); la clase `modals-no-motion` se repite inline en los 12 componentes overlay.
+
+**Verificación final:** 349/349 tests del monorepo, build, typecheck, lint y prettier en verde. CI de GitHub en verde.
+
 <!-- slug: modals-overlay-system -->
