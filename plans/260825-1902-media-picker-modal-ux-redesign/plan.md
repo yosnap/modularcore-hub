@@ -1,7 +1,7 @@
 ---
 title: "Media Picker Modal UX Redesign"
 description: "Rediseñar la UX del Media Picker (Svelte) como un modal con pestañas Biblioteca/Subir archivo/Desde URL, y el editor de imagen como modal de 2 columnas con panel de metadatos, igualando las capturas de referencia del usuario."
-status: done
+status: merged
 priority: P1
 effort: "10-11d"
 tags: [media-picker, svelte, ux, modal]
@@ -154,5 +154,15 @@ Re-read `plan.md` and all 5 phase files after applying the 14 accepted findings.
 6. El drag de los handles de recorte recalcula `resizeCropRect` y reescribe el estilo del overlay en cada `pointermove` crudo, sin throttling/rAF — podría notarse jank en dispositivos de gama baja con alta tasa de reporte del puntero.
 
 **Verificación tras los fixes:** `pnpm --filter @modularcore/media-picker test` → 164/164; `pnpm --filter web exec svelte-check` → 970 archivos, 0 errores.
+
+## Merge (2026-08-26)
+
+PR #18 mergeado (squash) en `develop`, commit `d0a0110`. Rama `feat/media-picker-modal-ux-redesign` borrada (remota y local). `develop` local resincronizado con el remoto tras un fallo de `gh pr merge`'s post-merge local sync (dos commits locales sin pushear de "brand kit tokens via Tailwind" impedían el fast-forward local; verificado que su contenido ya viajaba dentro del PR mergeado, sin pérdida de datos). `pnpm install --frozen-lockfile` confirma dependencias al día, sin cambios pendientes. 164/164 tests en verde sobre `develop` ya actualizado.
+
+Los 4 hallazgos de seguimiento (puntos 3-6 arriba) quedan como deuda técnica documentada, sin ticket/issue abierto — a retomar si se justifica el esfuerzo.
+
+## Versionado (2026-08-26)
+
+`@modularcore/media-picker` subido de `0.3.2` a `0.4.0` (minor) vía `changeset version`, consumiendo dos changesets pendientes: el de este plan (nuevo) más uno ya existente sin liberar del PR #16 (variantes de estilo). `CHANGELOG.md` regenerado. **Solo en `develop`, sin tocar `main` todavía** — decisión explícita del usuario: quedan 2 cambios más pendientes de mergear a `develop` antes de promocionar todo junto a `main` con una única nueva tag.
 
 <!-- slug: media-picker-modal-ux-redesign -->
