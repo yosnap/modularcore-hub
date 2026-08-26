@@ -100,4 +100,14 @@ Propagadas las 3 decisiones a Fase 2, 3 y 4 (ver marcadores `<!-- Updated: Valid
 - Referencias obsoletas reconciliadas: eliminado "v2" del SDK en Research Log y Fase 3; eliminada la falsa afirmación de "convención ya usada por el CLI" para env vars; resuelta la pregunta abierta de Changesets `ignore` (era contradictoria con Fase 1).
 - Contradicciones sin resolver: 0.
 
+## PR Code Review (2026-08-26, PR #19)
+
+`/code-review` sobre el PR: 6 hallazgos. 4 documentados como deuda técnica sin corregir (env var `MODULARCORE_REGISTRY_ALLOW_INSECURE` con comparación estricta a `'1'`; `"agnostic"` como string mágico sin tipo dedicado en `RegistryEntry.frameworks`; servidor HTTP de fixture de test duplicado 3 veces entre `cli`/`registry-client`/`mcp-server`, ya divergido; el patrón remap-luego-escribir duplicado inline en `add.ts`/`diff.ts`/`update.ts`, el último parcialmente resuelto por el fix #1 de abajo).
+
+**2 corregidos:**
+1. `install_component` (MCP) escribía los archivos del descriptor en su ruta cruda del registry, sin aplicar el remapeo `paths.lib`/`paths.components` de `modularcore.json` que sí aplica `modularcore add` (CLI) — un componente instalado por MCP quedaba en una ruta distinta al mismo componente instalado por CLI en el mismo proyecto, y `diff`/`update` del CLI no encontraban lo que MCP había escrito. Fix: `remapTarget` se movió de `packages/cli/src/files.ts` a `@modularcore/registry-client` (compartido; el CLI re-exporta para no romper sus imports existentes), y `install_component` ahora lee `paths` de `modularcore.json` (tolerante a archivo ausente/inválido) y lo aplica antes de escribir.
+2. `stringify({ absolute })` de auto-seo resolvía **cualquier** campo de texto que empezara por "/" como URL relativa, corrompiendo texto normal (p. ej. un `headline` de Article). Fix: solo resuelve nombres de campo conocidos de Schema.org tipados como URL (`url`, `image`, `logo`, `sameAs`, `contentUrl`, `thumbnailUrl`, `embedUrl`, `mainEntityOfPage`, `target`, `@id`); cualquier otro campo queda intacto sin importar su contenido.
+
+**Verificación final:** 312/312 tests del monorepo, build, typecheck, lint y prettier en verde.
+
 <!-- slug: modularcore-hub-v11-auto-seo-y-mcp-server -->
