@@ -24,6 +24,11 @@ describe('safeHref', () => {
   it('rejects a protocol-relative URL (resolves to an arbitrary host)', () => {
     expect(safeHref('//evil.com')).toBeUndefined();
   });
+
+  it('rejects a backslash-disguised protocol-relative URL (WHATWG normalizes \\ to / for http(s))', () => {
+    expect(safeHref('/\\evil.com')).toBeUndefined();
+    expect(safeHref('/\\\\evil.com')).toBeUndefined();
+  });
 });
 
 describe('safeImageSrc', () => {

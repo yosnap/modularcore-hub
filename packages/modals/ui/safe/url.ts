@@ -22,15 +22,23 @@ function parseUrl(url: string): URL | null {
 // resolve to an arbitrary host) — no `window`/SSR dependency needed since the dummy origin never
 // leaves this check. The ORIGINAL relative string is returned as-is so the link stays relative
 // in the DOM rather than being rewritten to an absolute URL.
+const DUMMY_BASE = 'https://modularcore.invalid';
+
 function isSafeRelativePath(url: string): boolean {
-  // Root-relative only ("/pricing"), not protocol-relative ("//evil.com" resolves to an
-  // arbitrary host) and not a scheme-less bare segment ("not a url" would otherwise parse fine
-  // against the dummy base too, which is far looser than the finding's actual failure scenario
-  // requires) — this narrows relative acceptance to exactly the in-app-link shape being fixed.
-  if (!url.startsWith('/') || url.startsWith('//')) return false;
+  // Must look like a root-relative path ("/pricing") to begin with — excludes a scheme-less bare
+  // segment ("not a url" would otherwise parse fine against the dummy base too, far looser than
+  // the finding's actual failure scenario requires).
+  if (!url.startsWith('/')) return false;
   try {
-    new URL(url, 'https://modularcore.invalid');
-    return true;
+    const resolved = new URL(url, DUMMY_BASE);
+    // Compare the RESOLVED host against the dummy base's host, rather than pattern-matching the
+    // input string (Code Review Finding, Critical: a plain `startsWith('//')` check missed that
+    // WHATWG's URL parser normalizes a backslash after the leading slash the same as a second
+    // slash for http(s) — "/\evil.com" also resolves to host "evil.com", bypassing that string
+    // check the exact same way "//evil.com" would). This catches that and any other
+    // parser-normalization trick the same way, since it checks where the URL actually resolves
+    // to instead of guessing from string shape.
+    return resolved.hostname === new URL(DUMMY_BASE).hostname;
   } catch {
     return false;
   }
