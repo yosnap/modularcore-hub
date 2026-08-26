@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": ".",
+    "types": ["node"],
+    "jsx": "react-jsx"
+  },
+  "include": ["core", "adapters", "ui/react", "ui/a11y", "ui/safe"]
+}

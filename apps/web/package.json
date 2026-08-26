@@ -16,6 +16,7 @@
   "dependencies": {
     "@modularcore/ai-chat": "workspace:*",
     "@modularcore/media-picker": "workspace:*",
+    "@modularcore/modals": "workspace:*",
     "@modularcore/registry": "workspace:*",
     "undici": "^8.10.0"
   },

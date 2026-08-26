@@ -1,0 +1,101 @@
+{
+  "name": "@modularcore/modals",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/core/modals.js",
+  "types": "./dist/core/modals.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/core/modals.d.ts",
+      "default": "./dist/core/modals.js"
+    },
+    "./types": {
+      "types": "./dist/core/types.d.ts",
+      "default": "./dist/core/types.js"
+    },
+    "./provider": {
+      "types": "./dist/core/provider.d.ts",
+      "default": "./dist/core/provider.js"
+    },
+    "./providers/in-memory": {
+      "types": "./dist/core/providers/in-memory.d.ts",
+      "default": "./dist/core/providers/in-memory.js"
+    },
+    "./react": {
+      "types": "./dist/adapters/react/use-modals.d.ts",
+      "default": "./dist/adapters/react/use-modals.js"
+    },
+    "./svelte": {
+      "types": "./dist/adapters/svelte/create-modals.svelte.d.ts",
+      "default": "./dist/adapters/svelte/create-modals.svelte.js"
+    },
+    "./ui/react/ModalOverlay": {
+      "types": "./dist/ui/react/ModalOverlay.d.ts",
+      "default": "./dist/ui/react/ModalOverlay.js"
+    },
+    "./ui/react/FullscreenOverlay": {
+      "types": "./dist/ui/react/FullscreenOverlay.d.ts",
+      "default": "./dist/ui/react/FullscreenOverlay.js"
+    },
+    "./ui/react/TopBanner": {
+      "types": "./dist/ui/react/TopBanner.d.ts",
+      "default": "./dist/ui/react/TopBanner.js"
+    },
+    "./ui/react/BottomBanner": {
+      "types": "./dist/ui/react/BottomBanner.d.ts",
+      "default": "./dist/ui/react/BottomBanner.js"
+    },
+    "./ui/react/SlideIn": {
+      "types": "./dist/ui/react/SlideIn.d.ts",
+      "default": "./dist/ui/react/SlideIn.js"
+    },
+    "./ui/react/Toast": {
+      "types": "./dist/ui/react/Toast.d.ts",
+      "default": "./dist/ui/react/Toast.js"
+    },
+    "./ui/react/ModalsRenderer": {
+      "types": "./dist/ui/react/ModalsRenderer.d.ts",
+      "default": "./dist/ui/react/ModalsRenderer.js"
+    },
+    "./ui/svelte/*": "./ui/svelte/*"
+  },
+  "files": [
+    "dist",
+    "ui/svelte"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:ui": "vitest run --config vitest.ui.config.ts",
+    "test:smoke": "vitest run --config vitest.smoke.config.ts"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "svelte": ">=5"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@modularcore/ai-chat": "workspace:*"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^4.0.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/svelte": "^5.2.6",
+    "@types/node": "^22.13.0",
+    "@types/react": "^19.2.0",
+    "jsdom": "^25.0.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "svelte": "^5.56.9"
+  }
+}
