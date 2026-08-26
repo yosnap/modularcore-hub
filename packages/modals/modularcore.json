@@ -15,37 +15,197 @@
   "envVariables": [],
   "description": "Headless overlay system (modal, fullscreen, top/bottom banner, slide-in, toast) with eligibility (targeting, date window, priority), client-side frequency capping, trigger scheduling and a provider pattern (no built-in DB/backend). React and Svelte adapters, mobile-first and accessible.",
   "files": [
-    { "path": "core/types.ts", "target": "src/modularcore/modals/core/types.ts", "type": "headless-core", "encoding": "utf8" },
-    { "path": "core/storage.ts", "target": "src/modularcore/modals/core/storage.ts", "type": "headless-core", "encoding": "utf8" },
-    { "path": "core/frequency.ts", "target": "src/modularcore/modals/core/frequency.ts", "type": "headless-core", "encoding": "utf8" },
-    { "path": "core/eligibility.ts", "target": "src/modularcore/modals/core/eligibility.ts", "type": "headless-core", "encoding": "utf8" },
-    { "path": "core/provider.ts", "target": "src/modularcore/modals/core/provider.ts", "type": "headless-core", "encoding": "utf8" },
-    { "path": "core/providers/in-memory.ts", "target": "src/modularcore/modals/core/providers/in-memory.ts", "type": "headless-core", "encoding": "utf8" },
-    { "path": "core/triggers.ts", "target": "src/modularcore/modals/core/triggers.ts", "type": "headless-core", "encoding": "utf8" },
-    { "path": "core/modals.ts", "target": "src/modularcore/modals/core/modals.ts", "type": "headless-core", "encoding": "utf8" },
-    { "path": "adapters/react/use-modals.ts", "target": "src/modularcore/modals/adapters/react/use-modals.ts", "type": "adapter", "encoding": "utf8" },
-    { "path": "adapters/svelte/create-modals.svelte.ts", "target": "src/modularcore/modals/adapters/svelte/create-modals.svelte.ts", "type": "adapter", "encoding": "utf8" },
-    { "path": "ui/a11y/focus-trap.ts", "target": "src/modularcore/modals/ui/a11y/focus-trap.ts", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/a11y/reduced-motion.ts", "target": "src/modularcore/modals/ui/a11y/reduced-motion.ts", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/safe/url.ts", "target": "src/modularcore/modals/ui/safe/url.ts", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/safe/style.ts", "target": "src/modularcore/modals/ui/safe/style.ts", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/react/internal/safe-render.ts", "target": "src/modularcore/modals/ui/react/internal/safe-render.ts", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/react/internal/use-escape-key.ts", "target": "src/modularcore/modals/ui/react/internal/use-escape-key.ts", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/react/internal/OverlayBody.tsx", "target": "src/modularcore/modals/ui/react/internal/OverlayBody.tsx", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/react/ModalOverlay.tsx", "target": "src/modularcore/modals/ui/react/ModalOverlay.tsx", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/react/FullscreenOverlay.tsx", "target": "src/modularcore/modals/ui/react/FullscreenOverlay.tsx", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/react/TopBanner.tsx", "target": "src/modularcore/modals/ui/react/TopBanner.tsx", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/react/BottomBanner.tsx", "target": "src/modularcore/modals/ui/react/BottomBanner.tsx", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/react/SlideIn.tsx", "target": "src/modularcore/modals/ui/react/SlideIn.tsx", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/react/Toast.tsx", "target": "src/modularcore/modals/ui/react/Toast.tsx", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/react/ModalsRenderer.tsx", "target": "src/modularcore/modals/ui/react/ModalsRenderer.tsx", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/svelte/internal/OverlayBody.svelte", "target": "src/modularcore/modals/ui/svelte/internal/OverlayBody.svelte", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/svelte/ModalOverlay.svelte", "target": "src/modularcore/modals/ui/svelte/ModalOverlay.svelte", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/svelte/FullscreenOverlay.svelte", "target": "src/modularcore/modals/ui/svelte/FullscreenOverlay.svelte", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/svelte/TopBanner.svelte", "target": "src/modularcore/modals/ui/svelte/TopBanner.svelte", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/svelte/BottomBanner.svelte", "target": "src/modularcore/modals/ui/svelte/BottomBanner.svelte", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/svelte/SlideIn.svelte", "target": "src/modularcore/modals/ui/svelte/SlideIn.svelte", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/svelte/Toast.svelte", "target": "src/modularcore/modals/ui/svelte/Toast.svelte", "type": "ui", "encoding": "utf8" },
-    { "path": "ui/svelte/ModalsRenderer.svelte", "target": "src/modularcore/modals/ui/svelte/ModalsRenderer.svelte", "type": "ui", "encoding": "utf8" }
+    {
+      "path": "core/types.ts",
+      "target": "src/modularcore/modals/core/types.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/storage.ts",
+      "target": "src/modularcore/modals/core/storage.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/frequency.ts",
+      "target": "src/modularcore/modals/core/frequency.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/eligibility.ts",
+      "target": "src/modularcore/modals/core/eligibility.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/provider.ts",
+      "target": "src/modularcore/modals/core/provider.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/providers/in-memory.ts",
+      "target": "src/modularcore/modals/core/providers/in-memory.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/triggers.ts",
+      "target": "src/modularcore/modals/core/triggers.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/modals.ts",
+      "target": "src/modularcore/modals/core/modals.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/react/use-modals.ts",
+      "target": "src/modularcore/modals/adapters/react/use-modals.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/svelte/create-modals.svelte.ts",
+      "target": "src/modularcore/modals/adapters/svelte/create-modals.svelte.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/a11y/focus-trap.ts",
+      "target": "src/modularcore/modals/ui/a11y/focus-trap.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/a11y/reduced-motion.ts",
+      "target": "src/modularcore/modals/ui/a11y/reduced-motion.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/safe/url.ts",
+      "target": "src/modularcore/modals/ui/safe/url.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/safe/style.ts",
+      "target": "src/modularcore/modals/ui/safe/style.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/internal/safe-render.ts",
+      "target": "src/modularcore/modals/ui/react/internal/safe-render.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/internal/use-escape-key.ts",
+      "target": "src/modularcore/modals/ui/react/internal/use-escape-key.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/internal/OverlayBody.tsx",
+      "target": "src/modularcore/modals/ui/react/internal/OverlayBody.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/ModalOverlay.tsx",
+      "target": "src/modularcore/modals/ui/react/ModalOverlay.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/FullscreenOverlay.tsx",
+      "target": "src/modularcore/modals/ui/react/FullscreenOverlay.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/TopBanner.tsx",
+      "target": "src/modularcore/modals/ui/react/TopBanner.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/BottomBanner.tsx",
+      "target": "src/modularcore/modals/ui/react/BottomBanner.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/SlideIn.tsx",
+      "target": "src/modularcore/modals/ui/react/SlideIn.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/Toast.tsx",
+      "target": "src/modularcore/modals/ui/react/Toast.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/ModalsRenderer.tsx",
+      "target": "src/modularcore/modals/ui/react/ModalsRenderer.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/internal/OverlayBody.svelte",
+      "target": "src/modularcore/modals/ui/svelte/internal/OverlayBody.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/ModalOverlay.svelte",
+      "target": "src/modularcore/modals/ui/svelte/ModalOverlay.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/FullscreenOverlay.svelte",
+      "target": "src/modularcore/modals/ui/svelte/FullscreenOverlay.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/TopBanner.svelte",
+      "target": "src/modularcore/modals/ui/svelte/TopBanner.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/BottomBanner.svelte",
+      "target": "src/modularcore/modals/ui/svelte/BottomBanner.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/SlideIn.svelte",
+      "target": "src/modularcore/modals/ui/svelte/SlideIn.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/Toast.svelte",
+      "target": "src/modularcore/modals/ui/svelte/Toast.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/ModalsRenderer.svelte",
+      "target": "src/modularcore/modals/ui/svelte/ModalsRenderer.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    }
   ]
 }

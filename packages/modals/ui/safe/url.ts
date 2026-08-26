@@ -25,7 +25,10 @@ export function safeHref(url?: string): string | undefined {
 }
 
 /** Allowlist for `<img src>`: https only, plus size-capped `data:` opt-in. Rejects `javascript:` and anything else. */
-export function safeImageSrc(url?: string, options: { allowData?: boolean } = {}): string | undefined {
+export function safeImageSrc(
+  url?: string,
+  options: { allowData?: boolean } = {},
+): string | undefined {
   if (!url) return undefined;
   if (url.startsWith('data:')) {
     if (!options.allowData) return undefined;

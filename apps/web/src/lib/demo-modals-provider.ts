@@ -55,7 +55,8 @@ export function createDemoModalsProvider(
     {
       id: 'demo-toast',
       type: 'toast',
-      message: 'Este es un `toast`: transitorio, se auto-cierra y admite varios simultáneos (stack).',
+      message:
+        'Este es un `toast`: transitorio, se auto-cierra y admite varios simultáneos (stack).',
       trigger: { type: 'manual' },
       autoDismissMs: 4000,
     },

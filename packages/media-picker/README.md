@@ -42,3 +42,18 @@ await picker.upload(provider);
 For a demo/playground with no real backend, implement a minimal in-memory `StorageProvider` (see
 `apps/web/src/lib/demo-storage-provider.ts` in this monorepo) that keeps blobs in a `Map` and
 serves them via `URL.createObjectURL` — never wire a real provider to unauthenticated demo pages.
+
+## UI style variants
+
+Each of the 6 UI components (`MediaLibraryGrid`, `FolderSelect`, `MimeTypeFilter`, `ImageEditor`,
+`BulkActionsBar`, `RemoteUrlLoader`) ships in 4 presentations, all with identical props/behavior —
+only markup/CSS differs:
+
+- `ui/react/*.tsx`, `ui/svelte/*.svelte` — headless, unstyled reference UI (the original default).
+- `ui/{react,svelte}/tailwind/` — Tailwind CSS utility classes only.
+- `ui/{react,svelte}/shadcn/` — Shadcn/ui theme, using real `@radix-ui/react-toggle` +
+  `@radix-ui/react-slider` (React) or `bits-ui` (Svelte) as optional peer dependencies. Requires
+  Tailwind CSS v4 — copy `ui/shadcn-theme.css` into your own Tailwind entry CSS (see its header
+  comment for a bundler gotcha some setups hit when `@import`ing it instead).
+- `ui/{react,svelte}/vanilla/` — plain CSS (`ui/vanilla-styles.css`, `mc-*` class prefix), no
+  framework dependency, works with or without a bundler.

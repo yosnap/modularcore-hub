@@ -1,4 +1,10 @@
-import { maxWidthClass, safeHref, safeImageSrc, safeMessage, safeOverlayStyle } from './safe-render.js';
+import {
+  maxWidthClass,
+  safeHref,
+  safeImageSrc,
+  safeMessage,
+  safeOverlayStyle,
+} from './safe-render.js';
 
 import type { ModalConfig } from '../../../core/types.js';
 
@@ -11,7 +17,13 @@ export interface OverlayBodyProps {
 }
 
 /** Shared presentational rendering (title/message/image/buttons/close) for every overlay type except Toast. */
-export function OverlayBody({ config, onPrimary, onSecondary, onClose, className }: OverlayBodyProps) {
+export function OverlayBody({
+  config,
+  onPrimary,
+  onSecondary,
+  onClose,
+  className,
+}: OverlayBodyProps) {
   const message = safeMessage(config);
   const imageSrc = safeImageSrc(config.imageUrl);
   const primaryHref = safeHref(config.primaryButton?.url);
@@ -19,13 +31,18 @@ export function OverlayBody({ config, onPrimary, onSecondary, onClose, className
   const showClose = config.showCloseButton ?? true;
 
   return (
-    <div className={`modals-body ${maxWidthClass(config.maxWidth)} ${className ?? ''}`} style={safeOverlayStyle(config)}>
+    <div
+      className={`modals-body ${maxWidthClass(config.maxWidth)} ${className ?? ''}`}
+      style={safeOverlayStyle(config)}
+    >
       {showClose && (
         <button type="button" className="modals-close" aria-label="Close" onClick={onClose}>
           ×
         </button>
       )}
-      {imageSrc && <img className="modals-image" src={imageSrc} alt="" referrerPolicy="no-referrer" />}
+      {imageSrc && (
+        <img className="modals-image" src={imageSrc} alt="" referrerPolicy="no-referrer" />
+      )}
       {config.title && <h2 className="modals-title">{config.title}</h2>}
       {message.html ? (
         <div className="modals-message" dangerouslySetInnerHTML={{ __html: message.html }} />
@@ -46,7 +63,11 @@ export function OverlayBody({ config, onPrimary, onSecondary, onClose, className
                 {config.primaryButton.text}
               </a>
             ) : (
-              <button type="button" className="modals-button modals-button--primary" onClick={onPrimary}>
+              <button
+                type="button"
+                className="modals-button modals-button--primary"
+                onClick={onPrimary}
+              >
                 {config.primaryButton.text}
               </button>
             ))}
@@ -62,7 +83,11 @@ export function OverlayBody({ config, onPrimary, onSecondary, onClose, className
                 {config.secondaryButton.text}
               </a>
             ) : (
-              <button type="button" className="modals-button modals-button--secondary" onClick={onSecondary}>
+              <button
+                type="button"
+                className="modals-button modals-button--secondary"
+                onClick={onSecondary}
+              >
                 {config.secondaryButton.text}
               </button>
             ))}

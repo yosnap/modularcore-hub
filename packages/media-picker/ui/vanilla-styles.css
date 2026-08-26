@@ -1,0 +1,420 @@
+/**
+ * Shared plain CSS for the vanilla style variant (React + Svelte). No framework, no build step
+ * required — a consumer without a bundler can drop a `<link rel="stylesheet" href="vanilla-
+ * styles.css">` straight into their HTML. Classes are prefixed `mc-` to avoid colliding with a
+ * consumer project's own class names.
+ */
+
+.mc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+}
+
+.mc-grid__item {
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  padding: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.mc-grid__item--selected {
+  border: 2px solid #18181b;
+}
+
+.mc-grid__thumb {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  display: block;
+}
+
+.mc-grid__caption {
+  margin-top: 4px;
+  line-height: 1.3;
+  overflow: hidden;
+}
+
+.mc-grid__filename {
+  display: block;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #3f3f46;
+}
+
+.mc-grid__size {
+  display: block;
+  font-size: 10px;
+  color: #a1a1aa;
+}
+
+.mc-alert {
+  color: #b00020;
+  font-size: 0.875rem;
+}
+
+.mc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.mc-select,
+.mc-input {
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 0.875rem;
+}
+
+.mc-button {
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  background: #fafafa;
+  cursor: pointer;
+}
+
+.mc-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mc-mime-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mc-mime-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #d4d4d8;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.8125rem;
+}
+
+.mc-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.mc-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mc-editor__actions,
+.mc-editor__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.mc-editor__preview {
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 70vh;
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+}
+
+.mc-editor__preview img {
+  max-width: 100%;
+  display: block;
+}
+
+/* MediaLibraryModal (Phase 2) — bespoke modal shell, no dependency (headless/tailwind/vanilla
+   variants build focus-trap/Escape/backdrop-click themselves; shadcn uses bits-ui's Dialog). */
+
+.mc-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 50;
+}
+
+.mc-modal {
+  background: #fff;
+  border-radius: 10px;
+  width: min(720px, 100%);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+}
+
+.mc-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e4e4e7;
+}
+
+.mc-modal__title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.mc-modal__close {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 0;
+  border-radius: 6px;
+}
+
+.mc-modal__close:hover {
+  background: #f4f4f5;
+}
+
+.mc-modal__tabs {
+  display: flex;
+  gap: 4px;
+  padding: 8px 16px 0;
+  border-bottom: 1px solid #e4e4e7;
+}
+
+.mc-modal__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  color: #71717a;
+}
+
+.mc-modal__tab--active {
+  color: #18181b;
+  border-bottom-color: #18181b;
+  font-weight: 500;
+}
+
+.mc-modal__body {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.mc-modal__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.mc-modal__search {
+  flex: 1;
+  min-width: 160px;
+}
+
+.mc-modal__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid #e4e4e7;
+  font-size: 0.8125rem;
+  color: #71717a;
+}
+
+.mc-folder-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.mc-folder-tab {
+  border: 1px solid #d4d4d8;
+  border-radius: 999px;
+  background: #fff;
+  padding: 4px 12px;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.mc-folder-tab--active {
+  background: #18181b;
+  border-color: #18181b;
+  color: #fff;
+}
+
+.mc-pagination {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.mc-pagination__button {
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  min-width: 28px;
+  height: 28px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
+
+.mc-pagination__button--active {
+  background: #18181b;
+  border-color: #18181b;
+  color: #fff;
+}
+
+.mc-dropzone {
+  border: 2px dashed #d4d4d8;
+  border-radius: 10px;
+  padding: 32px 16px;
+  text-align: center;
+  color: #71717a;
+  font-size: 0.875rem;
+}
+
+.mc-dropzone--dragover {
+  border-color: #18181b;
+  background: #fafafa;
+}
+
+.mc-upload-queue {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.mc-upload-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.8125rem;
+}
+
+.mc-upload-item__name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mc-upload-item__track {
+  width: 96px;
+  height: 6px;
+  border-radius: 999px;
+  background: #e4e4e7;
+  overflow: hidden;
+}
+
+.mc-upload-item__bar {
+  height: 100%;
+  background: #18181b;
+}
+
+.mc-upload-item__status--error {
+  color: #b00020;
+}
+
+.mc-upload-item__status--done {
+  color: #16a34a;
+}
+
+/* ImageEditor modal (Phase 3) — two-column "Editar imagen" layout, reusing the .mc-modal
+   shell above (same bespoke focus-trap/Escape/backdrop-click pattern as MediaLibraryModal). */
+
+.mc-editor-modal {
+  width: min(880px, 100%);
+}
+
+.mc-editor-modal__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .mc-editor-modal__body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mc-editor-modal__left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mc-editor-modal__right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-left: 1px solid #e4e4e7;
+  padding-left: 16px;
+}
+
+.mc-editor-modal__preview {
+  position: relative;
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 50vh;
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.mc-editor-modal__preview img {
+  max-width: 100%;
+  display: block;
+}
+
+.mc-editor-modal__crop-overlay {
+  border: 2px dashed #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+.mc-editor-modal__handle {
+  border-radius: 999px;
+  border: 1px solid #18181b;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.mc-editor-modal__badge {
+  display: inline-block;
+  border-radius: 4px;
+  background: #f4f4f5;
+  color: #71717a;
+  font-size: 10px;
+  padding: 1px 4px;
+  margin-left: 4px;
+}

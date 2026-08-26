@@ -3,7 +3,11 @@ import type { ModalConfig } from './types.js';
 export interface TriggerEnvironment {
   setTimeout(fn: () => void, ms: number): number;
   clearTimeout(id: number): void;
-  addEventListener(type: 'scroll' | 'mouseout', fn: (event: Event) => void, options?: AddEventListenerOptions): void;
+  addEventListener(
+    type: 'scroll' | 'mouseout',
+    fn: (event: Event) => void,
+    options?: AddEventListenerOptions,
+  ): void;
   removeEventListener(type: 'scroll' | 'mouseout', fn: (event: Event) => void): void;
   scrollPercent(): number;
 }
@@ -43,7 +47,11 @@ export function defaultTriggerEnvironment(): TriggerEnvironment {
  * 0, so both share the same setTimeout path (kept as a distinct enum member only for naming
  * parity with the reference product).
  */
-export function scheduleTrigger(config: ModalConfig, env: TriggerEnvironment, fire: () => void): () => void {
+export function scheduleTrigger(
+  config: ModalConfig,
+  env: TriggerEnvironment,
+  fire: () => void,
+): () => void {
   const { type, value } = config.trigger;
 
   switch (type) {

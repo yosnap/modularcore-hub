@@ -7,11 +7,21 @@ import { useModals } from '../../adapters/react/use-modals.js';
 import type { ModalsProvider } from '../../core/provider.js';
 import type { ModalsContext } from '../../core/types.js';
 
-function providerOf(getActiveModals: ModalsProvider['getActiveModals'] = async () => []): ModalsProvider {
+function providerOf(
+  getActiveModals: ModalsProvider['getActiveModals'] = async () => [],
+): ModalsProvider {
   return { getActiveModals };
 }
 
-function Probe({ provider, ctx, onResult }: { provider: ModalsProvider; ctx: ModalsContext; onResult: (r: ReturnType<typeof useModals>) => void }) {
+function Probe({
+  provider,
+  ctx,
+  onResult,
+}: {
+  provider: ModalsProvider;
+  ctx: ModalsContext;
+  onResult: (r: ReturnType<typeof useModals>) => void;
+}) {
   const result = useModals(provider, ctx);
   onResult(result);
   return null;
@@ -30,7 +40,9 @@ describe('useModals', () => {
       latest = r;
     };
 
-    const { rerender } = render(<Probe provider={provider} ctx={{ path: '/a' }} onResult={onResult} />);
+    const { rerender } = render(
+      <Probe provider={provider} ctx={{ path: '/a' }} onResult={onResult} />,
+    );
     await act(async () => {});
     expect(loadCalls).toEqual(['/a']);
 
@@ -50,7 +62,9 @@ describe('useModals', () => {
       latest = r;
     };
 
-    const { rerender } = render(<Probe provider={provider} ctx={{ path: '/a' }} onResult={onResult} />);
+    const { rerender } = render(
+      <Probe provider={provider} ctx={{ path: '/a' }} onResult={onResult} />,
+    );
     await act(async () => {});
 
     // Path change: previously this destroyed the manager (cleanup ran on every dep change, not
@@ -73,7 +87,9 @@ describe('useModals', () => {
       });
 
     const onResult = () => {};
-    const { rerender } = render(<Probe provider={makeProvider(1)} ctx={{ path: '/a' }} onResult={onResult} />);
+    const { rerender } = render(
+      <Probe provider={makeProvider(1)} ctx={{ path: '/a' }} onResult={onResult} />,
+    );
     await act(async () => {});
 
     rerender(<Probe provider={makeProvider(2)} ctx={{ path: '/a' }} onResult={onResult} />);

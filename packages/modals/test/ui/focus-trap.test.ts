@@ -41,7 +41,12 @@ describe('createFocusTrap', () => {
     container.dispatchEvent(tabEvent);
     expect(document.activeElement).toBe(first);
 
-    const shiftTabEvent = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true });
+    const shiftTabEvent = new KeyboardEvent('keydown', {
+      key: 'Tab',
+      shiftKey: true,
+      bubbles: true,
+      cancelable: true,
+    });
     container.dispatchEvent(shiftTabEvent);
     expect(document.activeElement).toBe(last);
 

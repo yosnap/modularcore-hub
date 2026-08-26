@@ -10,10 +10,14 @@ describe('prefersReducedMotion', () => {
   });
 
   it('reflects matchMedia("(prefers-reduced-motion: reduce)").matches', () => {
-    window.matchMedia = vi.fn().mockReturnValue({ matches: true }) as unknown as typeof window.matchMedia;
+    window.matchMedia = vi
+      .fn()
+      .mockReturnValue({ matches: true }) as unknown as typeof window.matchMedia;
     expect(prefersReducedMotion()).toBe(true);
 
-    window.matchMedia = vi.fn().mockReturnValue({ matches: false }) as unknown as typeof window.matchMedia;
+    window.matchMedia = vi
+      .fn()
+      .mockReturnValue({ matches: false }) as unknown as typeof window.matchMedia;
     expect(prefersReducedMotion()).toBe(false);
   });
 

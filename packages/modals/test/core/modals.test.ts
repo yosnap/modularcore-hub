@@ -60,7 +60,11 @@ function freshStore() {
 describe('OverlayManager slot selection', () => {
   it('picks 1 overlay per singleton slot by highest priority', async () => {
     const env = fakeEnv();
-    const manager = new OverlayManager({ triggerEnv: env, store: freshStore(), now: () => new Date('2026-01-01') });
+    const manager = new OverlayManager({
+      triggerEnv: env,
+      store: freshStore(),
+      now: () => new Date('2026-01-01'),
+    });
     const provider = providerOf([
       config({ id: 'low', priority: 1, trigger: { type: 'delay', value: 0 } }),
       config({ id: 'high', priority: 5, trigger: { type: 'delay', value: 0 } }),
@@ -78,7 +82,11 @@ describe('OverlayManager slot selection', () => {
     // BOTH must remain explicitly show()-able: a caller asking for the loser by id must not
     // silently no-op just because it lost the slot's priority contest during load().
     const env = fakeEnv();
-    const manager = new OverlayManager({ triggerEnv: env, store: freshStore(), now: () => new Date('2026-01-01') });
+    const manager = new OverlayManager({
+      triggerEnv: env,
+      store: freshStore(),
+      now: () => new Date('2026-01-01'),
+    });
     const provider = providerOf([
       config({ id: 'winner', type: 'modal', trigger: { type: 'manual' } }),
       config({ id: 'loser', type: 'fullscreen', trigger: { type: 'manual' } }),
@@ -114,8 +122,14 @@ describe('OverlayManager slot selection', () => {
 describe('OverlayManager load() disposes previous triggers', () => {
   it('a pending delay from a previous load does not fire after a reload with a new path', async () => {
     const env = fakeEnv();
-    const manager = new OverlayManager({ triggerEnv: env, store: freshStore(), now: () => new Date('2026-01-01') });
-    const firstProvider = providerOf([config({ id: 'stale', trigger: { type: 'delay', value: 1000 } })]);
+    const manager = new OverlayManager({
+      triggerEnv: env,
+      store: freshStore(),
+      now: () => new Date('2026-01-01'),
+    });
+    const firstProvider = providerOf([
+      config({ id: 'stale', trigger: { type: 'delay', value: 1000 } }),
+    ]);
     const secondProvider = providerOf([]);
 
     await manager.load(firstProvider, { path: '/pricing' });
@@ -130,7 +144,11 @@ describe('OverlayManager load() disposes previous triggers', () => {
 describe('OverlayManager idempotency', () => {
   it('show/dismiss are idempotent per id; a late toast timer after dismiss is a no-op', async () => {
     const env = fakeEnv();
-    const manager = new OverlayManager({ triggerEnv: env, store: freshStore(), now: () => new Date('2026-01-01') });
+    const manager = new OverlayManager({
+      triggerEnv: env,
+      store: freshStore(),
+      now: () => new Date('2026-01-01'),
+    });
     const provider = providerOf([config({ id: 't', type: 'toast', trigger: { type: 'manual' } })]);
 
     await manager.load(provider, { path: '/' });
@@ -151,7 +169,11 @@ describe('OverlayManager tracking', () => {
     const recordSpy = vi.spyOn(store, 'record');
     const onView = vi.fn();
     const onInteraction = vi.fn();
-    const manager = new OverlayManager({ triggerEnv: env, store, now: () => new Date('2026-01-01T00:00:00.000Z') });
+    const manager = new OverlayManager({
+      triggerEnv: env,
+      store,
+      now: () => new Date('2026-01-01T00:00:00.000Z'),
+    });
     const provider = providerOf([config({ id: 'a', trigger: { type: 'delay', value: 0 } })], {
       trackView: onView,
       trackInteraction: onInteraction,
@@ -161,7 +183,11 @@ describe('OverlayManager tracking', () => {
     env.fireTimeouts();
 
     expect(recordSpy).toHaveBeenCalledTimes(1);
-    expect(onView).toHaveBeenCalledWith({ modalId: 'a', path: '/blog', at: '2026-01-01T00:00:00.000Z' });
+    expect(onView).toHaveBeenCalledWith({
+      modalId: 'a',
+      path: '/blog',
+      at: '2026-01-01T00:00:00.000Z',
+    });
 
     manager.dismiss('a', 'close-button');
     expect(onInteraction).toHaveBeenCalledWith({

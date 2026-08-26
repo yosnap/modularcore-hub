@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160">
+  <!-- Lockup for DARK backgrounds -->
+  <g transform="translate(0,20) scale(0.6)">
+    <path d="M100,20 L170,60 L100,100 L30,60 Z" fill="#A78BFA"/>
+    <path d="M30,60 L100,100 L100,180 L30,140 Z" fill="#818CF8"/>
+    <path d="M170,60 L100,100 L100,180 L170,140 Z" fill="#6366F1"/>
+  </g>
+  <text x="150" y="100" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="700" font-size="56" letter-spacing="-1" fill="#FFFFFF">Modular<tspan fill="#A5B4FC">Core</tspan></text>
+</svg>

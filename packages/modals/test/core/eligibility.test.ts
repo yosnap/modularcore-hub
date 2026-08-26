@@ -33,13 +33,18 @@ describe('matchesTargeting', () => {
   });
 
   it('excludePages wins over an include match', () => {
-    expect(matchesTargeting('/blog/x', { pages: ['/blog'], excludePages: ['/blog/x'] })).toBe(false);
+    expect(matchesTargeting('/blog/x', { pages: ['/blog'], excludePages: ['/blog/x'] })).toBe(
+      false,
+    );
   });
 });
 
 describe('isWithinDateWindow', () => {
   it('rejects before startDate and after endDate', () => {
-    const config = baseConfig({ startDate: '2026-01-01T00:00:00.000Z', endDate: '2026-01-31T00:00:00.000Z' });
+    const config = baseConfig({
+      startDate: '2026-01-01T00:00:00.000Z',
+      endDate: '2026-01-31T00:00:00.000Z',
+    });
     expect(isWithinDateWindow(config, new Date('2025-12-31T00:00:00.000Z'))).toBe(false);
     expect(isWithinDateWindow(config, new Date('2026-01-15T00:00:00.000Z'))).toBe(true);
     expect(isWithinDateWindow(config, new Date('2026-02-01T00:00:00.000Z'))).toBe(false);

@@ -5,12 +5,7 @@ import { defaultTriggerEnvironment, scheduleTrigger } from './triggers.js';
 import type { FrequencyStore } from './frequency.js';
 import type { ModalsProvider } from './provider.js';
 import type { TriggerEnvironment } from './triggers.js';
-import type {
-  InteractionAction,
-  ModalConfig,
-  ModalsContext,
-  SingletonSlot,
-} from './types.js';
+import type { InteractionAction, ModalConfig, ModalsContext, SingletonSlot } from './types.js';
 
 export interface OverlaysState {
   active: Partial<Record<SingletonSlot, ModalConfig>>;
@@ -214,7 +209,11 @@ export class OverlayManager {
 
     this.store.record(config, now);
     if (this.currentPath !== undefined) {
-      this.currentProvider?.trackView?.({ modalId: config.id, path: this.currentPath, at: now.toISOString() });
+      this.currentProvider?.trackView?.({
+        modalId: config.id,
+        path: this.currentPath,
+        at: now.toISOString(),
+      });
     }
   }
 

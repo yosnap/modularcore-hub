@@ -122,6 +122,18 @@ describe('createCloudinaryProvider (mock provider, no network)', () => {
     expect(page).toEqual({ items: [{ key: 'a', url: 'u', size: 1 }] });
   });
 
+  it('forwards query/sort through to the configured list hook', async () => {
+    const list = vi.fn(async () => ({ items: [] }));
+    const provider = createCloudinaryProvider({
+      mode: 'signed',
+      cloudName: 'demo',
+      getSignedParams: async () => ({ apiKey: 'k', timestamp: 1, signature: 's' }),
+      list,
+    });
+    await provider.list({ query: 'cat', sort: 'oldest' });
+    expect(list).toHaveBeenCalledWith({ query: 'cat', sort: 'oldest' });
+  });
+
   it('listFolders/createFolder are absent unless the hooks are configured', () => {
     const provider = createCloudinaryProvider({
       mode: 'signed',

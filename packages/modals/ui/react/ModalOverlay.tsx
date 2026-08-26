@@ -9,7 +9,9 @@ import type { ModalConfig } from '../../core/types.js';
 
 export interface ModalOverlayProps {
   config: ModalConfig;
-  onDismiss: (action: 'primary-button' | 'secondary-button' | 'close-button' | 'outside-click') => void;
+  onDismiss: (
+    action: 'primary-button' | 'secondary-button' | 'close-button' | 'outside-click',
+  ) => void;
 }
 
 /** Centered dialog for `type: 'modal'`. Focus-trapped, closes on Escape/backdrop click. */

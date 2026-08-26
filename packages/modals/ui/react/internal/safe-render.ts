@@ -11,7 +11,9 @@ export { safeHref, safeImageSrc, safeMessage, maxWidthClass };
 export type { SafeMessage } from '../../safe/message.js';
 
 /** `bgColor`/`textColor` validated before ever reaching a `style` object. */
-export function safeOverlayStyle(config: Pick<ModalConfig, 'bgColor' | 'textColor'>): CSSProperties {
+export function safeOverlayStyle(
+  config: Pick<ModalConfig, 'bgColor' | 'textColor'>,
+): CSSProperties {
   const style: CSSProperties = {};
   const bg = safeColor(config.bgColor);
   const text = safeColor(config.textColor);

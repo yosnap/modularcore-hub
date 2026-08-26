@@ -23,12 +23,21 @@ export function ModalsRenderer({ state, onDismiss }: ModalsRendererProps) {
     <Fragment>
       {active.modal &&
         (active.modal.type === 'fullscreen' ? (
-          <FullscreenOverlay config={active.modal} onDismiss={(action) => onDismiss(active.modal!.id, action)} />
+          <FullscreenOverlay
+            config={active.modal}
+            onDismiss={(action) => onDismiss(active.modal!.id, action)}
+          />
         ) : (
-          <ModalOverlay config={active.modal} onDismiss={(action) => onDismiss(active.modal!.id, action)} />
+          <ModalOverlay
+            config={active.modal}
+            onDismiss={(action) => onDismiss(active.modal!.id, action)}
+          />
         ))}
       {active['top-banner'] && (
-        <TopBanner config={active['top-banner']} onDismiss={(action) => onDismiss(active['top-banner']!.id, action)} />
+        <TopBanner
+          config={active['top-banner']}
+          onDismiss={(action) => onDismiss(active['top-banner']!.id, action)}
+        />
       )}
       {active['bottom-banner'] && (
         <BottomBanner
@@ -37,12 +46,19 @@ export function ModalsRenderer({ state, onDismiss }: ModalsRendererProps) {
         />
       )}
       {active['slide-in'] && (
-        <SlideIn config={active['slide-in']} onDismiss={(action) => onDismiss(active['slide-in']!.id, action)} />
+        <SlideIn
+          config={active['slide-in']}
+          onDismiss={(action) => onDismiss(active['slide-in']!.id, action)}
+        />
       )}
       {toasts.length > 0 && (
         <div className="modals-toast-stack">
           {toasts.map((toast) => (
-            <Toast key={toast.id} config={toast} onDismiss={(action) => onDismiss(toast.id, action)} />
+            <Toast
+              key={toast.id}
+              config={toast}
+              onDismiss={(action) => onDismiss(toast.id, action)}
+            />
           ))}
         </div>
       )}

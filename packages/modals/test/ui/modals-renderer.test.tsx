@@ -26,7 +26,12 @@ function stateWithModal(config: Partial<ModalConfig> = {}): OverlaysState {
 describe('ModalsRenderer security boundary', () => {
   it('renders message as text and never executes it, even when it looks like HTML', () => {
     const onDismiss = vi.fn();
-    render(<ModalsRenderer state={stateWithModal({ message: '<img src=x onerror=alert(1)>' })} onDismiss={onDismiss} />);
+    render(
+      <ModalsRenderer
+        state={stateWithModal({ message: '<img src=x onerror=alert(1)>' })}
+        onDismiss={onDismiss}
+      />,
+    );
 
     const messageEl = screen.getByText('<img src=x onerror=alert(1)>');
     expect(messageEl.innerHTML).not.toContain('<img');
@@ -92,7 +97,15 @@ describe('Toast auto-dismiss', () => {
     const onDismiss = vi.fn();
     const state: OverlaysState = {
       active: {},
-      toasts: [{ id: 't1', type: 'toast', message: 'hi', trigger: { type: 'manual' }, autoDismissMs: 1000 }],
+      toasts: [
+        {
+          id: 't1',
+          type: 'toast',
+          message: 'hi',
+          trigger: { type: 'manual' },
+          autoDismissMs: 1000,
+        },
+      ],
       loading: false,
       error: null,
     };

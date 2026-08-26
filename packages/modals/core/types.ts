@@ -1,13 +1,15 @@
 // Framework-agnostic data model for @modularcore/modals. No DOM, no framework imports.
 
-export type OverlayType = 'modal' | 'fullscreen' | 'top-banner' | 'bottom-banner' | 'slide-in' | 'toast';
+export type OverlayType =
+  'modal' | 'fullscreen' | 'top-banner' | 'bottom-banner' | 'slide-in' | 'toast';
 
 export type TriggerType = 'page-load' | 'delay' | 'scroll' | 'exit-intent' | 'click' | 'manual';
 // 'page-load' is an alias of 'delay' with value≈0 — handled as a single branch in scheduleTrigger (core/triggers.ts).
 
 export type FrequencyType = 'always' | 'once-per-session' | 'once-per-day' | 'once-ever';
 
-export type InteractionAction = 'primary-button' | 'secondary-button' | 'close-button' | 'outside-click';
+export type InteractionAction =
+  'primary-button' | 'secondary-button' | 'close-button' | 'outside-click';
 
 /** Slots of single instance (1 overlay per slot). 'toast' is not here: it is multi-instance. */
 export type SingletonSlot = 'modal' | 'top-banner' | 'bottom-banner' | 'slide-in';

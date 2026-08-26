@@ -12,7 +12,8 @@ export function matchesTargeting(path: string, targeting?: ModalConfig['targetin
   const pages = targeting?.pages;
   const excludePages = targeting?.excludePages;
 
-  const matchesEntry = (entry: string): boolean => (entry === '/' ? path === '/' : path.startsWith(entry));
+  const matchesEntry = (entry: string): boolean =>
+    entry === '/' ? path === '/' : path.startsWith(entry);
 
   if (excludePages?.some(matchesEntry)) return false;
   if (!pages || pages.length === 0) return true;

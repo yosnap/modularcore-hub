@@ -8,7 +8,9 @@ import type { ModalConfig } from '../../core/types.js';
 
 export interface FullscreenOverlayProps {
   config: ModalConfig;
-  onDismiss: (action: 'primary-button' | 'secondary-button' | 'close-button' | 'outside-click') => void;
+  onDismiss: (
+    action: 'primary-button' | 'secondary-button' | 'close-button' | 'outside-click',
+  ) => void;
 }
 
 /** Full-viewport dialog for `type: 'fullscreen'` (shares the 'modal' slot). Focus-trapped, closes on Escape. */
