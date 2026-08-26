@@ -11,6 +11,7 @@
       <a href="/">Catálogo</a>
       <a href="/playground/ai-chat">Playground: AI Chat</a>
       <a href="/playground/media-picker">Playground: Media Picker</a>
+      <a href="/playground/modals">Playground: Modals</a>
     </nav>
   </header>
   <main>
