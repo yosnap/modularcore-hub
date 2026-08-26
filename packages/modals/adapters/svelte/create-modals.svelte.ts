@@ -33,8 +33,18 @@ export function createModals(
     state = next;
   });
 
+  // Reloads whenever a reactive read inside `ctx`/`provider` changes. Deliberately NO cleanup
+  // here: `load()` already disposes the previous load's triggers itself (core/modals.ts), so
+  // tearing the manager down on every reactive change here — instead of only on true unmount —
+  // would destroy it after the first change and leave every subsequent load() operating on a
+  // dead instance.
   $effect(() => {
     void manager.load(provider, ctx);
+  });
+
+  // True unmount only: this effect reads no reactive state, so it never reruns — its cleanup
+  // fires exactly once, when the component unmounts.
+  $effect(() => {
     return () => {
       unsubscribe();
       manager.destroy();

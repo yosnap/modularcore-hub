@@ -40,6 +40,30 @@ describe('useModals', () => {
     expect(latest).toBeDefined();
   });
 
+  it('regression: state keeps updating after a ctx.path change (destroy must not run on every reload)', async () => {
+    const provider = providerOf(async () => [
+      { id: 'a', type: 'top-banner' as const, message: 'hi', trigger: { type: 'manual' as const } },
+    ]);
+
+    let latest: ReturnType<typeof useModals> | undefined;
+    const onResult = (r: ReturnType<typeof useModals>) => {
+      latest = r;
+    };
+
+    const { rerender } = render(<Probe provider={provider} ctx={{ path: '/a' }} onResult={onResult} />);
+    await act(async () => {});
+
+    // Path change: previously this destroyed the manager (cleanup ran on every dep change, not
+    // only unmount), leaving `show()` below a no-op against a dead instance.
+    rerender(<Probe provider={provider} ctx={{ path: '/b' }} onResult={onResult} />);
+    await act(async () => {});
+
+    act(() => {
+      latest?.show('a');
+    });
+    expect(latest?.state.active['top-banner']?.id).toBe('a');
+  });
+
   it('reloads when the provider identity changes, even with the same path', async () => {
     const loadCalls: number[] = [];
     const makeProvider = (tag: number) =>

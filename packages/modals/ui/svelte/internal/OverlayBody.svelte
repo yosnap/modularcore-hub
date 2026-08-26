@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { renderMarkdownToHtml } from '@modularcore/ai-chat/markdown';
-
-  import { safeColor } from '../../safe/style.js';
+  import { safeMessage } from '../../safe/message.js';
+  import { safeColor, maxWidthClass } from '../../safe/style.js';
   import { safeHref, safeImageSrc } from '../../safe/url.js';
 
   import type { InteractionAction, ModalConfig } from '../../../core/types.js';
@@ -22,11 +21,11 @@
   const bgColor = $derived(safeColor(config.bgColor));
   const textColor = $derived(safeColor(config.textColor));
   const showClose = $derived(config.showCloseButton ?? true);
-  const messageHtml = $derived(config.allowHtml ? renderMarkdownToHtml(config.message) : undefined);
+  const message = $derived(safeMessage(config));
 </script>
 
 <div
-  class="modals-body modals-max-w-{config.maxWidth ?? 'md'} {extraClass}"
+  class="modals-body {maxWidthClass(config.maxWidth)} {extraClass}"
   style:background-color={bgColor}
   style:color={textColor}
 >
@@ -39,10 +38,10 @@
   {#if config.title}
     <h2 class="modals-title">{config.title}</h2>
   {/if}
-  {#if messageHtml}
-    <div class="modals-message">{@html messageHtml}</div>
+  {#if message.html}
+    <div class="modals-message">{@html message.html}</div>
   {:else}
-    <p class="modals-message">{config.message}</p>
+    <p class="modals-message">{message.text}</p>
   {/if}
   {#if config.primaryButton || config.secondaryButton}
     <div class="modals-actions">

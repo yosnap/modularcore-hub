@@ -146,7 +146,7 @@ export class OverlayManager {
     if (gen !== this.generation) return; // superseded while awaiting the provider
 
     const now = this.now();
-    const eligible = filterEligible(configs, pathnameOf(ctx.path), this.store, now);
+    const eligible = filterEligible(configs, this.currentPath, this.store, now);
 
     // Pick one winner per singleton slot (highest priority; ties keep provider order — Array.sort
     // is stable). Toasts are not slotted: every eligible toast is a candidate, capped below.
@@ -166,7 +166,12 @@ export class OverlayManager {
     }
 
     const winners = [...bySlot.values(), ...toastCandidates.slice(0, this.toastCap)];
-    for (const config of winners) this.pending.set(config.id, config);
+    // `pending` indexes EVERY eligible config (not just slot winners): `show(id)`/`fireClick(id)`
+    // must be able to explicitly show a manual/click-triggered config even if it lost its slot's
+    // priority contest during auto-trigger scheduling below — e.g. a `modal` and a `fullscreen`
+    // fixture sharing the 'modal' slot at equal priority must both stay independently triggerable
+    // by id; only ONE of them can be auto-scheduled/occupy the slot at a time, not neither.
+    for (const config of eligible) this.pending.set(config.id, config);
 
     this.setState({ loading: false });
 

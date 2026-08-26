@@ -72,6 +72,24 @@ describe('OverlayManager slot selection', () => {
     expect(manager.getState().active['top-banner']?.id).toBe('high');
   });
 
+  it('regression: a slot loser stays independently show()-able by id (manual trigger)', async () => {
+    // 'modal' and 'fullscreen' share the same singleton slot. Both configs below are eligible,
+    // equal priority, manual trigger — only one can occupy the slot/auto-schedule at a time, but
+    // BOTH must remain explicitly show()-able: a caller asking for the loser by id must not
+    // silently no-op just because it lost the slot's priority contest during load().
+    const env = fakeEnv();
+    const manager = new OverlayManager({ triggerEnv: env, store: freshStore(), now: () => new Date('2026-01-01') });
+    const provider = providerOf([
+      config({ id: 'winner', type: 'modal', trigger: { type: 'manual' } }),
+      config({ id: 'loser', type: 'fullscreen', trigger: { type: 'manual' } }),
+    ]);
+
+    await manager.load(provider, { path: '/' });
+    manager.show('loser');
+
+    expect(manager.getState().active.modal?.id).toBe('loser');
+  });
+
   it('caps toasts at toastCap and drops the rest', async () => {
     const env = fakeEnv();
     const manager = new OverlayManager({

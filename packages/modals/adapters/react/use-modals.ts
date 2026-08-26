@@ -40,16 +40,25 @@ export function useModals(
 
   useEffect(() => manager.subscribe(setState), [manager]);
 
-  // Compares by ctx.path (a fresh ctx object every render is expected) and provider identity
-  // (the consumer is responsible for memoizing the provider — an inline object literal reloads
-  // on every render).
+  // Reloads whenever ctx.path (a fresh ctx object every render is expected) or provider identity
+  // changes (the consumer is responsible for memoizing the provider — an inline object literal
+  // reloads on every render). Deliberately NO cleanup here: `load()` already disposes the
+  // previous load's triggers itself (core/modals.ts), so tearing the manager down on every
+  // path/provider change — instead of only on true unmount — would destroy it after the first
+  // change and leave every subsequent load() operating on a dead instance.
   useEffect(() => {
     void manager.load(provider, ctx);
+  }, [manager, ctx.path, provider]);
+
+  // True unmount only: this effect's cleanup fires when `manager`'s identity changes (which only
+  // happens after a destroy+recreate on a later render) or when the component actually unmounts
+  // — never on a path/provider change, since `manager` itself doesn't change for those.
+  useEffect(() => {
     return () => {
       manager.destroy();
       if (handleRef.current?.instance === manager) handleRef.current.destroyed = true;
     };
-  }, [manager, ctx.path, provider]);
+  }, [manager]);
 
   return {
     state,
