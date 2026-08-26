@@ -76,4 +76,15 @@ describe('stringify — general serialization', () => {
     const parsed = JSON.parse(output) as { logo: string };
     expect(parsed.logo).toBe('https://cdn.example.com/logo.png');
   });
+
+  it('regression: does not corrupt a plain text field that happens to start with "/"', () => {
+    const schema = createSchema('Article', {
+      headline: '/2026 fue un gran año para componentes modulares',
+      datePublished: '2026-08-25',
+    });
+
+    const output = stringify(schema, { absolute: 'https://modularcore.dev' });
+    const parsed = JSON.parse(output) as { headline: string };
+    expect(parsed.headline).toBe('/2026 fue un gran año para componentes modulares');
+  });
 });

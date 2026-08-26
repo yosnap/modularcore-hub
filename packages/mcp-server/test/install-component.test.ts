@@ -69,6 +69,41 @@ describe('install_component', () => {
     expect(written).toContain('hello from modularcore');
   });
 
+  it('regression: remaps the target the same way the CLI does when the project customized paths.lib', async () => {
+    registry = await startFixtureRegistryServer();
+    project = await createTmpProject({
+      files: {
+        'modularcore.json': JSON.stringify({
+          registryUrl: registry.url,
+          framework: 'agnostic',
+          paths: { lib: 'src/lib/modularcore', components: 'src/components' },
+          installed: {},
+        }),
+      },
+    });
+    server = await connectTestServer({
+      registryUrl: registry.url,
+      projectRoot: project.dir,
+      supportsElicitation: true,
+      elicitationHandler: () => ({ action: 'accept', content: { confirm: true } }),
+    });
+
+    const result = await server.client.callTool({
+      name: 'install_component',
+      arguments: { name: 'hello-core', targetPath: '.' },
+    });
+
+    expect(result.isError).toBeFalsy();
+    // Same remapped location `modularcore add` would use — not the raw descriptor target
+    // (src/modularcore/...) — so the CLI's own diff/update can find what MCP installed.
+    const written = await readFile(
+      join(project.dir, 'src/lib/modularcore/hello-core/hello.ts'),
+      'utf8',
+    );
+    expect(written).toContain('hello from modularcore');
+    expect(await listFilesRecursive(join(project.dir, 'src/modularcore'))).toEqual([]);
+  });
+
   it('rejects a mismatched requested version before eliciting anything', async () => {
     registry = await startFixtureRegistryServer();
     project = await createTmpProject({});

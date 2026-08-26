@@ -3,7 +3,7 @@ export type { RegistryClient } from './registry-client.js';
 
 export { RegistryClientError } from './errors.js';
 
-export { isTrackedWriteError, resolveTargetPath, writeFilesTracked } from './files.js';
+export { isTrackedWriteError, remapTarget, resolveTargetPath, writeFilesTracked } from './files.js';
 export type { TrackedWriteError } from './files.js';
 
 export type {

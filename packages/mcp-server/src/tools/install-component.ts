@@ -1,9 +1,11 @@
 import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
 import { z } from 'zod';
 
 import {
   isTrackedWriteError,
+  remapTarget,
   resolveTargetPath,
   writeFilesTracked,
 } from '@modularcore/registry-client';
@@ -54,6 +56,27 @@ function parseExistingEnvKeys(envExampleContent: string): Set<string> {
  * escaped its intended sandbox must not be able to read arbitrary files either, not just be
  * blocked from writing them.
  */
+/**
+ * Reads `paths.*` from `projectRoot`'s `modularcore.json` (`init`'s output) if present, so
+ * `install_component` can `remapTarget` its files the same way the CLI's `add` does (Code
+ * Review Finding, Critical: without this, a component installed via MCP landed at a different
+ * on-disk path than the same component installed via the CLI in the same project, and the
+ * CLI's `diff`/`update` afterward couldn't find what MCP had written). Tolerant of a missing or
+ * malformed file — unlike the CLI's `readProjectConfig`, MCP installs don't require a prior
+ * `modularcore init`; an absent/invalid config just means no remap (targets used as-is).
+ */
+async function readConfiguredPaths(projectRoot: string): Promise<Record<string, string>> {
+  try {
+    const raw = await readFile(join(projectRoot, 'modularcore.json'), 'utf8');
+    const parsed: unknown = JSON.parse(raw);
+    const paths = (parsed as { paths?: unknown } | null)?.paths;
+    if (paths === null || typeof paths !== 'object') return {};
+    return paths as Record<string, string>;
+  } catch {
+    return {};
+  }
+}
+
 async function readExistingEnvKeys(projectRoot: string): Promise<Set<string>> {
   const envExamplePath = resolveTargetPath(projectRoot, ENV_EXAMPLE_FILENAME);
   try {
@@ -118,11 +141,20 @@ export function registerInstallComponentTool(
         return toolError(error);
       }
 
+      // Remap conventional descriptor targets onto this project's configured `paths` — same
+      // remap the CLI's `add` applies — computed once and reused for both the elicitation
+      // preview and the actual write, so what the user is shown is exactly what gets written.
+      const configuredPaths = await readConfiguredPaths(projectRoot);
+      const remappedFiles = descriptor.files.map((file) => ({
+        ...file,
+        target: remapTarget(file.target, configuredPaths),
+      }));
+
       const elicitationSummary = {
         component: descriptor.name,
         version: descriptor.version,
         destination: projectRoot,
-        filesToWrite: descriptor.files.map((file) => file.target),
+        filesToWrite: remappedFiles.map((file) => file.target),
         newEnvVariables: newEnvVariables.map((env) => env.key),
         npmDependenciesNotInstalledAutomatically: descriptor.dependencies,
       };
@@ -171,7 +203,7 @@ export function registerInstallComponentTool(
       }
 
       try {
-        const written = await writeFilesTracked(descriptor.files, projectRoot);
+        const written = await writeFilesTracked(remappedFiles, projectRoot);
         return {
           content: [
             {

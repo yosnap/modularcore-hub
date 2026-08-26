@@ -4,27 +4,10 @@ import { CliError } from './errors.js';
 
 import type { EnvVariableDescriptor, RegistryFileWithContent } from '@modularcore/registry';
 
-/**
- * Descriptor authors write conventional targets (`src/components/...`,
- * `src/modularcore/...`); the CLI remaps those prefixes onto the project's configured
- * `paths` from `modularcore.json` (`init`'s defaults make this a no-op unless the user
- * customized `paths`). Any other target is left untouched. This remap is CLI-specific (it
- * depends on `modularcore.json`'s `paths`), so it stays here rather than in
- * `@modularcore/registry-client`; callers must apply it before calling that package's
- * `resolveTargetPath`/`writeFilesTracked`.
- */
-export function remapTarget(target: string, paths: Record<string, string>): string {
-  const remaps: Array<[string, string | undefined]> = [
-    ['src/components/', paths.components],
-    ['src/modularcore/', paths.lib],
-  ];
-  for (const [prefix, replacement] of remaps) {
-    if (replacement && target.startsWith(prefix)) {
-      return `${replacement}/${target.slice(prefix.length)}`;
-    }
-  }
-  return target;
-}
+// `remapTarget` now lives in `@modularcore/registry-client` (shared by the CLI and the MCP
+// server's `install_component`, which previously skipped it entirely — Code Review Finding,
+// Critical) — re-exported here so `add.ts`/`diff.ts`/`update.ts` don't need an import-path change.
+export { remapTarget } from '@modularcore/registry-client';
 
 export function decodeFileContent(file: RegistryFileWithContent): Buffer {
   return file.encoding === 'base64'

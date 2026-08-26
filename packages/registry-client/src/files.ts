@@ -5,12 +5,35 @@ import type { RegistryFileWithContent, WriteResult } from '@modularcore/registry
 /**
  * Anti-path-traversal clamp: resolves a registry file's `target` onto `cwd`, refusing any
  * path that escapes the project root. Callers that remap conventional target prefixes onto
- * project-specific paths (e.g. the CLI's `paths.components`/`paths.lib` from
- * `modularcore.json`) must apply that remap to `fileTarget` themselves before calling this —
- * that remapping is a caller-specific concept this package does not know about.
+ * project-specific paths (e.g. `paths.components`/`paths.lib` from `modularcore.json` — see
+ * `remapTarget` below) must apply that remap to `fileTarget` themselves before calling this.
  */
 export function resolveTargetPath(cwd: string, fileTarget: string): string {
   return resolveWriteTargetPath(cwd, fileTarget);
+}
+
+/**
+ * Descriptor authors write conventional targets (`src/components/...`, `src/modularcore/...`);
+ * every writer (CLI `add`/`diff`/`update`, MCP server `install_component`) must remap those
+ * prefixes onto the project's configured `paths` from its `modularcore.json` before calling
+ * `resolveTargetPath`/`writeFilesTracked` — otherwise a component installed via one writer
+ * lands at a different on-disk path than the same component installed via another (Code Review
+ * Finding, Critical: `install_component` previously skipped this entirely, writing to the
+ * unremapped default path even in a project whose `modularcore.json` remaps `paths.lib`, so the
+ * CLI's own `diff`/`update` afterward couldn't find what MCP had installed). `init`'s defaults
+ * make this a no-op unless the project customized `paths`. Any other target is left untouched.
+ */
+export function remapTarget(target: string, paths: Record<string, string>): string {
+  const remaps: Array<[string, string | undefined]> = [
+    ['src/components/', paths.components],
+    ['src/modularcore/', paths.lib],
+  ];
+  for (const [prefix, replacement] of remaps) {
+    if (replacement && target.startsWith(prefix)) {
+      return `${replacement}/${target.slice(prefix.length)}`;
+    }
+  }
+  return target;
 }
 
 export interface TrackedWriteError extends Error {
