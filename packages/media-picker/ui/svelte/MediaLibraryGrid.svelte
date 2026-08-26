@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { formatBytes } from '../../core/format.js';
+
   import type { MediaPickerRune } from '../../adapters/svelte/create-media-picker.svelte.js';
   import type { LibraryItem } from '../../core/media-picker.js';
 
@@ -20,6 +22,11 @@
 
   function isSelected(item: LibraryItem): boolean {
     return picker.state.selection.some((selected) => selected.key === item.key);
+  }
+
+  /** Basename (last path segment) for the caption — the title attr keeps the full key available. */
+  function basename(key: string): string {
+    return key.split('/').pop() || key;
   }
 </script>
 
@@ -44,6 +51,15 @@
       {:else}
         <span>{item.key}</span>
       {/if}
+      <div style="margin-top:4px;font-size:11px;line-height:1.3;overflow:hidden">
+        <span
+          title={item.key}
+          style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"
+        >
+          {basename(item.key)}
+        </span>
+        <span>{formatBytes(item.size)}</span>
+      </div>
     </button>
   {/each}
 </div>

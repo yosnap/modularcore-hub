@@ -2,6 +2,7 @@
   import { Toggle } from 'bits-ui';
 
   import '../../shadcn-theme.css';
+  import { formatBytes } from '../../../core/format.js';
   import type { MediaPickerRune } from '../../../adapters/svelte/create-media-picker.svelte.js';
   import type { LibraryItem } from '../../../core/media-picker.js';
 
@@ -23,6 +24,10 @@
 
   function isSelected(item: LibraryItem): boolean {
     return picker.state.selection.some((selected) => selected.key === item.key);
+  }
+
+  function basename(key: string): string {
+    return key.split('/').pop() || key;
   }
 </script>
 
@@ -47,6 +52,10 @@
       {:else}
         <span class="block truncate text-xs text-muted-foreground">{item.key}</span>
       {/if}
+      <div class="mt-1 leading-tight">
+        <span class="block truncate text-xs text-foreground" title={item.key}>{basename(item.key)}</span>
+        <span class="block text-[11px] text-muted-foreground">{formatBytes(item.size)}</span>
+      </div>
     </Toggle.Root>
   {/each}
 </div>

@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { initPageCache } from '../core/library-state.js';
 import { MediaPicker } from '../core/media-picker.js';
 
 import type { LibraryItem } from '../core/library-state.js';
@@ -16,10 +17,17 @@ const idleState = {
   libraryNextCursor: null,
   libraryLoading: false,
   libraryError: null,
+  libraryPage: initPageCache(0),
+  libraryQuery: '',
+  librarySort: undefined,
   folders: [],
   foldersLoading: false,
   foldersError: null,
 };
+
+// Matches the state right after a single reset() call: libraryGeneration has been bumped once
+// (0 -> 1), so `libraryPage` is retagged with generation 1 instead of the constructor's 0.
+const resetIdleState = { ...idleState, libraryPage: initPageCache(1) };
 
 function libraryItem(key: string): LibraryItem {
   return { key, url: `https://cdn.example.com/${key}`, size: 1 };
@@ -32,6 +40,24 @@ function fakeProvider(
   return {
     upload: vi.fn(async () => result),
     list: vi.fn(list ?? (async () => ({ items: [] }))),
+    remove: vi.fn(async () => undefined),
+    getUrl: (key) => `https://cdn.example.com/${key}`,
+  };
+}
+
+/** A provider whose `list()` resolves purely from the requested `cursor` — models 3 numbered pages. */
+function pagedProvider(): StorageProvider {
+  const pages: Record<string, ListPage> = {
+    '': { items: [libraryItem('a'), libraryItem('b')], nextCursor: 'p2' },
+    p2: { items: [libraryItem('c'), libraryItem('d')], nextCursor: 'p3' },
+    p3: { items: [libraryItem('e')], nextCursor: undefined },
+  };
+  const list = vi.fn(
+    async (options?: { cursor?: string }) => pages[options?.cursor ?? ''] ?? { items: [] },
+  );
+  return {
+    upload: vi.fn(async () => ({ key: 'k', url: 'u', size: 1, contentType: 'image/png' })),
+    list,
     remove: vi.fn(async () => undefined),
     getUrl: (key) => `https://cdn.example.com/${key}`,
   };
@@ -119,7 +145,7 @@ describe('MediaPicker (state machine, collaborators injected — not the canvas 
     const picker = new MediaPicker();
     picker.loadLocalFile(new File(['x'], 'x.png'));
     picker.reset();
-    expect(picker.getState()).toEqual(idleState);
+    expect(picker.getState()).toEqual(resetIdleState);
   });
 
   it('a slow loadFromUrl that resolves after reset() does not clobber the reset state', async () => {
@@ -135,7 +161,7 @@ describe('MediaPicker (state machine, collaborators injected — not the canvas 
     // The reset happened while loadFromUrl was still in flight; its late-arriving blob must
     // not resurrect it — this is exactly the out-of-order-resolution bug the generation guard
     // exists to prevent.
-    expect(picker.getState()).toEqual(idleState);
+    expect(picker.getState()).toEqual(resetIdleState);
   });
 
   it('a slow upload that resolves after reset() does not report stale progress or a stale result', async () => {
@@ -166,7 +192,7 @@ describe('MediaPicker (state machine, collaborators injected — not the canvas 
     });
     await pending;
 
-    expect(picker.getState()).toEqual(idleState);
+    expect(picker.getState()).toEqual(resetIdleState);
   });
 
   it('subscribe() returns an unsubscribe function', () => {
@@ -351,6 +377,143 @@ describe('MediaPicker (state machine, collaborators injected — not the canvas 
 
       // The late resolution from the superseded call must not have overwritten folder B's items.
       expect(picker.getState().libraryItems).toEqual([libraryItem('fromB')]);
+    });
+  });
+
+  describe('listPage()', () => {
+    it('page 1 requires no cursor and replaces libraryItems', async () => {
+      const provider = pagedProvider();
+      const picker = new MediaPicker();
+
+      await picker.listPage(provider, { page: 1 });
+
+      expect(provider.list).toHaveBeenCalledWith(expect.objectContaining({ cursor: undefined }));
+      expect(picker.getState().libraryItems).toEqual([libraryItem('a'), libraryItem('b')]);
+      expect(picker.getState().libraryPage.currentPage).toBe(1);
+    });
+
+    it('always replaces libraryItems (never accumulates) across sequential pages', async () => {
+      const provider = pagedProvider();
+      const picker = new MediaPicker();
+
+      await picker.listPage(provider, { page: 1 });
+      expect(picker.getState().libraryItems).toHaveLength(2);
+
+      await picker.listPage(provider, { page: 2 });
+      expect(picker.getState().libraryItems).toEqual([libraryItem('c'), libraryItem('d')]);
+      expect(picker.getState().libraryItems).toHaveLength(2); // not cumulative with page 1's items
+    });
+
+    it('jumping to an already-visited page reuses the cached cursor', async () => {
+      const provider = pagedProvider();
+      const picker = new MediaPicker();
+
+      await picker.listPage(provider, { page: 1 });
+      await picker.listPage(provider, { page: 2 });
+      await picker.listPage(provider, { page: 1 }); // jump back
+
+      expect(picker.getState().libraryItems).toEqual([libraryItem('a'), libraryItem('b')]);
+      expect(picker.getState().libraryPage.currentPage).toBe(1);
+    });
+
+    it('rejects a jump past the last known page instead of silently fetching the wrong page', async () => {
+      const provider = pagedProvider();
+      const picker = new MediaPicker();
+
+      await picker.listPage(provider, { page: 1 });
+
+      await expect(picker.listPage(provider, { page: 5 })).rejects.toThrow(
+        /not been walked to yet/,
+      );
+    });
+
+    it('changing folder/query/sort resets the cache and restarts at page 1', async () => {
+      const provider = pagedProvider();
+      const picker = new MediaPicker();
+
+      await picker.listPage(provider, { page: 1 });
+      await picker.listPage(provider, { page: 2 });
+
+      // Filter changed while asking for "page 2" — must restart at page 1 for the new filter,
+      // not reuse the old cursor cached for page 2 under the previous filter.
+      await picker.listPage(provider, { page: 2, folder: 'other' });
+
+      expect(picker.getState().libraryPage.currentPage).toBe(1);
+      expect(picker.getState().libraryItems).toEqual([libraryItem('a'), libraryItem('b')]);
+    });
+
+    it('stores libraryQuery/librarySort from the request options', async () => {
+      const provider = pagedProvider();
+      const picker = new MediaPicker();
+
+      await picker.listPage(provider, { page: 1, query: 'cat', sort: 'name' });
+
+      expect(picker.getState().libraryQuery).toBe('cat');
+      expect(picker.getState().librarySort).toBe('name');
+    });
+
+    it('rejects a non-positive/non-integer page', async () => {
+      const provider = pagedProvider();
+      const picker = new MediaPicker();
+
+      await expect(picker.listPage(provider, { page: 0 })).rejects.toThrow(/1-based integer/);
+      await expect(picker.listPage(provider, { page: 1.5 })).rejects.toThrow(/1-based integer/);
+    });
+
+    it('a stale in-flight page response does not poison a cache reset by a newer filter change', async () => {
+      let resolveSlow!: (page: ListPage) => void;
+      const slowList = vi.fn(() => new Promise<ListPage>((resolve) => (resolveSlow = resolve)));
+      const slowProvider: StorageProvider = {
+        upload: vi.fn(async () => ({ key: 'k', url: 'u', size: 1, contentType: 'image/png' })),
+        list: slowList,
+        remove: vi.fn(async () => undefined),
+        getUrl: (key) => `https://cdn.example.com/${key}`,
+      };
+      const picker = new MediaPicker();
+
+      const slowCall = picker.listPage(slowProvider, { page: 1 });
+      const fastProvider = pagedProvider();
+      // Supersedes the in-flight call above AND changes the filter, resetting the cache.
+      await picker.listPage(fastProvider, { page: 1, folder: 'b' });
+
+      resolveSlow({ items: [libraryItem('stale')], nextCursor: 'stale-c2' });
+      await slowCall;
+
+      // The stale response's items/cursor must not have overwritten the newer filter's state.
+      expect(picker.getState().libraryItems).toEqual([libraryItem('a'), libraryItem('b')]);
+      // And its cursor must not have poisoned the freshly-reset cache: page 2 still resolves
+      // via the fast provider's own (correct) cursor, not a stale one.
+      await picker.listPage(fastProvider, { page: 2, folder: 'b' });
+      expect(picker.getState().libraryItems).toEqual([libraryItem('c'), libraryItem('d')]);
+    });
+  });
+
+  describe('syncLibrary()', () => {
+    it('re-fetches the current page using the same filters, without resetting currentPage', async () => {
+      const provider = pagedProvider();
+      const picker = new MediaPicker();
+
+      await picker.listPage(provider, { page: 1, folder: 'f1' });
+      await picker.listPage(provider, { page: 2, folder: 'f1' });
+      (provider.list as ReturnType<typeof vi.fn>).mockClear();
+
+      await picker.syncLibrary(provider);
+
+      expect(provider.list).toHaveBeenCalledWith(
+        expect.objectContaining({ folder: 'f1', cursor: 'p2' }),
+      );
+      expect(picker.getState().libraryPage.currentPage).toBe(2);
+      expect(picker.getState().libraryItems).toEqual([libraryItem('c'), libraryItem('d')]);
+    });
+
+    it('defaults to page 1 with no filters when called before any listPage()', async () => {
+      const provider = pagedProvider();
+      const picker = new MediaPicker();
+
+      await picker.syncLibrary(provider);
+
+      expect(picker.getState().libraryPage.currentPage).toBe(1);
+      expect(picker.getState().libraryItems).toEqual([libraryItem('a'), libraryItem('b')]);
     });
   });
 

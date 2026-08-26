@@ -6,6 +6,7 @@ import type { CropOptions } from '../../core/canvas/crop.js';
 import type { FlipAxis, RotateDirection, TransformOptions } from '../../core/canvas/transform.js';
 import type {
   LibraryItem,
+  ListLibraryPageOptions,
   MediaPickerConfig,
   MediaPickerDeps,
   MediaPickerState,
@@ -33,6 +34,8 @@ export interface MediaPickerRune {
   clearSelection: () => void;
   confirmSelection: () => LibraryItem[];
   listLibrary: (provider: StorageProvider, options?: ListOptions) => Promise<void>;
+  listPage: (provider: StorageProvider, options: ListLibraryPageOptions) => Promise<void>;
+  syncLibrary: (provider: StorageProvider) => Promise<void>;
   listFolders: (provider: StorageProvider) => Promise<void>;
   createFolder: (provider: StorageProvider, name: string) => Promise<StorageFolder>;
 }
@@ -71,6 +74,8 @@ export function createMediaPicker(
     clearSelection: () => picker.clearSelection(),
     confirmSelection: () => picker.confirmSelection(),
     listLibrary: (provider, options) => picker.listLibrary(provider, options),
+    listPage: (provider, options) => picker.listPage(provider, options),
+    syncLibrary: (provider) => picker.syncLibrary(provider),
     listFolders: (provider) => picker.listFolders(provider),
     createFolder: (provider, name) => picker.createFolder(provider, name),
   };

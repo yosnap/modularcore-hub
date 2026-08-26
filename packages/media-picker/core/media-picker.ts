@@ -1,13 +1,20 @@
 import { compressImage } from './canvas/compress.js';
 import { cropImage } from './canvas/crop.js';
 import { flip, rotate90 } from './canvas/transform.js';
-import { mergeLibraryPage, toggleSelection } from './library-state.js';
+import {
+  cursorForPage,
+  initPageCache,
+  mergeLibraryPage,
+  recordPageCursor,
+  resetPageCache,
+  toggleSelection,
+} from './library-state.js';
 import { fromLibrary, fromLocalFile, fromRemoteUrl } from './sources.js';
 
 import type { CompressOptions } from './canvas/compress.js';
 import type { CropOptions } from './canvas/crop.js';
 import type { FlipAxis, RotateDirection, TransformOptions } from './canvas/transform.js';
-import type { LibraryItem, MediaPickerConfig } from './library-state.js';
+import type { LibraryItem, MediaPickerConfig, PageCache } from './library-state.js';
 import type { RemoteUrlSourceOptions } from './sources.js';
 import type {
   ListOptions,
@@ -17,7 +24,12 @@ import type {
   UploadResult,
 } from './provider.js';
 
-export type { LibraryItem, MediaPickerConfig } from './library-state.js';
+export type { LibraryItem, MediaPickerConfig, PageCache } from './library-state.js';
+
+/** Options for `MediaPicker.listPage()` — a `ListOptions` plus the (1-based) page to fetch. */
+export interface ListLibraryPageOptions extends ListOptions {
+  page: number;
+}
 
 export type MediaPickerStatus =
   'idle' | 'cropping' | 'compressing' | 'uploading' | 'done' | 'error';
@@ -34,6 +46,12 @@ export interface MediaPickerState {
   libraryNextCursor: string | null;
   libraryLoading: boolean;
   libraryError: Error | null;
+  /** Page-index-to-cursor cache backing `listPage()`/`syncLibrary()` numbered pagination. See `PageCache` in `library-state.ts`. */
+  libraryPage: PageCache;
+  /** Last search text passed to `listPage()`/`syncLibrary()`. Empty string when unset. */
+  libraryQuery: string;
+  /** Last sort order passed to `listPage()`/`syncLibrary()`. */
+  librarySort: ListOptions['sort'];
   folders: StorageFolder[];
   foldersLoading: boolean;
   foldersError: Error | null;
@@ -61,6 +79,9 @@ const initialState: MediaPickerState = {
   libraryNextCursor: null,
   libraryLoading: false,
   libraryError: null,
+  libraryPage: initPageCache(0),
+  libraryQuery: '',
+  librarySort: undefined,
   folders: [],
   foldersLoading: false,
   foldersError: null,
@@ -89,6 +110,21 @@ export class MediaPicker {
   // "same pattern as `run()`/`commitIfCurrent`", just scoped to library state instead of
   // sharing the blob-generation counter.
   private libraryGeneration = 0;
+  // Separate from `libraryGeneration` on purpose: `listFolders()` and `listLibrary()`/
+  // `listPage()` are independent requests that are fired concurrently on every modal open
+  // (see `MediaLibraryModal`'s mount effect). Sharing one counter between them meant a
+  // `listFolders()` call racing a `listPage()` call would bump the shared generation and cause
+  // `listPage()`'s own response to be dropped as "stale" by `ifCurrent`, leaving
+  // `libraryLoading` stuck `true` forever — reproduced live via the Phase 4 browser QA pass.
+  private foldersGeneration = 0;
+  // Snapshot of the filters (everything in ListOptions except `page`/`cursor`) that produced
+  // the current `state.libraryPage` cache, tracked as a stable string key so `listPage()` can
+  // detect a folder/mimeTypes/scope/query/sort change and reset the cache instead of trying to
+  // reuse cursors minted under a different filter set. `null` until the first `listPage()` call.
+  private libraryFilterKey: string | null = null;
+  // The filters themselves (minus `page`), remembered so `syncLibrary()` can re-request the
+  // current page without the caller having to repeat folder/query/sort by hand.
+  private libraryFilters: ListOptions = {};
   private readonly config: Required<MediaPickerConfig>;
 
   constructor(deps: Partial<MediaPickerDeps> = {}, config: MediaPickerConfig = {}) {
@@ -218,7 +254,10 @@ export class MediaPicker {
   reset(): void {
     this.generation++;
     this.libraryGeneration++;
-    this.setState({ ...initialState });
+    this.foldersGeneration++;
+    this.libraryFilterKey = null;
+    this.libraryFilters = {};
+    this.setState({ ...initialState, libraryPage: initPageCache(this.libraryGeneration) });
   }
 
   /**
@@ -242,22 +281,59 @@ export class MediaPicker {
   }
 
   /**
-   * Runs a library-scoped async `action` (listLibrary/listFolders), tagging it with the
+   * Runs a `listLibrary`/`listPage`/`syncLibrary` async `action`, tagging it with the
    * `libraryGeneration` active when it started — same last-one-wins pattern as `run()`, kept
    * in a separate counter (see the field comment above). `onSettled` always runs so loading
    * flags get cleared even for a superseded call; the caller decides what to store from
    * `result`/`error` and whether that decision only applies `ifCurrent`.
    */
-  private async runLibrary<T>(
+  private runLibrary<T>(
     action: () => Promise<T>,
     onSettled: (
       outcome: { result: T; error: null } | { result: null; error: Error },
       ifCurrent: (patch: Partial<MediaPickerState>) => void,
     ) => void,
   ): Promise<void> {
-    const gen = ++this.libraryGeneration;
+    return this.runGuarded(
+      () => ++this.libraryGeneration,
+      (gen) => gen === this.libraryGeneration,
+      action,
+      onSettled,
+    );
+  }
+
+  /**
+   * Same guard pattern as `runLibrary`, but for `listFolders()` — a distinct counter so a
+   * folder fetch racing a library-page fetch can't drop the other's response as stale (see
+   * `foldersGeneration`'s field comment).
+   */
+  private runFolders<T>(
+    action: () => Promise<T>,
+    onSettled: (
+      outcome: { result: T; error: null } | { result: null; error: Error },
+      ifCurrent: (patch: Partial<MediaPickerState>) => void,
+    ) => void,
+  ): Promise<void> {
+    return this.runGuarded(
+      () => ++this.foldersGeneration,
+      (gen) => gen === this.foldersGeneration,
+      action,
+      onSettled,
+    );
+  }
+
+  private async runGuarded<T>(
+    bumpGeneration: () => number,
+    isCurrent: (gen: number) => boolean,
+    action: () => Promise<T>,
+    onSettled: (
+      outcome: { result: T; error: null } | { result: null; error: Error },
+      ifCurrent: (patch: Partial<MediaPickerState>) => void,
+    ) => void,
+  ): Promise<void> {
+    const gen = bumpGeneration();
     const ifCurrent = (patch: Partial<MediaPickerState>): void => {
-      if (gen === this.libraryGeneration) this.setState(patch);
+      if (isCurrent(gen)) this.setState(patch);
     };
     try {
       const result = await action();
@@ -295,12 +371,102 @@ export class MediaPicker {
     );
   }
 
+  /**
+   * Numbered-pagination counterpart to `listLibrary()` — always REPLACES `libraryItems` with
+   * exactly `options.page`'s items, never appends, regardless of whether a cursor was used
+   * (see `library-state.ts`'s `PageCache` doc comment for why `listLibrary`/`mergeLibraryPage`
+   * cannot serve this: their cursor-present-means-append rule would concatenate pages).
+   *
+   * Resolves `options.page` against the cached page-to-cursor map. Changing any filter
+   * (`folder`/`mimeTypes`/`scope`/`query`/`sort`) versus the last call resets that cache and
+   * restarts at page 1, regardless of which page was requested — a filter change invalidates
+   * every previously-recorded cursor. Requesting a page beyond the last known one throws
+   * instead of silently fetching the wrong page — the caller (UI) must walk forward
+   * sequentially first, see `cursorForPage`'s doc comment.
+   */
+  async listPage(provider: StorageProvider, options: ListLibraryPageOptions): Promise<void> {
+    const { page: requestedPage, ...filters } = options;
+    if (!Number.isInteger(requestedPage) || requestedPage < 1) {
+      throw new Error('media-picker: listPage() page must be a 1-based integer');
+    }
+
+    const filterKey = JSON.stringify([
+      filters.folder,
+      filters.mimeTypes,
+      filters.scope,
+      filters.query,
+      filters.sort,
+    ]);
+    const filterChanged = filterKey !== this.libraryFilterKey;
+    this.libraryFilterKey = filterKey;
+    this.libraryFilters = filters;
+
+    const cache = filterChanged
+      ? resetPageCache(this.libraryGeneration + 1) // matches the gen `runLibrary` assigns below — safe because no await happens between this line and that call, so nothing else can bump `libraryGeneration` in between
+      : this.state.libraryPage;
+    const page = filterChanged ? 1 : requestedPage;
+
+    const { cursor, reachable } = cursorForPage(cache, page);
+    if (!reachable) {
+      throw new Error(
+        `media-picker: listPage() page ${page} has not been walked to yet — fetch the intervening pages first`,
+      );
+    }
+
+    const requestEpoch = cache.generation;
+    this.setState({
+      libraryPage: cache,
+      libraryQuery: filters.query ?? '',
+      librarySort: filters.sort,
+      libraryLoading: true,
+      libraryError: null,
+    });
+
+    await this.runLibrary(
+      () => provider.list({ ...filters, cursor }),
+      (outcome, ifCurrent) => {
+        if (outcome.error) {
+          ifCurrent({ libraryLoading: false, libraryError: outcome.error });
+          return;
+        }
+        const libraryPage: PageCache = {
+          ...recordPageCursor(
+            this.state.libraryPage,
+            page,
+            outcome.result.nextCursor,
+            requestEpoch,
+          ),
+          currentPage: page,
+        };
+        ifCurrent({
+          libraryItems: [...outcome.result.items],
+          libraryNextCursor: outcome.result.nextCursor ?? null,
+          libraryLoading: false,
+          libraryPage,
+        });
+      },
+    );
+  }
+
+  /**
+   * Re-fetches the current page (`state.libraryPage.currentPage`) with the same filters as the
+   * last `listPage()` call, without resetting the cache or the current page position — backs
+   * the "Sincronizar" button. Defaults to page 1 with no filters when called before any
+   * `listPage()`.
+   */
+  async syncLibrary(provider: StorageProvider): Promise<void> {
+    await this.listPage(provider, {
+      ...this.libraryFilters,
+      page: this.state.libraryPage.currentPage,
+    });
+  }
+
   async listFolders(provider: StorageProvider): Promise<void> {
     if (!provider.listFolders) {
       throw new Error('media-picker: listFolders() called but the provider does not implement it');
     }
     this.setState({ foldersLoading: true, foldersError: null });
-    await this.runLibrary(
+    await this.runFolders(
       () => provider.listFolders!(),
       (outcome, ifCurrent) => {
         if (outcome.error) {
