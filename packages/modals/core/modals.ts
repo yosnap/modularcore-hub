@@ -195,11 +195,22 @@ export class OverlayManager {
   }
 
   private showInternal(config: ModalConfig): void {
-    if (this.shownIds.has(config.id) || this.dismissedIds.has(config.id)) return; // idempotent
+    if (this.dismissedIds.has(config.id)) return; // idempotent: already dismissed this load
+    const slot = slotOf(config.type);
+    const alreadyVisible =
+      slot === 'toast'
+        ? this.state.toasts.some((toast) => toast.id === config.id)
+        : this.state.active[slot]?.id === config.id;
+    // Also guard against a config still being visible from a PRIOR load() (Code Review Finding,
+    // Critical): `shownIds` resets on every load(), but `state.active`/`state.toasts`
+    // intentionally don't (a still-open overlay must not flicker away on an unrelated reload) —
+    // without this, an `always`-frequency config whose trigger refires after a second load()
+    // duplicated itself into `state.toasts` with the same id (duplicate list keys, double
+    // `trackView`).
+    if (this.shownIds.has(config.id) || alreadyVisible) return;
     this.shownIds.add(config.id);
 
     const now = this.now();
-    const slot = slotOf(config.type);
     if (slot === 'toast') {
       if (this.state.toasts.length >= this.toastCap) return; // over cap: silently dropped
       this.setState({ toasts: [...this.state.toasts, config] });
@@ -221,12 +232,23 @@ export class OverlayManager {
     if (this.dismissedIds.has(modalId)) return; // idempotent
     this.dismissedIds.add(modalId);
 
-    const config = this.pending.get(modalId);
+    // Fall back to state.active/state.toasts when the config fell out of `pending` (Code Review
+    // Finding, Critical): `pending` is cleared at the start of every load(), so a still-visible
+    // overlay whose id is no longer eligible in the newest load() would otherwise have no way to
+    // resolve its slot — the close button would set `dismissedIds` (idempotent-blocking any
+    // retry) but never actually remove the overlay from state, leaving it stuck on screen with a
+    // now-dead close button.
+    const config =
+      this.pending.get(modalId) ??
+      Object.values(this.state.active).find((active) => active?.id === modalId) ??
+      this.state.toasts.find((toast) => toast.id === modalId);
     const slot = config ? slotOf(config.type) : undefined;
+
+    if (!slot) return; // unknown modalId (stale/typo'd) — no-op, no tracking event either
 
     if (slot === 'toast') {
       this.setState({ toasts: this.state.toasts.filter((toast) => toast.id !== modalId) });
-    } else if (slot) {
+    } else {
       const next = { ...this.state.active };
       if (next[slot]?.id === modalId) delete next[slot];
       this.setState({ active: next });

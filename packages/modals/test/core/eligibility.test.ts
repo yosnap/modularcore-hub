@@ -49,6 +49,12 @@ describe('isWithinDateWindow', () => {
     expect(isWithinDateWindow(config, new Date('2026-01-15T00:00:00.000Z'))).toBe(true);
     expect(isWithinDateWindow(config, new Date('2026-02-01T00:00:00.000Z'))).toBe(false);
   });
+
+  it('fails closed (excludes) on an unparsable startDate/endDate instead of bypassing the window', () => {
+    const now = new Date('2026-06-15T00:00:00.000Z');
+    expect(isWithinDateWindow(baseConfig({ startDate: '2026-13-40' }), now)).toBe(false);
+    expect(isWithinDateWindow(baseConfig({ endDate: 'not-a-date' }), now)).toBe(false);
+  });
 });
 
 describe('once-per-day frequency boundary', () => {

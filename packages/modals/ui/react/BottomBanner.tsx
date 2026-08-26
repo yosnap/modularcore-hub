@@ -1,3 +1,4 @@
+import { prefersReducedMotion } from '../a11y/reduced-motion.js';
 import { OverlayBody } from './internal/OverlayBody.js';
 import { useEscapeKey } from './internal/use-escape-key.js';
 
@@ -13,7 +14,11 @@ export function BottomBanner({ config, onDismiss }: BottomBannerProps) {
   useEscapeKey(true, () => onDismiss('close-button'));
 
   return (
-    <div role="region" aria-live="polite" className="modals-bottom-banner">
+    <div
+      role="region"
+      aria-live="polite"
+      className={`modals-bottom-banner${prefersReducedMotion() ? ' modals-no-motion' : ''}`}
+    >
       <OverlayBody
         config={config}
         onPrimary={() => onDismiss('primary-button')}

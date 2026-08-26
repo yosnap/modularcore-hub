@@ -199,6 +199,56 @@ describe('OverlayManager tracking', () => {
   });
 });
 
+describe('OverlayManager reload consistency', () => {
+  it('regression: dismiss() still removes a still-visible overlay after a reload drops it from pending', async () => {
+    const env = fakeEnv();
+    const manager = new OverlayManager({
+      triggerEnv: env,
+      store: freshStore(),
+      now: () => new Date('2026-01-01'),
+    });
+    const firstProvider = providerOf([
+      config({ id: 'a', type: 'top-banner', trigger: { type: 'manual' } }),
+    ]);
+    const secondProvider = providerOf([]); // 'a' is no longer eligible on the next load
+
+    await manager.load(firstProvider, { path: '/' });
+    manager.show('a');
+    expect(manager.getState().active['top-banner']?.id).toBe('a');
+
+    await manager.load(secondProvider, { path: '/' }); // clears `pending`; 'a' stays in state.active
+    expect(manager.getState().active['top-banner']?.id).toBe('a'); // still visible, unaffected by reload
+
+    manager.dismiss('a');
+    expect(manager.getState().active['top-banner']).toBeUndefined();
+  });
+
+  it("regression: an always-frequency toast whose trigger refires after a reload doesn't duplicate", async () => {
+    const env = fakeEnv();
+    const manager = new OverlayManager({
+      triggerEnv: env,
+      store: freshStore(),
+      now: () => new Date('2026-01-01'),
+    });
+    const provider = providerOf([
+      config({
+        id: 't',
+        type: 'toast',
+        frequency: 'always',
+        trigger: { type: 'delay', value: 0 },
+      }),
+    ]);
+
+    await manager.load(provider, { path: '/' });
+    env.fireTimeouts(); // shows the toast
+
+    await manager.load(provider, { path: '/' }); // still eligible ('always'); reschedules the trigger
+    env.fireTimeouts(); // the rescheduled trigger refires while the toast is still on screen
+
+    expect(manager.getState().toasts.filter((toast) => toast.id === 't')).toHaveLength(1);
+  });
+});
+
 describe('OverlayManager `now` resolution', () => {
   it('resolves now once per load and threads it to eligibility (respects date window)', async () => {
     const env = fakeEnv();

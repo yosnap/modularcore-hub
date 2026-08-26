@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 import { createFocusTrap } from '../a11y/focus-trap.js';
+import { prefersReducedMotion } from '../a11y/reduced-motion.js';
 import { OverlayBody } from './internal/OverlayBody.js';
 import { useEscapeKey } from './internal/use-escape-key.js';
 
@@ -33,7 +34,7 @@ export function FullscreenOverlay({ config, onDismiss }: FullscreenOverlayProps)
       role="dialog"
       aria-modal="true"
       aria-label={config.title ?? config.name ?? 'Dialog'}
-      className="modals-fullscreen"
+      className={`modals-fullscreen${prefersReducedMotion() ? ' modals-no-motion' : ''}`}
     >
       <OverlayBody
         config={config}

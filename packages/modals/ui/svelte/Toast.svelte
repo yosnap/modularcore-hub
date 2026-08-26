@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { prefersReducedMotion } from '../a11y/reduced-motion.js';
   import OverlayBody from './internal/OverlayBody.svelte';
 
   import type { InteractionAction, ModalConfig } from '../../core/types.js';
@@ -20,8 +21,10 @@
     const timer = setTimeout(() => ondismiss('close-button'), ms);
     return () => clearTimeout(timer);
   });
+
+  const noMotionClass = $derived(prefersReducedMotion() ? ' modals-no-motion' : '');
 </script>
 
-<div role="status" aria-live="polite" class="modals-toast">
+<div role="status" aria-live="polite" class="modals-toast{noMotionClass}">
   <OverlayBody {config} {ondismiss} />
 </div>

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 
+import { prefersReducedMotion } from '../a11y/reduced-motion.js';
 import { OverlayBody } from './internal/OverlayBody.js';
 
 import type { ModalConfig } from '../../core/types.js';
@@ -22,7 +23,11 @@ export function Toast({ config, onDismiss }: ToastProps) {
   }, [config.id, config.autoDismissMs]);
 
   return (
-    <div role="status" aria-live="polite" className="modals-toast">
+    <div
+      role="status"
+      aria-live="polite"
+      className={`modals-toast${prefersReducedMotion() ? ' modals-no-motion' : ''}`}
+    >
       <OverlayBody
         config={config}
         onPrimary={() => onDismiss('primary-button')}

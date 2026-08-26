@@ -1,3 +1,4 @@
+import { prefersReducedMotion } from '../a11y/reduced-motion.js';
 import { OverlayBody } from './internal/OverlayBody.js';
 import { useEscapeKey } from './internal/use-escape-key.js';
 
@@ -13,7 +14,11 @@ export function SlideIn({ config, onDismiss }: SlideInProps) {
   useEscapeKey(true, () => onDismiss('close-button'));
 
   return (
-    <div role="region" aria-live="polite" className="modals-slide-in">
+    <div
+      role="region"
+      aria-live="polite"
+      className={`modals-slide-in${prefersReducedMotion() ? ' modals-no-motion' : ''}`}
+    >
       <OverlayBody
         config={config}
         onPrimary={() => onDismiss('primary-button')}

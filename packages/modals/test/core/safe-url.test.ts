@@ -16,6 +16,14 @@ describe('safeHref', () => {
     expect(safeHref('not a url')).toBeUndefined();
     expect(safeHref(undefined)).toBeUndefined();
   });
+
+  it('allows a root-relative in-app path and keeps it relative', () => {
+    expect(safeHref('/pricing')).toBe('/pricing');
+  });
+
+  it('rejects a protocol-relative URL (resolves to an arbitrary host)', () => {
+    expect(safeHref('//evil.com')).toBeUndefined();
+  });
 });
 
 describe('safeImageSrc', () => {

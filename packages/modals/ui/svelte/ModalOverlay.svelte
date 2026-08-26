@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createFocusTrap } from '../a11y/focus-trap.js';
+  import { prefersReducedMotion } from '../a11y/reduced-motion.js';
   import OverlayBody from './internal/OverlayBody.svelte';
 
   import type { InteractionAction, ModalConfig } from '../../core/types.js';
@@ -32,9 +33,11 @@
   function onBackdropClick(event: MouseEvent): void {
     if (event.target === event.currentTarget) ondismiss('outside-click');
   }
+
+  const noMotionClass = $derived(prefersReducedMotion() ? ' modals-no-motion' : '');
 </script>
 
-<div class="modals-backdrop" role="presentation" onclick={onBackdropClick}>
+<div class="modals-backdrop{noMotionClass}" role="presentation" onclick={onBackdropClick}>
   <div bind:this={dialogEl} role="dialog" aria-modal="true" aria-label={config.title ?? config.name ?? 'Dialog'} class="modals-modal">
     <OverlayBody {config} {ondismiss} />
   </div>

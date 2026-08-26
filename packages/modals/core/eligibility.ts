@@ -22,8 +22,18 @@ export function matchesTargeting(path: string, targeting?: ModalConfig['targetin
 
 export function isWithinDateWindow(config: ModalConfig, now: Date): boolean {
   const nowMs = now.getTime();
-  if (config.startDate && nowMs < new Date(config.startDate).getTime()) return false;
-  if (config.endDate && nowMs > new Date(config.endDate).getTime()) return false;
+  if (config.startDate) {
+    const startMs = new Date(config.startDate).getTime();
+    // Fail closed on an unparsable date instead of fail open (Code Review Finding, Critical):
+    // `nowMs < NaN` is always false, so an invalid startDate/endDate previously bypassed the
+    // window check entirely instead of excluding the config — the opposite of what a scheduling
+    // gate over untrusted (CMS-sourced) provider data must do.
+    if (Number.isNaN(startMs) || nowMs < startMs) return false;
+  }
+  if (config.endDate) {
+    const endMs = new Date(config.endDate).getTime();
+    if (Number.isNaN(endMs) || nowMs > endMs) return false;
+  }
   return true;
 }
 

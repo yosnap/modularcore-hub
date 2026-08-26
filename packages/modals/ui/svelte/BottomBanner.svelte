@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { prefersReducedMotion } from '../a11y/reduced-motion.js';
   import OverlayBody from './internal/OverlayBody.svelte';
 
   import type { InteractionAction, ModalConfig } from '../../core/types.js';
@@ -18,8 +19,10 @@
     document.addEventListener('keydown', onKeydown);
     return () => document.removeEventListener('keydown', onKeydown);
   });
+
+  const noMotionClass = $derived(prefersReducedMotion() ? ' modals-no-motion' : '');
 </script>
 
-<div role="region" aria-live="polite" class="modals-bottom-banner">
+<div role="region" aria-live="polite" class="modals-bottom-banner{noMotionClass}">
   <OverlayBody {config} {ondismiss} />
 </div>
