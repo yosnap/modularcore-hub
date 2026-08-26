@@ -68,7 +68,21 @@
   --font-mono: var(--mc-font-mono);
 }
 
-@layer base {
+/*
+ * Explicit layer order (must be declared before any layer's rules are written, and wins
+ * regardless of what order stylesheets actually load in): pins `brand` after `base` for the
+ * whole document. Without this, `packages/media-picker`'s shadcn variant components each
+ * self-import `ui/shadcn-theme.css` (see its own file comment — deliberately self-contained for
+ * standalone consumers) which declares the SAME `@layer base { :root { --primary: ... } } }`
+ * selector with the generic un-branded shadcn zinc palette. Since that CSS module only loads
+ * once its component actually mounts (later than this file, which the root layout imports
+ * first), it would otherwise win the same-layer/same-specificity tie and silently revert
+ * --primary (and every other token below) back to zinc-950 for the rest of the page's lifetime
+ * — reproduced live: the brand indigo never appeared in the shadcn playground variant.
+ */
+@layer base, brand;
+
+@layer brand {
   /*
    * Semantic tokens remapped to the brand palette (docs/brand-guide.md §3). Each value is the
    * HSL equivalent of its --mc-* source (brand-tokens.css stores hex; --theme-inline above wraps
@@ -118,7 +132,9 @@
     --input: 215.3 25% 26.7%; /* mc-neutral-700 */
     --ring: 234.5 89.5% 73.9%; /* mc-primary-400 #818CF8, lighter for dark-bg visibility */
   }
+}
 
+@layer base {
   body {
     font-family: var(--mc-font-body);
     color: hsl(var(--foreground));

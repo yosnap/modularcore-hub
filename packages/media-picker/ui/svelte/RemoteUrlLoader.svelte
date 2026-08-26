@@ -33,9 +33,22 @@
   // otherwise a double-click fires two concurrent fetches.
   let loading = $state(false);
 
+  /** "Parses as a URL" — any scheme accepted here; the SSRF guard applies the real restriction. */
+  function isParsableUrl(value: string): boolean {
+    if (!value) return false;
+    try {
+      new URL(value);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  const valid = $derived(isParsableUrl(url.trim()));
+
   async function handleLoad(): Promise<void> {
     const trimmed = url.trim();
-    if (!trimmed || loading) return;
+    if (!isParsableUrl(trimmed) || loading) return;
     loading = true;
     try {
       await picker.loadFromUrl(resolveUrl(trimmed), { allowHttp, maxBytes });
@@ -45,13 +58,23 @@
   }
 </script>
 
+<!--
+  Deliberately unstyled: structure + ARIA only, no CSS framework — this package ships
+  headless-first with minimal reference UI. Restyle freely.
+-->
 <div>
   <label>
-    Image URL
+    URL de la imagen
+    <span aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07l-1.5 1.5" />
+        <path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07l1.5-1.5" />
+      </svg>
+    </span>
     <input type="url" bind:value={url} placeholder="https://example.com/image.png" />
   </label>
-  <button type="button" onclick={() => void handleLoad()} disabled={loading || url.trim() === ''}>
-    Load from URL
+  <button type="button" onclick={() => void handleLoad()} disabled={loading || !valid}>
+    Usar esta URL
   </button>
   {#if picker.state.error}
     <p role="alert">{picker.state.error.message}</p>

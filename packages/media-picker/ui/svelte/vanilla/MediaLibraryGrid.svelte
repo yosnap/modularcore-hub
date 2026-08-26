@@ -1,5 +1,6 @@
 <script lang="ts">
   import '../../vanilla-styles.css';
+  import { formatBytes } from '../../../core/format.js';
   import type { MediaPickerRune } from '../../../adapters/svelte/create-media-picker.svelte.js';
   import type { LibraryItem } from '../../../core/media-picker.js';
 
@@ -22,6 +23,10 @@
   function isSelected(item: LibraryItem): boolean {
     return picker.state.selection.some((selected) => selected.key === item.key);
   }
+
+  function basename(key: string): string {
+    return key.split('/').pop() || key;
+  }
 </script>
 
 <!-- Vanilla CSS variant: same props/behavior as the headless MediaLibraryGrid. -->
@@ -43,6 +48,10 @@
       {:else}
         <span>{item.key}</span>
       {/if}
+      <div class="mc-grid__caption">
+        <span class="mc-grid__filename" title={item.key}>{basename(item.key)}</span>
+        <span class="mc-grid__size">{formatBytes(item.size)}</span>
+      </div>
     </button>
   {/each}
 </div>

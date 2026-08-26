@@ -80,6 +80,43 @@ describe('createS3CompatibleProvider (mock provider, no network)', () => {
     await expect(provider.upload(new File(['x'], 'x.png'))).rejects.toThrow(/status 403/);
   });
 
+  it('forwards overwriteKey to getUploadUrl (real same-key "Sobreescribir" upload)', async () => {
+    const fetchSpy = vi.fn(async () => new Response(null, { status: 200 }));
+    global.fetch = fetchSpy as unknown as typeof fetch;
+    const getUploadUrl = vi.fn(async (_file: Blob, options?: { overwriteKey?: string }) => ({
+      url: 'https://upload.example.com/presigned',
+      key: options?.overwriteKey ?? 'uploads/fresh.png',
+    }));
+
+    const provider = createS3CompatibleProvider({
+      publicUrlBase: 'https://cdn.example.com',
+      getUploadUrl,
+    });
+
+    const file = new File(['data'], 'a.png', { type: 'image/png' });
+    const result = await provider.upload(file, { overwriteKey: 'uploads/existing.png' });
+
+    expect(getUploadUrl).toHaveBeenCalledWith(
+      file,
+      expect.objectContaining({ overwriteKey: 'uploads/existing.png' }),
+    );
+    expect(result.key).toBe('uploads/existing.png');
+  });
+
+  it('omitting overwriteKey reproduces the current "always new key" behavior exactly', async () => {
+    global.fetch = vi.fn(async () => new Response(null, { status: 200 })) as unknown as typeof fetch;
+    const getUploadUrl = vi.fn(async (_file: Blob, options?: { overwriteKey?: string }) => ({
+      url: 'https://upload.example.com/presigned',
+      key: options?.overwriteKey ?? 'uploads/fresh.png',
+    }));
+    const provider = createS3CompatibleProvider({ publicUrlBase: 'https://cdn.example.com', getUploadUrl });
+
+    const result = await provider.upload(new File(['data'], 'a.png'));
+
+    expect(getUploadUrl).toHaveBeenCalledWith(expect.any(File), undefined);
+    expect(result.key).toBe('uploads/fresh.png');
+  });
+
   it('list()/remove() require explicit hooks (no implicit standing credentials)', async () => {
     const provider = createS3CompatibleProvider({
       publicUrlBase: 'https://cdn.example.com',
@@ -102,6 +139,17 @@ describe('createS3CompatibleProvider (mock provider, no network)', () => {
     const page = await provider.list({ folder: 'f1', mimeTypes: ['image/png'] });
     expect(list).toHaveBeenCalledWith({ folder: 'f1', mimeTypes: ['image/png'] });
     expect(page).toEqual({ items: [{ key: 'a', url: 'u', size: 1 }], nextCursor: 'c2' });
+  });
+
+  it('forwards query/sort through to the configured list hook', async () => {
+    const list = vi.fn(async () => ({ items: [] }));
+    const provider = createS3CompatibleProvider({
+      publicUrlBase: 'https://cdn.example.com',
+      getUploadUrl: async () => ({ url: 'x', key: 'k' }),
+      list,
+    });
+    await provider.list({ query: 'cat', sort: 'name' });
+    expect(list).toHaveBeenCalledWith({ query: 'cat', sort: 'name' });
   });
 
   it('listFolders/createFolder are absent unless the hooks are configured', () => {

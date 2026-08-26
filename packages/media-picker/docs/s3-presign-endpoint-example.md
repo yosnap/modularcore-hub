@@ -52,3 +52,35 @@ const provider = createS3CompatibleProvider({
   },
 });
 ```
+
+## Listing: `query`/`sort`
+
+`ListOptions.query` (free-text search) and `ListOptions.sort` (`'newest' | 'oldest' | 'name' | 'size'`)
+are forwarded verbatim to whatever `list` hook you configure — same trust boundary as `scope`
+today. Two things to get right in your own listing endpoint:
+
+- **Never string-interpolate `query` into a bucket-listing filter/prefix expression.**
+  `query` is free text typed by the end user; concatenating it unparameterized into e.g. an S3
+  `Prefix`/`Delimiter` query or a database `LIKE` clause risks a filter-injection vector — a
+  user's search text could widen the listing beyond the caller's intended `scope`/`folder`.
+  Parameterize it (bound query param / prepared statement / an allow-listed match against
+  indexed object keys), the same way you would any other untrusted user input.
+- **`sort` is a request, not a guarantee.** Real bucket listings are not always sortable
+  server-side without an index (S3 itself returns keys in lexicographic order only) — an
+  endpoint that ignores `sort` entirely is a valid, if degraded, implementation. Document
+  which `sort` values your endpoint actually honors.
+
+```ts
+export async function listMedia(req, res) {
+  // AUTHENTICATE/AUTHORIZE req before listing.
+  const { folder, query, sort, cursor, limit } = req.query;
+  // Parameterized — `query` never gets concatenated into a raw filter string.
+  const results = await db.mediaObjects.find({
+    where: { userId: req.user.id, folder, ...(query ? { key: { contains: String(query) } } : {}) },
+    orderBy: sort === 'name' ? 'key' : sort === 'size' ? 'size' : 'lastModified',
+    cursor,
+    take: limit ?? 24,
+  });
+  res.json(results);
+}
+```
