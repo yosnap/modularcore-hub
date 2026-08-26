@@ -10,13 +10,6 @@ export class CliError extends Error {
   }
 }
 
-export class RegistryClientError extends CliError {
-  constructor(message: string) {
-    super(message);
-    this.name = 'RegistryClientError';
-  }
-}
-
 export class CompatibilityError extends CliError {
   constructor(message: string) {
     super(message);

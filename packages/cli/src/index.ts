@@ -12,13 +12,13 @@ import { formatIndexEntries, runList } from './commands/list.js';
 import { runSearch } from './commands/search.js';
 import { runUpdate } from './commands/update.js';
 import { readProjectConfig } from './config.js';
-import { CliError } from './errors.js';
+import { formatCliTopLevelError } from './format-error.js';
 import { clackPromptAdapter } from './prompts.js';
-import { createRegistryClient } from './registry-client.js';
+import { createRegistryClient } from '@modularcore/registry-client';
 
 /**
  * AD7: Node < 18 has no global `fetch`; fail fast with an actionable message instead of
- * an opaque `fetch is not defined` deep inside `registry-client.ts`.
+ * an opaque `fetch is not defined` deep inside `@modularcore/registry-client`.
  */
 if (typeof fetch !== 'function') {
   console.error(
@@ -118,8 +118,9 @@ async function main(): Promise<void> {
   try {
     await program.parseAsync(process.argv);
   } catch (error) {
-    if (error instanceof CliError) {
-      console.error(`[modularcore] ${error.message}`);
+    const formatted = formatCliTopLevelError(error);
+    if (formatted !== undefined) {
+      console.error(formatted);
       process.exit(1);
     }
     throw error;

@@ -1,0 +1,23 @@
+{
+  "name": "needs-react-19",
+  "version": "1.0.0",
+  "title": "Needs React 19",
+  "type": "frontend-component",
+  "category": "test-fixture",
+  "frameworks": ["react"],
+  "visibility": "public",
+  "peerDependencies": { "react": ">=19" },
+  "dependencies": [],
+  "registryDependencies": [],
+  "envVariables": [],
+  "description": "AD2 fixture: peerDependencies range incompatible with an installed react ^18.",
+  "files": [
+    {
+      "path": "src/widget.tsx",
+      "target": "src/components/needs-react-19/widget.tsx",
+      "type": "component",
+      "encoding": "utf8",
+      "content": "export function Widget() {\n  return null;\n}\n"
+    }
+  ]
+}

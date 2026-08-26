@@ -3,7 +3,9 @@ import { join } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { appendEnvExample, diffLines, remapTarget, resolveTargetPath } from '../src/files.js';
+import { resolveTargetPath } from '@modularcore/registry-client';
+
+import { appendEnvExample, diffLines, remapTarget } from '../src/files.js';
 import { createTmpProject } from './helpers/tmp-project.js';
 
 const DEFAULT_PATHS = { components: 'src/components', lib: 'src/lib/modularcore' };
@@ -24,44 +26,22 @@ describe('remapTarget', () => {
   it('leaves unrecognized targets untouched', () => {
     expect(remapTarget('other/place/file.ts', DEFAULT_PATHS)).toBe('other/place/file.ts');
   });
-});
 
-describe('resolveTargetPath (anti path-traversal clamp)', () => {
-  it('rejects a target that escapes the project root via a malicious paths.lib', async () => {
+  it("composes with @modularcore/registry-client's resolveTargetPath (anti path-traversal clamp)", async () => {
     const project = await createTmpProject({});
     try {
+      // A malicious paths.lib escaping the project root is still caught by the clamp,
+      // even though remapping itself now happens in the CLI before calling resolveTargetPath.
       expect(() =>
-        resolveTargetPath(project.dir, 'src/modularcore/hello.ts', {
-          ...DEFAULT_PATHS,
-          lib: '../../escaped',
-        }),
+        resolveTargetPath(
+          project.dir,
+          remapTarget('src/modularcore/hello.ts', { ...DEFAULT_PATHS, lib: '../../escaped' }),
+        ),
       ).toThrow(/Refusing to write outside target root/);
-    } finally {
-      await project.cleanup();
-    }
-  });
 
-  it('rejects an absolute paths.lib remap', async () => {
-    const project = await createTmpProject({});
-    try {
-      expect(() =>
-        resolveTargetPath(project.dir, 'src/modularcore/hello.ts', {
-          ...DEFAULT_PATHS,
-          lib: '/etc',
-        }),
-      ).toThrow(/Refusing to write outside target root/);
-    } finally {
-      await project.cleanup();
-    }
-  });
-
-  it('resolves a normal target inside the project root', async () => {
-    const project = await createTmpProject({});
-    try {
       const resolved = resolveTargetPath(
         project.dir,
-        'src/modularcore/hello-core/hello.ts',
-        DEFAULT_PATHS,
+        remapTarget('src/modularcore/hello-core/hello.ts', DEFAULT_PATHS),
       );
       expect(resolved).toBe(join(project.dir, 'src/lib/modularcore/hello-core/hello.ts'));
     } finally {

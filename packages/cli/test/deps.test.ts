@@ -6,7 +6,7 @@ import {
   resolveRegistryDependencies,
 } from '../src/deps.js';
 import { CompatibilityError, DependencyCycleError } from '../src/errors.js';
-import { createRegistryClient } from '../src/registry-client.js';
+import { createRegistryClient } from '@modularcore/registry-client';
 import { startFixtureRegistryServer } from './helpers/load-fixture-registry.js';
 
 import type { TestRegistryServer } from './helpers/test-registry-server.js';
@@ -55,6 +55,15 @@ describe('deps', () => {
     const client = createRegistryClient(server.url);
     const entry = await client.getDescriptor('widget');
     expect(() => assertCompatible(entry, 'react', () => '^18.2.0')).not.toThrow();
+  });
+
+  it('accepts a component declaring frameworks: ["agnostic"] regardless of the project framework', async () => {
+    server = await startFixtureRegistryServer();
+    const client = createRegistryClient(server.url);
+    const entry = await client.getDescriptor('widget');
+    const agnosticEntry = { ...entry, frameworks: ['agnostic'], peerDependencies: {} };
+    expect(() => assertCompatible(agnosticEntry, 'react', () => undefined)).not.toThrow();
+    expect(() => assertCompatible(agnosticEntry, 'svelte', () => undefined)).not.toThrow();
   });
 
   it('SA2: rejects a dependency without a pinned/semver version', async () => {

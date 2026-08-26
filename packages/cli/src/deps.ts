@@ -2,7 +2,7 @@ import semver from 'semver';
 
 import { CompatibilityError, DependencyCycleError } from './errors.js';
 
-import type { RegistryClient } from './registry-client.js';
+import type { RegistryClient } from '@modularcore/registry-client';
 import type { RegistryEntry } from '@modularcore/registry';
 
 /**
@@ -15,7 +15,7 @@ export function assertCompatible(
   projectFramework: string,
   installedPeerVersion: (peerName: string) => string | undefined,
 ): void {
-  if (!entry.frameworks.includes(projectFramework)) {
+  if (!entry.frameworks.includes('agnostic') && !entry.frameworks.includes(projectFramework)) {
     throw new CompatibilityError(
       `"${entry.name}" no soporta el framework de este proyecto ("${projectFramework}"). ` +
         `Frameworks soportados: ${entry.frameworks.join(', ')}.`,

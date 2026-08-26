@@ -1,0 +1,18 @@
+[
+  {
+    "name": "hello-core",
+    "title": "Hello Core",
+    "category": "test-fixture",
+    "version": "1.0.0",
+    "frameworks": ["react", "svelte"],
+    "description": "Trivial framework-agnostic fixture used by MCP server tests."
+  },
+  {
+    "name": "widget",
+    "title": "Widget",
+    "category": "ui",
+    "version": "2.0.0",
+    "frameworks": ["react"],
+    "description": "Second fixture component, used for search filtering."
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "name": "@modularcore/auto-seo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/core/index.js",
+  "types": "./dist/core/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "schema-dts": "^2.0.0"
+  }
+}

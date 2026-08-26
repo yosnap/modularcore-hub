@@ -22,6 +22,7 @@
   "dependencies": {
     "@clack/prompts": "^1.7.0",
     "@modularcore/registry": "workspace:*",
+    "@modularcore/registry-client": "workspace:*",
     "commander": "^15.0.0",
     "semver": "^7.8.5",
     "zod": "^4.4.3"

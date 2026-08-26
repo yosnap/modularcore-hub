@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { runInit } from '../src/commands/init.js';
 import { runAdd } from '../src/commands/add.js';
 import { CliError, CompatibilityError, DependencyCycleError } from '../src/errors.js';
-import { createRegistryClient } from '../src/registry-client.js';
+import { createRegistryClient } from '@modularcore/registry-client';
 import { readProjectConfig, writeProjectConfig } from '../src/config.js';
 import { createFakePrompts } from './helpers/fake-prompts.js';
 import { createTmpProject } from './helpers/tmp-project.js';

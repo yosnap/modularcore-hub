@@ -1,0 +1,23 @@
+{
+  "name": "widget",
+  "version": "2.0.0",
+  "title": "Widget",
+  "type": "frontend-component",
+  "category": "ui",
+  "frameworks": ["react"],
+  "visibility": "public",
+  "peerDependencies": {},
+  "dependencies": [],
+  "registryDependencies": [],
+  "envVariables": [],
+  "description": "Second fixture component, used for search filtering.",
+  "files": [
+    {
+      "path": "src/widget.tsx",
+      "target": "src/modularcore/widget/widget.tsx",
+      "type": "component",
+      "encoding": "utf8",
+      "content": "export function Widget() { return null; }\n"
+    }
+  ]
+}

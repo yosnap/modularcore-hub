@@ -1,4 +1,4 @@
-import type { RegistryClient } from '../registry-client.js';
+import type { RegistryClient } from '@modularcore/registry-client';
 import type { RegistryIndexEntry } from '@modularcore/registry';
 
 export async function runList(client: RegistryClient): Promise<RegistryIndexEntry[]> {

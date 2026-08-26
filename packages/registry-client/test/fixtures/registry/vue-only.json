@@ -1,0 +1,23 @@
+{
+  "name": "vue-only",
+  "version": "1.0.0",
+  "title": "Vue Only",
+  "type": "frontend-component",
+  "category": "test-fixture",
+  "frameworks": ["vue"],
+  "visibility": "public",
+  "peerDependencies": { "vue": ">=3" },
+  "dependencies": [],
+  "registryDependencies": [],
+  "envVariables": [],
+  "description": "AD2 fixture: framework incompatible with a react project.",
+  "files": [
+    {
+      "path": "src/widget.vue",
+      "target": "src/components/vue-only/widget.vue",
+      "type": "component",
+      "encoding": "utf8",
+      "content": "<template><div/></template>\n"
+    }
+  ]
+}

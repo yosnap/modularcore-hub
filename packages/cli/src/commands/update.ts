@@ -6,12 +6,13 @@ import {
   decodeFileContent,
   diffLines,
   readLocalFileBuffer,
-  resolveTargetPath,
+  remapTarget,
 } from '../files.js';
 import { readProjectConfig, writeProjectConfig } from '../config.js';
 import { formatDiffLines } from './diff.js';
+import { resolveTargetPath } from '@modularcore/registry-client';
 
-import type { RegistryClient } from '../registry-client.js';
+import type { RegistryClient } from '@modularcore/registry-client';
 import type { PromptAdapter } from '../prompts.js';
 
 export interface UpdateOptions {
@@ -45,7 +46,7 @@ async function updateComponent(
   const entry = await client.getDescriptor(name);
   const outcomes: UpdateFileOutcome[] = [];
   for (const file of entry.files) {
-    const localPath = resolveTargetPath(cwd, file.target, paths);
+    const localPath = resolveTargetPath(cwd, remapTarget(file.target, paths));
     const localBuffer = await readLocalFileBuffer(localPath);
     const registryBuffer = decodeFileContent(file);
 
