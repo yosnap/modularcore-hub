@@ -1,5 +1,25 @@
 # @modularcore/media-picker
 
+## 0.4.0
+
+### Minor Changes
+
+- Redesign the Svelte UI as a modal picker/editor across all 4 style variants (headless, tailwind, shadcn, vanilla), matching the reference design: a tabbed "Biblioteca de medios" modal (Biblioteca/Subir archivo/Desde URL) and a two-column "Editar imagen" modal with interactive crop handles and a UI-only metadata panel.
+
+  - New `MediaLibraryModal` component with real numbered pagination, search, and sort (`listPage`, `syncLibrary`, `PageCache`), alongside the existing `listLibrary` infinite-scroll action which is unchanged.
+  - New per-file upload queue for the "Subir archivo" tab that never touches the single-blob picker state machine.
+  - `ImageEditor` redesigned as a modal with draggable crop handles (`resizeCropRect`), a custom W:H ratio input, a shared `applyZoom` module (Svelte variants only), and a double-submit-guarded Cancelar/Sobreescribir/Guardar como nuevo footer.
+  - New `UploadOptions.overwriteKey` for a real same-key overwrite upload, honored by `s3-compatible` and the demo provider (Cloudinary is explicitly unsupported — its `getSignedParams(file)` callback has no `options` parameter).
+
+  The React UI adapter is untouched and keeps compiling; only the Svelte UI was redesigned in this release.
+
+- 620dffd: Add 3 downloadable style variants for every UI component (React + Svelte): Tailwind, Shadcn
+  (with real `@radix-ui/react-toggle`/`@radix-ui/react-slider` in React, `bits-ui` in Svelte), and
+  plain CSS ("vanilla", bundler-agnostic). New files live under `ui/{react,svelte}/{tailwind,shadcn,vanilla}/`
+  alongside the existing unstyled headless components, which are unchanged. `@radix-ui/react-toggle`,
+  `@radix-ui/react-slider`, and `bits-ui` are new optional peer dependencies — only required by
+  consumers who use the Shadcn variant.
+
 ## 0.3.2
 
 ### Patch Changes

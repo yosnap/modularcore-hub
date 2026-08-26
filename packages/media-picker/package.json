@@ -1,6 +1,6 @@
 {
   "name": "@modularcore/media-picker",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "main": "./dist/core/media-picker.js",
@@ -123,6 +123,7 @@
     "@radix-ui/react-toggle": "^1.1.18",
     "@types/node": "^22.13.0",
     "@types/react": "^19.2.0",
+    "bits-ui": "^2.18.2",
     "canvas": "^3.2.0",
     "react": "^19.2.8",
     "svelte": "^5.56.9",

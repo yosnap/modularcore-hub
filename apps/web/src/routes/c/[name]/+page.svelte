@@ -87,11 +87,11 @@ tar -xzf {descriptor.name}.tar.gz</code
   .meta {
     display: flex;
     gap: 0.75rem;
-    color: #555;
+    color: var(--mc-neutral-500);
     font-size: 0.9rem;
   }
   .badge {
-    background: #eee;
+    background: var(--mc-neutral-100);
     border-radius: 4px;
     padding: 0 0.4rem;
   }
@@ -101,13 +101,13 @@ tar -xzf {descriptor.name}.tar.gz</code
   }
   th,
   td {
-    border: 1px solid #ddd;
+    border: 1px solid var(--mc-neutral-200);
     padding: 0.4rem 0.6rem;
     text-align: left;
     vertical-align: top;
   }
   pre {
-    background: #f5f5f5;
+    background: var(--mc-neutral-50);
     padding: 0.75rem;
     border-radius: 6px;
     overflow-x: auto;

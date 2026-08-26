@@ -58,18 +58,18 @@
     gap: 1rem;
   }
   .card {
-    border: 1px solid #ddd;
+    border: 1px solid var(--mc-neutral-200);
     border-radius: 8px;
     padding: 1rem;
   }
   .meta {
     display: flex;
     gap: 0.75rem;
-    color: #555;
+    color: var(--mc-neutral-500);
     font-size: 0.9rem;
   }
   .badge {
-    background: #eee;
+    background: var(--mc-neutral-100);
     border-radius: 4px;
     padding: 0 0.4rem;
   }
