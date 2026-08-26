@@ -66,13 +66,19 @@ export function createDemoStorageProvider(): StorageProvider {
       // to the same user/tenant) — this demo provider has no such check because it has no
       // concept of a caller identity at all; do not copy this file's overwrite path as a model
       // for a real provider without adding that authorization check.
-      const folderId = options?.key?.includes('/') ? options.key.split('/')[0] : undefined;
+      const previous = options?.overwriteKey ? store.get(options.overwriteKey) : undefined;
+      // On overwrite, `options.key` is never passed (see "Sobreescribir" call sites) — falling
+      // back to the previous entry's own `folderId` instead of `undefined` keeps the item in
+      // whatever folder it already lived in (Code Review Finding: overwriting an image used to
+      // silently reset its folder, making it vanish from that folder's filtered library view).
+      const folderId = options?.key?.includes('/')
+        ? options.key.split('/')[0]
+        : previous?.folderId;
       const key = options?.overwriteKey ?? generateKey(folderId);
-      if (options?.overwriteKey) {
+      if (previous) {
         // Revoke the previous entry's object URL before replacing it — mirrors `remove()`
         // below; without this every "Sobreescribir" leaked one blob URL for the tab's lifetime.
-        const previous = store.get(options.overwriteKey);
-        if (previous) URL.revokeObjectURL(previous.url);
+        URL.revokeObjectURL(previous.url);
       }
       const url = URL.createObjectURL(file);
       const contentType = options?.contentType ?? file.type ?? 'application/octet-stream';

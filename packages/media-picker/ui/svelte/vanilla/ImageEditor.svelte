@@ -203,7 +203,13 @@
   }
 
   let submitting = $state(false);
-  const isBusy = $derived(submitting || picker.state.status === 'uploading');
+  // Also covers 'cropping'/'compressing', not just 'uploading' (Code Review Finding, Critical):
+  // rotate()/flip()/crop() all capture `state.blob` synchronously and share the same generation
+  // counter (core/media-picker.ts's `run()`) — clicking Rotar then immediately Guardar before
+  // rotate() resolves lets crop() start against the still-pre-rotation blob and win the race,
+  // silently discarding the rotation. Disabling rotate/flip/save/overwrite for the whole
+  // 'idle'-to-'idle' window (not just the final upload) closes that gap structurally.
+  const isBusy = $derived(submitting || picker.state.status !== 'idle');
 
   async function performCrop(): Promise<void> {
     if (!picker.state.blob) return;
@@ -351,10 +357,10 @@
           </div>
 
           <div class="mc-editor__actions">
-            <button type="button" onclick={() => picker.rotate('ccw')} class="mc-button">⟲ -90°</button>
-            <button type="button" onclick={() => picker.rotate('cw')} class="mc-button">⟳ +90°</button>
-            <button type="button" onclick={() => picker.flip('horizontal')} class="mc-button">Voltear H</button>
-            <button type="button" onclick={() => picker.flip('vertical')} class="mc-button">Voltear V</button>
+            <button type="button" disabled={isBusy} onclick={() => picker.rotate('ccw')} class="mc-button">⟲ -90°</button>
+            <button type="button" disabled={isBusy} onclick={() => picker.rotate('cw')} class="mc-button">⟳ +90°</button>
+            <button type="button" disabled={isBusy} onclick={() => picker.flip('horizontal')} class="mc-button">Voltear H</button>
+            <button type="button" disabled={isBusy} onclick={() => picker.flip('vertical')} class="mc-button">Voltear V</button>
           </div>
 
           <label class="mc-field">

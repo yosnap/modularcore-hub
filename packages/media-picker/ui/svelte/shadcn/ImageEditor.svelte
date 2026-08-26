@@ -206,7 +206,13 @@
   }
 
   let submitting = $state(false);
-  const isBusy = $derived(submitting || picker.state.status === 'uploading');
+  // Also covers 'cropping'/'compressing', not just 'uploading' (Code Review Finding, Critical):
+  // rotate()/flip()/crop() all capture `state.blob` synchronously and share the same generation
+  // counter (core/media-picker.ts's `run()`) — clicking Rotar then immediately Guardar before
+  // rotate() resolves lets crop() start against the still-pre-rotation blob and win the race,
+  // silently discarding the rotation. Disabling rotate/flip/save/overwrite for the whole
+  // 'idle'-to-'idle' window (not just the final upload) closes that gap structurally.
+  const isBusy = $derived(submitting || picker.state.status !== 'idle');
 
   async function performCrop(): Promise<void> {
     if (!picker.state.blob) return;
@@ -331,10 +337,10 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-2">
-            <button type="button" onclick={() => picker.rotate('ccw')} class="rounded-md border border-input px-3 py-1.5 text-sm hover:bg-accent">⟲ -90°</button>
-            <button type="button" onclick={() => picker.rotate('cw')} class="rounded-md border border-input px-3 py-1.5 text-sm hover:bg-accent">⟳ +90°</button>
-            <button type="button" onclick={() => picker.flip('horizontal')} class="rounded-md border border-input px-3 py-1.5 text-sm hover:bg-accent">⇋ Voltear H</button>
-            <button type="button" onclick={() => picker.flip('vertical')} class="rounded-md border border-input px-3 py-1.5 text-sm hover:bg-accent">⇅ Voltear V</button>
+            <button type="button" disabled={isBusy} onclick={() => picker.rotate('ccw')} class="rounded-md border border-input px-3 py-1.5 text-sm hover:bg-accent disabled:opacity-50">⟲ -90°</button>
+            <button type="button" disabled={isBusy} onclick={() => picker.rotate('cw')} class="rounded-md border border-input px-3 py-1.5 text-sm hover:bg-accent disabled:opacity-50">⟳ +90°</button>
+            <button type="button" disabled={isBusy} onclick={() => picker.flip('horizontal')} class="rounded-md border border-input px-3 py-1.5 text-sm hover:bg-accent disabled:opacity-50">⇋ Voltear H</button>
+            <button type="button" disabled={isBusy} onclick={() => picker.flip('vertical')} class="rounded-md border border-input px-3 py-1.5 text-sm hover:bg-accent disabled:opacity-50">⇅ Voltear V</button>
           </div>
 
           <label class="flex flex-col gap-2 text-sm text-foreground">

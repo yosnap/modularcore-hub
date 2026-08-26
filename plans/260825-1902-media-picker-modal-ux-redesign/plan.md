@@ -139,4 +139,20 @@ Re-read `plan.md` and all 5 phase files after applying the 14 accepted findings.
 - Effort re-estimated per phase (Phase 1: 4h→6-8h, Phase 2: 1.5d→2-2.5d, Phase 3: 2.5-3d→3.5-4d) and overall plan (7d→10-11d).
 - No remaining contradictions found between `plan.md` and the 5 phase files.
 
+## PR Code Review (2026-08-26, PR #18)
+
+`/code-review` sobre el PR encontró 8 hallazgos. 2 descartados (React `ImageEditor` sin `applyZoom` compartido / sin crop interactivo) — no aplican, el plan deja explícitamente la UI de React fuera de alcance (Non-Goals: "kept compiling, not redesigned").
+
+**Corregidos antes de mergear (2 críticos, confirmados):**
+1. `isBusy` (footer de `ImageEditor`) solo cubría `status === 'uploading'`, no `cropping`/`compressing`; los botones Rotar/Voltear no tenían ningún guard. Click en Rotar seguido de un click rápido en Guardar podía dejar que `crop()` arrancara con el blob aún sin rotar (mismo contador de generación compartido en `core/media-picker.ts`'s `run()`) y ganara la carrera, descartando la rotación sin ningún error visible. Fix: `isBusy` ahora cubre `status !== 'idle'` y los 4 botones de rotar/voltear quedan deshabilitados mientras tanto, en las 4 variantes.
+2. `demo-storage-provider.ts`: al "Sobreescribir", `folderId` se derivaba solo de `options.key` (nunca pasado en ese flujo), reseteando la carpeta de la imagen a `undefined` y haciéndola desaparecer de esa vista filtrada. Fix: cae al `folderId` de la entrada previa cuando hay `overwriteKey`.
+
+**Pendiente como seguimiento (severidad media/baja, no bloquea el merge):**
+3. `listPage`'s `filterKey` no incluye `limit`/per-page — cambiar el tamaño de página no invalida la cache de cursores; contra un backend real (S3/Cloudinary) podría reproducir una página desalineada. El provider demo (index-based) no lo sufre.
+4. `core/canvas/crop.ts`: la corrección de tamaño mínimo tras un resize con aspect-ratio bloqueado corre después del último `clampToBounds()`, sin re-clamp — caso extremo teórico, no confirmado alcanzable desde una interacción normal de UI.
+5. `MediaLibraryModal.svelte` duplica ~300 líneas de orquestación (fetchPage, debounce de búsqueda, cola de subida, focus trap) casi verbatim entre las 4 variantes — riesgo de mantenimiento (ya causó el gap del punto 3, documentado solo en una copia).
+6. El drag de los handles de recorte recalcula `resizeCropRect` y reescribe el estilo del overlay en cada `pointermove` crudo, sin throttling/rAF — podría notarse jank en dispositivos de gama baja con alta tasa de reporte del puntero.
+
+**Verificación tras los fixes:** `pnpm --filter @modularcore/media-picker test` → 164/164; `pnpm --filter web exec svelte-check` → 970 archivos, 0 errores.
+
 <!-- slug: media-picker-modal-ux-redesign -->
