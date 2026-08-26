@@ -173,7 +173,8 @@ describe('install_component', () => {
       supportsElicitation: true,
       elicitationHandler: () =>
         new Promise((resolvePromise) => {
-          releaseElicitation = () => resolvePromise({ action: 'accept', content: { confirm: true } });
+          releaseElicitation = () =>
+            resolvePromise({ action: 'accept', content: { confirm: true } });
         }),
     });
 

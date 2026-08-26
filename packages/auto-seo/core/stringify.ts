@@ -47,9 +47,7 @@ export function stringify(
   schema: JsonLdSchema | JsonLdGraph,
   options: StringifyOptions = {},
 ): string {
-  const resolved = options.absolute
-    ? resolveRelativeUrls(schema, options.absolute)
-    : schema;
+  const resolved = options.absolute ? resolveRelativeUrls(schema, options.absolute) : schema;
 
   const json = JSON.stringify(resolved, null, 2);
 

@@ -27,7 +27,7 @@ describe('remapTarget', () => {
     expect(remapTarget('other/place/file.ts', DEFAULT_PATHS)).toBe('other/place/file.ts');
   });
 
-  it('composes with @modularcore/registry-client\'s resolveTargetPath (anti path-traversal clamp)', async () => {
+  it("composes with @modularcore/registry-client's resolveTargetPath (anti path-traversal clamp)", async () => {
     const project = await createTmpProject({});
     try {
       // A malicious paths.lib escaping the project root is still caught by the clamp,

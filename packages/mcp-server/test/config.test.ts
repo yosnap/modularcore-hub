@@ -21,9 +21,9 @@ describe('resolveConfig', () => {
   });
 
   it('rejects http:// by default', () => {
-    expect(() => resolveConfig([], { MODULARCORE_REGISTRY_URL: 'http://registry.example.com' })).toThrow(
-      McpServerConfigError,
-    );
+    expect(() =>
+      resolveConfig([], { MODULARCORE_REGISTRY_URL: 'http://registry.example.com' }),
+    ).toThrow(McpServerConfigError);
   });
 
   it('allows http:// with MODULARCORE_REGISTRY_ALLOW_INSECURE=1', () => {

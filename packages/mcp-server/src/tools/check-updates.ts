@@ -16,7 +16,7 @@ const inputSchema = {
     )
     .describe(
       'Components currently installed in the caller project, as tracked by the caller (this ' +
-        'server has no local install-state file, unlike the CLI\'s modularcore.json).',
+        "server has no local install-state file, unlike the CLI's modularcore.json).",
     ),
 };
 
@@ -36,7 +36,7 @@ export function registerCheckUpdatesTool(server: McpServer, client: RegistryClie
       title: 'Check component updates',
       description:
         'Read-only comparison of `installedComponents` (name+version, supplied by the caller) ' +
-        'against the registry index\'s current version per component. Plain string equality — ' +
+        "against the registry index's current version per component. Plain string equality — " +
         'the registry index exposes one published version per name, not a semver range, so no ' +
         'semver comparison is performed. No filesystem writes, no elicitation. ' +
         UNTRUSTED_CONTENT_NOTICE,

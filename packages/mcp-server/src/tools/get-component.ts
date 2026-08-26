@@ -7,7 +7,10 @@ import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { RegistryClient } from '@modularcore/registry-client';
 
 const inputSchema = {
-  name: z.string().min(1).describe('Exact component name (kebab-case), as returned by search_components.'),
+  name: z
+    .string()
+    .min(1)
+    .describe('Exact component name (kebab-case), as returned by search_components.'),
 };
 
 export function registerGetComponentTool(server: McpServer, client: RegistryClient): void {
@@ -46,7 +49,11 @@ export function registerGetComponentTool(server: McpServer, client: RegistryClie
           content: [
             {
               type: 'text',
-              text: JSON.stringify({ notice: UNTRUSTED_CONTENT_NOTICE, component: summary }, null, 2),
+              text: JSON.stringify(
+                { notice: UNTRUSTED_CONTENT_NOTICE, component: summary },
+                null,
+                2,
+              ),
             },
           ],
         };

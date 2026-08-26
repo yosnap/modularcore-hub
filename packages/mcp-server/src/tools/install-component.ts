@@ -2,7 +2,11 @@ import { readFile } from 'node:fs/promises';
 
 import { z } from 'zod';
 
-import { isTrackedWriteError, resolveTargetPath, writeFilesTracked } from '@modularcore/registry-client';
+import {
+  isTrackedWriteError,
+  resolveTargetPath,
+  writeFilesTracked,
+} from '@modularcore/registry-client';
 
 import { toolError } from './tool-error.js';
 import { UNTRUSTED_CONTENT_NOTICE } from './untrusted-content.js';
@@ -18,7 +22,7 @@ const inputSchema = {
     .string()
     .min(1)
     .describe(
-      'Path, relative to the server\'s project root (its process cwd), where the component ' +
+      "Path, relative to the server's project root (its process cwd), where the component " +
         'should be installed. Must not be absolute and must not contain "..".',
     ),
   version: z
@@ -71,7 +75,7 @@ export function registerInstallComponentTool(
     {
       title: 'Install component',
       description:
-        'DESTRUCTIVE: writes/overwrites files under targetPath in the caller\'s project. ' +
+        "DESTRUCTIVE: writes/overwrites files under targetPath in the caller's project. " +
         'Always requires an MCP elicitation confirmation (destination path, version, new ' +
         'envVariables, npm dependencies) before writing anything — if the connected MCP ' +
         'client does not support elicitation, or the user declines, no file is written and a ' +

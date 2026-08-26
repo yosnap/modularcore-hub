@@ -1,4 +1,9 @@
-import { isSchemaType, schemaValidators, type JsonLdGraph, type JsonLdSchema } from './schema-types.js';
+import {
+  isSchemaType,
+  schemaValidators,
+  type JsonLdGraph,
+  type JsonLdSchema,
+} from './schema-types.js';
 
 export interface ValidationResult {
   valid: boolean;

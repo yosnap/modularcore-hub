@@ -50,7 +50,9 @@ export async function connectTestServer(options: {
 
   if (options.elicitationHandler) {
     const handler = options.elicitationHandler;
-    client.setRequestHandler(ElicitRequestSchema, async (request) => handler(request.params.message));
+    client.setRequestHandler(ElicitRequestSchema, async (request) =>
+      handler(request.params.message),
+    );
   }
 
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
