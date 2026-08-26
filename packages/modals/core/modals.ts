@@ -215,6 +215,14 @@ export class OverlayManager {
       if (this.state.toasts.length >= this.toastCap) return; // over cap: silently dropped
       this.setState({ toasts: [...this.state.toasts, config] });
     } else {
+      // A different config already occupies this singleton slot (e.g. a 'modal' and a
+      // 'fullscreen' fixture sharing the 'modal' slot, both independently show()-able — see
+      // `pending`'s doc comment) — dismiss it properly instead of silently overwriting `active`
+      // (Code Review Finding: the previous code just replaced the slot with no dismiss/tracking
+      // for the config it displaced, leaving it stuck in `shownIds` — unable to ever be shown
+      // again this load — with no close/dismiss ever recorded for it).
+      const previous = this.state.active[slot];
+      if (previous && previous.id !== config.id) this.dismiss(previous.id, 'replaced');
       this.setState({ active: { ...this.state.active, [slot]: config } });
     }
 

@@ -9,7 +9,9 @@ export type TriggerType = 'page-load' | 'delay' | 'scroll' | 'exit-intent' | 'cl
 export type FrequencyType = 'always' | 'once-per-session' | 'once-per-day' | 'once-ever';
 
 export type InteractionAction =
-  'primary-button' | 'secondary-button' | 'close-button' | 'outside-click';
+  'primary-button' | 'secondary-button' | 'close-button' | 'outside-click' | 'replaced';
+// 'replaced': the manager auto-dismissed this overlay because a different config was shown into
+// the same singleton slot (see OverlayManager.showInternal) — not a user-initiated dismissal.
 
 /** Slots of single instance (1 overlay per slot). 'toast' is not here: it is multi-instance. */
 export type SingletonSlot = 'modal' | 'top-banner' | 'bottom-banner' | 'slide-in';

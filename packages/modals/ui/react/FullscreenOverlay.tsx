@@ -24,7 +24,10 @@ export function FullscreenOverlay({ config, onDismiss }: FullscreenOverlayProps)
     const trap = createFocusTrap(el);
     trap.activate();
     return () => trap.deactivate();
-  }, []);
+    // Re-run on config identity change (Code Review Finding), not just mount — see
+    // ModalOverlay.tsx's identical comment for why a mount-only effect misses a same-type,
+    // same-slot config swap.
+  }, [config.id]);
 
   useEscapeKey(true, () => onDismiss('close-button'));
 

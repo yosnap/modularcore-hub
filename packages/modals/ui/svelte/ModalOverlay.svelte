@@ -16,6 +16,11 @@
   let dialogEl: HTMLDivElement | undefined = $state();
 
   $effect(() => {
+    // Reading `config.id` makes it a tracked dependency, so this effect re-runs (deactivating
+    // and re-activating the trap) when a different config swaps into the same slot and Svelte
+    // reuses this component instance (Code Review Finding) — without it, only `dialogEl` was
+    // tracked and a same-type slot swap never moved focus into the new dialog's content.
+    void config.id;
     if (!dialogEl) return;
     const trap = createFocusTrap(dialogEl);
     trap.activate();

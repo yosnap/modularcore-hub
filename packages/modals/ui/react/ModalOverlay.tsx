@@ -24,7 +24,11 @@ export function ModalOverlay({ config, onDismiss }: ModalOverlayProps) {
     const trap = createFocusTrap(el);
     trap.activate();
     return () => trap.deactivate();
-  }, []);
+    // Re-run on config identity change (Code Review Finding), not just mount: React reuses this
+    // component instance when a different config swaps into the same singleton slot (e.g. a
+    // 'modal' config replaced by a 'fullscreen' one — see OverlayManager.showInternal's slot-swap
+    // handling), and a mount-only effect would never move focus into the new dialog's content.
+  }, [config.id]);
 
   useEscapeKey(true, () => onDismiss('close-button'));
 

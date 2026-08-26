@@ -98,6 +98,35 @@ describe('OverlayManager slot selection', () => {
     expect(manager.getState().active.modal?.id).toBe('loser');
   });
 
+  it('regression: showing a config into an already-occupied slot dismisses (not silently overwrites) the previous occupant', async () => {
+    const env = fakeEnv();
+    const store = freshStore();
+    const onInteraction = vi.fn();
+    const manager = new OverlayManager({
+      triggerEnv: env,
+      store,
+      now: () => new Date('2026-01-01'),
+    });
+    const provider = providerOf(
+      [
+        config({ id: 'first', type: 'modal', trigger: { type: 'manual' } }),
+        config({ id: 'second', type: 'fullscreen', trigger: { type: 'manual' } }),
+      ],
+      { trackInteraction: onInteraction },
+    );
+
+    await manager.load(provider, { path: '/' });
+    manager.show('first');
+    manager.show('second'); // targets the same 'modal' slot 'first' already occupies
+
+    expect(manager.getState().active.modal?.id).toBe('second');
+    // The displaced config was dismissed (tracked with a distinct 'replaced' action), not just
+    // silently dropped from state with no record of it ever closing.
+    expect(onInteraction).toHaveBeenCalledWith(
+      expect.objectContaining({ modalId: 'first', action: 'replaced' }),
+    );
+  });
+
   it('caps toasts at toastCap and drops the rest', async () => {
     const env = fakeEnv();
     const manager = new OverlayManager({

@@ -16,6 +16,9 @@
   let dialogEl: HTMLDivElement | undefined = $state();
 
   $effect(() => {
+    // See ModalOverlay.svelte's identical comment: reading `config.id` makes it a tracked
+    // dependency so this re-runs on a same-type slot swap, not just on mount (Code Review Finding).
+    void config.id;
     if (!dialogEl) return;
     const trap = createFocusTrap(dialogEl);
     trap.activate();
