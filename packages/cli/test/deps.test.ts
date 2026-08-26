@@ -57,6 +57,15 @@ describe('deps', () => {
     expect(() => assertCompatible(entry, 'react', () => '^18.2.0')).not.toThrow();
   });
 
+  it('accepts a component declaring frameworks: ["agnostic"] regardless of the project framework', async () => {
+    server = await startFixtureRegistryServer();
+    const client = createRegistryClient(server.url);
+    const entry = await client.getDescriptor('widget');
+    const agnosticEntry = { ...entry, frameworks: ['agnostic'], peerDependencies: {} };
+    expect(() => assertCompatible(agnosticEntry, 'react', () => undefined)).not.toThrow();
+    expect(() => assertCompatible(agnosticEntry, 'svelte', () => undefined)).not.toThrow();
+  });
+
   it('SA2: rejects a dependency without a pinned/semver version', async () => {
     server = await startFixtureRegistryServer();
     const client = createRegistryClient(server.url);

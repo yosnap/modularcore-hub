@@ -15,7 +15,7 @@ export function assertCompatible(
   projectFramework: string,
   installedPeerVersion: (peerName: string) => string | undefined,
 ): void {
-  if (!entry.frameworks.includes(projectFramework)) {
+  if (!entry.frameworks.includes('agnostic') && !entry.frameworks.includes(projectFramework)) {
     throw new CompatibilityError(
       `"${entry.name}" no soporta el framework de este proyecto ("${projectFramework}"). ` +
         `Frameworks soportados: ${entry.frameworks.join(', ')}.`,

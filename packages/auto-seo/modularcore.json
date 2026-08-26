@@ -7,7 +7,7 @@
   "frameworks": ["agnostic"],
   "visibility": "public",
   "peerDependencies": {},
-  "dependencies": ["zod"],
+  "dependencies": ["zod@^4.4.3"],
   "registryDependencies": [],
   "envVariables": [],
   "description": "Headless, framework-agnostic core to generate Schema.org structured data as JSON-LD (Article, Product, Organization, BreadcrumbList, WebSite, LocalBusiness, FAQPage). No classes, no framework dependency. Scope (MVP, v1) is JSON-LD only — OpenGraph and social card previews are out of scope.",
