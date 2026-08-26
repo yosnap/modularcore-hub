@@ -104,12 +104,17 @@ describe('createS3CompatibleProvider (mock provider, no network)', () => {
   });
 
   it('omitting overwriteKey reproduces the current "always new key" behavior exactly', async () => {
-    global.fetch = vi.fn(async () => new Response(null, { status: 200 })) as unknown as typeof fetch;
+    global.fetch = vi.fn(
+      async () => new Response(null, { status: 200 }),
+    ) as unknown as typeof fetch;
     const getUploadUrl = vi.fn(async (_file: Blob, options?: { overwriteKey?: string }) => ({
       url: 'https://upload.example.com/presigned',
       key: options?.overwriteKey ?? 'uploads/fresh.png',
     }));
-    const provider = createS3CompatibleProvider({ publicUrlBase: 'https://cdn.example.com', getUploadUrl });
+    const provider = createS3CompatibleProvider({
+      publicUrlBase: 'https://cdn.example.com',
+      getUploadUrl,
+    });
 
     const result = await provider.upload(new File(['data'], 'a.png'));
 

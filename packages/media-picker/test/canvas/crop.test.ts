@@ -179,7 +179,9 @@ describe('cropImage (real pixels via node-canvas — AD6, not mocked)', () => {
       const result = resizeCropRect(rect, 'se', { dx: -1000, dy: -1000 }, bounds);
       expect(result.width).toBeGreaterThan(0);
       expect(result.height).toBeGreaterThan(0);
-      expect(() => cropImage(createQuadrantImageBlob(200, 100), { rect: result }, env)).not.toThrow();
+      expect(() =>
+        cropImage(createQuadrantImageBlob(200, 100), { rect: result }, env),
+      ).not.toThrow();
     });
 
     it('respects a locked preset aspect ratio, adjusting the non-dragged dimension proportionally', () => {

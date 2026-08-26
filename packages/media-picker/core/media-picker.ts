@@ -430,7 +430,12 @@ export class MediaPicker {
           return;
         }
         const libraryPage: PageCache = {
-          ...recordPageCursor(this.state.libraryPage, page, outcome.result.nextCursor, requestEpoch),
+          ...recordPageCursor(
+            this.state.libraryPage,
+            page,
+            outcome.result.nextCursor,
+            requestEpoch,
+          ),
           currentPage: page,
         };
         ifCurrent({
@@ -450,7 +455,10 @@ export class MediaPicker {
    * `listPage()`.
    */
   async syncLibrary(provider: StorageProvider): Promise<void> {
-    await this.listPage(provider, { ...this.libraryFilters, page: this.state.libraryPage.currentPage });
+    await this.listPage(provider, {
+      ...this.libraryFilters,
+      page: this.state.libraryPage.currentPage,
+    });
   }
 
   async listFolders(provider: StorageProvider): Promise<void> {

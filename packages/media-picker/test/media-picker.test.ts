@@ -52,7 +52,9 @@ function pagedProvider(): StorageProvider {
     p2: { items: [libraryItem('c'), libraryItem('d')], nextCursor: 'p3' },
     p3: { items: [libraryItem('e')], nextCursor: undefined },
   };
-  const list = vi.fn(async (options?: { cursor?: string }) => pages[options?.cursor ?? ''] ?? { items: [] });
+  const list = vi.fn(
+    async (options?: { cursor?: string }) => pages[options?.cursor ?? ''] ?? { items: [] },
+  );
   return {
     upload: vi.fn(async () => ({ key: 'k', url: 'u', size: 1, contentType: 'image/png' })),
     list,
@@ -420,7 +422,9 @@ describe('MediaPicker (state machine, collaborators injected — not the canvas 
 
       await picker.listPage(provider, { page: 1 });
 
-      await expect(picker.listPage(provider, { page: 5 })).rejects.toThrow(/not been walked to yet/);
+      await expect(picker.listPage(provider, { page: 5 })).rejects.toThrow(
+        /not been walked to yet/,
+      );
     });
 
     it('changing folder/query/sort resets the cache and restarts at page 1', async () => {
@@ -495,7 +499,9 @@ describe('MediaPicker (state machine, collaborators injected — not the canvas 
 
       await picker.syncLibrary(provider);
 
-      expect(provider.list).toHaveBeenCalledWith(expect.objectContaining({ folder: 'f1', cursor: 'p2' }));
+      expect(provider.list).toHaveBeenCalledWith(
+        expect.objectContaining({ folder: 'f1', cursor: 'p2' }),
+      );
       expect(picker.getState().libraryPage.currentPage).toBe(2);
       expect(picker.getState().libraryItems).toEqual([libraryItem('c'), libraryItem('d')]);
     });

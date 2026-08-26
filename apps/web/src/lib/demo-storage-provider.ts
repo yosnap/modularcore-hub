@@ -71,9 +71,7 @@ export function createDemoStorageProvider(): StorageProvider {
       // back to the previous entry's own `folderId` instead of `undefined` keeps the item in
       // whatever folder it already lived in (Code Review Finding: overwriting an image used to
       // silently reset its folder, making it vanish from that folder's filtered library view).
-      const folderId = options?.key?.includes('/')
-        ? options.key.split('/')[0]
-        : previous?.folderId;
+      const folderId = options?.key?.includes('/') ? options.key.split('/')[0] : previous?.folderId;
       const key = options?.overwriteKey ?? generateKey(folderId);
       if (previous) {
         // Revoke the previous entry's object URL before replacing it — mirrors `remove()`
