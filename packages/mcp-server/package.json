@@ -1,7 +1,10 @@
 {
   "name": "@modularcore/mcp-server",
   "version": "0.2.0",
-  "private": true,
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "bin": {
     "modularcore-mcp-server": "./dist/index.js"
