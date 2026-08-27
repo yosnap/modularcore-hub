@@ -28,7 +28,12 @@ export function ModernSelect({
   name,
 }: ModernSelectProps): JSX.Element {
   const [open, setOpen] = useState(false);
-  const [highlighted, setHighlighted] = useState(Math.max(0, options.findIndex((option) => option.value === value)));
+  const [highlighted, setHighlighted] = useState(
+    Math.max(
+      0,
+      options.findIndex((option) => option.value === value),
+    ),
+  );
   const rootRef = useRef<HTMLDivElement>(null);
   const listboxId = useId();
   const selected = options.find((option) => option.value === value);
@@ -80,11 +85,20 @@ export function ModernSelect({
         onClick={() => setOpen((current) => !current)}
         onKeyDown={handleKeyDown}
       >
-        <span className={selected ? undefined : 'mc-modern-select-placeholder'}>{selected?.label ?? placeholder}</span>
-        <span aria-hidden="true" className="mc-modern-select-chevron">⌄</span>
+        <span className={selected ? undefined : 'mc-modern-select-placeholder'}>
+          {selected?.label ?? placeholder}
+        </span>
+        <span aria-hidden="true" className="mc-modern-select-chevron">
+          ⌄
+        </span>
       </button>
       {open ? (
-        <div id={listboxId} className="mc-modern-select-content" role="listbox" aria-label={placeholder}>
+        <div
+          id={listboxId}
+          className="mc-modern-select-content"
+          role="listbox"
+          aria-label={placeholder}
+        >
           {options.map((option, index) => (
             <button
               key={option.value}

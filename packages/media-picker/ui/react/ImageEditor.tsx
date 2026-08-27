@@ -99,7 +99,10 @@ export function ImageEditor({ picker }: ImageEditorProps): JSX.Element {
           <ModernSelect
             value={String(aspect)}
             onChange={(value) => setAspect(value as AspectRatio)}
-            options={ASPECT_PRESETS.map((preset) => ({ value: String(preset), label: String(preset) }))}
+            options={ASPECT_PRESETS.map((preset) => ({
+              value: String(preset),
+              label: String(preset),
+            }))}
             placeholder="Aspect ratio"
           />
         </label>

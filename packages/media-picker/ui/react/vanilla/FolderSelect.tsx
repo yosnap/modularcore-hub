@@ -39,7 +39,10 @@ export function FolderSelect({
         value={value ?? ''}
         disabled={foldersLoading}
         onChange={onChange}
-        options={[{ value: '', label: 'All folders' }, ...folders.map((folder) => ({ value: folder.id, label: folder.name }))]}
+        options={[
+          { value: '', label: 'All folders' },
+          ...folders.map((folder) => ({ value: folder.id, label: folder.name })),
+        ]}
         placeholder="All folders"
       />
       {foldersError ? (
