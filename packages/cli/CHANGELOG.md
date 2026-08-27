@@ -1,5 +1,11 @@
 # @modularcore/cli
 
+## 0.2.1
+
+### Patch Changes
+
+- Republish the CLI and MCP server packages after their previous npm versions were reserved.
+
 ## 0.2.0
 
 ### Minor Changes
