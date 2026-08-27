@@ -6,7 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-final class AzureBlobUploadTargetController
+final class AzureBlobUploadTargetController extends Controller
 {
     public function __invoke(Request $request, AzureBlobSasIssuer $sas): JsonResponse
     {

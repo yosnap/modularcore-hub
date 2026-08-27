@@ -166,6 +166,12 @@
       "encoding": "utf8"
     },
     {
+      "path": "snippets/laravel/media-picker-entry.ts",
+      "target": "src/modularcore/media-picker/entry.ts",
+      "type": "snippet",
+      "encoding": "utf8"
+    },
+    {
       "path": "snippets/laravel/azure-blob-sas-controller.php",
       "target": "app/Http/Controllers/AzureBlobUploadTargetController.php",
       "type": "snippet",

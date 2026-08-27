@@ -12,7 +12,7 @@
     "vue": ">=3.3",
     "@angular/core": ">=17"
   },
-  "dependencies": ["zod"],
+  "dependencies": ["zod@^4.4.3"],
   "registryDependencies": [],
   "envVariables": [
     {
@@ -126,6 +126,12 @@
     {
       "path": "snippets/laravel/ai-chat.blade.php",
       "target": "resources/views/components/ai-chat.blade.php",
+      "type": "snippet",
+      "encoding": "utf8"
+    },
+    {
+      "path": "snippets/laravel/ai-chat-entry.ts",
+      "target": "src/modularcore/ai-chat/entry.ts",
       "type": "snippet",
       "encoding": "utf8"
     },

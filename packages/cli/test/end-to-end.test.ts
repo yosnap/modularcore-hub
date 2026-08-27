@@ -68,6 +68,24 @@ describe('init -> add end-to-end (KPI: well under 5 minutes)', () => {
     }
   });
 
+  it('detects Blade and uses Laravel asset paths', async () => {
+    const project = await createTmpProject({
+      composerJson: { require: { 'laravel/framework': '^11.0' } },
+    });
+    try {
+      const config = await runInit({
+        cwd: project.dir,
+        prompts: createFakePrompts({ text: [], select: [] }),
+      });
+      expect(config).toMatchObject({
+        framework: 'blade',
+        paths: { components: 'resources/views/components', lib: 'resources/js/modularcore' },
+      });
+    } finally {
+      await project.cleanup();
+    }
+  });
+
   it('aborts without writing files when the user declines confirmation', async () => {
     server = await startFixtureRegistryServer();
     const project = await createTmpProject({
