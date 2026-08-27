@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { JSX } from 'react';
 import type { StorageProvider } from '../../core/provider.js';
 import type { UseMediaPickerResult } from '../../adapters/react/use-media-picker.js';
+import { ModernSelect } from './ModernSelect.js';
 
 export interface FolderSelectProps {
   picker: UseMediaPickerResult;
@@ -11,7 +12,7 @@ export interface FolderSelectProps {
   onChange: (folderId: string) => void;
 }
 
-/** Plain `<select>` over `picker.state.folders` (flat list, no nesting), plus an optional create-folder input when the provider supports it. */
+/** Selector de carpetas plano, más un input opcional para crear carpetas. */
 export function FolderSelect({
   picker,
   provider,
@@ -32,18 +33,16 @@ export function FolderSelect({
 
   return (
     <div>
-      <select
+      <ModernSelect
         value={value ?? ''}
         disabled={foldersLoading}
-        onChange={(event) => onChange(event.target.value)}
-      >
-        <option value="">All folders</option>
-        {folders.map((folder) => (
-          <option key={folder.id} value={folder.id}>
-            {folder.name}
-          </option>
-        ))}
-      </select>
+        onChange={onChange}
+        options={[
+          { value: '', label: 'All folders' },
+          ...folders.map((folder) => ({ value: folder.id, label: folder.name })),
+        ]}
+        placeholder="All folders"
+      />
       {foldersError ? <p role="alert">{foldersError.message}</p> : null}
       {canCreate ? (
         <span>

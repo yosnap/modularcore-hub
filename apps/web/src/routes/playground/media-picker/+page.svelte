@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createMediaPicker } from '@modularcore/media-picker/svelte';
+  import ModernSelect from '$lib/components/ModernSelect.svelte';
 
   import type { LibraryItem } from '@modularcore/media-picker';
 
@@ -157,15 +158,16 @@
 <div class="style-switcher">
   <label>
     Estilo del componente
-    <select
+    <ModernSelect
       bind:value={styleVariant}
-      class="rounded-md border border-input bg-background px-2 py-1 text-sm"
-    >
-      <option value="headless">Sin estilo (headless)</option>
-      <option value="tailwind">Tailwind</option>
-      <option value="shadcn">Shadcn</option>
-      <option value="vanilla">CSS plano</option>
-    </select>
+      ariaLabel="Estilo del componente"
+      options={[
+        { value: 'headless', label: 'Sin estilo (headless)' },
+        { value: 'tailwind', label: 'Tailwind' },
+        { value: 'shadcn', label: 'Shadcn' },
+        { value: 'vanilla', label: 'CSS plano' },
+      ]}
+    />
   </label>
   <small>
     La descarga del componente (<code>modularcore add media-picker</code> o el tarball del

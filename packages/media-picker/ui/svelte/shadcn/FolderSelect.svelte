@@ -2,6 +2,7 @@
   import '../../shadcn-theme.css';
   import type { MediaPickerRune } from '../../../adapters/svelte/create-media-picker.svelte.js';
   import type { StorageProvider } from '../../../core/provider.js';
+  import ModernSelect from '../ModernSelect.svelte';
 
   let {
     picker,
@@ -27,20 +28,14 @@
   }
 </script>
 
-<!-- Native <select>, same rationale as the React shadcn variant: preserves value/onChange
-     parity across all variants without pulling in bits-ui's Select primitive. -->
 <div class="flex flex-wrap items-center gap-2">
-  <select
+  <ModernSelect
     {value}
     disabled={picker.state.foldersLoading}
-    onchange={(event) => onChange(event.currentTarget.value)}
-    class="rounded-md border border-input bg-background px-2 py-1.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-  >
-    <option value="">All folders</option>
-    {#each picker.state.folders as folder (folder.id)}
-      <option value={folder.id}>{folder.name}</option>
-    {/each}
-  </select>
+    onchange={onChange}
+    options={[{ value: '', label: 'All folders' }, ...picker.state.folders.map((folder) => ({ value: folder.id, label: folder.name }))]}
+    placeholder="All folders"
+  />
   {#if picker.state.foldersError}
     <p role="alert" class="text-sm text-destructive">{picker.state.foldersError.message}</p>
   {/if}

@@ -5,6 +5,7 @@
   import BulkActionsBar from './BulkActionsBar.svelte';
   import MediaLibraryGrid from './MediaLibraryGrid.svelte';
   import RemoteUrlLoader from './RemoteUrlLoader.svelte';
+  import ModernSelect from '../ModernSelect.svelte';
 
   import type { MediaPickerRune } from '../../../adapters/svelte/create-media-picker.svelte.js';
   import type { LibraryItem } from '../../../core/media-picker.js';
@@ -400,18 +401,8 @@
 
           <div class="mc-modal__footer">
             <span>{picker.state.libraryItems.length} elementos</span>
-            <select value={sortValue ?? ''} onchange={(event) => handleSortChange(event.currentTarget.value)} class="mc-select">
-              <option value="">Predeterminado</option>
-              <option value="newest">Más recientes</option>
-              <option value="oldest">Más antiguos</option>
-              <option value="name">Nombre</option>
-              <option value="size">Tamaño</option>
-            </select>
-            <select value={perPage} onchange={(event) => handlePerPageChange(Number(event.currentTarget.value))} class="mc-select">
-              {#each PER_PAGE_OPTIONS as option (option)}
-                <option value={option}>{option}/pág.</option>
-              {/each}
-            </select>
+            <ModernSelect value={sortValue ?? ''} onchange={handleSortChange} options={[{ value: '', label: 'Predeterminado' }, { value: 'newest', label: 'Más recientes' }, { value: 'oldest', label: 'Más antiguos' }, { value: 'name', label: 'Nombre' }, { value: 'size', label: 'Tamaño' }]} placeholder="Orden" />
+            <ModernSelect value={String(perPage)} onchange={(value) => handlePerPageChange(Number(value))} options={PER_PAGE_OPTIONS.map((option) => ({ value: String(option), label: `${option}/pág.` }))} placeholder="Por página" />
             <nav aria-label="Paginación" class="mc-pagination">
               {#each pageButtons as page (page)}
                 <button

@@ -1,5 +1,3 @@
-import { createInMemoryProvider } from '@modularcore/modals/providers/in-memory';
-
 import type { ModalConfig } from '@modularcore/modals/types';
 import type { ModalsProvider } from '@modularcore/modals/provider';
 
@@ -13,8 +11,14 @@ import type { ModalsProvider } from '@modularcore/modals/provider';
 export function createDemoModalsProvider(
   onView: (evt: Parameters<NonNullable<ModalsProvider['trackView']>>[0]) => void,
   onInteraction: (evt: Parameters<NonNullable<ModalsProvider['trackInteraction']>>[0]) => void,
+  /**
+   * Reactive read of the playground's "constructor" preview config, if any — called fresh on
+   * every `getActiveModals()` so a Svelte `$state` object passed in here stays live. Returns
+   * `undefined` when the constructor form hasn't been saved yet (nothing extra to serve).
+   */
+  getCustomModal?: () => ModalConfig | undefined,
 ): ModalsProvider {
-  const modals: ModalConfig[] = [
+  const fixtures: ModalConfig[] = [
     {
       id: 'demo-modal',
       type: 'modal',
@@ -62,5 +66,16 @@ export function createDemoModalsProvider(
     },
   ];
 
-  return createInMemoryProvider({ modals, onView, onInteraction });
+  // Not `createInMemoryProvider` here on purpose: that helper captures its `modals` array once
+  // and returns the same reference forever, which can't pick up a live-edited constructor config
+  // on the next `reload()`. `getCustomModal` is re-invoked on every `getActiveModals()` call
+  // instead, so a Svelte `$state` object the playground mutates is always read fresh.
+  return {
+    async getActiveModals() {
+      const custom = getCustomModal?.();
+      return custom ? [...fixtures, custom] : fixtures;
+    },
+    trackView: onView,
+    trackInteraction: onInteraction,
+  };
 }

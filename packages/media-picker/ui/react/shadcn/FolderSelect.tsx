@@ -5,6 +5,7 @@ import type { StorageProvider } from '../../../core/provider.js';
 import type { UseMediaPickerResult } from '../../../adapters/react/use-media-picker.js';
 
 import '../../shadcn-theme.css';
+import { ModernSelect } from '../ModernSelect.js';
 
 export interface FolderSelectProps {
   picker: UseMediaPickerResult;
@@ -13,11 +14,7 @@ export interface FolderSelectProps {
   onChange: (folderId: string) => void;
 }
 
-/** Shadcn variant of FolderSelect — same props/behavior as headless. Plain `<select>` styled
- * with Shadcn tokens (no Radix Select primitive: keeping the native element preserves exact
- * parity with `value`/`onChange` semantics used by every other variant, and native `<select>`
- * already has full keyboard/a11y support — Radix's Select exists for custom-rendered options,
- * which this component doesn't need). */
+/** Shadcn variant of FolderSelect — same props/behavior as headless with a custom accessible select. */
 export function FolderSelect({
   picker,
   provider,
@@ -38,19 +35,16 @@ export function FolderSelect({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <select
+      <ModernSelect
         value={value ?? ''}
         disabled={foldersLoading}
-        onChange={(event) => onChange(event.target.value)}
-        className="rounded-md border border-input bg-background px-2 py-1.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-      >
-        <option value="">All folders</option>
-        {folders.map((folder) => (
-          <option key={folder.id} value={folder.id}>
-            {folder.name}
-          </option>
-        ))}
-      </select>
+        onChange={onChange}
+        options={[
+          { value: '', label: 'All folders' },
+          ...folders.map((folder) => ({ value: folder.id, label: folder.name })),
+        ]}
+        placeholder="All folders"
+      />
       {foldersError ? (
         <p role="alert" className="text-sm text-destructive">
           {foldersError.message}
