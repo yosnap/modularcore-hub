@@ -44,6 +44,18 @@ describe('framework-detect', () => {
     }
   });
 
+  it('detects Blade from a Laravel composer dependency', async () => {
+    const project = await createTmpProject({
+      composerJson: { require: { 'laravel/framework': '^11.0' } },
+    });
+    try {
+      const { frameworks } = await detectFrameworks(project.dir);
+      expect(frameworks).toEqual(['blade']);
+    } finally {
+      await project.cleanup();
+    }
+  });
+
   it('flags a package.json with "workspaces" as a workspace root', async () => {
     const project = await createTmpProject({
       packageJson: { name: 'root', workspaces: ['packages/*'] },

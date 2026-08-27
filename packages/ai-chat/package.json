@@ -50,6 +50,14 @@
       "types": "./dist/adapters/svelte/create-chat.svelte.d.ts",
       "default": "./dist/adapters/svelte/create-chat.svelte.js"
     },
+    "./vue": {
+      "types": "./dist/adapters/vue/use-chat.d.ts",
+      "default": "./dist/adapters/vue/use-chat.js"
+    },
+    "./angular": {
+      "types": "./dist/adapters/angular/chat.service.d.ts",
+      "default": "./dist/adapters/angular/chat.service.js"
+    },
     "./web": {
       "types": "./dist/adapters/web/chat-element.d.ts",
       "default": "./dist/adapters/web/chat-element.js"
@@ -73,7 +81,9 @@
   },
   "peerDependencies": {
     "react": ">=18",
-    "svelte": ">=5"
+    "svelte": ">=5",
+    "vue": ">=3.3",
+    "@angular/core": ">=17"
   },
   "peerDependenciesMeta": {
     "react": {
@@ -81,12 +91,20 @@
     },
     "svelte": {
       "optional": true
+    },
+    "vue": {
+      "optional": true
+    },
+    "@angular/core": {
+      "optional": true
     }
   },
   "devDependencies": {
+    "@angular/core": "^22.1.4",
     "@types/node": "^22.13.0",
     "@types/react": "^19.2.0",
     "react": "^19.2.8",
-    "svelte": "^5.56.9"
+    "svelte": "^5.56.9",
+    "vue": "^3.5.42"
   }
 }

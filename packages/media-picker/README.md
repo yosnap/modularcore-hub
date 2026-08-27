@@ -1,7 +1,8 @@
 # @modularcore/media-picker
 
 Headless media picker — local file / remote URL / library sources, canvas crop + compress, and
-S3-compatible + Cloudinary storage providers — with React and Svelte adapters.
+S3-compatible, Cloudinary + Azure Blob storage providers — with React, Svelte, Vue 3 and Angular
+standalone adapters.
 
 **Credentials never live in this component.** `StorageProvider` (see `core/provider.ts`) is the
 only seam to a storage backend, and its interface has no place to pass a long-lived secret
@@ -24,6 +25,17 @@ signed upload payload) from a backend endpoint that *you* control and implement 
   implementations that call into your signing backend.
 - `adapters/react`, `adapters/svelte` — thin bindings over `MediaPicker` (Svelte adapter uses
   Svelte 5 runes).
+- `adapters/vue`, `adapters/angular` — per-component bindings over the same core. Vue uses refs;
+  Angular uses signals plus `DestroyRef`.
+- `core/providers/azure-blob.ts` — browser upload through a short-lived, blob-scoped SAS target
+  issued by your own backend.
+
+## Azure Blob and Laravel
+
+Use `createAzureBlobProvider` only with a SAS target endpoint you own. The endpoint authenticates,
+authorizes, validates the file and generates the key before returning a short-lived URL. See
+[`docs/azure-blob-sas-endpoint-example.md`](./docs/azure-blob-sas-endpoint-example.md) and the
+Laravel snippets under `snippets/laravel/`; neither sends account credentials to the browser.
 
 ## Basic usage (Svelte 5)
 

@@ -4,13 +4,15 @@
   "title": "AI Chat",
   "type": "headless-core",
   "category": "ai",
-  "frameworks": ["react", "svelte", "web"],
+  "frameworks": ["react", "svelte", "vue", "angular", "web", "blade"],
   "visibility": "public",
   "peerDependencies": {
     "react": ">=18",
-    "svelte": ">=5"
+    "svelte": ">=5",
+    "vue": ">=3.3",
+    "@angular/core": ">=17"
   },
-  "dependencies": ["zod"],
+  "dependencies": ["zod@^4.4.3"],
   "registryDependencies": [],
   "envVariables": [
     {
@@ -29,7 +31,7 @@
       "required": false
     }
   ],
-  "description": "Headless AI chat core (OpenAI-compatible streaming, model fallback, token estimation, function calling with human-in-the-loop confirmation, local/backend history) with React, Svelte, and framework-free Web adapters. BYOK — the API key always comes from your app's config, never hardcoded.",
+  "description": "Headless AI chat core (OpenAI-compatible streaming, model fallback, token estimation, function calling with human-in-the-loop confirmation, local/backend history) with React, Svelte, Vue, Angular and Web adapters plus Blade snippets. BYOK — the API key always comes from your app's server-side config, never hardcoded.",
   "files": [
     {
       "path": "core/client.ts",
@@ -104,9 +106,45 @@
       "encoding": "utf8"
     },
     {
+      "path": "adapters/vue/use-chat.ts",
+      "target": "src/modularcore/ai-chat/adapters/vue/use-chat.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/angular/chat.service.ts",
+      "target": "src/modularcore/ai-chat/adapters/angular/chat.service.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
       "path": "adapters/web/chat-element.ts",
       "target": "src/modularcore/ai-chat/adapters/web/chat-element.ts",
       "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "snippets/laravel/ai-chat.blade.php",
+      "target": "resources/views/components/ai-chat.blade.php",
+      "type": "snippet",
+      "encoding": "utf8"
+    },
+    {
+      "path": "snippets/laravel/ai-chat-entry.ts",
+      "target": "src/modularcore/ai-chat/entry.ts",
+      "type": "snippet",
+      "encoding": "utf8"
+    },
+    {
+      "path": "snippets/laravel/chat-proxy-controller.php",
+      "target": "app/Http/Controllers/ChatCompletionController.php",
+      "type": "snippet",
+      "encoding": "utf8"
+    },
+    {
+      "path": "snippets/laravel/routes.php",
+      "target": "routes/modularcore-ai-chat.php",
+      "type": "snippet",
       "encoding": "utf8"
     }
   ]

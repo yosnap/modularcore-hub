@@ -1,5 +1,13 @@
 # @modularcore/cli
 
+## 0.1.2
+
+### Patch Changes
+
+- f239b9e: feat: wire registry-client, mcp-server and auto-seo; bump cli
+- Updated dependencies [f239b9e]
+  - @modularcore/registry-client@0.2.0
+
 ## 0.1.1
 
 ### Patch Changes

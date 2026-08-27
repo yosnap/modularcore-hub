@@ -5,11 +5,14 @@ import type { ProjectConfig } from '../config.js';
 import type { DetectedFramework } from '../framework-detect.js';
 import type { PromptAdapter } from '../prompts.js';
 
-const FRAMEWORK_OPTIONS: DetectedFramework[] = ['react', 'svelte', 'vue', 'angular'];
+const FRAMEWORK_OPTIONS: DetectedFramework[] = ['react', 'svelte', 'vue', 'angular', 'blade'];
 const DEFAULT_REGISTRY_URL = 'http://localhost:5173/registry';
-const DEFAULT_PATHS: Record<string, string> = {
-  components: 'src/components',
-  lib: 'src/lib/modularcore',
+const DEFAULT_PATHS: Record<DetectedFramework, Record<string, string>> = {
+  blade: { components: 'resources/views/components', lib: 'resources/js/modularcore' },
+  react: { components: 'src/components', lib: 'src/lib/modularcore' },
+  svelte: { components: 'src/components', lib: 'src/lib/modularcore' },
+  vue: { components: 'src/components', lib: 'src/lib/modularcore' },
+  angular: { components: 'src/components', lib: 'src/lib/modularcore' },
 };
 
 export interface InitOptions {
@@ -31,7 +34,7 @@ export async function runInit({ cwd, prompts }: InitOptions): Promise<ProjectCon
     detectPackageManager(cwd),
   ]);
 
-  let framework: string;
+  let framework: DetectedFramework;
   if (frameworks.length === 1 && !workspaceRoot) {
     framework = frameworks[0]!;
     prompts.note(`Framework detectado: ${framework}`, 'Detección');
@@ -42,17 +45,19 @@ export async function runInit({ cwd, prompts }: InitOptions): Promise<ProjectCon
         ? 'no se detectó ningún framework soportado'
         : `se detectaron varios frameworks (${frameworks.join(', ')})`;
     prompts.note(reason, 'Selección manual requerida');
-    framework = await prompts.select(
+    framework = (await prompts.select(
       '¿Qué framework usa este proyecto?',
       FRAMEWORK_OPTIONS.map((value) => ({ value, label: value })),
-    );
+    )) as DetectedFramework;
   }
+
+  const defaultPaths = DEFAULT_PATHS[framework];
 
   const componentsPath = await prompts.text(
     'Ruta para componentes (paths.components)',
-    DEFAULT_PATHS.components,
+    defaultPaths.components,
   );
-  const libPath = await prompts.text('Ruta para librería (paths.lib)', DEFAULT_PATHS.lib);
+  const libPath = await prompts.text('Ruta para librería (paths.lib)', defaultPaths.lib);
   const registryUrl = await prompts.text('URL del registry', DEFAULT_REGISTRY_URL);
 
   const config: ProjectConfig = {

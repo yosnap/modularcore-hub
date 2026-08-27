@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-export type DetectedFramework = 'react' | 'svelte' | 'vue' | 'angular';
+export type DetectedFramework = 'react' | 'svelte' | 'vue' | 'angular' | 'blade';
 export type PackageManager = 'pnpm' | 'yarn' | 'bun' | 'npm';
 
 export interface PackageJsonShape {
@@ -11,17 +11,31 @@ export interface PackageJsonShape {
   workspaces?: unknown;
 }
 
+interface ComposerJsonShape {
+  require?: Record<string, string>;
+}
+
 const FRAMEWORK_MARKERS: Record<DetectedFramework, string> = {
   react: 'react',
   svelte: 'svelte',
   vue: 'vue',
   angular: '@angular/core',
+  blade: 'laravel/framework',
 };
 
 export async function readPackageJson(cwd: string): Promise<PackageJsonShape | undefined> {
   try {
     const raw = await readFile(join(cwd, 'package.json'), 'utf8');
     return JSON.parse(raw) as PackageJsonShape;
+  } catch {
+    return undefined;
+  }
+}
+
+async function readComposerJson(cwd: string): Promise<ComposerJsonShape | undefined> {
+  try {
+    const raw = await readFile(join(cwd, 'composer.json'), 'utf8');
+    return JSON.parse(raw) as ComposerJsonShape;
   } catch {
     return undefined;
   }
@@ -38,11 +52,12 @@ export interface FrameworkDetectionResult {
 }
 
 export async function detectFrameworks(cwd: string): Promise<FrameworkDetectionResult> {
-  const pkg = await readPackageJson(cwd);
-  if (!pkg) return { frameworks: [], packageJson: undefined };
-  const deps = allDeclaredDeps(pkg);
-  const frameworks = (Object.keys(FRAMEWORK_MARKERS) as DetectedFramework[]).filter(
-    (framework) => FRAMEWORK_MARKERS[framework] in deps,
+  const [pkg, composer] = await Promise.all([readPackageJson(cwd), readComposerJson(cwd)]);
+  const deps = pkg ? allDeclaredDeps(pkg) : {};
+  const frameworks = (Object.keys(FRAMEWORK_MARKERS) as DetectedFramework[]).filter((framework) =>
+    framework === 'blade'
+      ? FRAMEWORK_MARKERS.blade in (composer?.require ?? {})
+      : FRAMEWORK_MARKERS[framework] in deps,
   );
   return { frameworks, packageJson: pkg };
 }
