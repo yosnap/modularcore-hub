@@ -17,6 +17,7 @@ COPY packages ./packages
 RUN pnpm install --frozen-lockfile
 
 COPY apps/web ./apps/web
+COPY assets ./assets
 
 # Run the workspace pipeline so registry assets are generated before SvelteKit builds.
 RUN pnpm build
