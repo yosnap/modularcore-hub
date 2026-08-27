@@ -1,5 +1,6 @@
 <script lang="ts">
   import { ALLOWED_MODELS } from '$lib/chat-config';
+  import ModernSelect from '$lib/components/ModernSelect.svelte';
   import { createPlaygroundChat } from '$lib/playground-chat.svelte';
 
   const chat = createPlaygroundChat();
@@ -26,15 +27,12 @@
 
 <label class="mb-4 block text-sm font-medium">
   Modelo:
-  <select
+  <ModernSelect
     value={chat.model}
-    onchange={(e) => chat.setModel(e.currentTarget.value as (typeof ALLOWED_MODELS)[number])}
-    class="rounded-md border border-input bg-background px-2 py-1 text-sm"
-  >
-    {#each ALLOWED_MODELS as model (model)}
-      <option value={model}>{model}</option>
-    {/each}
-  </select>
+    options={ALLOWED_MODELS.map((model) => ({ value: model, label: model }))}
+    ariaLabel="Modelo de AI Chat"
+    onchange={(value) => chat.setModel(value as (typeof ALLOWED_MODELS)[number])}
+  />
 </label>
 
 <ul class="messages">

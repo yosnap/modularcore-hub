@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { JSX } from 'react';
 import type { StorageProvider } from '../../../core/provider.js';
 import type { UseMediaPickerResult } from '../../../adapters/react/use-media-picker.js';
+import { ModernSelect } from '../ModernSelect.js';
 
 export interface FolderSelectProps {
   picker: UseMediaPickerResult;
@@ -32,19 +33,13 @@ export function FolderSelect({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <select
+      <ModernSelect
         value={value ?? ''}
         disabled={foldersLoading}
-        onChange={(event) => onChange(event.target.value)}
-        className="rounded-md border border-zinc-300 px-2 py-1.5 text-sm"
-      >
-        <option value="">All folders</option>
-        {folders.map((folder) => (
-          <option key={folder.id} value={folder.id}>
-            {folder.name}
-          </option>
-        ))}
-      </select>
+        onChange={onChange}
+        options={[{ value: '', label: 'All folders' }, ...folders.map((folder) => ({ value: folder.id, label: folder.name }))]}
+        placeholder="All folders"
+      />
       {foldersError ? (
         <p role="alert" className="text-sm text-red-600">
           {foldersError.message}

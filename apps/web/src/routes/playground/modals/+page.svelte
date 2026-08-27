@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createModals } from '@modularcore/modals/svelte';
+  import ModernSelect from '$lib/components/ModernSelect.svelte';
   import ModalsRendererHeadless from '@modularcore/modals/ui/svelte/ModalsRenderer.svelte';
   import ModalsRendererTailwind from '@modularcore/modals/ui/svelte/tailwind/ModalsRenderer.svelte';
   import ModalsRendererShadcn from '@modularcore/modals/ui/svelte/shadcn/ModalsRenderer.svelte';
@@ -203,12 +204,16 @@
 <div class="style-switcher">
   <label>
     Estilo del componente
-    <select bind:value={styleVariant}>
-      <option value="headless">Sin estilo (headless)</option>
-      <option value="tailwind">Tailwind</option>
-      <option value="shadcn">Shadcn</option>
-      <option value="vanilla">CSS plano</option>
-    </select>
+    <ModernSelect
+      bind:value={styleVariant}
+      ariaLabel="Estilo del componente"
+      options={[
+        { value: 'headless', label: 'Sin estilo (headless)' },
+        { value: 'tailwind', label: 'Tailwind' },
+        { value: 'shadcn', label: 'Shadcn' },
+        { value: 'vanilla', label: 'CSS plano' },
+      ]}
+    />
   </label>
   <small>
     La descarga del componente (<code>modularcore add modals</code> o el tarball del catálogo)
@@ -249,11 +254,7 @@
         <legend>Básicos</legend>
         <label>
           Tipo (ubicación)
-          <select bind:value={form.type}>
-            {#each OVERLAY_TYPES as type (type)}
-              <option value={type}>{type}</option>
-            {/each}
-          </select>
+          <ModernSelect bind:value={form.type} options={OVERLAY_TYPES.map((type) => ({ value: type, label: type }))} ariaLabel="Tipo de overlay" />
         </label>
         <label>
           Título
@@ -304,11 +305,7 @@
         {#if needsMaxWidth(form.type)}
           <label>
             Ancho máximo
-            <select bind:value={form.maxWidth}>
-              {#each MAX_WIDTHS as width (width)}
-                <option value={width}>{width}</option>
-              {/each}
-            </select>
+            <ModernSelect bind:value={form.maxWidth} options={MAX_WIDTHS.map((width) => ({ value: width, label: width }))} ariaLabel="Ancho máximo" />
           </label>
         {/if}
         <label>
@@ -333,11 +330,7 @@
         <legend>Comportamiento</legend>
         <label>
           Trigger
-          <select bind:value={form.triggerType}>
-            {#each TRIGGER_TYPES as type (type)}
-              <option value={type}>{type}</option>
-            {/each}
-          </select>
+          <ModernSelect bind:value={form.triggerType} options={TRIGGER_TYPES.map((type) => ({ value: type, label: type }))} ariaLabel="Trigger" />
         </label>
         {#if needsTriggerValue(form.triggerType)}
           <label>
@@ -347,11 +340,7 @@
         {/if}
         <label>
           Frecuencia
-          <select bind:value={form.frequency}>
-            {#each FREQUENCIES as freq (freq)}
-              <option value={freq}>{freq}</option>
-            {/each}
-          </select>
+          <ModernSelect bind:value={form.frequency} options={FREQUENCIES.map((frequency) => ({ value: frequency, label: frequency }))} ariaLabel="Frecuencia" />
         </label>
         <label>
           Prioridad (para el slot compartido)
@@ -448,7 +437,6 @@
     margin: 2rem 0 2.25rem;
     padding: 1rem 1.125rem;
     border: 1px solid var(--builder-border);
-    border-top: 2px solid var(--builder-accent);
     border-radius: var(--builder-radius);
     background: var(--builder-surface);
     box-shadow: 0 4px 14px hsl(222 47% 11% / 0.05);
@@ -573,7 +561,6 @@
   }
 
   input,
-  select,
   textarea {
     width: 100%;
     box-sizing: border-box;
@@ -587,8 +574,7 @@
     transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
   }
 
-  input,
-  select {
+  input {
     min-height: 2.75rem;
     padding: 0.625rem 0.75rem;
   }
@@ -606,13 +592,11 @@
   }
 
   input:hover,
-  select:hover,
   textarea:hover {
     border-color: var(--builder-accent);
   }
 
   input:focus-visible,
-  select:focus-visible,
   textarea:focus-visible {
     outline: 2px solid var(--builder-accent);
     outline-offset: 2px;
@@ -737,7 +721,6 @@
 
   @media (prefers-reduced-motion: reduce) {
     input,
-    select,
     textarea,
     button {
       transition: none;

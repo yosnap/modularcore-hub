@@ -5,6 +5,7 @@ import type { StorageProvider } from '../../../core/provider.js';
 import type { UseMediaPickerResult } from '../../../adapters/react/use-media-picker.js';
 
 import '../../vanilla-styles.css';
+import { ModernSelect } from '../ModernSelect.js';
 
 export interface FolderSelectProps {
   picker: UseMediaPickerResult;
@@ -34,19 +35,13 @@ export function FolderSelect({
 
   return (
     <div className="mc-field">
-      <select
+      <ModernSelect
         value={value ?? ''}
         disabled={foldersLoading}
-        onChange={(event) => onChange(event.target.value)}
-        className="mc-select"
-      >
-        <option value="">All folders</option>
-        {folders.map((folder) => (
-          <option key={folder.id} value={folder.id}>
-            {folder.name}
-          </option>
-        ))}
-      </select>
+        onChange={onChange}
+        options={[{ value: '', label: 'All folders' }, ...folders.map((folder) => ({ value: folder.id, label: folder.name }))]}
+        placeholder="All folders"
+      />
       {foldersError ? (
         <p role="alert" className="mc-alert">
           {foldersError.message}
