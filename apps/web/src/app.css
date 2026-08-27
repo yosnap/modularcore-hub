@@ -27,6 +27,7 @@
  */
 @source '../../../packages/media-picker/ui/react';
 @source '../../../packages/media-picker/ui/svelte';
+@source '../../../packages/modals/ui/svelte';
 
 /*
  * Shadcn variant tokens, embedded directly rather than `@import`ed from
