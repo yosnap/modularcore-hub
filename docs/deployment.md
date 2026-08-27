@@ -18,17 +18,15 @@ monorepo con pnpm y deja una imagen de ejecución mínima que escucha en el puer
 - **Health check:** `GET /` en el puerto `3000`.
 - **Volúmenes:** ninguno. La aplicación y el registry son de solo lectura en tiempo de ejecución.
 
-## Variables de entorno
+## Variables globales
 
-| Variable | Requerida | Uso |
-| --- | --- | --- |
-| `OPENROUTER_API_KEY` | Sí, para `/api/chat` | Clave privada del proxy de AI Chat. |
-| `NODE_ENV` | No | La imagen establece `production`. |
-| `PORT` | No | La imagen establece `3000`; Easypanel debe enrutar a ese puerto. |
-| `HOST` | No | La imagen establece `0.0.0.0`. |
+No se requieren variables globales en Easypanel. La imagen define internamente el modo de
+producción, el host y el puerto `3000`; el servicio debe conservar su entorno global actual sin
+reemplazarlo.
 
-Las variables se crean en Easypanel; no se guardan en Git. `docs/mcp-data.md` también está
-ignorado para impedir que la URL local de conexión MCP se publique por accidente.
+El endpoint opcional `/api/chat` no estará disponible mientras no se configure de forma explícita
+una clave del proveedor de IA. `docs/mcp-data.md` está ignorado para impedir que la URL local de
+conexión MCP se publique por accidente.
 
 ## Verificación previa
 
@@ -38,8 +36,7 @@ pnpm build
 ```
 
 Easypanel debe completar un despliegue desde el Dockerfile y servir la URL configurada por el
-dominio del servicio. Tras el primer despliegue, comprobar la portada y una solicitud a
-`/api/chat` con una clave válida.
+dominio del servicio. Tras el primer despliegue, comprobar la portada.
 
 ## Reversión
 
