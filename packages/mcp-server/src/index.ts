@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import { pathToFileURL } from 'node:url';
+
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
@@ -34,7 +36,10 @@ export async function main(): Promise<void> {
   await server.connect(transport);
 }
 
-const isEntryPoint = process.argv[1] && import.meta.url === `file://${process.argv[1]}`;
+// pathToFileURL en vez de concatenar "file://": las rutas con espacios (u otros caracteres
+// percent-encoded) no coinciden con import.meta.url si se comparan como texto plano.
+const isEntryPoint =
+  process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href;
 if (isEntryPoint) {
   main().catch((error) => {
     console.error(`[@modularcore/mcp-server] fatal: ${(error as Error).message}`);
