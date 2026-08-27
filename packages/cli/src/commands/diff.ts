@@ -1,8 +1,9 @@
-import { decodeFileContent, diffLines, readLocalFileBuffer, resolveTargetPath } from '../files.js';
+import { decodeFileContent, diffLines, readLocalFileBuffer, remapTarget } from '../files.js';
 import { readProjectConfig } from '../config.js';
+import { resolveTargetPath } from '@modularcore/registry-client';
 
 import type { DiffLine } from '../files.js';
-import type { RegistryClient } from '../registry-client.js';
+import type { RegistryClient } from '@modularcore/registry-client';
 
 export interface FileDiffResult {
   target: string;
@@ -24,7 +25,7 @@ export async function runDiff(
   const entry = await client.getDescriptor(name);
   const files: FileDiffResult[] = [];
   for (const file of entry.files) {
-    const localPath = resolveTargetPath(cwd, file.target, config.paths);
+    const localPath = resolveTargetPath(cwd, remapTarget(file.target, config.paths));
     const localBuffer = await readLocalFileBuffer(localPath);
     if (localBuffer === undefined) {
       files.push({ target: localPath, status: 'missing-locally' });

@@ -9,6 +9,20 @@
 export interface UploadOptions {
   /** Desired storage key/path. Providers may ignore or namespace this. */
   key?: string;
+  /**
+   * When set, upload to this EXACT existing key instead of minting a new one — the real
+   * "Sobreescribir" (overwrite) contract, distinct from `key` above (a namespace hint a
+   * provider may ignore). Callers must source this only from a key the storage backend
+   * already returned (e.g. `ListedObject.key`), never from user-editable display text — a
+   * signing endpoint that trusts a client-supplied key turns a careless wiring mistake into an
+   * arbitrary-object-overwrite primitive, the same trust boundary as `scope`/`query` above.
+   * `core/providers/s3-compatible.ts` forwards this to `getUploadUrl(file, options)` (no
+   * signature change needed, it already receives the full `options`).
+   * `core/providers/cloudinary.ts` does NOT support this field — `getSignedParams(file)` has no
+   * `options` parameter, so "Sobreescribir" against a Cloudinary-backed picker always mints a
+   * new `public_id`, same as "Guardar como nuevo" (see `docs/cloudinary-signing-endpoint-example.md`).
+   */
+  overwriteKey?: string;
   contentType?: string;
   onProgress?: (loadedBytes: number, totalBytes: number) => void;
   signal?: AbortSignal;
@@ -38,11 +52,26 @@ export interface ListedObject {
  * authorization decision requires the caller's identity, which only the user's own backend
  * (behind the `list` hook) can verify. A provider that ignores `scope` entirely is a valid
  * implementation of this interface.
+ *
+ * `query`/`sort` carry the same trust boundary as `scope`: they are forwarded verbatim to
+ * whatever `list` hook the consuming application wires up (see `providers/s3-compatible.ts`/
+ * `providers/cloudinary.ts` and `docs/s3-presign-endpoint-example.md`/
+ * `docs/cloudinary-signing-endpoint-example.md`). Two things a provider author must handle on
+ * their own backend, NOT this package:
+ * - `query` is free-text from the end user — never string-interpolate it into a backend
+ *   filter/search expression (e.g. an S3 prefix filter or a Cloudinary Admin API search
+ *   expression) without parameterization, or it becomes a filter-injection vector.
+ * - `sort` is a request, not a guarantee — a provider that ignores it (same as `scope` today)
+ *   is still a valid implementation; real backends may not support every sort order server-side.
  */
 export interface ListOptions {
   folder?: string;
   scope?: 'mine' | 'all';
   mimeTypes?: string[];
+  /** Free-text search. See the trust-boundary note above — never interpolate this unparameterized into a backend query. */
+  query?: string;
+  /** Requested sort order. Not guaranteed to be honored by every provider — see the trust-boundary note above. */
+  sort?: 'newest' | 'oldest' | 'name' | 'size';
   cursor?: string;
   limit?: number;
 }

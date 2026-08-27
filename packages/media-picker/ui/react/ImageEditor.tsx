@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 import type { AspectRatio, CropRect } from '../../core/canvas/crop.js';
 import type { UseMediaPickerResult } from '../../adapters/react/use-media-picker.js';
+import { ModernSelect } from './ModernSelect.js';
 
 export interface ImageEditorProps {
   picker: UseMediaPickerResult;
@@ -95,13 +96,15 @@ export function ImageEditor({ picker }: ImageEditorProps): JSX.Element {
       <div>
         <label>
           Aspect ratio
-          <select value={aspect} onChange={(event) => setAspect(event.target.value as AspectRatio)}>
-            {ASPECT_PRESETS.map((preset) => (
-              <option key={preset} value={preset}>
-                {preset}
-              </option>
-            ))}
-          </select>
+          <ModernSelect
+            value={String(aspect)}
+            onChange={(value) => setAspect(value as AspectRatio)}
+            options={ASPECT_PRESETS.map((preset) => ({
+              value: String(preset),
+              label: String(preset),
+            }))}
+            placeholder="Aspect ratio"
+          />
         </label>
         <label>
           Zoom

@@ -26,7 +26,13 @@ export interface S3CompatibleConfig {
   getUploadUrl: (file: Blob, options?: UploadOptions) => Promise<S3PresignedTarget>;
   /** Base used to build public URLs, e.g. `https://cdn.example.com` or a bucket endpoint. */
   publicUrlBase: string;
-  /** Listing/removal need standing credentials — proxy them through your own backend too. */
+  /**
+   * Listing/removal need standing credentials — proxy them through your own backend too.
+   * `options.query`/`options.sort` (numbered-pagination search/sort) are forwarded verbatim —
+   * see the trust-boundary note on `ListOptions` in `core/provider.ts` and
+   * `docs/s3-presign-endpoint-example.md` for the injection/no-guarantee caveats before wiring
+   * them into your bucket-listing query.
+   */
   list?: (options?: ListOptions) => Promise<ListPage>;
   remove?: (key: string) => Promise<void>;
   /** Folders are a flat list (no nesting) — proxy them through your own backend as well. */

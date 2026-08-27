@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Simplified favicon: flat hexagon silhouette, legible down to 16px -->
+  <rect width="200" height="200" rx="36" fill="#4F46E5"/>
+  <path d="M100,44 L152,72 L100,100 L48,72 Z" fill="#FFFFFF"/>
+  <path d="M48,72 L100,100 L100,156 L48,128 Z" fill="#C7D2FE"/>
+  <path d="M152,72 L100,100 L100,156 L152,128 Z" fill="#818CF8"/>
+</svg>

@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 import { runDiff } from '../src/commands/diff.js';
 import { runUpdate } from '../src/commands/update.js';
-import { createRegistryClient } from '../src/registry-client.js';
+import { createRegistryClient } from '@modularcore/registry-client';
 import { writeProjectConfig } from '../src/config.js';
 import { createFakePrompts } from './helpers/fake-prompts.js';
 import { createTmpProject } from './helpers/tmp-project.js';

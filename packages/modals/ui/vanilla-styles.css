@@ -1,0 +1,301 @@
+/**
+ * Plain CSS for the vanilla style variant (React + Svelte). No framework, no build step
+ * required — a consumer without a bundler can drop a `<link rel="stylesheet" href="vanilla-
+ * styles.css">` straight into their HTML. Custom-authored classes are prefixed `mc-modals-` to
+ * avoid colliding with a consumer project's own class names.
+ *
+ * The `modals-*` classes (without the `mc-` prefix) are emitted directly by the headless
+ * components (ui/svelte/*.svelte, ui/react/*.tsx) and by `safe/style.ts`'s `maxWidthClass()` —
+ * they are shared, framework-agnostic hooks. This stylesheet is the first place any of them get
+ * real rules; every other style variant (tailwind/shadcn) styles them through utility classes
+ * instead.
+ */
+
+:root {
+  --mc-modals-z: 1000;
+  --mc-modals-bg: #ffffff;
+  --mc-modals-fg: #18181b;
+  --mc-modals-muted: #52525b;
+  --mc-modals-border: #e4e4e7;
+  --mc-modals-backdrop: rgba(0, 0, 0, 0.5);
+  --mc-modals-accent: #4f46e5;
+  --mc-modals-accent-hover: #4338ca;
+  --mc-modals-radius: 10px;
+  --mc-modals-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* Disables motion for anyone with `prefers-reduced-motion: reduce` — the headless components
+   already compute this via `prefersReducedMotion()` and append the `modals-no-motion` class;
+   this is the only rule that makes that flag do anything. */
+.modals-no-motion,
+.modals-no-motion * {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * ModalOverlay — centered dialog with a full-viewport backdrop.
+ * ------------------------------------------------------------------------------------------- */
+
+.mc-modals-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--mc-modals-z);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: var(--mc-modals-backdrop);
+  transition: opacity 0.15s ease;
+}
+
+.mc-modals-dialog {
+  position: relative;
+  background: var(--mc-modals-bg);
+  color: var(--mc-modals-fg);
+  border-radius: var(--mc-modals-radius);
+  box-shadow: var(--mc-modals-shadow);
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * FullscreenOverlay — occupies the entire viewport.
+ * ------------------------------------------------------------------------------------------- */
+
+.mc-modals-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: var(--mc-modals-z);
+  display: flex;
+  flex-direction: column;
+  background: var(--mc-modals-bg);
+  color: var(--mc-modals-fg);
+  overflow-y: auto;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * TopBanner / BottomBanner — full-width strips pinned to a viewport edge.
+ * ------------------------------------------------------------------------------------------- */
+
+.mc-modals-top-banner,
+.mc-modals-bottom-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: var(--mc-modals-z);
+  background: var(--mc-modals-bg);
+  color: var(--mc-modals-fg);
+  border-color: var(--mc-modals-border);
+  transition: transform 0.15s ease;
+}
+
+.mc-modals-top-banner {
+  top: 0;
+  border-bottom: 1px solid var(--mc-modals-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.mc-modals-bottom-banner {
+  bottom: 0;
+  border-top: 1px solid var(--mc-modals-border);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * SlideIn — bottom-right card on desktop, near-full-width on small screens.
+ * ------------------------------------------------------------------------------------------- */
+
+.mc-modals-slide-in {
+  position: fixed;
+  z-index: var(--mc-modals-z);
+  bottom: 16px;
+  right: 16px;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  background: var(--mc-modals-bg);
+  color: var(--mc-modals-fg);
+  border-radius: var(--mc-modals-radius);
+  box-shadow: var(--mc-modals-shadow);
+  transition: transform 0.2s ease;
+}
+
+@media (max-width: 640px) {
+  .mc-modals-slide-in {
+    left: 16px;
+    right: 16px;
+    width: auto;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * Toast + toast stack (rendered by ModalsRenderer around each Toast instance).
+ * ------------------------------------------------------------------------------------------- */
+
+.mc-modals-toast-stack {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: var(--mc-modals-z);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: calc(100vw - 32px);
+}
+
+@media (max-width: 640px) {
+  .mc-modals-toast-stack {
+    left: 16px;
+    right: 16px;
+  }
+}
+
+.mc-modals-toast {
+  background: var(--mc-modals-bg);
+  color: var(--mc-modals-fg);
+  border-radius: 8px;
+  box-shadow: var(--mc-modals-shadow);
+  width: 320px;
+  max-width: 100%;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * OverlayBody — shared content: close button, image, title, message, action buttons. Rendered
+ * inside every overlay type above (dialog/fullscreen/banner/slide-in/toast).
+ * ------------------------------------------------------------------------------------------- */
+
+.mc-modals-body {
+  position: relative;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mc-modals-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--mc-modals-muted);
+  cursor: pointer;
+}
+
+.mc-modals-close:hover {
+  background: #f4f4f5;
+  color: var(--mc-modals-fg);
+}
+
+.mc-modals-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.mc-modals-title {
+  margin: 0;
+  padding-right: 28px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--mc-modals-fg);
+}
+
+.mc-modals-message {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--mc-modals-muted);
+}
+
+.mc-modals-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.mc-modals-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.mc-modals-button--primary {
+  background: var(--mc-modals-accent);
+  color: #ffffff;
+  border-color: var(--mc-modals-accent);
+}
+
+.mc-modals-button--primary:hover {
+  background: var(--mc-modals-accent-hover);
+  border-color: var(--mc-modals-accent-hover);
+}
+
+.mc-modals-button--secondary {
+  background: transparent;
+  color: var(--mc-modals-fg);
+  border-color: var(--mc-modals-border);
+}
+
+.mc-modals-button--secondary:hover {
+  background: #f4f4f5;
+}
+
+/* ---------------------------------------------------------------------------------------------
+ * `maxWidthClass()` (safe/style.ts) hands back one of these unprefixed class names based on
+ * `config.maxWidth` — a closed enum shared by every style variant. Widths mirror common
+ * Tailwind `max-w-*` scale values so all variants agree on the same dialog sizing.
+ * ------------------------------------------------------------------------------------------- */
+
+.modals-max-w-sm {
+  max-width: 24rem;
+}
+
+.modals-max-w-md {
+  max-width: 28rem;
+}
+
+.modals-max-w-lg {
+  max-width: 32rem;
+}
+
+.modals-max-w-xl {
+  max-width: 36rem;
+}
+
+.modals-max-w-2xl {
+  max-width: 42rem;
+}
+
+.modals-max-w-full {
+  max-width: 100%;
+}

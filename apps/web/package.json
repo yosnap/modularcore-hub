@@ -16,6 +16,7 @@
   "dependencies": {
     "@modularcore/ai-chat": "workspace:*",
     "@modularcore/media-picker": "workspace:*",
+    "@modularcore/modals": "workspace:*",
     "@modularcore/registry": "workspace:*",
     "undici": "^8.10.0"
   },
@@ -23,8 +24,11 @@
     "@sveltejs/adapter-node": "^5.5.7",
     "@sveltejs/kit": "^2.70.3",
     "@sveltejs/vite-plugin-svelte": "^7.3.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "bits-ui": "^2.18.2",
     "svelte": "^5.56.9",
     "svelte-check": "^4.1.0",
+    "tailwindcss": "^4.3.3",
     "vite": "^8.2.1",
     "vitest": "^2.0.0"
   }

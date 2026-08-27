@@ -29,6 +29,11 @@ export type CloudinaryConfig =
       cloudName: string;
       resourceType?: 'image' | 'video' | 'raw' | 'auto';
       getSignedParams: (file: Blob) => Promise<CloudinarySignedParams>;
+      /**
+       * `options.query`/`options.sort` are forwarded verbatim — see the trust-boundary note on
+       * `ListOptions` in `core/provider.ts` and `docs/cloudinary-signing-endpoint-example.md`
+       * before wiring them into an Admin API search expression.
+       */
       list?: (options?: ListOptions) => Promise<ListPage>;
       remove?: (key: string) => Promise<void>;
       listFolders?: () => Promise<StorageFolder[]>;

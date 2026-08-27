@@ -28,6 +28,28 @@
   {/each}
 </ul>
 
+<section class="tools">
+  <h2>Herramientas</h2>
+  <p>
+    A diferencia de los componentes de arriba, lo siguiente <strong
+      >no se copia a tu proyecto ni se instala vía CLI</strong
+    >: se registra en la configuración de tu cliente y se ejecuta bajo demanda.
+  </p>
+  <ul class="cards">
+    <li class="card">
+      <h3><a href="/mcp-server">MCP Server</a></h3>
+      <p class="meta">
+        <span class="badge">npx</span>
+        <span>@modularcore/mcp-server</span>
+      </p>
+      <p>
+        Servidor MCP (stdio) que expone el registry a clientes como Cursor, Claude Code o VS Code
+        — búsqueda, instalación con confirmación y chequeo de actualizaciones vía tools MCP.
+      </p>
+    </li>
+  </ul>
+</section>
+
 <style>
   .cards {
     list-style: none;
@@ -36,18 +58,18 @@
     gap: 1rem;
   }
   .card {
-    border: 1px solid #ddd;
+    border: 1px solid var(--mc-neutral-200);
     border-radius: 8px;
     padding: 1rem;
   }
   .meta {
     display: flex;
     gap: 0.75rem;
-    color: #555;
+    color: var(--mc-neutral-500);
     font-size: 0.9rem;
   }
   .badge {
-    background: #eee;
+    background: var(--mc-neutral-100);
     border-radius: 4px;
     padding: 0 0.4rem;
   }

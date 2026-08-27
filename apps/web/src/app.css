@@ -1,0 +1,176 @@
+/**
+ * Tailwind CSS v4, loaded globally (see plan.md → Validation Log, Sesión 1). Deliberately
+ * imports only the theme + utilities layers, NOT `tailwindcss/preflight` — Preflight resets
+ * default browser styling for every native element (buttons, inputs, headings) site-wide,
+ * which would visibly change the catalog/docs/ai-chat pages that still use plain scoped CSS
+ * and were never asked to be migrated (see plan Non-Goals). Skipping it keeps Tailwind's
+ * utility classes available everywhere while leaving every untouched page pixel-identical.
+ */
+@import 'tailwindcss/theme' layer(theme);
+@import 'tailwindcss/utilities' layer(utilities);
+
+/*
+ * Brand kit (docs/brand-guide.md is the source of truth). Imported for its --mc-font-* custom
+ * properties, referenced directly below in @theme inline and @layer base. --mc-color-* tokens
+ * are NOT re-used via var() here: the semantic tokens below (--primary, --ring, etc.) are
+ * consumed as raw HSL triplets by `hsl(var(--x))` in @theme inline, while brand-tokens.css
+ * stores colors as hex — mixing the two formats would break `hsl(#6366f1)`. Each semantic color
+ * value is instead the pre-computed HSL equivalent of its --mc-* source, noted in a comment.
+ */
+@import '../../../assets/brand-tokens.css';
+
+/*
+ * Tailwind's automatic content detection does not scan `node_modules` (the pnpm workspace
+ * symlink `@modularcore/media-picker` included) — without these `@source` directives, none of
+ * the Tailwind utility classes used inside the `tailwind/*` and `shadcn/*` component variants
+ * would ever be found, and the playground preview for those variants would render unstyled.
+ */
+@source '../../../packages/media-picker/ui/react';
+@source '../../../packages/media-picker/ui/svelte';
+@source '../../../packages/modals/ui/svelte';
+
+/*
+ * Shadcn variant tokens, embedded directly rather than `@import`ed from
+ * `packages/media-picker/ui/shadcn-theme.css` — that file IS the canonical source (kept in sync
+ * manually) and is meant to be copied into a consumer's own entry CSS exactly like this, but a
+ * further `@import` of it from here specifically triggers a Vite/rolldown-vite quirk in this
+ * repo's setup where `@theme` is left unprocessed (confirmed empirically: `@layer base {...}`
+ * from an imported file gets through fine, `@theme` does not). Embedding directly sidesteps it
+ * and matches how real shadcn/ui projects work anyway — theme tokens live in the consuming
+ * app's own global CSS, not imported from a package.
+ */
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /* Brand typography (docs/brand-guide.md §4), exposed as font-sans/font-display/font-mono */
+  --font-sans: var(--mc-font-body);
+  --font-display: var(--mc-font-display);
+  --font-mono: var(--mc-font-mono);
+}
+
+/*
+ * Explicit layer order (must be declared before any layer's rules are written, and wins
+ * regardless of what order stylesheets actually load in): pins `brand` after `base` for the
+ * whole document. Without this, `packages/media-picker`'s shadcn variant components each
+ * self-import `ui/shadcn-theme.css` (see its own file comment — deliberately self-contained for
+ * standalone consumers) which declares the SAME `@layer base { :root { --primary: ... } } }`
+ * selector with the generic un-branded shadcn zinc palette. Since that CSS module only loads
+ * once its component actually mounts (later than this file, which the root layout imports
+ * first), it would otherwise win the same-layer/same-specificity tie and silently revert
+ * --primary (and every other token below) back to zinc-950 for the rest of the page's lifetime
+ * — reproduced live: the brand indigo never appeared in the shadcn playground variant.
+ */
+@layer base, brand;
+
+@layer brand {
+  /*
+   * Semantic tokens remapped to the brand palette (docs/brand-guide.md §3). Each value is the
+   * HSL equivalent of its --mc-* source (brand-tokens.css stores hex; --theme-inline above wraps
+   * these in hsl(), which requires an HSL triplet, not a hex literal — see import comment).
+   */
+  :root {
+    --background: 0 0% 100%; /* mc-neutral-0 #FFFFFF */
+    --foreground: 222.2 47.4% 11.2%; /* mc-neutral-900 #0F172A */
+    --card: 0 0% 100%; /* mc-neutral-0 */
+    --card-foreground: 222.2 47.4% 11.2%; /* mc-neutral-900 */
+    --popover: 0 0% 100%; /* mc-neutral-0 */
+    --popover-foreground: 222.2 47.4% 11.2%; /* mc-neutral-900 */
+    --primary: 238.7 83.5% 66.7%; /* mc-primary-500 #6366F1 */
+    --primary-foreground: 0 0% 100%; /* mc-neutral-0 */
+    --secondary: 210 40% 96.1%; /* mc-neutral-100 #F1F5F9 */
+    --secondary-foreground: 222.2 47.4% 11.2%; /* mc-neutral-900 */
+    --muted: 210 40% 96.1%; /* mc-neutral-100 */
+    --muted-foreground: 215.4 16.3% 46.9%; /* mc-neutral-500 #64748B */
+    --accent: 210 40% 96.1%; /* mc-neutral-100 */
+    --accent-foreground: 243.4 75.3% 58.6%; /* mc-primary-600 #4F46E5, branded hover emphasis */
+    --destructive: 0 84.2% 60.2%; /* mc-danger #EF4444 */
+    --destructive-foreground: 0 0% 100%; /* mc-neutral-0 */
+    --border: 214.3 31.8% 91.4%; /* mc-neutral-200 #E2E8F0 */
+    --input: 214.3 31.8% 91.4%; /* mc-neutral-200 */
+    --ring: 238.7 83.5% 66.7%; /* mc-primary-500 */
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 47.4% 11.2%; /* mc-neutral-900 #0F172A */
+    --foreground: 210 40% 98%; /* mc-neutral-50 #F8FAFC */
+    --card: 217.2 32.6% 17.5%; /* mc-neutral-800 #1E293B */
+    --card-foreground: 210 40% 98%; /* mc-neutral-50 */
+    --popover: 217.2 32.6% 17.5%; /* mc-neutral-800 */
+    --popover-foreground: 210 40% 98%; /* mc-neutral-50 */
+    --primary: 238.7 83.5% 66.7%; /* mc-primary-500, same hue both themes */
+    --primary-foreground: 0 0% 100%; /* mc-neutral-0 */
+    --secondary: 217.2 32.6% 17.5%; /* mc-neutral-800 */
+    --secondary-foreground: 210 40% 98%; /* mc-neutral-50 */
+    --muted: 217.2 32.6% 17.5%; /* mc-neutral-800 */
+    --muted-foreground: 215 20.2% 65.1%; /* mc-neutral-400 #94A3B8 */
+    --accent: 217.2 32.6% 17.5%; /* mc-neutral-800 */
+    --accent-foreground: 229.7 93.6% 81.8%; /* mc-primary-300 #A5B4FC, branded hover emphasis */
+    --destructive: 0 62.8% 30.6%; /* darkened danger red, not brand-defined for dark mode */
+    --destructive-foreground: 210 40% 98%; /* mc-neutral-50 */
+    --border: 215.3 25% 26.7%; /* mc-neutral-700 #334155 */
+    --input: 215.3 25% 26.7%; /* mc-neutral-700 */
+    --ring: 234.5 89.5% 73.9%; /* mc-primary-400 #818CF8, lighter for dark-bg visibility */
+  }
+}
+
+@layer base {
+  body {
+    font-family: var(--mc-font-body);
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--background));
+    line-height: 1.6;
+  }
+
+  a {
+    color: var(--mc-primary-600);
+  }
+
+  a:hover {
+    color: var(--mc-primary-700);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--mc-font-display);
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--mc-font-mono);
+  }
+}

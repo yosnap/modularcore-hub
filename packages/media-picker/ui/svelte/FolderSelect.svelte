@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { MediaPickerRune } from '../../adapters/svelte/create-media-picker.svelte.js';
   import type { StorageProvider } from '../../core/provider.js';
+  import ModernSelect from './ModernSelect.svelte';
 
   let {
     picker,
@@ -27,12 +28,13 @@
 </script>
 
 <div>
-  <select {value} disabled={picker.state.foldersLoading} onchange={(event) => onChange(event.currentTarget.value)}>
-    <option value="">All folders</option>
-    {#each picker.state.folders as folder (folder.id)}
-      <option value={folder.id}>{folder.name}</option>
-    {/each}
-  </select>
+  <ModernSelect
+    {value}
+    disabled={picker.state.foldersLoading}
+    onchange={onChange}
+    options={[{ value: '', label: 'All folders' }, ...picker.state.folders.map((folder) => ({ value: folder.id, label: folder.name }))]}
+    placeholder="All folders"
+  />
   {#if picker.state.foldersError}
     <p role="alert">{picker.state.foldersError.message}</p>
   {/if}

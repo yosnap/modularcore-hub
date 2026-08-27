@@ -1,5 +1,6 @@
 <script lang="ts">
   import { ALLOWED_MODELS } from '$lib/chat-config';
+  import ModernSelect from '$lib/components/ModernSelect.svelte';
   import { createPlaygroundChat } from '$lib/playground-chat.svelte';
 
   const chat = createPlaygroundChat();
@@ -24,16 +25,14 @@
   <code>baseURL</code> en ese proxy, no el código de este componente.
 </p>
 
-<label>
+<label class="mb-4 block text-sm font-medium">
   Modelo:
-  <select
+  <ModernSelect
     value={chat.model}
-    onchange={(e) => chat.setModel(e.currentTarget.value as (typeof ALLOWED_MODELS)[number])}
-  >
-    {#each ALLOWED_MODELS as model (model)}
-      <option value={model}>{model}</option>
-    {/each}
-  </select>
+    options={ALLOWED_MODELS.map((model) => ({ value: model, label: model }))}
+    ariaLabel="Modelo de AI Chat"
+    onchange={(value) => chat.setModel(value as (typeof ALLOWED_MODELS)[number])}
+  />
 </label>
 
 <ul class="messages">
@@ -55,8 +54,13 @@
     bind:value={draft}
     placeholder="Escribe un mensaje..."
     disabled={chat.status === 'streaming'}
+    class="rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
   />
-  <button type="submit" disabled={chat.status === 'streaming' || draft.trim().length === 0}>
+  <button
+    type="submit"
+    disabled={chat.status === 'streaming' || draft.trim().length === 0}
+    class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
+  >
     Enviar
   </button>
 </form>
@@ -72,13 +76,13 @@
   .messages li {
     padding: 0.5rem 0.75rem;
     border-radius: 6px;
-    background: #f5f5f5;
+    background: var(--mc-neutral-50);
   }
   .messages li.user {
-    background: #e6f0ff;
+    background: var(--mc-primary-100);
   }
   .error {
-    color: #b00020;
+    color: var(--mc-danger);
   }
   form {
     display: flex;

@@ -200,6 +200,234 @@
       "target": "src/modularcore/media-picker/ui/svelte/RemoteUrlLoader.svelte",
       "type": "ui",
       "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/tailwind/MediaLibraryGrid.tsx",
+      "target": "src/modularcore/media-picker/ui/react/tailwind/MediaLibraryGrid.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/tailwind/FolderSelect.tsx",
+      "target": "src/modularcore/media-picker/ui/react/tailwind/FolderSelect.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/tailwind/MimeTypeFilter.tsx",
+      "target": "src/modularcore/media-picker/ui/react/tailwind/MimeTypeFilter.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/tailwind/ImageEditor.tsx",
+      "target": "src/modularcore/media-picker/ui/react/tailwind/ImageEditor.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/tailwind/BulkActionsBar.tsx",
+      "target": "src/modularcore/media-picker/ui/react/tailwind/BulkActionsBar.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/tailwind/RemoteUrlLoader.tsx",
+      "target": "src/modularcore/media-picker/ui/react/tailwind/RemoteUrlLoader.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/MediaLibraryGrid.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/tailwind/MediaLibraryGrid.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/FolderSelect.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/tailwind/FolderSelect.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/MimeTypeFilter.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/tailwind/MimeTypeFilter.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/ImageEditor.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/tailwind/ImageEditor.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/BulkActionsBar.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/tailwind/BulkActionsBar.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/RemoteUrlLoader.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/tailwind/RemoteUrlLoader.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/shadcn/MediaLibraryGrid.tsx",
+      "target": "src/modularcore/media-picker/ui/react/shadcn/MediaLibraryGrid.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/shadcn/FolderSelect.tsx",
+      "target": "src/modularcore/media-picker/ui/react/shadcn/FolderSelect.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/shadcn/MimeTypeFilter.tsx",
+      "target": "src/modularcore/media-picker/ui/react/shadcn/MimeTypeFilter.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/shadcn/ImageEditor.tsx",
+      "target": "src/modularcore/media-picker/ui/react/shadcn/ImageEditor.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/shadcn/BulkActionsBar.tsx",
+      "target": "src/modularcore/media-picker/ui/react/shadcn/BulkActionsBar.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/shadcn/RemoteUrlLoader.tsx",
+      "target": "src/modularcore/media-picker/ui/react/shadcn/RemoteUrlLoader.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/MediaLibraryGrid.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/shadcn/MediaLibraryGrid.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/FolderSelect.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/shadcn/FolderSelect.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/MimeTypeFilter.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/shadcn/MimeTypeFilter.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/ImageEditor.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/shadcn/ImageEditor.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/BulkActionsBar.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/shadcn/BulkActionsBar.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/RemoteUrlLoader.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/shadcn/RemoteUrlLoader.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/vanilla/MediaLibraryGrid.tsx",
+      "target": "src/modularcore/media-picker/ui/react/vanilla/MediaLibraryGrid.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/vanilla/FolderSelect.tsx",
+      "target": "src/modularcore/media-picker/ui/react/vanilla/FolderSelect.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/vanilla/MimeTypeFilter.tsx",
+      "target": "src/modularcore/media-picker/ui/react/vanilla/MimeTypeFilter.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/vanilla/ImageEditor.tsx",
+      "target": "src/modularcore/media-picker/ui/react/vanilla/ImageEditor.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/vanilla/BulkActionsBar.tsx",
+      "target": "src/modularcore/media-picker/ui/react/vanilla/BulkActionsBar.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/vanilla/RemoteUrlLoader.tsx",
+      "target": "src/modularcore/media-picker/ui/react/vanilla/RemoteUrlLoader.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/MediaLibraryGrid.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/vanilla/MediaLibraryGrid.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/FolderSelect.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/vanilla/FolderSelect.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/MimeTypeFilter.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/vanilla/MimeTypeFilter.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/ImageEditor.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/vanilla/ImageEditor.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/BulkActionsBar.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/vanilla/BulkActionsBar.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/RemoteUrlLoader.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/vanilla/RemoteUrlLoader.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/shadcn-theme.css",
+      "target": "src/modularcore/media-picker/ui/shadcn-theme.css",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla-styles.css",
+      "target": "src/modularcore/media-picker/ui/vanilla-styles.css",
+      "type": "ui",
+      "encoding": "utf8"
     }
   ]
 }
