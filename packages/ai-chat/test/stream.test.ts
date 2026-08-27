@@ -71,6 +71,23 @@ describe('parseSseStream (real ReadableStream/SSE parsing)', () => {
     }).rejects.toThrow(/malformed SSE JSON/);
   });
 
+  it('turns a normalized proxy error event into a rejected stream', async () => {
+    const encoder = new TextEncoder();
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(encoder.encode('event: error\ndata: {"message":"upstream rate limited"}\n\n'));
+        controller.close();
+      },
+    });
+
+    await expect(async () => {
+      for await (const chunk of parseSseStream(body)) {
+        // Consume the generator.
+        void chunk;
+      }
+    }).rejects.toThrow(/proxy stream error: upstream rate limited/);
+  });
+
   it('rejects with AbortError and cancels the reader when the signal aborts mid-stream', async () => {
     const controller = new AbortController();
     let cancelCalled = false;

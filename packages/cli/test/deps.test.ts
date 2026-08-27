@@ -57,6 +57,21 @@ describe('deps', () => {
     expect(() => assertCompatible(entry, 'react', () => '^18.2.0')).not.toThrow();
   });
 
+  it('validates only the peer for the selected framework when a descriptor has multiple adapters', async () => {
+    server = await startFixtureRegistryServer();
+    const client = createRegistryClient(server.url);
+    const entry = await client.getDescriptor('widget');
+    const multiFramework = {
+      ...entry,
+      frameworks: ['react', 'vue', 'angular'],
+      peerDependencies: { react: '>=18', vue: '>=3.3', '@angular/core': '>=17' },
+    };
+    expect(() =>
+      assertCompatible(multiFramework, 'vue', (peer) => (peer === 'vue' ? '^3.5.0' : undefined)),
+    ).not.toThrow();
+    expect(() => assertCompatible(multiFramework, 'vue', () => undefined)).toThrow(/"vue"/);
+  });
+
   it('accepts a component declaring frameworks: ["agnostic"] regardless of the project framework', async () => {
     server = await startFixtureRegistryServer();
     const client = createRegistryClient(server.url);

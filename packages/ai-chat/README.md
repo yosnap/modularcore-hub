@@ -2,7 +2,7 @@
 
 Headless AI chat core — OpenAI-compatible streaming, model fallback, token usage tracking,
 function calling with human-in-the-loop confirmation, and local/backend history — with thin
-React, Svelte, and framework-free Web adapters on top.
+React, Svelte, Vue 3, Angular standalone and framework-free Web adapters on top.
 
 **BYOK (Bring Your Own Key).** The core never hardcodes or reads an API key from the
 environment itself: your app passes `apiKey` (and optionally `baseURL`) into `ChatConfig`. This
@@ -23,6 +23,14 @@ the browser.
   before adding any formatting markup, so its output is safe to assign to `innerHTML`/`{@html}`.
 - `adapters/react`, `adapters/svelte`, `adapters/web` — thin bindings over `Chat` for each
   framework (Svelte adapter uses Svelte 5 runes).
+- `adapters/vue`, `adapters/angular` — per-component Composition API/signals bindings with
+  lifecycle cleanup; they do not share conversation state globally.
+
+## Laravel / Blade
+
+`snippets/laravel/` contains a Blade mount point and a server-side OpenAI-compatible proxy
+reference. Keep the provider key in Laravel configuration, authenticate and rate-limit the route,
+and retain the model allowlist; never inject a provider key into a Blade template.
 
 ## Basic usage (Svelte 5)
 

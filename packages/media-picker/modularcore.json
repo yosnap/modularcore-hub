@@ -4,11 +4,13 @@
   "title": "Universal Media Picker",
   "type": "headless-core",
   "category": "media",
-  "frameworks": ["react", "svelte"],
+  "frameworks": ["react", "svelte", "vue", "angular", "blade"],
   "visibility": "public",
   "peerDependencies": {
     "react": ">=18",
-    "svelte": ">=5"
+    "svelte": ">=5",
+    "vue": ">=3.3",
+    "@angular/core": ">=17"
   },
   "dependencies": [],
   "registryDependencies": [],
@@ -47,9 +49,19 @@
       "key": "CLOUDINARY_API_SECRET",
       "description": "Cloudinary API secret used by your backend to compute signed-upload params. Never sent to the browser.",
       "required": true
+    },
+    {
+      "key": "AZURE_STORAGE_ACCOUNT_NAME",
+      "description": "Azure Storage account name used only by your backend when issuing short-lived, blob-scoped SAS targets. Never sent to the browser as a credential.",
+      "required": false
+    },
+    {
+      "key": "AZURE_STORAGE_BLOB_CONTAINER",
+      "description": "Azure Blob container selected by your backend for scoped upload targets.",
+      "required": false
     }
   ],
-  "description": "Headless media picker (local/URL/library sources, canvas crop + compress, S3-compatible and Cloudinary providers) with React and Svelte adapters. Credentials always live in your own signing backend, never in this component.",
+  "description": "Headless media picker (local/URL/library sources, canvas crop + compress, S3-compatible, Cloudinary and Azure Blob providers) with React, Svelte, Vue and Angular adapters plus Blade snippets. Credentials always live in your own signing backend, never in this component.",
   "files": [
     {
       "path": "core/provider.ts",
@@ -118,6 +130,12 @@
       "encoding": "utf8"
     },
     {
+      "path": "core/providers/azure-blob.ts",
+      "target": "src/modularcore/media-picker/core/providers/azure-blob.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
       "path": "adapters/react/use-media-picker.ts",
       "target": "src/modularcore/media-picker/adapters/react/use-media-picker.ts",
       "type": "adapter",
@@ -127,6 +145,30 @@
       "path": "adapters/svelte/create-media-picker.svelte.ts",
       "target": "src/modularcore/media-picker/adapters/svelte/create-media-picker.svelte.ts",
       "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/vue/use-media-picker.ts",
+      "target": "src/modularcore/media-picker/adapters/vue/use-media-picker.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/angular/media-picker.service.ts",
+      "target": "src/modularcore/media-picker/adapters/angular/media-picker.service.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "snippets/laravel/media-picker.blade.php",
+      "target": "resources/views/components/media-picker.blade.php",
+      "type": "snippet",
+      "encoding": "utf8"
+    },
+    {
+      "path": "snippets/laravel/azure-blob-sas-controller.php",
+      "target": "app/Http/Controllers/AzureBlobUploadTargetController.php",
+      "type": "snippet",
       "encoding": "utf8"
     },
     {

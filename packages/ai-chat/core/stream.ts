@@ -28,12 +28,27 @@ export interface ChatCompletionChunk {
 }
 
 function parseSseEvent(rawEvent: string): ChatCompletionChunk | 'done' | null {
+  const eventName = rawEvent
+    .split('\n')
+    .find((line) => line.startsWith('event:'))
+    ?.slice(6)
+    .trim();
   const dataLines = rawEvent
     .split('\n')
     .filter((line) => line.startsWith('data:'))
     .map((line) => line.slice(5).trimStart());
   if (dataLines.length === 0) return null;
   const data = dataLines.join('');
+  if (eventName === 'error') {
+    let message = 'The chat proxy rejected the upstream request';
+    try {
+      const parsed = JSON.parse(data) as { message?: unknown };
+      if (typeof parsed.message === 'string') message = parsed.message;
+    } catch {
+      // Preserve a safe error when a proxy emitted malformed data.
+    }
+    throw new Error(`ai-chat: proxy stream error: ${message}`);
+  }
   if (data === '[DONE]') return 'done';
   try {
     return JSON.parse(data) as ChatCompletionChunk;

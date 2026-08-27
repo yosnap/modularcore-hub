@@ -5,6 +5,13 @@ import { CompatibilityError, DependencyCycleError } from './errors.js';
 import type { RegistryClient } from '@modularcore/registry-client';
 import type { RegistryEntry } from '@modularcore/registry';
 
+const frameworkPeerByFramework: Record<string, string> = {
+  react: 'react',
+  svelte: 'svelte',
+  vue: 'vue',
+  angular: '@angular/core',
+};
+
 /**
  * AD2: rejects before any file is written if the project's framework isn't declared
  * by the component, or if an installed peer (React/Svelte/...) doesn't satisfy the
@@ -22,6 +29,13 @@ export function assertCompatible(
     );
   }
   for (const [peerName, range] of Object.entries(entry.peerDependencies)) {
+    // A descriptor can ship thin adapters for multiple frameworks. Only the framework peer
+    // selected by this project is relevant; requiring every adapter runtime would make, for
+    // example, `modularcore add` demand Angular from a Vue app.
+    const frameworkForPeer = Object.entries(frameworkPeerByFramework).find(
+      ([, peer]) => peer === peerName,
+    )?.[0];
+    if (frameworkForPeer && frameworkForPeer !== projectFramework) continue;
     const installedRange = installedPeerVersion(peerName);
     if (!installedRange) {
       throw new CompatibilityError(

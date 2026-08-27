@@ -42,6 +42,10 @@
       "types": "./dist/core/providers/cloudinary.d.ts",
       "default": "./dist/core/providers/cloudinary.js"
     },
+    "./providers/azure-blob": {
+      "types": "./dist/core/providers/azure-blob.d.ts",
+      "default": "./dist/core/providers/azure-blob.js"
+    },
     "./react": {
       "types": "./dist/adapters/react/use-media-picker.d.ts",
       "default": "./dist/adapters/react/use-media-picker.js"
@@ -49,6 +53,14 @@
     "./svelte": {
       "types": "./dist/adapters/svelte/create-media-picker.svelte.d.ts",
       "default": "./dist/adapters/svelte/create-media-picker.svelte.js"
+    },
+    "./vue": {
+      "types": "./dist/adapters/vue/use-media-picker.d.ts",
+      "default": "./dist/adapters/vue/use-media-picker.js"
+    },
+    "./angular": {
+      "types": "./dist/adapters/angular/media-picker.service.d.ts",
+      "default": "./dist/adapters/angular/media-picker.service.js"
     },
     "./ui/react/MediaLibraryGrid": {
       "types": "./dist/ui/react/MediaLibraryGrid.d.ts",
@@ -89,18 +101,26 @@
     "test:smoke": "vitest run --config vitest.smoke.config.ts"
   },
   "peerDependencies": {
+    "@radix-ui/react-slider": ">=1",
+    "@radix-ui/react-toggle": ">=1",
+    "bits-ui": ">=2",
     "react": ">=18",
     "svelte": ">=5",
-    "undici": ">=6",
-    "@radix-ui/react-toggle": ">=1",
-    "@radix-ui/react-slider": ">=1",
-    "bits-ui": ">=2"
+    "vue": ">=3.3",
+    "@angular/core": ">=17",
+    "undici": ">=6"
   },
   "peerDependenciesMeta": {
     "react": {
       "optional": true
     },
     "svelte": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    },
+    "@angular/core": {
       "optional": true
     },
     "undici": {
@@ -117,6 +137,7 @@
     }
   },
   "devDependencies": {
+    "@angular/core": "^22.1.4",
     "@aws-sdk/client-s3": "^3.700.0",
     "@aws-sdk/s3-request-presigner": "^3.700.0",
     "@radix-ui/react-slider": "^1.4.7",
@@ -127,6 +148,7 @@
     "canvas": "^3.2.0",
     "react": "^19.2.8",
     "svelte": "^5.56.9",
-    "undici": "^8.10.0"
+    "undici": "^8.10.0",
+    "vue": "^3.5.42"
   }
 }
