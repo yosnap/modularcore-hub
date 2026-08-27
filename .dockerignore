@@ -1,0 +1,19 @@
+# Source-control and local tooling metadata
+.git/
+.claude/
+.*
+**/.*
+
+# Dependencies and generated output
+node_modules/
+**/node_modules/
+.turbo/
+**/build/
+**/dist/
+**/.svelte-kit/
+apps/web/registry-data/
+
+# Other local files
+coverage/
+*.log
+.DS_Store
