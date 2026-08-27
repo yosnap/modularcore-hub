@@ -64,7 +64,11 @@ No se incluyen archivos de fuente: Geist e Inter son gratuitas y se sirven vía 
 - **Favicon/app icon →** usar siempre `favicon.svg` (versión simplificada, no el `mark.svg` completo) para máxima legibilidad en 16-32px.
 - No deformar, rotar, añadir sombras/efectos, ni recolorear fuera de la paleta definida.
 
-## 6. Pendiente / decisiones abiertas
+## 6. Convenciones de interfaz
+
+- Los contenedores de bloques usan bordes neutros cuando son necesarios para separar contenido. No usar bordes de color como decoración; el color de marca se reserva para acciones, foco, selección y estados.
+
+## 7. Pendiente / decisiones abiertas
 
 - No se generaron variantes con IA (logo alternativo tipo "monograma" o "gradiente") por falta de cuota en `GEMINI_API_KEY`. Si se habilita cuota de pago, se puede correr `ak-design` logo `--batch` para explorar alternativas y comparar contra este isotipo base.
 - Tagline "Componentes headless, un solo core." es un borrador, no validado con el usuario — ajustar si se define copy oficial.
