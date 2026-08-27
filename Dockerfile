@@ -29,6 +29,7 @@ ENV HOST=0.0.0.0
 ENV PORT=3000
 
 COPY --from=build /app/apps/web/build ./
+COPY --from=build /app/apps/web/registry-data ./registry-data
 
 EXPOSE 3000
 
