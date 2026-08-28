@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@modularcore/ai-chat": "workspace:*",
+    "@modularcore/auto-seo": "workspace:*",
     "@modularcore/media-picker": "workspace:*",
     "@modularcore/modals": "workspace:*",
     "@modularcore/registry": "workspace:*",

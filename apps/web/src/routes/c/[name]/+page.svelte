@@ -1,9 +1,12 @@
 <script lang="ts">
+  import { playgroundFor } from '$lib/playgrounds';
+
   import type { PageProps } from './$types';
 
   let { data }: PageProps = $props();
   let descriptor = $derived(data.descriptor);
   let tarballPath = $derived(`/registry/${descriptor.name}.tar.gz`);
+  let playground = $derived(playgroundFor(descriptor.name));
 </script>
 
 <a href="/">&larr; Volver al catálogo</a>
@@ -16,6 +19,10 @@
 </p>
 {#if descriptor.description}
   <p>{descriptor.description}</p>
+{/if}
+
+{#if playground}
+  <p><a href={playground.href}>Abrir playground de {playground.label}</a></p>
 {/if}
 
 <section>
