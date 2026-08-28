@@ -50,6 +50,9 @@ importers:
       '@modularcore/ai-chat':
         specifier: workspace:*
         version: link:../../packages/ai-chat
+      '@modularcore/auto-seo':
+        specifier: workspace:*
+        version: link:../../packages/auto-seo
       '@modularcore/media-picker':
         specifier: workspace:*
         version: link:../../packages/media-picker

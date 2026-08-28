@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
 
+  import { PLAYGROUNDS } from '$lib/playgrounds';
+
   import '../app.css';
 
   let { children }: { children: Snippet } = $props();
@@ -13,9 +15,16 @@
     </a>
     <nav>
       <a class="nav-link" href="/">Catálogo</a>
-      <a class="nav-link" href="/playground/ai-chat">Playground: AI Chat</a>
-      <a class="nav-link" href="/playground/media-picker">Playground: Media Picker</a>
-      <a class="nav-link" href="/playground/modals">Playground: Modals</a>
+      <details class="playgrounds-menu">
+        <summary>Playgrounds</summary>
+        <div class="playgrounds-list">
+          {#each PLAYGROUNDS as playground (playground.component)}
+            <a href={playground.href}>{playground.label}</a>
+          {/each}
+        </div>
+      </details>
+      <a class="nav-link" href="/cli">CLI</a>
+      <a class="nav-link" href="/mcp-server">MCP</a>
     </nav>
   </header>
   <main>
@@ -49,6 +58,7 @@
   nav {
     display: flex;
     gap: 1.5rem;
+    align-items: center;
   }
   .nav-link {
     font-size: 0.875rem;
@@ -59,5 +69,35 @@
   }
   .nav-link:hover {
     color: var(--mc-primary-600);
+  }
+  .playgrounds-menu {
+    position: relative;
+    color: var(--mc-neutral-500);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  summary {
+    cursor: pointer;
+  }
+  .playgrounds-list {
+    position: absolute;
+    z-index: 10;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    display: grid;
+    min-width: 11rem;
+    padding: 0.5rem;
+    border: 1px solid var(--mc-neutral-200);
+    border-radius: 8px;
+    background: var(--mc-neutral-0);
+    box-shadow: 0 8px 20px rgb(15 23 42 / 12%);
+  }
+  .playgrounds-list a {
+    padding: 0.4rem 0.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+  .playgrounds-list a:hover {
+    background: var(--mc-neutral-100);
   }
 </style>
