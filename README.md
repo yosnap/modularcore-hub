@@ -10,7 +10,7 @@ pedírselos a un agente mediante el servidor MCP. El código resultante queda en
 puedes adaptarlo a tus necesidades.
 
 > El portal de documentación oficial estará en
-> [docs.modularcoreft.com](https://docs.modularcoreft.com). Mientras se publica, esta guía y el
+> [docs.modularcorehub.com](https://docs.modularcorehub.com/). Mientras se publica, esta guía y el
 > código del repositorio son la referencia disponible.
 
 ## Elige cómo usarlo
@@ -19,7 +19,7 @@ puedes adaptarlo a tus necesidades.
 | --- | --- |
 | Explorar, inicializar un proyecto e incorporar componentes desde la terminal | [CLI](#cli) |
 | Pedir componentes desde Cursor, Claude Code, VS Code u otro cliente MCP | [MCP](#mcp) |
-| Consultar la documentación oficial cuando esté disponible | [docs.modularcoreft.com](https://docs.modularcoreft.com) |
+| Consultar la documentación oficial cuando esté disponible | [docs.modularcorehub.com](https://docs.modularcorehub.com/) |
 
 ## CLI
 
@@ -86,7 +86,7 @@ activo. No instala dependencias npm automáticamente: el agente o la persona que
 revisar e instalar las dependencias indicadas.
 
 Las rutas exactas para Cursor, Claude Code, VS Code y otros clientes compatibles se publicarán en
-[docs.modularcoreft.com](https://docs.modularcoreft.com).
+[docs.modularcorehub.com](https://docs.modularcorehub.com/).
 
 ## Ejemplo mínimo
 
