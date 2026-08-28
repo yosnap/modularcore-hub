@@ -8,8 +8,6 @@
   });
 </script>
 
-<a href="/">&larr; Volver al catálogo</a>
-
 <h1>CLI de ModularCore</h1>
 <p>
   El CLI instala y mantiene componentes en tu proyecto. El comando habitual es
@@ -64,6 +62,7 @@ modularcore add media-picker`}</code></pre>
 <p>Requiere Node.js 18 o superior.</p>
 
 <style>
-  section { margin-top: 2rem; }
-  pre { overflow-x: auto; padding: 0.9rem; border-radius: 8px; background: var(--mc-neutral-50); }
+  section {
+    margin-top: 2rem;
+  }
 </style>

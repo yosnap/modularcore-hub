@@ -7,6 +7,21 @@
     <link rel="icon" type="image/png" sizes="32x32" href="%sveltekit.assets%/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="%sveltekit.assets%/favicon-192.png" />
     <link rel="apple-touch-icon" href="%sveltekit.assets%/apple-touch-icon.png" />
+    <script>
+      // Apply the saved (or system) theme before first paint so the page never flashes the
+      // wrong palette. Kept inline and dependency-free on purpose; the toggle updates the same
+      // <html> class and localStorage key at runtime.
+      (function () {
+        try {
+          var stored = localStorage.getItem('mc-theme');
+          var dark = stored
+            ? stored === 'dark'
+            : matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.classList.toggle('dark', dark);
+          document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+        } catch (e) {}
+      })();
+    </script>
     %sveltekit.head%
   </head>
   <body data-sveltekit-preload-data="hover">

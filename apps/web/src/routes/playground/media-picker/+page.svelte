@@ -137,8 +137,6 @@
   }
 </script>
 
-<a href="/">&larr; Volver al catálogo</a>
-
 <h1>Playground: Media Picker</h1>
 <p>
   Demo en vivo de <code>@modularcore/media-picker</code> con un <strong>provider de demo</strong>
@@ -178,18 +176,10 @@
 </div>
 
 <div class="triggers">
-  <button
-    type="button"
-    onclick={() => openLibrary(false)}
-    class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-  >
+  <button type="button" class="btn btn-primary" onclick={() => openLibrary(false)}>
     Abrir biblioteca de medios
   </button>
-  <button
-    type="button"
-    onclick={() => openLibrary(true)}
-    class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
-  >
+  <button type="button" class="btn btn-secondary" onclick={() => openLibrary(true)}>
     Selección múltiple (demo)
   </button>
 </div>
@@ -242,26 +232,72 @@
   }
   .triggers {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.75rem;
     margin-bottom: 1rem;
   }
+  /* Explicit, theme-aware button styles (independent of Tailwind utility generation). */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 1rem;
+    border-radius: 0.6rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background-color 0.16s var(--ui-ease-out),
+      border-color 0.16s var(--ui-ease-out),
+      transform 0.16s var(--ui-ease-out);
+  }
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+  .btn:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+  .btn-primary {
+    border-color: transparent;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+  .btn-primary:hover {
+    background: hsl(var(--primary) / 0.9);
+  }
+  .btn-secondary {
+    border-color: hsl(var(--border));
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+  .btn-secondary:hover {
+    background: hsl(var(--muted));
+  }
+  /* Compact status chip that hugs its content instead of an empty full-width dashed box. */
   .debug-strip {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     gap: 0.25rem;
-    padding: 0.5rem 0.75rem;
-    border: 1px dashed var(--mc-neutral-200);
-    border-radius: 8px;
+    align-self: flex-start;
+    max-width: 100%;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--ui-glass-border);
+    border-radius: var(--ui-radius-xl);
+    background: var(--ui-glass-bg);
     margin-bottom: 1rem;
     font-size: 0.85rem;
+    color: hsl(var(--muted-foreground));
   }
   .style-switcher {
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--mc-neutral-200);
-    border-radius: 8px;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--ui-glass-border);
+    border-radius: var(--ui-radius-xl);
+    background: var(--ui-glass-bg);
     margin-bottom: 1rem;
+    font-weight: 600;
   }
 </style>
