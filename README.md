@@ -60,8 +60,8 @@ El servidor [`@modularcore/mcp-server@0.3.1`](https://www.npmjs.com/package/@mod
 conecta un cliente compatible con MCP al registry mediante **stdio**. El cliente inicia el proceso
 cuando lo necesita; no es necesario mantener un servicio MCP desplegado.
 
-Configura un servidor stdio en tu cliente MCP. Este es el formato base; sustituye
-`https://<tu-host-del-hub>/registry` por la URL HTTPS de tu despliegue:
+Configura un servidor stdio en tu cliente MCP. El registry público de ModularCore Hub está en
+`https://modularcorehub.com/registry`:
 
 ```json
 {
@@ -72,7 +72,7 @@ Configura un servidor stdio en tu cliente MCP. Este es el formato base; sustituy
       "args": ["-y", "@modularcore/mcp-server@0.3.1"],
       "cwd": "/ruta/absoluta/a/tu-proyecto",
       "env": {
-        "MODULARCORE_REGISTRY_URL": "https://<tu-host-del-hub>/registry"
+        "MODULARCORE_REGISTRY_URL": "https://modularcorehub.com/registry"
       }
     }
   }
