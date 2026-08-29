@@ -9,8 +9,6 @@
   let playground = $derived(playgroundFor(descriptor.name));
 </script>
 
-<a href="/">&larr; Volver al catálogo</a>
-
 <h1>{descriptor.title}</h1>
 <p class="meta">
   <span class="badge">{descriptor.category}</span>
@@ -22,7 +20,14 @@
 {/if}
 
 {#if playground}
-  <p><a href={playground.href}>Abrir playground de {playground.label}</a></p>
+  <a class="playground-cta" href={playground.href}>
+    <svg class="cta-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M8 5v14l11-7z" fill="currentColor" />
+    </svg>
+    <span class="cta-title">Abrir playground</span>
+    <span class="cta-sub">· {playground.label} en vivo</span>
+    <span class="cta-arrow" aria-hidden="true">→</span>
+  </a>
 {/if}
 
 <section>
@@ -94,11 +99,62 @@ tar -xzf {descriptor.name}.tar.gz</code
   .meta {
     display: flex;
     gap: 0.75rem;
-    color: var(--mc-neutral-500);
+    color: hsl(var(--muted-foreground));
     font-size: 0.9rem;
   }
+
+  /* Playground CTA — minimalist single-line link: a primary play glyph, label, and arrow. */
+  .playground-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1.5rem 0 0.5rem;
+    padding: 0.55rem 0.95rem;
+    border: 1px solid var(--ui-glass-border);
+    border-radius: var(--ui-radius-xl);
+    background: transparent;
+    text-decoration: none;
+    color: hsl(var(--foreground));
+    transition:
+      border-color 0.18s var(--ui-ease-out),
+      background-color 0.18s var(--ui-ease-out);
+  }
+  .playground-cta:hover {
+    border-color: hsl(var(--primary) / 0.5);
+    background: hsl(var(--primary) / 0.06);
+  }
+  .cta-icon {
+    width: 0.95rem;
+    height: 0.95rem;
+    color: hsl(var(--primary));
+    flex-shrink: 0;
+  }
+  .cta-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+  .cta-sub {
+    font-size: 0.9rem;
+    color: hsl(var(--muted-foreground));
+  }
+  .cta-arrow {
+    margin-left: 0.35rem;
+    color: hsl(var(--muted-foreground));
+    transition: transform 0.2s var(--ui-ease-spring);
+  }
+  .playground-cta:hover .cta-arrow {
+    transform: translateX(3px);
+    color: hsl(var(--primary));
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .playground-cta,
+    .cta-arrow {
+      transition: none;
+    }
+  }
   .badge {
-    background: var(--mc-neutral-100);
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
     border-radius: 4px;
     padding: 0 0.4rem;
   }
@@ -108,15 +164,9 @@ tar -xzf {descriptor.name}.tar.gz</code
   }
   th,
   td {
-    border: 1px solid var(--mc-neutral-200);
+    border: 1px solid var(--ui-glass-border);
     padding: 0.4rem 0.6rem;
     text-align: left;
     vertical-align: top;
-  }
-  pre {
-    background: var(--mc-neutral-50);
-    padding: 0.75rem;
-    border-radius: 6px;
-    overflow-x: auto;
   }
 </style>

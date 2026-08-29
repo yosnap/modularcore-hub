@@ -21,8 +21,6 @@
 }`);
 </script>
 
-<a href="/">&larr; Volver al catálogo</a>
-
 <h1>MCP Server</h1>
 <p class="meta"><span class="badge">npm</span><span>@modularcore/mcp-server@0.3.1</span></p>
 <p>
@@ -118,10 +116,30 @@
 </section>
 
 <style>
-  section { margin-top: 2rem; }
-  .meta { display: flex; gap: 0.75rem; color: var(--mc-neutral-500); font-size: 0.9rem; }
-  .badge { background: var(--mc-neutral-100); border-radius: 4px; padding: 0 0.4rem; }
-  table { width: 100%; border-collapse: collapse; }
-  th, td { padding: 0.5rem 0.65rem; border: 1px solid var(--mc-neutral-200); text-align: left; vertical-align: top; }
-  pre { overflow-x: auto; padding: 0.9rem; border-radius: 8px; background: var(--mc-neutral-50); }
+  section {
+    margin-top: 2rem;
+  }
+  .meta {
+    display: flex;
+    gap: 0.75rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.9rem;
+  }
+  .badge {
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
+    border-radius: 4px;
+    padding: 0 0.4rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th,
+  td {
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--ui-glass-border);
+    text-align: left;
+    vertical-align: top;
+  }
 </style>

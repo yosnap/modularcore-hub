@@ -193,8 +193,6 @@
   }
 </script>
 
-<a href="/">&larr; Volver al catálogo</a>
-
 <h1>Playground: Modals</h1>
 <p>
   Demo en vivo de <code>@modularcore/modals</code> con un <strong>provider de demo</strong> en
@@ -444,9 +442,10 @@
 
   .style-switcher label {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.75rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    max-width: 26rem;
     color: var(--builder-ink);
     font-size: 0.875rem;
     font-weight: 650;

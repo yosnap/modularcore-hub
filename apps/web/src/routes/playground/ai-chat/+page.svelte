@@ -15,8 +15,6 @@
   }
 </script>
 
-<a href="/">&larr; Volver al catálogo</a>
-
 <h1>Playground: AI Chat</h1>
 <p>
   Demo en vivo de <code>@modularcore/ai-chat</code>. La conversación pasa por
@@ -74,12 +72,15 @@
     margin: 1rem 0;
   }
   .messages li {
-    padding: 0.5rem 0.75rem;
-    border-radius: 6px;
-    background: var(--mc-neutral-50);
+    padding: 0.55rem 0.8rem;
+    border-radius: var(--ui-radius-xl);
+    border: 1px solid var(--ui-glass-border);
+    background: hsl(var(--muted));
+    color: hsl(var(--foreground));
   }
   .messages li.user {
-    background: var(--mc-primary-100);
+    background: hsl(var(--primary) / 0.14);
+    border-color: hsl(var(--primary) / 0.25);
   }
   .error {
     color: var(--mc-danger);
