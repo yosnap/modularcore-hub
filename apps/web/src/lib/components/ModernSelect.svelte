@@ -51,42 +51,56 @@
 </Select.Root>
 
 <style>
+  /* Theme-aware via the app's semantic tokens (hsl(var(--*))) so the control is correct in both
+     light and dark — previously it used undefined --mc-surface/--mc-border custom props that fell
+     back to hard-coded light values, rendering a white box in dark mode. */
   :global(.modern-select-trigger) {
     display: inline-flex;
     width: 100%;
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-    border: 1px solid var(--mc-border, #d7dce5);
-    border-radius: 0.5rem;
-    background: var(--mc-surface, #fff);
-    color: var(--mc-text, #182230);
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.6rem;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
     padding: 0.625rem 0.75rem;
     font: inherit;
     font-size: 0.875rem;
     line-height: 1.25rem;
     text-align: left;
-    transition: border-color 140ms ease, box-shadow 140ms ease;
+    transition:
+      border-color 140ms ease,
+      box-shadow 140ms ease;
   }
 
-  :global(.modern-select-trigger:hover) { border-color: var(--mc-primary, #6366f1); }
+  :global(.modern-select-trigger:hover) {
+    border-color: hsl(var(--primary));
+  }
   :global(.modern-select-trigger:focus-visible) {
     outline: none;
-    border-color: var(--mc-primary, #6366f1);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--mc-primary, #6366f1) 18%, transparent);
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.22);
   }
-  :global(.modern-select-trigger:disabled) { cursor: not-allowed; opacity: 0.55; }
-  :global(.modern-select-chevron) { color: var(--mc-muted, #6b7280); font-size: 1rem; line-height: 1; }
+  :global(.modern-select-trigger:disabled) {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+  :global(.modern-select-chevron) {
+    color: hsl(var(--muted-foreground));
+    font-size: 1rem;
+    line-height: 1;
+  }
 
   :global(.modern-select-content) {
     z-index: 50;
     min-width: var(--bits-select-anchor-width);
     overflow: hidden;
-    border: 1px solid var(--mc-border, #d7dce5);
-    border-radius: 0.625rem;
-    background: var(--mc-surface, #fff);
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.7rem;
+    background: hsl(var(--popover));
     padding: 0.3rem;
-    box-shadow: 0 16px 40px rgb(15 23 42 / 0.14);
+    box-shadow: 0 16px 40px rgb(0 0 0 / 0.3);
   }
 
   :global(.modern-select-item) {
@@ -95,12 +109,18 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    border-radius: 0.4rem;
+    border-radius: 0.45rem;
     padding: 0.55rem 0.65rem;
-    color: var(--mc-text, #182230);
+    color: hsl(var(--popover-foreground));
     font-size: 0.875rem;
     outline: none;
   }
-  :global(.modern-select-item[data-highlighted]) { background: var(--mc-primary-soft, #eef2ff); color: var(--mc-primary-strong, #4338ca); }
-  :global(.modern-select-item[data-disabled]) { cursor: not-allowed; opacity: 0.45; }
+  :global(.modern-select-item[data-highlighted]) {
+    background: hsl(var(--primary) / 0.14);
+    color: hsl(var(--primary));
+  }
+  :global(.modern-select-item[data-disabled]) {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
 </style>

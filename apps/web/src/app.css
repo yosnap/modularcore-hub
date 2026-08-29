@@ -20,6 +20,17 @@
 @import '../../../assets/brand-tokens.css';
 
 /*
+ * Self-hosted brand fonts (docs/brand-guide.md §4), served from node_modules — no external
+ * network request, so no CSP/privacy concern and no layout shift waiting on a third party.
+ * The variable builds expose the family names "Geist Variable" / "Geist Mono Variable" /
+ * "Inter Variable"; the --mc-font-* stacks below are widened to name them first while keeping
+ * the original 'Geist'/'Inter' fallbacks from brand-tokens.css intact.
+ */
+@import '@fontsource-variable/geist/wght.css';
+@import '@fontsource-variable/geist-mono/wght.css';
+@import '@fontsource-variable/inter/wght.css';
+
+/*
  * Tailwind's automatic content detection does not scan `node_modules` (the pnpm workspace
  * symlink `@modularcore/media-picker` included) — without these `@source` directives, none of
  * the Tailwind utility classes used inside the `tailwind/*` and `shadcn/*` component variants
@@ -110,37 +121,105 @@
     --input: 214.3 31.8% 91.4%; /* mc-neutral-200 */
     --ring: 238.7 83.5% 66.7%; /* mc-primary-500 */
     --radius: 0.5rem;
+
+    /*
+     * Design primitives for the site chrome (headers, cards, backgrounds). These are decorative
+     * layers reserved for the website shell — component previews stay on the neutral semantic
+     * tokens above, per brand-guide.md §6 (brand color reserved for actions/focus/selection).
+     * The brand gradient traces the three isometric-cube faces: violet → indigo → deep indigo.
+     */
+    --ui-radius-xl: 1rem;
+    --ui-radius-2xl: 1.5rem;
+    --ui-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ui-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    --ui-gradient-brand: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #4338ca 100%);
+    --ui-gradient-text: linear-gradient(120deg, #4f46e5 0%, #8b5cf6 55%, #06b6d4 100%);
+
+    --ui-glass-bg: rgb(255 255 255 / 72%);
+    --ui-glass-border: rgb(15 23 42 / 8%);
+    --ui-glass-blur: 14px;
+
+    --ui-shadow-sm: 0 1px 2px rgb(15 23 42 / 6%);
+    --ui-shadow-md: 0 10px 30px -12px rgb(15 23 42 / 18%);
+    --ui-shadow-lg: 0 24px 60px -20px rgb(15 23 42 / 25%);
+    --ui-glow: 0 0 40px -6px rgb(99 102 241 / 32%);
+
+    --ui-aurora-1: rgb(139 92 246 / 30%);
+    --ui-aurora-2: rgb(99 102 241 / 26%);
+    --ui-aurora-3: rgb(6 182 212 / 20%);
+    --ui-grid-line: rgb(15 23 42 / 4%);
   }
 
   .dark {
-    --background: 222.2 47.4% 11.2%; /* mc-neutral-900 #0F172A */
-    --foreground: 210 40% 98%; /* mc-neutral-50 #F8FAFC */
-    --card: 217.2 32.6% 17.5%; /* mc-neutral-800 #1E293B */
-    --card-foreground: 210 40% 98%; /* mc-neutral-50 */
-    --popover: 217.2 32.6% 17.5%; /* mc-neutral-800 */
-    --popover-foreground: 210 40% 98%; /* mc-neutral-50 */
+    /*
+     * Deep near-black base with a subtle indigo cast (hue 240) instead of the flat slate-900, so
+     * the whole shell reads darker and the brand primary "pops" against it. Surfaces climb in
+     * lightness (bg → card → border) to keep depth legible on an almost-black canvas.
+     */
+    --background: 240 9% 4%; /* ~#0a0a0b, near-pure black with only a whisper of cool tint */
+    --foreground: 220 24% 96%; /* soft near-white */
+    --card: 240 8% 7%; /* ~#111113 */
+    --card-foreground: 220 24% 96%;
+    --popover: 240 9% 6%;
+    --popover-foreground: 220 24% 96%;
     --primary: 238.7 83.5% 66.7%; /* mc-primary-500, same hue both themes */
     --primary-foreground: 0 0% 100%; /* mc-neutral-0 */
-    --secondary: 217.2 32.6% 17.5%; /* mc-neutral-800 */
-    --secondary-foreground: 210 40% 98%; /* mc-neutral-50 */
-    --muted: 217.2 32.6% 17.5%; /* mc-neutral-800 */
-    --muted-foreground: 215 20.2% 65.1%; /* mc-neutral-400 #94A3B8 */
-    --accent: 217.2 32.6% 17.5%; /* mc-neutral-800 */
+    --secondary: 240 7% 12%; /* dark neutral surface */
+    --secondary-foreground: 220 24% 96%;
+    --muted: 240 7% 12%;
+    --muted-foreground: 230 12% 64%; /* cool gray, readable on black */
+    --accent: 240 7% 14%;
     --accent-foreground: 229.7 93.6% 81.8%; /* mc-primary-300 #A5B4FC, branded hover emphasis */
     --destructive: 0 62.8% 30.6%; /* darkened danger red, not brand-defined for dark mode */
     --destructive-foreground: 210 40% 98%; /* mc-neutral-50 */
-    --border: 215.3 25% 26.7%; /* mc-neutral-700 #334155 */
-    --input: 215.3 25% 26.7%; /* mc-neutral-700 */
+    --border: 240 8% 16%; /* faint hairline */
+    --input: 240 8% 16%;
     --ring: 234.5 89.5% 73.9%; /* mc-primary-400 #818CF8, lighter for dark-bg visibility */
+
+    /* Design primitives, dark variant — near-black glass surfaces, with the brand primary kept
+       only as an accent on hairlines/glow (not baked into the base tint) so the shell reads black
+       rather than purple (see the :root block above for their role). */
+    --ui-glass-bg: rgb(15 15 17 / 68%);
+    --ui-glass-border: rgb(129 140 248 / 13%);
+
+    --ui-shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+    --ui-shadow-md: 0 10px 30px -12px rgb(0 0 0 / 65%);
+    --ui-shadow-lg: 0 24px 60px -20px rgb(0 0 0 / 80%);
+    --ui-glow: 0 0 50px -6px rgb(129 140 248 / 42%);
+
+    --ui-aurora-1: rgb(139 92 246 / 18%);
+    --ui-aurora-2: rgb(99 102 241 / 18%);
+    --ui-aurora-3: rgb(6 182 212 / 12%);
+    --ui-grid-line: rgb(129 140 248 / 6%);
   }
 }
 
 @layer base {
+  /*
+   * Widen the brand font stacks to name the self-hosted variable builds first (their family
+   * names carry the "Variable" suffix), keeping every original fallback from brand-tokens.css.
+   * Redefining here — not in brand-tokens.css (the shared source of truth) — keeps that asset
+   * portable while making the fonts actually resolve in this app.
+   */
+  :root {
+    --mc-font-display:
+      'Geist Variable', 'Geist', 'Inter Variable', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    --mc-font-body: 'Inter Variable', 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    --mc-font-mono:
+      'Geist Mono Variable', 'Geist Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  }
+
   body {
     font-family: var(--mc-font-body);
     color: hsl(var(--foreground));
     background-color: hsl(var(--background));
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition:
+      background-color 0.4s var(--ui-ease-out),
+      color 0.4s var(--ui-ease-out);
   }
 
   a {
@@ -172,5 +251,100 @@
   pre,
   samp {
     font-family: var(--mc-font-mono);
+  }
+
+  /*
+   * No Preflight is loaded, so native <button> keeps the UA default `2px outset` bevel border,
+   * which reads as a light/white ring on coloured buttons (e.g. the primary playground buttons).
+   * Neutralise it at zero specificity via :where() so any explicit border — a Tailwind utility
+   * like `border border-input`, or a scoped page style — still wins untouched.
+   */
+  :where(button) {
+    border: 1px solid transparent;
+  }
+
+  /*
+   * Theme-aware code surfaces. Driven by the semantic --muted/--border tokens so a block that was
+   * a hard-coded light box (var(--mc-neutral-50)) now reads correctly in both themes — dark on
+   * near-black, light on paper. Applies site-wide; individual pages no longer set their own.
+   */
+  pre {
+    position: relative;
+    margin: 1rem 0;
+    padding: 1rem 3rem 1rem 1.1rem;
+    border-radius: var(--ui-radius-xl);
+    background: hsl(var(--muted));
+    border: 1px solid var(--ui-glass-border);
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.65;
+    color: hsl(var(--foreground));
+  }
+
+  /*
+   * Copy-to-clipboard button injected into every <pre> by the root layout's enhancer. Styled
+   * globally (not scoped) because the button is created at runtime, outside Svelte's template.
+   */
+  .code-copy {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.55rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    padding: 0;
+    border: 1px solid var(--ui-glass-border);
+    border-radius: 8px;
+    background: hsl(var(--background) / 0.6);
+    color: hsl(var(--muted-foreground));
+    cursor: pointer;
+    /* Always visible (not hover-only), just slightly dimmed until interacted with. */
+    opacity: 0.7;
+    transition:
+      opacity 0.16s var(--ui-ease-out),
+      color 0.16s var(--ui-ease-out),
+      border-color 0.16s var(--ui-ease-out);
+  }
+  pre:hover .code-copy,
+  .code-copy:hover,
+  .code-copy:focus-visible {
+    opacity: 1;
+  }
+  .code-copy:hover {
+    color: hsl(var(--foreground));
+    border-color: hsl(var(--primary) / 0.5);
+  }
+  .code-copy.copied {
+    color: var(--mc-accent-emerald);
+    border-color: var(--mc-accent-emerald);
+    opacity: 1;
+  }
+  .code-copy svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+  /* Touch devices have no hover — keep the button visible there. */
+  @media (hover: none) {
+    .code-copy {
+      opacity: 1;
+    }
+  }
+  pre code {
+    padding: 0;
+    background: none;
+    border: 0;
+    font-size: inherit;
+    color: inherit;
+  }
+  /* Inline code (not inside <pre>) — a subtle chip. */
+  :not(pre) > code {
+    padding: 0.1rem 0.38rem;
+    border-radius: 5px;
+    background: hsl(var(--muted));
+    border: 1px solid var(--ui-glass-border);
+    font-size: 0.88em;
+    color: hsl(var(--foreground));
   }
 }

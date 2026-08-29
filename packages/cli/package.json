@@ -1,7 +1,10 @@
 {
   "name": "@modularcore/cli",
-  "version": "0.1.2",
-  "private": true,
+  "version": "0.2.1",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "bin": {
     "modularcore": "./dist/index.js"
