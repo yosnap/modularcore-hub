@@ -7,6 +7,7 @@
   import BackgroundPattern from '$lib/components/BackgroundPattern.svelte';
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
   import CommandPalette, { type CommandItem } from '$lib/components/CommandPalette.svelte';
+  import { focusInitialElement, restoreFocus, trapFocus } from '$lib/focus-management';
   import { PLAYGROUNDS } from '$lib/playgrounds';
 
   import type { LayoutData } from './$types';
@@ -85,6 +86,37 @@
 
   let drawerOpen = $state(false);
   let paletteOpen = $state(false);
+  let isMobile = $state(false);
+  let drawerEl = $state<HTMLElement | null>(null);
+  let drawerOpener = $state<HTMLElement | null>(null);
+
+  function openDrawer(): void {
+    drawerOpener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    drawerOpen = true;
+    void tick().then(() => {
+      if (drawerEl) focusInitialElement(drawerEl);
+    });
+  }
+
+  function closeDrawer(): void {
+    drawerOpen = false;
+    void tick().then(() => restoreFocus(drawerOpener));
+  }
+
+  function toggleDrawer(): void {
+    if (drawerOpen) closeDrawer();
+    else openDrawer();
+  }
+
+  function onDrawerKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeDrawer();
+      return;
+    }
+
+    if (drawerEl) trapFocus(event, drawerEl);
+  }
 
   // Progressive enhancement: drop a copy-to-clipboard button into every code block in the main
   // content. Runs client-side after mount and each navigation so newly rendered pages get it too.
@@ -125,9 +157,21 @@
     });
   }
 
-  onMount(enhanceCodeBlocks);
+  onMount(() => {
+    const mobileQuery = window.matchMedia('(max-width: 900px)');
+    const updateMobileState = (): void => {
+      isMobile = mobileQuery.matches;
+      if (!isMobile) drawerOpen = false;
+    };
+
+    updateMobileState();
+    mobileQuery.addEventListener('change', updateMobileState);
+    enhanceCodeBlocks();
+
+    return () => mobileQuery.removeEventListener('change', updateMobileState);
+  });
   afterNavigate(async () => {
-    drawerOpen = false;
+    if (drawerOpen) closeDrawer();
     await tick();
     enhanceCodeBlocks();
   });
@@ -144,7 +188,7 @@
         class="hamburger"
         aria-label="Abrir navegación"
         aria-expanded={drawerOpen}
-        onclick={() => (drawerOpen = !drawerOpen)}
+        onclick={toggleDrawer}
       >
         <span></span><span></span><span></span>
       </button>
@@ -172,16 +216,27 @@
   </header>
 
   <div class="body">
-    {#if drawerOpen}
+    {#if isMobile && drawerOpen}
       <button
         type="button"
         class="backdrop"
         aria-label="Cerrar navegación"
-        onclick={() => (drawerOpen = false)}
+        onclick={closeDrawer}
       ></button>
     {/if}
 
-    <aside class="sidebar" class:open={drawerOpen} aria-label="Navegación principal">
+    <aside
+      class="sidebar"
+      class:open={drawerOpen}
+      aria-label="Navegación principal"
+      aria-hidden={isMobile && !drawerOpen ? 'true' : undefined}
+      aria-modal={isMobile && drawerOpen ? 'true' : undefined}
+      inert={isMobile && !drawerOpen}
+      role={isMobile ? 'dialog' : undefined}
+      tabindex="-1"
+      bind:this={drawerEl}
+      onkeydown={onDrawerKeydown}
+    >
       <nav class="tree">
         {#each groups as group (group.id)}
           {@const open = !collapsed[group.id]}
@@ -208,7 +263,12 @@
               <ul class="tree-children">
                 {#each group.items as item (item.href)}
                   <li>
-                    <a class="tree-leaf" href={item.href} class:active={item.active}>
+                    <a
+                      class="tree-leaf"
+                      href={item.href}
+                      class:active={item.active}
+                      onclick={closeDrawer}
+                    >
                       {item.label}
                     </a>
                   </li>
@@ -501,10 +561,14 @@
       height: 100%;
       height: 100dvh;
       transform: translateX(-100%);
+      visibility: hidden;
+      pointer-events: none;
       transition: transform 0.3s var(--ui-ease-out);
     }
     .sidebar.open {
       transform: translateX(0);
+      visibility: visible;
+      pointer-events: auto;
       box-shadow: var(--ui-shadow-lg);
     }
     main {

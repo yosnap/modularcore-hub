@@ -1,6 +1,7 @@
 <script lang="ts">
   import { tick } from 'svelte';
   import { goto } from '$app/navigation';
+  import { focusInitialElement, restoreFocus, trapFocus } from '$lib/focus-management';
 
   export interface CommandItem {
     label: string;
@@ -13,7 +14,8 @@
 
   let query = $state('');
   let activeIndex = $state(0);
-  let inputEl = $state<HTMLInputElement | null>(null);
+  let paletteEl = $state<HTMLElement | null>(null);
+  let openerEl = $state<HTMLElement | null>(null);
 
   let results = $derived(
     query.trim()
@@ -34,14 +36,18 @@
   // navbar button, or any other trigger binding `open`).
   $effect(() => {
     if (open) {
+      openerEl = document.activeElement instanceof HTMLElement ? document.activeElement : null;
       query = '';
       activeIndex = 0;
-      void tick().then(() => inputEl?.focus());
+      void tick().then(() => {
+        if (paletteEl) focusInitialElement(paletteEl);
+      });
     }
   });
 
   function close(): void {
     open = false;
+    void tick().then(() => restoreFocus(openerEl));
   }
 
   function select(item: CommandItem | undefined): void {
@@ -53,7 +59,8 @@
   function onGlobalKeydown(event: KeyboardEvent): void {
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
       event.preventDefault();
-      open = !open;
+      if (open) close();
+      else open = true;
     } else if (event.key === 'Escape' && open) {
       close();
     }
@@ -71,6 +78,10 @@
       select(results[activeIndex]);
     }
   }
+
+  function onDialogKeydown(event: KeyboardEvent): void {
+    if (paletteEl) trapFocus(event, paletteEl);
+  }
 </script>
 
 <svelte:window onkeydown={onGlobalKeydown} />
@@ -86,6 +97,8 @@
       aria-modal="true"
       aria-label="Buscar y navegar"
       tabindex="-1"
+      bind:this={paletteEl}
+      onkeydown={onDialogKeydown}
       onclick={(event) => event.stopPropagation()}
     >
       <div class="search-row">
@@ -94,7 +107,6 @@
           <path d="M20 20l-3.2-3.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
         </svg>
         <input
-          bind:this={inputEl}
           bind:value={query}
           onkeydown={onInputKeydown}
           type="text"
