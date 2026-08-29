@@ -7,7 +7,12 @@
   import BackgroundPattern from '$lib/components/BackgroundPattern.svelte';
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
   import CommandPalette, { type CommandItem } from '$lib/components/CommandPalette.svelte';
-  import { focusInitialElement, restoreFocus, trapFocus } from '$lib/focus-management';
+  import {
+    focusInitialElement,
+    restoreFocus,
+    shouldCloseMobileDrawer,
+    trapFocus,
+  } from '$lib/focus-management';
   import { PLAYGROUNDS } from '$lib/playgrounds';
 
   import type { LayoutData } from './$types';
@@ -99,8 +104,9 @@
   }
 
   function closeDrawer(): void {
+    const restoreDrawerFocus = shouldCloseMobileDrawer(isMobile, drawerOpen);
     drawerOpen = false;
-    void tick().then(() => restoreFocus(drawerOpener));
+    if (restoreDrawerFocus) void tick().then(() => restoreFocus(drawerOpener));
   }
 
   function toggleDrawer(): void {
@@ -109,6 +115,8 @@
   }
 
   function onDrawerKeydown(event: KeyboardEvent): void {
+    if (!shouldCloseMobileDrawer(isMobile, drawerOpen)) return;
+
     if (event.key === 'Escape') {
       event.preventDefault();
       closeDrawer();
@@ -116,6 +124,10 @@
     }
 
     if (drawerEl) trapFocus(event, drawerEl);
+  }
+
+  function onDrawerNavigation(): void {
+    if (shouldCloseMobileDrawer(isMobile, drawerOpen)) closeDrawer();
   }
 
   // Progressive enhancement: drop a copy-to-clipboard button into every code block in the main
@@ -171,7 +183,7 @@
     return () => mobileQuery.removeEventListener('change', updateMobileState);
   });
   afterNavigate(async () => {
-    if (drawerOpen) closeDrawer();
+    if (shouldCloseMobileDrawer(isMobile, drawerOpen)) closeDrawer();
     await tick();
     enhanceCodeBlocks();
   });
@@ -267,7 +279,7 @@
                       class="tree-leaf"
                       href={item.href}
                       class:active={item.active}
-                      onclick={closeDrawer}
+                      onclick={onDrawerNavigation}
                     >
                       {item.label}
                     </a>

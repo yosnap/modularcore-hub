@@ -49,3 +49,7 @@ export function trapFocus(event: KeyboardEvent, container: HTMLElement): void {
 export function restoreFocus(element: HTMLElement | null): void {
   if (element?.isConnected) element.focus();
 }
+
+export function shouldCloseMobileDrawer(isMobile: boolean, drawerOpen: boolean): boolean {
+  return isMobile && drawerOpen;
+}
