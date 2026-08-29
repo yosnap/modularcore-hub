@@ -92,6 +92,7 @@
   let drawerOpen = $state(false);
   let paletteOpen = $state(false);
   let isMobile = $state(false);
+  let contentEl = $state<HTMLElement | null>(null);
   let drawerEl = $state<HTMLElement | null>(null);
   let drawerOpener = $state<HTMLElement | null>(null);
 
@@ -182,7 +183,11 @@
 
     return () => mobileQuery.removeEventListener('change', updateMobileState);
   });
-  afterNavigate(async () => {
+  afterNavigate(async (navigation) => {
+    // With the fixed shell, the real scroller is `.content` (not window), so SvelteKit's
+    // built-in scroll reset never reaches it. Reset it manually, keeping position for
+    // hash links that target an element inside the page.
+    if (!navigation.to?.url.hash) contentEl?.scrollTo(0, 0);
     if (shouldCloseMobileDrawer(isMobile, drawerOpen)) closeDrawer();
     await tick();
     enhanceCodeBlocks();
@@ -292,7 +297,7 @@
       </nav>
     </aside>
 
-    <div class="content">
+    <div class="content" bind:this={contentEl}>
       <main>
         {@render children()}
       </main>
