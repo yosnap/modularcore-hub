@@ -121,6 +121,8 @@ describe('createAzureBlobProvider', () => {
       }),
       getUrl: (key) => key,
     });
-    await expect(secureProvider.upload(new File(['x'], 'a.png'))).rejects.toThrow(/reserved upload header/);
+    await expect(secureProvider.upload(new File(['x'], 'a.png'))).rejects.toThrow(
+      /reserved upload header/,
+    );
   });
 });

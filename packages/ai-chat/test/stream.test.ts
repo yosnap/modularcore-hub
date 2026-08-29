@@ -75,7 +75,9 @@ describe('parseSseStream (real ReadableStream/SSE parsing)', () => {
     const encoder = new TextEncoder();
     const body = new ReadableStream<Uint8Array>({
       start(controller) {
-        controller.enqueue(encoder.encode('event: error\ndata: {"message":"upstream rate limited"}\n\n'));
+        controller.enqueue(
+          encoder.encode('event: error\ndata: {"message":"upstream rate limited"}\n\n'),
+        );
         controller.close();
       },
     });

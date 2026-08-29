@@ -28,7 +28,9 @@ function mountPicker(input: HTMLInputElement): void {
 }
 
 function mountAllPickers(): void {
-  document.querySelectorAll<HTMLInputElement>('[data-modularcore-media-picker]').forEach(mountPicker);
+  document
+    .querySelectorAll<HTMLInputElement>('[data-modularcore-media-picker]')
+    .forEach(mountPicker);
 }
 
 if (document.readyState === 'loading') {

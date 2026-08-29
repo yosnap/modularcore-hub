@@ -14,7 +14,7 @@ describe('Laravel Media Picker snippets', () => {
     ]);
 
     expect(blade).not.toContain('<script type="module">');
-    expect(blade).toContain("Import ./modularcore/media-picker/entry from resources/js/app.js");
+    expect(blade).toContain('Import ./modularcore/media-picker/entry from resources/js/app.js');
     expect(entry).toContain("from './core/providers/azure-blob.js'");
   });
 

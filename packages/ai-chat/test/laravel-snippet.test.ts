@@ -14,7 +14,7 @@ describe('Laravel AI Chat snippets', () => {
     ]);
 
     expect(blade).not.toContain('<script type="module">');
-    expect(blade).toContain("Import ./modularcore/ai-chat/entry from resources/js/app.js");
+    expect(blade).toContain('Import ./modularcore/ai-chat/entry from resources/js/app.js');
     expect(entry).toContain("from './adapters/web/chat-element.js'");
   });
 
