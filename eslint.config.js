@@ -17,6 +17,9 @@ export default tseslint.config(
       // installed here — this monorepo's own build/typecheck never compiles these directly either,
       // see packages/media-picker/tsconfig.json).
       '**/*.svelte',
+      // No parser de Astro instalado en este monorepo (mismo motivo que .svelte arriba).
+      '**/*.astro',
+      'apps/docs/.astro/**',
     ],
   },
   js.configs.recommended,

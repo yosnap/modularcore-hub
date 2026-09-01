@@ -98,6 +98,7 @@ Espacios de trabajo definidos en [`pnpm-workspace.yaml`](./pnpm-workspace.yaml)
 | `packages/auto-seo` | `@modularcore/auto-seo` | privado | Generación de JSON-LD (SEO estructurado). |
 | `packages/hello-core` | `@modularcore/hello-core` | privado | Paquete mínimo usado en el spike de inyección copy-code. |
 | `apps/web` | `web` | privado | Website (SvelteKit): catálogo, docs y playgrounds. |
+| `apps/docs` | `docs` | privado | Sitio de documentación pública (Starlight/Astro), servido en `docs.modularcorehub.com`. |
 
 > Los directorios `fixtures/*` son objetivos de prueba de inyección (apps desechables) y **no**
 > forman parte del workspace; se instalan aparte con `pnpm install --ignore-workspace`.
@@ -244,6 +245,18 @@ Además:
 - [ ] Se añadieron/actualizaron pruebas para el cambio.
 - [ ] Se añadió un changeset si el cambio afecta a un paquete publicable.
 - [ ] El PR trata un solo tema y su descripción explica el *qué* y el *porqué*.
+- [ ] Si este PR cambia el comportamiento de CLI, MCP o Web, se ha actualizado `apps/docs` en este mismo PR (o se justifica abajo por qué no aplica).
+
+### Publicar una versión de la documentación
+
+El sitio de `apps/docs` versiona su contenido a mano, nunca desde CI. Para congelar la versión
+actual antes de un cambio importante:
+
+```bash
+pnpm --filter docs version:freeze -- <slug>
+```
+
+El disparo lo decide el mantenedor — este comando nunca se ejecuta automáticamente.
 
 ---
 
@@ -252,7 +265,8 @@ Además:
 El workflow [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) tiene dos jobs:
 
 1. **`unit`** — Build · Typecheck · Lint · Format check · Test (unit/mock). Corre en **todos
-   los Pull Requests, incluidos los de forks**. Es el que debe quedar verde en tu PR.
+   los Pull Requests, incluidos los de forks**. Es el que debe quedar verde en tu PR. `apps/docs`
+   se construye y verifica en este mismo job sin ningún paso ni workflow adicional.
 2. **`smokes`** — Pruebas contra proveedores reales. Solo corre en push a `develop`/`main`
    (nunca en PRs de fork, por seguridad: los secretos no se exponen a forks).
 
