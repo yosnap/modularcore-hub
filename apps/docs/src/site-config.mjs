@@ -7,3 +7,8 @@
 // otro sitio.
 export const SITE = 'https://docs.modularcorehub.com';
 export const BASE = undefined; // '/docs' si S1 = B2
+
+// Enlaces externos del sitio, en un solo sitio para que la cabecera (social de Starlight) y el
+// pie no se desincronicen.
+export const REPO_URL = 'https://github.com/yosnap/modularcore-hub';
+export const WEB_URL = 'https://modularcorehub.com';

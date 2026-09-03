@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
-import { SITE, BASE } from './src/site-config.mjs';
+import { SITE, BASE, REPO_URL } from './src/site-config.mjs';
 import versions from './versions.json' with { type: 'json' };
 
 // Grupos de sidebar por versión archivada — generados desde versions.json, nunca a mano
@@ -22,7 +22,7 @@ export default defineConfig({
       locales: {
         root: { label: 'Español', lang: 'es' },
       },
-      social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/yosnap/modularcore-hub' }],
+      social: [{ icon: 'github', label: 'GitHub', href: REPO_URL }],
       customCss: ['./src/styles/brand.css'],
       logo: {
         src: './public/logo.svg',

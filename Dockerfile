@@ -12,11 +12,16 @@ RUN corepack enable
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json tsconfig.base.json vitest.workspace.ts ./
 COPY apps/web/package.json ./apps/web/package.json
+# `--frozen-lockfile` exige el manifiesto de TODOS los importers del lockfile, incluido el
+# sitio de documentación, aunque esta imagen no lo construya.
+COPY apps/docs/package.json ./apps/docs/package.json
 COPY packages ./packages
 
 RUN pnpm install --frozen-lockfile
 
 COPY apps/web ./apps/web
+# Fuente única de la versión publicada de la documentación, que la web enlaza y muestra.
+COPY apps/docs/versions.json ./apps/docs/versions.json
 COPY assets ./assets
 
 # Run the workspace pipeline so registry assets are generated before SvelteKit builds.

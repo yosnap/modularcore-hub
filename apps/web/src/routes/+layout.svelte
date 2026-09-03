@@ -7,6 +7,9 @@
   import BackgroundPattern from '$lib/components/BackgroundPattern.svelte';
   import ThemeToggle from '$lib/components/ThemeToggle.svelte';
   import CommandPalette, { type CommandItem } from '$lib/components/CommandPalette.svelte';
+  import GithubLink from '$lib/components/GithubLink.svelte';
+  import SiteFooter from '$lib/components/SiteFooter.svelte';
+  import { DOCS_URL, DOCS_VERSION } from '$lib/site-links';
   import {
     focusInitialElement,
     restoreFocus,
@@ -228,6 +231,17 @@
         <span class="search-label">Buscar…</span>
         <kbd>⌘K</kbd>
       </button>
+      <a
+        class="docs-link"
+        href={DOCS_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Documentación de ModularCore Hub (versión {DOCS_VERSION})"
+      >
+        <span>Documentación</span>
+        <span class="docs-version">v{DOCS_VERSION}</span>
+      </a>
+      <GithubLink />
       <ThemeToggle />
     </div>
   </header>
@@ -301,6 +315,7 @@
       <main>
         {@render children()}
       </main>
+      <SiteFooter />
     </div>
   </div>
 </div>
@@ -394,6 +409,36 @@
     height: 1rem;
     flex-shrink: 0;
   }
+  /* Acceso a la documentación: siempre visible en la barra, con su versión publicada, que no
+     tiene por qué coincidir con la del proyecto. */
+  .docs-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid var(--ui-glass-border);
+    background: hsl(var(--muted) / 0.5);
+    color: hsl(var(--muted-foreground));
+    font-size: 0.85rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      border-color 0.18s var(--ui-ease-out),
+      background-color 0.18s var(--ui-ease-out),
+      color 0.18s var(--ui-ease-out);
+  }
+  .docs-link:hover {
+    border-color: hsl(var(--primary) / 0.45);
+    background: hsl(var(--muted) / 0.8);
+    color: hsl(var(--foreground));
+  }
+  .docs-version {
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: hsl(var(--accent-foreground));
+  }
+
   .search-label {
     flex: 1;
     text-align: left;
@@ -547,6 +592,14 @@
     .search-label,
     .search-trigger kbd {
       display: none;
+    }
+    /* En móvil la barra se queda sin sitio: el enlace de documentación conserva su versión,
+       que es el dato que no puede perderse, y suelta la etiqueta. */
+    .docs-link span:first-child {
+      display: none;
+    }
+    .docs-link::before {
+      content: 'Docs';
     }
     .search-trigger {
       min-width: 0;
