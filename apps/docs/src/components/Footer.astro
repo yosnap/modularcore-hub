@@ -1,0 +1,24 @@
+---
+// Override del slot Footer de Starlight: añade la línea de versiones bajo el pie por defecto.
+// El sitio de documentación se versiona por su cuenta (versions.json) y se despliega como
+// servicio propio, así que su versión NO coincide con la del proyecto — se muestran ambas
+// para que quede explícito qué doc corresponde a qué release.
+import Default from '@astrojs/starlight/components/Footer.astro';
+
+import versions from '../../versions.json';
+import pkg from '../../../../package.json';
+---
+
+<Default><slot /></Default>
+
+<p class="version-line">
+  Docs v{versions.current} · ModularCore Hub v{pkg.version}
+</p>
+
+<style>
+  .version-line {
+    margin-top: 1rem;
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-gray-3);
+  }
+</style>

@@ -31,6 +31,7 @@ export default defineConfig({
       favicon: '/favicon.ico',
       components: {
         SiteTitle: './src/components/VersionSelect.astro',
+        Footer: './src/components/Footer.astro',
       },
       sidebar: [
         {
