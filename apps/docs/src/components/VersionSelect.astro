@@ -1,0 +1,73 @@
+---
+// Override del slot SiteTitle de Starlight (confirmado real vía starlight.astro.build/reference/overrides).
+// No se renderiza el <Default /> original (causaba recursión infinita en el build estático al
+// re-invocar el propio slot) — se reconstruye el enlace de título mínimo + logo directamente,
+// más el selector de versión.
+import versions from '../../versions.json';
+
+const allVersions = [
+  { slug: '', label: `${versions.current} (actual)` },
+  ...versions.archived.map((slug) => ({ slug, label: `${slug} (archivada)` })),
+];
+
+const currentPath = Astro.url.pathname;
+const currentArchived = versions.archived.find((slug) => currentPath.startsWith(`/${slug}/`));
+const relativePath = currentArchived ? currentPath.slice(`/${currentArchived}`.length) : currentPath;
+---
+
+<div class="version-select-wrapper">
+  <a href="/" class="site-title">
+    <img src="/logo.svg" alt="" width="24" height="24" />
+    <span>ModularCore Hub</span>
+  </a>
+  {
+    allVersions.length > 1 && (
+      <select
+        class="version-select"
+        aria-label="Seleccionar versión de la documentación"
+        data-relative-path={relativePath}
+      >
+        {allVersions.map((v) => (
+          <option value={v.slug} selected={v.slug === (currentArchived ?? '')}>
+            {v.label}
+          </option>
+        ))}
+      </select>
+    )
+  }
+</div>
+
+<style>
+  .version-select-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .site-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--sl-color-text-accent);
+    text-decoration: none;
+  }
+  .version-select {
+    font-size: var(--sl-text-xs);
+    background: var(--sl-color-bg-nav);
+    color: var(--sl-color-text);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.25rem;
+    padding: 0.15rem 0.4rem;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLSelectElement>('.version-select').forEach((select) => {
+    select.addEventListener('change', () => {
+      const target = select.value;
+      const relative = select.dataset.relativePath ?? '/';
+      const destination = target ? `/${target}${relative}` : relative;
+      window.location.assign(destination);
+    });
+  });
+</script>

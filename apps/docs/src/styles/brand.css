@@ -1,0 +1,34 @@
+/* Fuente única de la marca (patrón ya usado en apps/web/src/app.css) — nunca replicar tokens */
+@import '../../../../assets/brand-tokens.css';
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+@import '@fontsource-variable/inter';
+
+:root[data-theme='light'],
+:root:not([data-theme='dark']) {
+  --sl-color-accent-low: var(--mc-primary-50);
+  --sl-color-accent: var(--mc-primary-600);
+  --sl-color-accent-high: var(--mc-primary-800);
+  --sl-color-text-accent: var(--mc-primary-600);
+}
+
+:root[data-theme='dark'],
+:root:not([data-theme='light']) {
+  --sl-color-accent-low: var(--mc-primary-900);
+  --sl-color-accent: var(--mc-primary-400);
+  --sl-color-accent-high: var(--mc-primary-200);
+}
+
+:root {
+  --sl-font: 'Inter Variable', sans-serif;
+  --sl-font-mono: 'Geist Mono Variable', monospace;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Geist Variable', sans-serif;
+}

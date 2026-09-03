@@ -11,3 +11,8 @@ pnpm-workspace.yaml
 plans/
 docs/
 *.md
+
+# apps/docs: generado por Astro (build/caché), no fuente. NOTA (red-team Finding 2): Prettier
+# sin plugin ya ignora *.astro sin necesidad de listarlo aquí — no es un no-op añadirlo.
+apps/docs/dist
+apps/docs/.astro

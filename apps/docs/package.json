@@ -1,0 +1,23 @@
+{
+  "name": "docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro sync && node scripts/check-coverage.mjs && astro build",
+    "typecheck": "astro sync && astro check",
+    "preview": "astro preview",
+    "version:freeze": "node scripts/freeze-version.mjs"
+  },
+  "dependencies": {
+    "astro": "7.2.10",
+    "@astrojs/starlight": "0.41.11",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@fontsource-variable/inter": "^5.3.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.5.0"
+  }
+}

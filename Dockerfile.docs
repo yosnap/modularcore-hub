@@ -1,0 +1,53 @@
+# syntax=docker/dockerfile:1
+
+# Sitio de documentación estático (Starlight/Astro). Servicio Easypanel independiente de
+# `modularhub` (ver Dockerfile de la raíz) — aislado en su propio proyecto cuando sea posible
+# (ver plan docs-site-starlight, Fase 1/S1).
+FROM node:22-bookworm-slim AS build
+
+WORKDIR /app
+ENV PNPM_HOME=/pnpm
+ENV PATH=$PNPM_HOME:$PATH
+
+RUN corepack enable
+
+# Solo manifiestos de TODOS los workspaces del lockfile (red-team Finding 1: --frozen-lockfile
+# falla si falta cualquier importer, no solo el de apps/docs) — nunca el código fuente de packages/.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json tsconfig.base.json ./
+COPY apps/docs/package.json ./apps/docs/package.json
+COPY apps/web/package.json ./apps/web/package.json
+COPY packages/ai-chat/package.json ./packages/ai-chat/package.json
+COPY packages/auto-seo/package.json ./packages/auto-seo/package.json
+COPY packages/cli/package.json ./packages/cli/package.json
+COPY packages/hello-core/package.json ./packages/hello-core/package.json
+COPY packages/mcp-server/package.json ./packages/mcp-server/package.json
+COPY packages/media-picker/package.json ./packages/media-picker/package.json
+COPY packages/modals/package.json ./packages/modals/package.json
+COPY packages/registry/package.json ./packages/registry/package.json
+COPY packages/registry-client/package.json ./packages/registry-client/package.json
+
+# Filtro acotado a docs: no arrastra `canvas` (media-picker) ni otras deps nativas
+# (red-team Finding 6: verificar en los logs que no aparece compilación de canvas).
+RUN pnpm install --frozen-lockfile --filter docs...
+
+COPY apps/docs ./apps/docs
+COPY assets ./assets
+
+# check-coverage.mjs (el guardarraíl anti-invención, ejecutado por `pnpm --filter docs build`)
+# lee estos ficheros fuente concretos para verificar comandos/tools/playgrounds reales — copias
+# mínimas y específicas, no el árbol de packages/ completo (mantiene el espíritu de la Fase 2:
+# la imagen de docs no depende del resto del monorepo).
+COPY packages/cli/src/commands ./packages/cli/src/commands
+COPY packages/mcp-server/src/index.ts ./packages/mcp-server/src/index.ts
+COPY apps/web/src/lib/playgrounds.ts ./apps/web/src/lib/playgrounds.ts
+
+# No se copia `packages/` completo ni se ejecuta `pnpm build` global (red-team, Security Finding 5
+# / H7): la doc es estática y no depende de build:registry ni del resto del monorepo.
+RUN pnpm --filter docs build
+
+FROM nginx:alpine AS runtime
+
+COPY --from=build /app/apps/docs/dist /usr/share/nginx/html
+COPY apps/docs/nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
