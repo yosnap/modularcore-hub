@@ -24,8 +24,10 @@ COPY apps/web ./apps/web
 COPY apps/docs/versions.json ./apps/docs/versions.json
 COPY assets ./assets
 
-# Run the workspace pipeline so registry assets are generated before SvelteKit builds.
-RUN pnpm build
+# Run the workspace pipeline so registry assets are generated before SvelteKit builds. Acotado a
+# `web` y sus dependencias: el sitio de documentación es otro servicio (ver Dockerfile.docs) y su
+# código no está en esta imagen, así que incluirlo en el pipeline rompería el build.
+RUN pnpm build --filter web...
 
 FROM node:22-bookworm-slim AS runtime
 
