@@ -1,6 +1,6 @@
 {
   "name": "modals",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "title": "Modals — Unified Overlay System",
   "type": "headless-core",
   "category": "ui",
@@ -210,6 +210,156 @@
     {
       "path": "ui/svelte/ModalsRenderer.svelte",
       "target": "src/modularcore/modals/ui/svelte/ModalsRenderer.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/BottomBanner.svelte",
+      "target": "src/modularcore/modals/ui/svelte/shadcn/BottomBanner.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/FullscreenOverlay.svelte",
+      "target": "src/modularcore/modals/ui/svelte/shadcn/FullscreenOverlay.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/ModalOverlay.svelte",
+      "target": "src/modularcore/modals/ui/svelte/shadcn/ModalOverlay.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/ModalsRenderer.svelte",
+      "target": "src/modularcore/modals/ui/svelte/shadcn/ModalsRenderer.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/SlideIn.svelte",
+      "target": "src/modularcore/modals/ui/svelte/shadcn/SlideIn.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/Toast.svelte",
+      "target": "src/modularcore/modals/ui/svelte/shadcn/Toast.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/TopBanner.svelte",
+      "target": "src/modularcore/modals/ui/svelte/shadcn/TopBanner.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/internal/OverlayBody.svelte",
+      "target": "src/modularcore/modals/ui/svelte/shadcn/internal/OverlayBody.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/BottomBanner.svelte",
+      "target": "src/modularcore/modals/ui/svelte/tailwind/BottomBanner.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/FullscreenOverlay.svelte",
+      "target": "src/modularcore/modals/ui/svelte/tailwind/FullscreenOverlay.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/ModalOverlay.svelte",
+      "target": "src/modularcore/modals/ui/svelte/tailwind/ModalOverlay.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/ModalsRenderer.svelte",
+      "target": "src/modularcore/modals/ui/svelte/tailwind/ModalsRenderer.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/SlideIn.svelte",
+      "target": "src/modularcore/modals/ui/svelte/tailwind/SlideIn.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/Toast.svelte",
+      "target": "src/modularcore/modals/ui/svelte/tailwind/Toast.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/TopBanner.svelte",
+      "target": "src/modularcore/modals/ui/svelte/tailwind/TopBanner.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/internal/OverlayBody.svelte",
+      "target": "src/modularcore/modals/ui/svelte/tailwind/internal/OverlayBody.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/BottomBanner.svelte",
+      "target": "src/modularcore/modals/ui/svelte/vanilla/BottomBanner.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/FullscreenOverlay.svelte",
+      "target": "src/modularcore/modals/ui/svelte/vanilla/FullscreenOverlay.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/ModalOverlay.svelte",
+      "target": "src/modularcore/modals/ui/svelte/vanilla/ModalOverlay.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/ModalsRenderer.svelte",
+      "target": "src/modularcore/modals/ui/svelte/vanilla/ModalsRenderer.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/SlideIn.svelte",
+      "target": "src/modularcore/modals/ui/svelte/vanilla/SlideIn.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/Toast.svelte",
+      "target": "src/modularcore/modals/ui/svelte/vanilla/Toast.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/TopBanner.svelte",
+      "target": "src/modularcore/modals/ui/svelte/vanilla/TopBanner.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/internal/OverlayBody.svelte",
+      "target": "src/modularcore/modals/ui/svelte/vanilla/internal/OverlayBody.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla-styles.css",
+      "target": "src/modularcore/modals/ui/vanilla-styles.css",
       "type": "ui",
       "encoding": "utf8"
     }
