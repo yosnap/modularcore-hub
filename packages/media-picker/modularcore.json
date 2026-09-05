@@ -1,6 +1,6 @@
 {
   "name": "media-picker",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "title": "Universal Media Picker",
   "type": "headless-core",
   "category": "media",
@@ -108,6 +108,12 @@
     {
       "path": "core/canvas/transform.ts",
       "target": "src/modularcore/media-picker/core/canvas/transform.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/canvas/variants.ts",
+      "target": "src/modularcore/media-picker/core/canvas/variants.ts",
       "type": "headless-core",
       "encoding": "utf8"
     },

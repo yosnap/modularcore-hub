@@ -2,7 +2,7 @@
   import { Toggle } from 'bits-ui';
 
   import '../../shadcn-theme.css';
-  import { formatBytes } from '../../../core/format.js';
+  import { formatBytes, formatVariantBadge, sortVariants } from '../../../core/format.js';
   import type { MediaPickerRune } from '../../../adapters/svelte/create-media-picker.svelte.js';
   import type { LibraryItem } from '../../../core/media-picker.js';
 
@@ -55,6 +55,17 @@
       <div class="mt-1 leading-tight">
         <span class="block truncate text-xs text-foreground" title={item.key}>{basename(item.key)}</span>
         <span class="block text-[11px] text-muted-foreground">{formatBytes(item.size)}</span>
+        {#if item.variants?.length}
+          <span class="mt-0.5 flex flex-wrap gap-1">
+            {#each sortVariants(item.variants) as variant (variant.key)}
+              <span
+                title={variant.label}
+                class="rounded bg-muted px-1 text-[10px] leading-4 text-muted-foreground"
+                >{formatVariantBadge(variant)}</span
+              >
+            {/each}
+          </span>
+        {/if}
       </div>
     </Toggle.Root>
   {/each}
