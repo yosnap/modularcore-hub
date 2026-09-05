@@ -1,5 +1,5 @@
 import { readFile, readdir } from 'node:fs/promises';
-import { dirname, join, relative } from 'node:path';
+import { dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
@@ -22,17 +22,34 @@ const IGNORED_DIRECTORIES = new Set([
   '.turbo',
   '.svelte-kit',
   '.astro',
+  '.claude',
   'coverage',
   'registry-data',
 ]);
 
+/**
+ * Planes e informes son documentos de trabajo, y uno que analice un conflicto de merge cita sus
+ * marcadores al principio de línea. Escanearlos convertiría ese informe en un fallo de la suite
+ * sin que haya ningún conflicto real.
+ */
+const IGNORED_ROOTS = ['plans'];
+
+/**
+ * Incluye lo que se envía al consumidor (`.php` de los snippets de Laravel) y lo que gobierna los
+ * builds (`.mjs`, `.html`, workflows): un conflicto sin resolver ahí se publica o rompe el CI
+ * igual que el de la página de documentación.
+ */
 const SCANNED_EXTENSIONS = [
   '.ts',
   '.tsx',
   '.js',
   '.jsx',
+  '.mjs',
+  '.cjs',
   '.svelte',
   '.astro',
+  '.php',
+  '.html',
   '.css',
   '.json',
   '.md',
@@ -43,7 +60,8 @@ const SCANNED_EXTENSIONS = [
 
 /**
  * Sólo al principio de línea y con la forma exacta de git. Un `=======` suelto sería un subrayado
- * de markdown perfectamente legítimo, así que se exige el trío completo para acusar a un fichero.
+ * de markdown perfectamente legítimo, así que se exige un marcador de apertura o de cierre para
+ * acusar a un fichero.
  */
 const MARKER_PATTERNS = [/^<<<<<<< /m, /^>>>>>>> /m];
 
@@ -51,11 +69,12 @@ async function collectSourceFiles(directory: string, found: string[] = []): Prom
   const entries = await readdir(directory, { withFileTypes: true });
 
   for (const entry of entries) {
-    if (entry.name.startsWith('.') && entry.name !== '.changeset') continue;
     const fullPath = join(directory, entry.name);
 
     if (entry.isDirectory()) {
       if (IGNORED_DIRECTORIES.has(entry.name)) continue;
+      // `.github` y `.changeset` sí se escanean: los workflows y los changesets son fuente.
+      if (IGNORED_ROOTS.includes(relative(repoRoot, fullPath))) continue;
       await collectSourceFiles(fullPath, found);
       continue;
     }
@@ -85,5 +104,20 @@ describe('marcadores de conflicto de merge', () => {
     }
 
     expect(offenders, 'Ficheros con un conflicto de merge sin resolver:').toEqual([]);
+  });
+
+  it('cubre lo que se publica y lo que gobierna el CI', async () => {
+    const scanned = (await collectSourceFiles(repoRoot)).map((file) => relative(repoRoot, file));
+
+    // Snippets que la CLI copia al proyecto del consumidor.
+    expect(scanned).toContain(
+      join('packages', 'ai-chat', 'snippets', 'laravel', 'ai-chat.blade.php'),
+    );
+    // Workflows: viven bajo un directorio con punto y aun así son fuente.
+    expect(scanned.some((file) => file.startsWith(`.github${sep}`))).toBe(true);
+    // Scripts de build fuera de TypeScript.
+    expect(scanned).toContain(join('apps', 'web', 'scripts', 'build-registry.mjs'));
+    // Y los planes e informes quedan fuera: citan marcadores sin que haya conflicto alguno.
+    expect(scanned.some((file) => file.startsWith(`plans${sep}`))).toBe(false);
   });
 });
