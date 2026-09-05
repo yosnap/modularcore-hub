@@ -58,9 +58,9 @@
       "types": "./dist/adapters/angular/chat.service.d.ts",
       "default": "./dist/adapters/angular/chat.service.js"
     },
-    "./web": {
-      "types": "./dist/adapters/web/chat-element.d.ts",
-      "default": "./dist/adapters/web/chat-element.js"
+    "./vanilla": {
+      "types": "./dist/adapters/vanilla/chat-element.d.ts",
+      "default": "./dist/adapters/vanilla/chat-element.js"
     },
     "./markdown": {
       "types": "./dist/ui/markdown.d.ts",

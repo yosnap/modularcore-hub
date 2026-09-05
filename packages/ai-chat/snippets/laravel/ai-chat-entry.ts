@@ -1,4 +1,4 @@
-import { createChatElement } from './adapters/web/chat-element.js';
+import { createChatElement } from './adapters/vanilla/chat-element.js';
 
 function mountChat(element: HTMLElement): void {
   const baseURL = element.dataset.baseUrl;

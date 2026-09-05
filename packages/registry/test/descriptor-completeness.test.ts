@@ -1,8 +1,10 @@
-import { readFile, readdir } from 'node:fs/promises';
-import { dirname, join, posix } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { readFile } from 'node:fs/promises';
+import { join, posix } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
+
+import { selectFilesForFramework } from '../src/framework-files.js';
+import { findWorkspaceDescriptors } from './helpers/workspace-descriptors.js';
 
 /**
  * Un descriptor incompleto no rompe nada en el monorepo: el código sigue compilando aquí
@@ -13,9 +15,6 @@ import { describe, expect, it } from 'vitest';
  * Esta prueba recorre cada `modularcore.json` real del monorepo y comprueba que todo import
  * relativo de un fichero descrito resuelve a otro fichero descrito.
  */
-const testDir = dirname(fileURLToPath(import.meta.url));
-const packagesRoot = join(testDir, '..', '..');
-
 const SOURCE_EXTENSIONS = ['.ts', '.tsx', '.svelte', '.js', '.jsx', '.css'];
 const IMPORT_PATTERN = /(?:from|import)\s+['"](\.[^'"]+)['"]/g;
 const BLOCK_COMMENT = /\/\*[\s\S]*?\*\//g;
@@ -28,29 +27,6 @@ const LINE_COMMENT = /(^|[^:])\/\/.*$/gm;
  */
 function stripComments(source: string): string {
   return source.replace(BLOCK_COMMENT, '').replace(LINE_COMMENT, '$1');
-}
-
-interface Descriptor {
-  name: string;
-  files: { path: string; target: string }[];
-}
-
-async function findDescriptors(): Promise<{ packageDir: string; descriptor: Descriptor }[]> {
-  const entries = await readdir(packagesRoot, { withFileTypes: true });
-  const found: { packageDir: string; descriptor: Descriptor }[] = [];
-
-  for (const entry of entries) {
-    if (!entry.isDirectory()) continue;
-    const packageDir = join(packagesRoot, entry.name);
-    try {
-      const raw = await readFile(join(packageDir, 'modularcore.json'), 'utf8');
-      found.push({ packageDir, descriptor: JSON.parse(raw) as Descriptor });
-    } catch {
-      // Un paquete sin descriptor (registry, cli, mcp-server…) no publica componentes.
-    }
-  }
-
-  return found;
 }
 
 /** Resuelve un import relativo igual que lo haría el bundler del proyecto destino. */
@@ -69,7 +45,7 @@ function resolves(specifier: string, fromPath: string, described: Set<string>): 
 }
 
 describe('integridad de los descriptores de componentes', async () => {
-  const descriptors = await findDescriptors();
+  const descriptors = await findWorkspaceDescriptors();
 
   it('encuentra al menos un componente que validar', () => {
     expect(descriptors.length).toBeGreaterThan(0);
@@ -95,6 +71,32 @@ describe('integridad de los descriptores de componentes', async () => {
       }
 
       expect(unresolved, `El descriptor de ${descriptor.name} no incluye:`).toEqual([]);
+    });
+
+    it(`${descriptor.name}: lo que se instala por framework se sostiene solo`, async () => {
+      // `add` no escribe el descriptor entero, sino el recorte del framework del proyecto. Ese
+      // recorte tiene que seguir cerrado: si deja fuera un fichero que otro del lote importa, la
+      // instalación queda rota igual que cuando el descriptor estaba incompleto, sólo que ahora
+      // por exceso de celo al filtrar.
+      const broken: string[] = [];
+
+      for (const framework of descriptor.frameworks) {
+        const selected = selectFilesForFramework(descriptor.files, framework);
+        const reachable = new Set(selected.map((file) => file.target));
+
+        for (const file of selected) {
+          if (!SOURCE_EXTENSIONS.some((extension) => file.path.endsWith(extension))) continue;
+
+          const contents = stripComments(await readFile(join(packageDir, file.path), 'utf8'));
+          for (const [, specifier] of contents.matchAll(IMPORT_PATTERN)) {
+            if (specifier && !resolves(specifier, file.target, reachable)) {
+              broken.push(`[${framework}] ${file.path} → ${specifier}`);
+            }
+          }
+        }
+      }
+
+      expect(broken, `El recorte por framework de ${descriptor.name} rompe imports:`).toEqual([]);
     });
 
     it(`${descriptor.name}: los ficheros descritos existen en el paquete`, async () => {

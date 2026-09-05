@@ -11,6 +11,7 @@ import {
 import { readProjectConfig, writeProjectConfig } from '../config.js';
 import { formatDiffLines } from './diff.js';
 import { resolveTargetPath } from '@modularcore/registry-client';
+import { selectFilesForFramework } from '@modularcore/registry';
 
 import type { RegistryClient } from '@modularcore/registry-client';
 import type { PromptAdapter } from '../prompts.js';
@@ -42,10 +43,12 @@ async function updateComponent(
   name: string,
   { cwd, client, prompts }: UpdateOptions,
   paths: Record<string, string>,
+  framework: string,
 ): Promise<UpdateResult> {
   const entry = await client.getDescriptor(name);
   const outcomes: UpdateFileOutcome[] = [];
-  for (const file of entry.files) {
+  // Mismo recorte que en `add`: un update no debe reintroducir los adaptadores que `add` omitió.
+  for (const file of selectFilesForFramework(entry.files, framework)) {
     const localPath = resolveTargetPath(cwd, remapTarget(file.target, paths));
     const localBuffer = await readLocalFileBuffer(localPath);
     const registryBuffer = decodeFileContent(file);
@@ -92,7 +95,7 @@ export async function runUpdate(
   }
   const results: UpdateResult[] = [];
   for (const target of targets) {
-    const result = await updateComponent(target, options, config.paths);
+    const result = await updateComponent(target, options, config.paths, config.framework);
     results.push(result);
     config.installed[result.name] = result.version;
   }

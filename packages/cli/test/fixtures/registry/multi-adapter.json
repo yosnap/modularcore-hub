@@ -1,0 +1,65 @@
+{
+  "name": "multi-adapter",
+  "version": "1.0.0",
+  "title": "Multi Adapter",
+  "type": "headless-core",
+  "category": "test-fixture",
+  "frameworks": ["react", "vue", "vanilla", "blade"],
+  "visibility": "public",
+  "peerDependencies": {},
+  "dependencies": [],
+  "registryDependencies": [],
+  "envVariables": [],
+  "description": "Fixture with one adapter per framework, used to check that add only writes the project's own.",
+  "files": [
+    {
+      "path": "core/engine.ts",
+      "target": "src/modularcore/multi-adapter/core/engine.ts",
+      "type": "headless-core",
+      "encoding": "utf8",
+      "content": "export const engine = 'shared';\n"
+    },
+    {
+      "path": "adapters/react/use-thing.ts",
+      "target": "src/modularcore/multi-adapter/adapters/react/use-thing.ts",
+      "type": "adapter",
+      "encoding": "utf8",
+      "content": "import { useState } from 'react';\nexport const useThing = useState;\n"
+    },
+    {
+      "path": "adapters/vue/use-thing.ts",
+      "target": "src/modularcore/multi-adapter/adapters/vue/use-thing.ts",
+      "type": "adapter",
+      "encoding": "utf8",
+      "content": "import { shallowRef } from 'vue';\nexport const useThing = shallowRef;\n"
+    },
+    {
+      "path": "adapters/vanilla/create-store.ts",
+      "target": "src/modularcore/multi-adapter/adapters/vanilla/create-store.ts",
+      "type": "adapter",
+      "encoding": "utf8",
+      "content": "export function createStore() {\n  return {};\n}\n"
+    },
+    {
+      "path": "ui/react/Thing.tsx",
+      "target": "src/modularcore/multi-adapter/ui/react/Thing.tsx",
+      "type": "ui",
+      "encoding": "utf8",
+      "content": "export const Thing = () => null;\n"
+    },
+    {
+      "path": "ui/plain-styles.css",
+      "target": "src/modularcore/multi-adapter/ui/plain-styles.css",
+      "type": "ui",
+      "encoding": "utf8",
+      "content": ".mc-thing {\n  color: inherit;\n}\n"
+    },
+    {
+      "path": "snippets/laravel/mount.ts",
+      "target": "resources/js/modularcore/multi-adapter-mount.ts",
+      "type": "snippet",
+      "encoding": "utf8",
+      "content": "export const mount = () => {};\n"
+    }
+  ]
+}
