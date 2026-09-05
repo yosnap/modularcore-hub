@@ -18,6 +18,17 @@ const packagesRoot = join(testDir, '..', '..');
 
 const SOURCE_EXTENSIONS = ['.ts', '.tsx', '.svelte', '.js', '.jsx', '.css'];
 const IMPORT_PATTERN = /(?:from|import)\s+['"](\.[^'"]+)['"]/g;
+const BLOCK_COMMENT = /\/\*[\s\S]*?\*\//g;
+const LINE_COMMENT = /(^|[^:])\/\/.*$/gm;
+
+/**
+ * Los ejemplos de uso dentro de un JSDoc contienen imports escritos desde el punto de vista
+ * del proyecto de destino, no del fichero que los documenta; tomarlos por imports reales daría
+ * un fallo falso.
+ */
+function stripComments(source: string): string {
+  return source.replace(BLOCK_COMMENT, '').replace(LINE_COMMENT, '$1');
+}
 
 interface Descriptor {
   name: string;
@@ -75,7 +86,7 @@ describe('integridad de los descriptores de componentes', async () => {
       for (const file of descriptor.files) {
         if (!SOURCE_EXTENSIONS.some((extension) => file.path.endsWith(extension))) continue;
 
-        const contents = await readFile(join(packageDir, file.path), 'utf8');
+        const contents = stripComments(await readFile(join(packageDir, file.path), 'utf8'));
         for (const [, specifier] of contents.matchAll(IMPORT_PATTERN)) {
           if (specifier && !resolves(specifier, file.target, described)) {
             unresolved.push(`${file.path} → ${specifier}`);
