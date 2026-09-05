@@ -29,9 +29,9 @@ OpenAI — incluido tu propio proxy en servidor, de modo que la clave nunca lleg
 - `ui/markdown.ts` — renderizador Markdown → HTML sin dependencias que escapa todo el texto no
   confiable antes de añadir cualquier marcado, por lo que su salida es segura para asignar a
   `innerHTML`/`{@html}`.
-- `adapters/react`, `adapters/svelte`, `adapters/web` — bindings finos sobre `Chat` para cada
-  framework (el adaptador de Svelte usa runas de Svelte 5). `adapters/web` es el binding sin
-  framework, el que el descriptor declara como `vanilla`.
+- `adapters/react`, `adapters/svelte`, `adapters/vanilla` — bindings finos sobre `Chat` para cada
+  framework (el adaptador de Svelte usa runas de Svelte 5). `adapters/vanilla` es el binding sin
+  framework, expuesto como `@modularcore/ai-chat/vanilla`.
 - `adapters/vue`, `adapters/angular` — bindings por componente (Composition API / signals) con
   limpieza de ciclo de vida; no comparten estado de conversación de forma global.
 

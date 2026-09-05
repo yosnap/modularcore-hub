@@ -3,6 +3,7 @@ import { join, posix } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
+import { selectFilesForFramework } from '../src/framework-files.js';
 import { findWorkspaceDescriptors } from './helpers/workspace-descriptors.js';
 
 /**
@@ -70,6 +71,32 @@ describe('integridad de los descriptores de componentes', async () => {
       }
 
       expect(unresolved, `El descriptor de ${descriptor.name} no incluye:`).toEqual([]);
+    });
+
+    it(`${descriptor.name}: lo que se instala por framework se sostiene solo`, async () => {
+      // `add` no escribe el descriptor entero, sino el recorte del framework del proyecto. Ese
+      // recorte tiene que seguir cerrado: si deja fuera un fichero que otro del lote importa, la
+      // instalación queda rota igual que cuando el descriptor estaba incompleto, sólo que ahora
+      // por exceso de celo al filtrar.
+      const broken: string[] = [];
+
+      for (const framework of descriptor.frameworks) {
+        const selected = selectFilesForFramework(descriptor.files, framework);
+        const reachable = new Set(selected.map((file) => file.target));
+
+        for (const file of selected) {
+          if (!SOURCE_EXTENSIONS.some((extension) => file.path.endsWith(extension))) continue;
+
+          const contents = stripComments(await readFile(join(packageDir, file.path), 'utf8'));
+          for (const [, specifier] of contents.matchAll(IMPORT_PATTERN)) {
+            if (specifier && !resolves(specifier, file.target, reachable)) {
+              broken.push(`[${framework}] ${file.path} → ${specifier}`);
+            }
+          }
+        }
+      }
+
+      expect(broken, `El recorte por framework de ${descriptor.name} rompe imports:`).toEqual([]);
     });
 
     it(`${descriptor.name}: los ficheros descritos existen en el paquete`, async () => {
