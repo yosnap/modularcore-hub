@@ -1,5 +1,7 @@
 import * as TogglePrimitive from '@radix-ui/react-toggle';
 
+import { basename, formatBytes, formatVariantBadge, sortVariants } from '../../../core/format.js';
+
 import type { JSX } from 'react';
 import type { LibraryItem } from '../../../core/media-picker.js';
 import type { UseMediaPickerResult } from '../../../adapters/react/use-media-picker.js';
@@ -60,6 +62,27 @@ export function MediaLibraryGrid({ picker, onSelectSingle }: MediaLibraryGridPro
             ) : (
               <span className="block truncate text-xs text-muted-foreground">{item.key}</span>
             )}
+            <div className="mt-1 leading-tight">
+              <span className="block truncate text-xs text-foreground" title={item.key}>
+                {basename(item.key)}
+              </span>
+              <span className="block text-[11px] text-muted-foreground">
+                {formatBytes(item.size)}
+              </span>
+              {item.variants?.length ? (
+                <span className="mt-0.5 flex flex-wrap gap-1">
+                  {sortVariants(item.variants).map((variant) => (
+                    <span
+                      key={variant.key}
+                      title={variant.label}
+                      className="rounded bg-muted px-1 text-[10px] leading-4 text-muted-foreground"
+                    >
+                      {formatVariantBadge(variant)}
+                    </span>
+                  ))}
+                </span>
+              ) : null}
+            </div>
           </TogglePrimitive.Root>
         );
       })}

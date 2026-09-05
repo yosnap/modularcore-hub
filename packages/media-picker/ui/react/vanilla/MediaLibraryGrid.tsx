@@ -1,3 +1,5 @@
+import { basename, formatBytes, formatVariantBadge, sortVariants } from '../../../core/format.js';
+
 import type { JSX } from 'react';
 import type { LibraryItem } from '../../../core/media-picker.js';
 import type { UseMediaPickerResult } from '../../../adapters/react/use-media-picker.js';
@@ -49,6 +51,21 @@ export function MediaLibraryGrid({ picker, onSelectSingle }: MediaLibraryGridPro
             ) : (
               <span>{item.key}</span>
             )}
+            <div className="mc-grid__caption">
+              <span className="mc-grid__filename" title={item.key}>
+                {basename(item.key)}
+              </span>
+              <span className="mc-grid__size">{formatBytes(item.size)}</span>
+              {item.variants?.length ? (
+                <span className="mc-grid__variants">
+                  {sortVariants(item.variants).map((variant) => (
+                    <span key={variant.key} className="mc-grid__variant" title={variant.label}>
+                      {formatVariantBadge(variant)}
+                    </span>
+                  ))}
+                </span>
+              ) : null}
+            </div>
           </button>
         );
       })}
