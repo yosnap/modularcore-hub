@@ -1,6 +1,7 @@
 import { compressImage } from './canvas/compress.js';
 import { cropImage } from './canvas/crop.js';
 import { flip, rotate90 } from './canvas/transform.js';
+import { generateVariants } from './canvas/variants.js';
 import {
   cursorForPage,
   initPageCache,
@@ -14,6 +15,7 @@ import { fromLibrary, fromLocalFile, fromRemoteUrl } from './sources.js';
 import type { CompressOptions } from './canvas/compress.js';
 import type { CropOptions } from './canvas/crop.js';
 import type { FlipAxis, RotateDirection, TransformOptions } from './canvas/transform.js';
+import type { GenerateVariantsOptions, VariantSize } from './canvas/variants.js';
 import type { LibraryItem, MediaPickerConfig, PageCache } from './library-state.js';
 import type { RemoteUrlSourceOptions } from './sources.js';
 import type {
@@ -66,6 +68,15 @@ export interface MediaPickerDeps {
   flip: typeof flip;
   fromRemoteUrl: typeof fromRemoteUrl;
   fromLibrary: typeof fromLibrary;
+  generateVariants: typeof generateVariants;
+}
+
+/** Resultado de `uploadWithVariants`: el original y los tamaños que llegaron a subirse. */
+export interface UploadWithVariantsResult {
+  original: UploadResult;
+  variants: { label: string; result: UploadResult }[];
+  /** Tamaños que fallaron al generarse o subirse. El original ya está guardado. */
+  failed: { label: string; error: Error }[];
 }
 
 const initialState: MediaPickerState = {
@@ -135,6 +146,7 @@ export class MediaPicker {
       flip: deps.flip ?? flip,
       fromRemoteUrl: deps.fromRemoteUrl ?? fromRemoteUrl,
       fromLibrary: deps.fromLibrary ?? fromLibrary,
+      generateVariants: deps.generateVariants ?? generateVariants,
     };
     this.config = {
       multiple: config.multiple ?? false,
@@ -249,6 +261,62 @@ export class MediaPicker {
     );
     this.commitIfCurrent(gen, { status: 'done', result, progress: 1 });
     return result;
+  }
+
+  /**
+   * Sube el blob actual y, a continuación, los tamaños derivados que se pidan.
+   *
+   * Se mantiene aparte de `upload()` a propósito: aquel resuelve con un único `UploadResult` y
+   * hay consumidores que dependen de esa forma. Aquí el original se sube primero y solo entonces
+   * se generan las derivadas, porque cada una necesita el identificador del original para
+   * enlazarse (`variantOf`).
+   *
+   * Un fallo en una derivada no tumba la operación: el original ya está guardado y perderlo por
+   * una miniatura sería un mal negocio. Los fallos se devuelven en `failed` para que la interfaz
+   * pueda avisar y reintentar.
+   */
+  async uploadWithVariants(
+    provider: StorageProvider,
+    sizes: VariantSize[],
+    options?: UploadOptions & Pick<GenerateVariantsOptions, 'mimeType' | 'quality'>,
+  ): Promise<UploadWithVariantsResult> {
+    if (!this.state.blob) {
+      throw new Error('media-picker: uploadWithVariants() called with no source loaded');
+    }
+    const source = this.state.blob;
+    const original = await this.upload(provider, options);
+
+    const variants: UploadWithVariantsResult['variants'] = [];
+    const failed: UploadWithVariantsResult['failed'] = [];
+
+    let generated: Awaited<ReturnType<typeof generateVariants>> = [];
+    try {
+      generated = await this.deps.generateVariants(source, {
+        sizes,
+        ...(options?.mimeType ? { mimeType: options.mimeType } : {}),
+        ...(options?.quality ? { quality: options.quality } : {}),
+        ...(options?.signal ? { signal: options.signal } : {}),
+      });
+    } catch (error) {
+      for (const size of sizes) failed.push({ label: size.label, error: error as Error });
+      return { original, variants, failed };
+    }
+
+    for (const variant of generated) {
+      try {
+        const result = await provider.upload(variant.blob, {
+          ...options,
+          variantOf: original.key,
+          variantLabel: variant.label,
+          onProgress: undefined,
+        });
+        variants.push({ label: variant.label, result });
+      } catch (error) {
+        failed.push({ label: variant.label, error: error as Error });
+      }
+    }
+
+    return { original, variants, failed };
   }
 
   reset(): void {

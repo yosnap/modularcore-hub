@@ -30,6 +30,10 @@
       "types": "./dist/core/canvas/transform.d.ts",
       "default": "./dist/core/canvas/transform.js"
     },
+    "./canvas/variants": {
+      "types": "./dist/core/canvas/variants.d.ts",
+      "default": "./dist/core/canvas/variants.js"
+    },
     "./library-state": {
       "types": "./dist/core/library-state.d.ts",
       "default": "./dist/core/library-state.js"

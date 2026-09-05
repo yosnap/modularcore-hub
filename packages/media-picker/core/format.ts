@@ -4,6 +4,8 @@
  * 4 Svelte/React style variants render the identical string for the same `size`.
  */
 
+import type { ObjectVariant } from './provider.js';
+
 const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'] as const;
 
 /**
@@ -23,4 +25,21 @@ export function formatBytes(bytes: number): string {
   // otherwise "1 KB" would render as "1.0 KB".
   const decimals = exponent > 0 && value < 10 && !Number.isInteger(value) ? 1 : 0;
   return `${value.toFixed(decimals)} ${UNITS[exponent]}`;
+}
+
+/**
+ * Ordena los tamaños derivados de mayor a menor para pintarlos siempre igual, sea cual sea el
+ * orden en que los devuelva el proveedor. Se compara por ancho y, a falta de ancho, por peso.
+ */
+export function sortVariants(variants: ObjectVariant[] = []): ObjectVariant[] {
+  return [...variants].sort((a, b) => (b.width ?? 0) - (a.width ?? 0) || b.size - a.size);
+}
+
+/**
+ * Texto corto para el distintivo de un tamaño derivado dentro de la cuadrícula: el ancho en
+ * píxeles cuando el proveedor lo conoce (`1200`), y la etiqueta en caso contrario (`thumb`),
+ * que es lo único garantizado por el contrato.
+ */
+export function formatVariantBadge(variant: ObjectVariant): string {
+  return variant.width ? String(variant.width) : variant.label;
 }
