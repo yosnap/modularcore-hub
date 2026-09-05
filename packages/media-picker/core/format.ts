@@ -43,3 +43,14 @@ export function sortVariants(variants: ObjectVariant[] = []): ObjectVariant[] {
 export function formatVariantBadge(variant: ObjectVariant): string {
   return variant.width ? String(variant.width) : variant.label;
 }
+
+/**
+ * Último segmento de la clave, para el pie de la tarjeta. La clave completa se conserva en el
+ * `title` del elemento, así que el pie puede quedarse con lo que distingue al fichero.
+ *
+ * Vivía copiada en cada presentación; aquí sólo hay una definición, y las ocho —cuatro de React,
+ * cuatro de Svelte— pintan exactamente lo mismo.
+ */
+export function basename(key: string): string {
+  return key.split('/').pop() || key;
+}

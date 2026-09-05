@@ -39,7 +39,6 @@ implementas.
 - `core/providers/azure-blob.ts` — subida desde el navegador a través de un target SAS de corta
   duración y con alcance de blob, emitido por tu propio backend.
 
-<<<<<<< HEAD
 ## Tamaños derivados (variantes)
 
 Una biblioteca de medios rara vez quiere servir el original de 4000 px en una cuadrícula de
@@ -70,9 +69,10 @@ biblioteca no muestre cinco copias de la misma imagen. `ListOptions.variant` via
 Un proveedor que ignore estos campos sigue siendo una implementación válida; simplemente no
 ofrecerá variantes.
 
-Las cuatro presentaciones de `MediaLibraryGrid` en Svelte muestran un distintivo por cada tamaño
-disponible, con el ancho en píxeles cuando el proveedor lo informa.
-=======
+Las ocho presentaciones de `MediaLibraryGrid` —cuatro de React y cuatro de Svelte— muestran un pie
+con el nombre del fichero y su tamaño, y un distintivo por cada tamaño derivado disponible, con el
+ancho en píxeles cuando el proveedor lo informa.
+
 ## Uso sin framework (Astro, Blade, HTMX…)
 
 Los demás adaptadores traducen el estado del núcleo al sistema reactivo de su framework y usan su
@@ -99,7 +99,6 @@ Astro es el caso más directo: su interactividad son `<script>` con TypeScript p
 reactivo propio. El snippet `snippets/astro/media-picker-island.ts` monta el picker sobre elementos
 marcados con `data-media-picker` y se limpia en `astro:before-swap`, el evento que dispara View
 Transitions antes de sustituir el documento. El mismo patrón sirve tal cual en Blade, HTMX o Rails.
->>>>>>> origin/develop
 
 ## Proveedores de almacenamiento soportados
 

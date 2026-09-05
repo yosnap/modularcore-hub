@@ -1,6 +1,6 @@
 {
   "name": "media-picker",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "title": "Universal Media Picker",
   "type": "headless-core",
   "category": "media",
