@@ -12,7 +12,11 @@
     "vue": ">=3.3",
     "@angular/core": ">=17"
   },
-  "dependencies": [],
+  "dependencies": [
+    "@radix-ui/react-slider@^1.4.7",
+    "@radix-ui/react-toggle@^1.1.18",
+    "bits-ui@^2.18.2"
+  ],
   "registryDependencies": [],
   "envVariables": [
     {
