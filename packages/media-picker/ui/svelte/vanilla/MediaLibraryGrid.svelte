@@ -1,6 +1,6 @@
 <script lang="ts">
   import '../../vanilla-styles.css';
-  import { formatBytes, formatVariantBadge, sortVariants } from '../../../core/format.js';
+  import { basename, formatBytes, formatVariantBadge, sortVariants } from '../../../core/format.js';
   import type { MediaPickerRune } from '../../../adapters/svelte/create-media-picker.svelte.js';
   import type { LibraryItem } from '../../../core/media-picker.js';
 
@@ -24,9 +24,6 @@
     return picker.state.selection.some((selected) => selected.key === item.key);
   }
 
-  function basename(key: string): string {
-    return key.split('/').pop() || key;
-  }
 </script>
 
 <!-- Vanilla CSS variant: same props/behavior as the headless MediaLibraryGrid. -->

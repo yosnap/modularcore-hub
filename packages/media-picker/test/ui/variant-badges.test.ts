@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { formatVariantBadge, sortVariants } from '../../core/format.js';
+import { basename, formatVariantBadge, sortVariants } from '../../core/format.js';
 
 import type { ObjectVariant } from '../../core/provider.js';
 
@@ -15,6 +15,10 @@ const GRIDS = [
   'ui/svelte/tailwind/MediaLibraryGrid.svelte',
   'ui/svelte/shadcn/MediaLibraryGrid.svelte',
   'ui/svelte/vanilla/MediaLibraryGrid.svelte',
+  'ui/react/MediaLibraryGrid.tsx',
+  'ui/react/tailwind/MediaLibraryGrid.tsx',
+  'ui/react/shadcn/MediaLibraryGrid.tsx',
+  'ui/react/vanilla/MediaLibraryGrid.tsx',
 ];
 
 function variant(overrides: Partial<ObjectVariant>): ObjectVariant {
@@ -68,8 +72,22 @@ describe('formatVariantBadge', () => {
   });
 });
 
-describe('las cuatro presentaciones de MediaLibraryGrid', () => {
-  it('pintan los tamaños con las mismas funciones compartidas', async () => {
+describe('basename', () => {
+  it('se queda con el último segmento de la clave', () => {
+    expect(basename('2026/09/portada.png')).toBe('portada.png');
+  });
+
+  it('devuelve la clave entera cuando no hay carpetas', () => {
+    expect(basename('portada.png')).toBe('portada.png');
+  });
+
+  it('no devuelve vacío cuando la clave termina en barra', () => {
+    expect(basename('carpeta/')).toBe('carpeta/');
+  });
+});
+
+describe('las ocho presentaciones de MediaLibraryGrid', () => {
+  it('pintan el pie con las mismas funciones compartidas, sin copias locales', async () => {
     for (const grid of GRIDS) {
       const source = await readFile(join(packageRoot, grid), 'utf8');
 
@@ -79,6 +97,9 @@ describe('las cuatro presentaciones de MediaLibraryGrid', () => {
       expect(source, `${grid} debe ordenar antes de pintar`).toContain(
         'sortVariants(item.variants)',
       );
+      expect(source, `${grid} debe pintar el nombre de fichero`).toContain('basename(item.key)');
+      expect(source, `${grid} debe pintar el tamaño`).toContain('formatBytes(item.size)');
+      expect(source, `${grid} no debe redefinir basename`).not.toContain('function basename');
     }
   });
 });

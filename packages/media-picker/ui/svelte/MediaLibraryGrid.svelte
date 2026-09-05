@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { formatBytes, formatVariantBadge, sortVariants } from '../../core/format.js';
+  import { basename, formatBytes, formatVariantBadge, sortVariants } from '../../core/format.js';
 
   import type { MediaPickerRune } from '../../adapters/svelte/create-media-picker.svelte.js';
   import type { LibraryItem } from '../../core/media-picker.js';
@@ -24,10 +24,6 @@
     return picker.state.selection.some((selected) => selected.key === item.key);
   }
 
-  /** Basename (last path segment) for the caption — the title attr keeps the full key available. */
-  function basename(key: string): string {
-    return key.split('/').pop() || key;
-  }
 </script>
 
 <!--
