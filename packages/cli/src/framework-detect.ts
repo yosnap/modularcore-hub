@@ -77,11 +77,9 @@ export async function detectFrameworks(cwd: string): Promise<FrameworkDetectionR
   // Sólo con señal positiva. La ausencia de todo marcador no es un proyecto sin framework: es un
   // proyecto del que no sabemos nada —quizá aún no ha instalado el suyo— y ahí AD2 manda
   // preguntar, ahora con `vanilla` entre las opciones de `init`.
-  if (VANILLA_MARKERS.some((marker) => marker in deps)) {
-    return { frameworks: [...frameworks, 'vanilla'], packageJson: pkg };
-  }
+  const frameworkless = VANILLA_MARKERS.some((marker) => marker in deps);
 
-  return { frameworks, packageJson: pkg };
+  return { frameworks: frameworkless ? [...frameworks, 'vanilla'] : frameworks, packageJson: pkg };
 }
 
 /**

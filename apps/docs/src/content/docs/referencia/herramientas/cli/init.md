@@ -9,7 +9,7 @@ description: "Detecta el framework y el gestor de paquetes del proyecto, y escri
 
 La detección de framework solo se auto-selecciona cuando es inequívoca: exactamente un framework detectado y el directorio actual no es la raíz de un workspace/monorepo. En cualquier otro caso —cero coincidencias, más de una, o raíz de workspace— el comando explica el motivo y pide elegir el framework manualmente mediante un prompt interactivo (`react`, `svelte`, `vue`, `angular`, `blade` o `vanilla`).
 
-`vanilla` es la opción para páginas sin framework —Astro, HTMX, Rails, Blade sin islas— cuya interactividad es TypeScript plano en un `<script>`. Se detecta a partir de `astro` en las dependencias; con cualquier otro generador, elígelo a mano. La ausencia de todo marcador no basta para deducirlo: un proyecto que aún no ha instalado su framework es un proyecto desconocido, no uno sin framework, así que ahí `init` pregunta igual. Un Astro con islas de React declara ambos y también pregunta: elegir entre la isla y el script plano es decisión tuya.
+`vanilla` es la opción para páginas sin framework —Astro, HTMX, Rails, 11ty— cuya interactividad es TypeScript plano en un `<script>`. Un proyecto Laravel queda siempre en `blade`, porque `composer.json` lo delata antes de llegar aquí. Se detecta a partir de `astro` en las dependencias; con cualquier otro generador, elígelo a mano. La ausencia de todo marcador no basta para deducirlo: un proyecto que aún no ha instalado su framework es un proyecto desconocido, no uno sin framework, así que ahí `init` pregunta igual. Un Astro con islas de React declara ambos y también pregunta: elegir entre la isla y el script plano es decisión tuya.
 
 Tras elegir framework, pregunta interactivamente:
 
