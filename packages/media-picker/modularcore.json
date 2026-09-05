@@ -1,6 +1,6 @@
 {
   "name": "media-picker",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "Universal Media Picker",
   "type": "headless-core",
   "category": "media",
@@ -474,6 +474,60 @@
     {
       "path": "ui/vanilla-styles.css",
       "target": "src/modularcore/media-picker/ui/vanilla-styles.css",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/format.ts",
+      "target": "src/modularcore/media-picker/core/format.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/canvas/zoom.ts",
+      "target": "src/modularcore/media-picker/core/canvas/zoom.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/ModernSelect.tsx",
+      "target": "src/modularcore/media-picker/ui/react/ModernSelect.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/ModernSelect.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/ModernSelect.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/MediaLibraryModal.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/MediaLibraryModal.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/MediaLibraryModal.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/tailwind/MediaLibraryModal.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/MediaLibraryModal.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/shadcn/MediaLibraryModal.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/MediaLibraryModal.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/vanilla/MediaLibraryModal.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/modern-select.css",
+      "target": "src/modularcore/media-picker/ui/modern-select.css",
       "type": "ui",
       "encoding": "utf8"
     }

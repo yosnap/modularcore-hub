@@ -88,4 +88,12 @@ las mismas props/comportamiento — solo cambia el marcado/CSS:
 - `ui/{react,svelte}/vanilla/` — CSS plano (`ui/vanilla-styles.css`, prefijo de clase `mc-*`), sin
   dependencia de framework, funciona con o sin bundler.
 
+Junto a esos seis se instalan dos componentes de apoyo:
+
+- `MediaLibraryModal` (solo Svelte, en las cuatro presentaciones) — envuelve la biblioteca en un
+  modal con pestañas Biblioteca / Subir archivo / Desde URL, paginación numerada, búsqueda y
+  orden.
+- `ModernSelect` (React y Svelte, con `ui/modern-select.css`) — el desplegable que usan
+  `FolderSelect` e `ImageEditor`.
+
 Prueba este componente en vivo en el [Playground de Media Picker](/referencia/playground/media-picker/).
