@@ -62,9 +62,14 @@ store.destroy();
 ```
 
 Astro es el caso más directo: su interactividad son `<script>` con TypeScript plano, sin runtime
-reactivo propio. El snippet `snippets/astro/media-picker-island.ts` monta el picker sobre elementos
-marcados con `data-media-picker` y se limpia en `astro:before-swap`, el evento que dispara View
-Transitions antes de sustituir el documento. El mismo patrón sirve tal cual en Blade, HTMX o Rails.
+reactivo propio. Elige `vanilla` al ejecutar `modularcore init` —no se detecta solo, porque no es
+una dependencia sino la ausencia de framework— y la CLI instalará el componente con normalidad.
+
+El snippet `snippets/astro/media-picker-island.ts` monta el picker sobre los elementos marcados con
+`data-media-picker`. Registra el montaje en `astro:page-load` y no solo al cargar el módulo, porque
+Astro no vuelve a ejecutar un script ya cargado tras una navegación con View Transitions; y libera
+las suscripciones en `astro:before-swap`, antes de que el documento sea sustituido. El mismo patrón
+sirve tal cual en Blade, HTMX o Rails.
 
 ## Proveedores de almacenamiento soportados
 

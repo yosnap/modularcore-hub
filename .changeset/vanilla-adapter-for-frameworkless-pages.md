@@ -1,5 +1,6 @@
 ---
 '@modularcore/media-picker': minor
+'@modularcore/cli': minor
 ---
 
 Añadir un adaptador sin framework (`adapters/vanilla`) y declarar `vanilla` entre los frameworks
@@ -14,3 +15,7 @@ Habilita Astro, cuya interactividad son `<script>` con TypeScript plano y que ha
 forma de usar el componente sin cargar React o Svelte solo para eso, y sirve igual en Blade, HTMX o
 Rails. Incluye `snippets/astro/media-picker-island.ts` como montaje de referencia, con limpieza en
 `astro:before-swap` para las View Transitions.
+
+La CLI incorpora `vanilla` entre los frameworks que ofrece `init`: sin eso, `assertCompatible`
+rechazaba la instalación en un proyecto Astro y la capacidad quedaba fuera de alcance. No se
+detecta automáticamente, porque no es una dependencia sino la ausencia de framework.
