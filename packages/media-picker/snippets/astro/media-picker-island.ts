@@ -19,12 +19,18 @@ import type { MediaPickerStore } from './adapters/vanilla/create-media-picker-st
  *   <p data-media-status></p>
  * </div>
  * <script>
- *   import { mountMediaPickers } from '../modularcore/media-picker/media-picker-island.js';
- *   mountMediaPickers();
+ *   import { registerMediaPickers } from '../modularcore/media-picker/media-picker-island.js';
+ *   registerMediaPickers();
  * </script>
  * ```
  */
+const MOUNTED = 'mediaPickerMounted';
+
 export function mountMediaPicker(root: HTMLElement): MediaPickerStore | null {
+  // Sin esto, montar dos veces el mismo nodo —al volver a una página ya visitada, por ejemplo—
+  // engancharía un segundo listener y cada selección subiría el archivo por duplicado.
+  if (root.dataset[MOUNTED] === 'true') return null;
+
   const signUrl = root.dataset.signUrl;
   const publicUrl = root.dataset.publicUrl;
   const fileInput = root.querySelector<HTMLInputElement>('[data-media-file]');
@@ -48,6 +54,8 @@ export function mountMediaPicker(root: HTMLElement): MediaPickerStore | null {
     },
   });
 
+  root.dataset[MOUNTED] = 'true';
+
   const store = createMediaPickerStore();
   const status = root.querySelector<HTMLElement>('[data-media-status]');
 
@@ -61,8 +69,17 @@ export function mountMediaPicker(root: HTMLElement): MediaPickerStore | null {
     const file = fileInput.files?.[0];
     if (!file) return;
 
+    // El valor se limpia antes de subir: si no, volver a elegir el mismo archivo tras un fallo
+    // no dispara `change` y el reintento parece que no hace nada.
+    fileInput.value = '';
+
     store.loadLocalFile(file);
-    await store.upload(provider);
+    try {
+      await store.upload(provider);
+    } catch {
+      // El error ya viaja en el estado y lo pinta el suscriptor de arriba; se captura aquí
+      // para no dejar una promesa rechazada sin gestionar en la consola del proyecto.
+    }
   });
 
   // Astro sustituye el documento entero en cada navegación con View Transitions, así que el
@@ -81,4 +98,13 @@ export function mountMediaPicker(root: HTMLElement): MediaPickerStore | null {
 
 export function mountMediaPickers(): void {
   document.querySelectorAll<HTMLElement>('[data-media-picker]').forEach(mountMediaPicker);
+}
+
+/**
+ * Astro no vuelve a ejecutar un módulo ya cargado tras una navegación con View Transitions, así
+ * que montar solo al cargar el script deja el picker muerto al volver a una página ya visitada.
+ * `astro:page-load` se dispara en la carga inicial y en cada navegación.
+ */
+export function registerMediaPickers(): void {
+  document.addEventListener('astro:page-load', mountMediaPickers);
 }
