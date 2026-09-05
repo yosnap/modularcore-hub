@@ -1,6 +1,6 @@
 {
   "name": "modals",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "title": "Modals — Unified Overlay System",
   "type": "headless-core",
   "category": "ui",
@@ -84,6 +84,12 @@
     {
       "path": "ui/a11y/reduced-motion.ts",
       "target": "src/modularcore/modals/ui/a11y/reduced-motion.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/safe/message.ts",
+      "target": "src/modularcore/modals/ui/safe/message.ts",
       "type": "ui",
       "encoding": "utf8"
     },
