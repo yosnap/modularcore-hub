@@ -62,6 +62,10 @@
       "types": "./dist/adapters/angular/media-picker.service.d.ts",
       "default": "./dist/adapters/angular/media-picker.service.js"
     },
+    "./vanilla": {
+      "types": "./dist/adapters/vanilla/create-media-picker-store.d.ts",
+      "default": "./dist/adapters/vanilla/create-media-picker-store.js"
+    },
     "./ui/react/MediaLibraryGrid": {
       "types": "./dist/ui/react/MediaLibraryGrid.d.ts",
       "default": "./dist/ui/react/MediaLibraryGrid.js"
