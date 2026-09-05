@@ -1,10 +1,10 @@
 {
   "name": "media-picker",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "title": "Universal Media Picker",
   "type": "headless-core",
   "category": "media",
-  "frameworks": ["react", "svelte", "vue", "angular", "blade"],
+  "frameworks": ["react", "svelte", "vue", "angular", "blade", "vanilla"],
   "visibility": "public",
   "peerDependencies": {
     "react": ">=18",
@@ -157,6 +157,12 @@
       "path": "adapters/angular/media-picker.service.ts",
       "target": "src/modularcore/media-picker/adapters/angular/media-picker.service.ts",
       "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/vanilla/create-media-picker-store.ts",
+      "target": "src/modularcore/media-picker/adapters/vanilla/create-media-picker-store.ts",
+      "type": "headless-core",
       "encoding": "utf8"
     },
     {
@@ -529,6 +535,12 @@
       "path": "ui/modern-select.css",
       "target": "src/modularcore/media-picker/ui/modern-select.css",
       "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "snippets/astro/media-picker-island.ts",
+      "target": "src/modularcore/media-picker/media-picker-island.ts",
+      "type": "snippet",
       "encoding": "utf8"
     }
   ]

@@ -5,8 +5,8 @@ description: "Selector de medios headless con recorte, compresión y subida a pr
 
 `@modularcore/media-picker` es un selector de medios headless — fuentes de archivo local, URL
 remota y biblioteca, recorte y compresión con canvas, y proveedores de almacenamiento
-S3-compatible, Cloudinary y Azure Blob — con adaptadores para React, Svelte, Vue 3 y Angular
-standalone.
+S3-compatible, Cloudinary y Azure Blob — con adaptadores para React, Svelte, Vue 3, Angular
+standalone y páginas sin framework (Astro, Blade, HTMX…).
 
 ## Las credenciales nunca viven en este componente
 
@@ -34,8 +34,37 @@ implementas.
   usa runas de Svelte 5).
 - `adapters/vue`, `adapters/angular` — bindings por componente sobre el mismo core. Vue usa refs;
   Angular usa signals más `DestroyRef`.
+- `adapters/vanilla` — binding sin framework: expone `subscribe` y `destroy` en lugar de apoyarse
+  en un sistema reactivo o en un ciclo de vida ajeno.
 - `core/providers/azure-blob.ts` — subida desde el navegador a través de un target SAS de corta
   duración y con alcance de blob, emitido por tu propio backend.
+
+## Uso sin framework (Astro, Blade, HTMX…)
+
+Los demás adaptadores traducen el estado del núcleo al sistema reactivo de su framework y usan su
+ciclo de vida para darse de baja. En una página sin framework no existe ninguno de los dos, así que
+`createMediaPickerStore` expone la suscripción tal cual y deja la limpieza en tus manos:
+
+```ts
+import { createMediaPickerStore } from '@modularcore/media-picker/vanilla';
+
+const store = createMediaPickerStore();
+
+// `subscribe` invoca al oyente de inmediato con el estado actual, así que el primer pintado
+// no necesita una llamada aparte a `getState`.
+const unsubscribe = store.subscribe((state) => {
+  status.textContent = state.error ? state.error.message : state.status;
+});
+
+// Al desmontar la isla, la página o el widget:
+unsubscribe();
+store.destroy();
+```
+
+Astro es el caso más directo: su interactividad son `<script>` con TypeScript plano, sin runtime
+reactivo propio. El snippet `snippets/astro/media-picker-island.ts` monta el picker sobre elementos
+marcados con `data-media-picker` y se limpia en `astro:before-swap`, el evento que dispara View
+Transitions antes de sustituir el documento. El mismo patrón sirve tal cual en Blade, HTMX o Rails.
 
 ## Proveedores de almacenamiento soportados
 
