@@ -172,7 +172,7 @@
     {
       "path": "adapters/vanilla/create-media-picker-store.ts",
       "target": "src/modularcore/media-picker/adapters/vanilla/create-media-picker-store.ts",
-      "type": "headless-core",
+      "type": "adapter",
       "encoding": "utf8"
     },
     {
