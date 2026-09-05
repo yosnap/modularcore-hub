@@ -5,7 +5,14 @@ import type { ProjectConfig } from '../config.js';
 import type { DetectedFramework } from '../framework-detect.js';
 import type { PromptAdapter } from '../prompts.js';
 
-const FRAMEWORK_OPTIONS: DetectedFramework[] = ['react', 'svelte', 'vue', 'angular', 'blade'];
+const FRAMEWORK_OPTIONS: DetectedFramework[] = [
+  'react',
+  'svelte',
+  'vue',
+  'angular',
+  'blade',
+  'vanilla',
+];
 const DEFAULT_REGISTRY_URL = 'http://localhost:5173/registry';
 const DEFAULT_PATHS: Record<DetectedFramework, Record<string, string>> = {
   blade: { components: 'resources/views/components', lib: 'resources/js/modularcore' },
@@ -13,6 +20,9 @@ const DEFAULT_PATHS: Record<DetectedFramework, Record<string, string>> = {
   svelte: { components: 'src/components', lib: 'src/lib/modularcore' },
   vue: { components: 'src/components', lib: 'src/lib/modularcore' },
   angular: { components: 'src/components', lib: 'src/lib/modularcore' },
+  // Astro y compañía: los componentes viven en src/components y el código sin framework
+  // acompaña al resto de utilidades del proyecto.
+  vanilla: { components: 'src/components', lib: 'src/lib/modularcore' },
 };
 
 export interface InitOptions {

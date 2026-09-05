@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-export type DetectedFramework = 'react' | 'svelte' | 'vue' | 'angular' | 'blade';
+export type DetectedFramework = 'react' | 'svelte' | 'vue' | 'angular' | 'blade' | 'vanilla';
 export type PackageManager = 'pnpm' | 'yarn' | 'bun' | 'npm';
 
 export interface PackageJsonShape {
@@ -15,7 +15,12 @@ interface ComposerJsonShape {
   require?: Record<string, string>;
 }
 
-const FRAMEWORK_MARKERS: Record<DetectedFramework, string> = {
+/**
+ * `vanilla` no aparece aquí a propósito: no es una dependencia que se pueda detectar, sino la
+ * ausencia de framework. Un proyecto Astro declara `astro`, no un runtime de interfaz, así que
+ * se elige a mano en `init` cuando la detección no encuentra ninguno de los de abajo.
+ */
+const FRAMEWORK_MARKERS: Record<Exclude<DetectedFramework, 'vanilla'>, string> = {
   react: 'react',
   svelte: 'svelte',
   vue: 'vue',
@@ -54,7 +59,8 @@ export interface FrameworkDetectionResult {
 export async function detectFrameworks(cwd: string): Promise<FrameworkDetectionResult> {
   const [pkg, composer] = await Promise.all([readPackageJson(cwd), readComposerJson(cwd)]);
   const deps = pkg ? allDeclaredDeps(pkg) : {};
-  const frameworks = (Object.keys(FRAMEWORK_MARKERS) as DetectedFramework[]).filter((framework) =>
+  const detectable = Object.keys(FRAMEWORK_MARKERS) as (keyof typeof FRAMEWORK_MARKERS)[];
+  const frameworks: DetectedFramework[] = detectable.filter((framework) =>
     framework === 'blade'
       ? FRAMEWORK_MARKERS.blade in (composer?.require ?? {})
       : FRAMEWORK_MARKERS[framework] in deps,
