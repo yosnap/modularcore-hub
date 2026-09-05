@@ -1,6 +1,6 @@
 <script lang="ts">
   import '../../vanilla-styles.css';
-  import { formatBytes } from '../../../core/format.js';
+  import { formatBytes, formatVariantBadge, sortVariants } from '../../../core/format.js';
   import type { MediaPickerRune } from '../../../adapters/svelte/create-media-picker.svelte.js';
   import type { LibraryItem } from '../../../core/media-picker.js';
 
@@ -51,6 +51,15 @@
       <div class="mc-grid__caption">
         <span class="mc-grid__filename" title={item.key}>{basename(item.key)}</span>
         <span class="mc-grid__size">{formatBytes(item.size)}</span>
+        {#if item.variants?.length}
+          <span class="mc-grid__variants">
+            {#each sortVariants(item.variants) as variant (variant.key)}
+              <span class="mc-grid__variant" title={variant.label}
+                >{formatVariantBadge(variant)}</span
+              >
+            {/each}
+          </span>
+        {/if}
       </div>
     </button>
   {/each}

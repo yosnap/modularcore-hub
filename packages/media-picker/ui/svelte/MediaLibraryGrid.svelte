@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { formatBytes } from '../../core/format.js';
+  import { formatBytes, formatVariantBadge, sortVariants } from '../../core/format.js';
 
   import type { MediaPickerRune } from '../../adapters/svelte/create-media-picker.svelte.js';
   import type { LibraryItem } from '../../core/media-picker.js';
@@ -59,6 +59,15 @@
           {basename(item.key)}
         </span>
         <span>{formatBytes(item.size)}</span>
+        {#if item.variants?.length}
+          <span style="display:flex;gap:3px;flex-wrap:wrap;margin-top:2px">
+            {#each sortVariants(item.variants) as variant (variant.key)}
+              <span title={variant.label} style="font-size:10px;padding:0 3px;border:1px solid #ccc"
+                >{formatVariantBadge(variant)}</span
+              >
+            {/each}
+          </span>
+        {/if}
       </div>
     </button>
   {/each}

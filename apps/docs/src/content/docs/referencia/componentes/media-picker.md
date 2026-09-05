@@ -39,6 +39,40 @@ implementas.
 - `core/providers/azure-blob.ts` — subida desde el navegador a través de un target SAS de corta
   duración y con alcance de blob, emitido por tu propio backend.
 
+<<<<<<< HEAD
+## Tamaños derivados (variantes)
+
+Una biblioteca de medios rara vez quiere servir el original de 4000 px en una cuadrícula de
+miniaturas. `generateVariants` produce los tamaños a partir del blob ya cargado, reutilizando
+`compressImage`, y **nunca escala hacia arriba**: una medida mayor que el original se omite en vez
+de generar una copia borrosa y más pesada que la fuente.
+
+```ts
+const { original, variants, failed } = await picker.uploadWithVariants(provider, [
+  { label: 'large', maxDimension: 1920 },
+  { label: 'medium', maxDimension: 1200 },
+  { label: 'thumb', maxDimension: 400 },
+]);
+```
+
+El original se sube primero, porque cada derivada necesita su clave para enlazarse. Un fallo en una
+derivada no tumba la operación —el original ya está guardado y perderlo por una miniatura sería un
+mal negocio—: los tamaños que fallaron llegan en `failed` para que la interfaz avise o reintente.
+
+Como con el resto del componente, **el núcleo no persiste nada**. Cada derivada se sube con
+`variantOf` (la clave del original) y `variantLabel`, y es tu proveedor quien decide cómo
+relacionarlas: una columna en tu base de datos, un prefijo en la clave, metadatos del objeto… Al
+listar, esas derivadas vuelven en `ListedObject.variants`, nunca como entradas propias, para que la
+biblioteca no muestre cinco copias de la misma imagen. `ListOptions.variant` viaja igual que
+`query` o `sort`: se reenvía tal cual a tu hook `list` para filtrar por un tamaño concreto, o por
+`'none'` para quedarte con los originales sin derivadas.
+
+Un proveedor que ignore estos campos sigue siendo una implementación válida; simplemente no
+ofrecerá variantes.
+
+Las cuatro presentaciones de `MediaLibraryGrid` en Svelte muestran un distintivo por cada tamaño
+disponible, con el ancho en píxeles cuando el proveedor lo informa.
+=======
 ## Uso sin framework (Astro, Blade, HTMX…)
 
 Los demás adaptadores traducen el estado del núcleo al sistema reactivo de su framework y usan su
@@ -65,6 +99,7 @@ Astro es el caso más directo: su interactividad son `<script>` con TypeScript p
 reactivo propio. El snippet `snippets/astro/media-picker-island.ts` monta el picker sobre elementos
 marcados con `data-media-picker` y se limpia en `astro:before-swap`, el evento que dispara View
 Transitions antes de sustituir el documento. El mismo patrón sirve tal cual en Blade, HTMX o Rails.
+>>>>>>> origin/develop
 
 ## Proveedores de almacenamiento soportados
 
