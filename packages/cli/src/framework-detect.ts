@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-export type DetectedFramework = 'react' | 'svelte' | 'vue' | 'angular' | 'blade';
+export type DetectedFramework = 'react' | 'svelte' | 'vue' | 'angular' | 'blade' | 'vanilla';
 export type PackageManager = 'pnpm' | 'yarn' | 'bun' | 'npm';
 
 export interface PackageJsonShape {
@@ -15,13 +15,25 @@ interface ComposerJsonShape {
   require?: Record<string, string>;
 }
 
-const FRAMEWORK_MARKERS: Record<DetectedFramework, string> = {
+/**
+ * `vanilla` no aparece aquí: no es un runtime que un proyecto declare como dependencia, sino la
+ * ausencia de uno. Se deduce en `detectFrameworks` a partir de VANILLA_MARKERS.
+ */
+const FRAMEWORK_MARKERS: Record<Exclude<DetectedFramework, 'vanilla'>, string> = {
   react: 'react',
   svelte: 'svelte',
   vue: 'vue',
   angular: '@angular/core',
   blade: 'laravel/framework',
 };
+
+/**
+ * Generadores cuya interactividad es TypeScript plano en un `<script>`, sin runtime reactivo
+ * propio: consumen el binding `vanilla`. Un Astro con islas de React declara además `react`, así
+ * que se detectan ambos y `init` pregunta — la elección entre la isla y el script plano es del
+ * proyecto, no nuestra.
+ */
+const VANILLA_MARKERS = ['astro'];
 
 export async function readPackageJson(cwd: string): Promise<PackageJsonShape | undefined> {
   try {
@@ -54,11 +66,21 @@ export interface FrameworkDetectionResult {
 export async function detectFrameworks(cwd: string): Promise<FrameworkDetectionResult> {
   const [pkg, composer] = await Promise.all([readPackageJson(cwd), readComposerJson(cwd)]);
   const deps = pkg ? allDeclaredDeps(pkg) : {};
-  const frameworks = (Object.keys(FRAMEWORK_MARKERS) as DetectedFramework[]).filter((framework) =>
+  const frameworks = (
+    Object.keys(FRAMEWORK_MARKERS) as Exclude<DetectedFramework, 'vanilla'>[]
+  ).filter((framework) =>
     framework === 'blade'
       ? FRAMEWORK_MARKERS.blade in (composer?.require ?? {})
       : FRAMEWORK_MARKERS[framework] in deps,
   );
+
+  // Sólo con señal positiva. La ausencia de todo marcador no es un proyecto sin framework: es un
+  // proyecto del que no sabemos nada —quizá aún no ha instalado el suyo— y ahí AD2 manda
+  // preguntar, ahora con `vanilla` entre las opciones de `init`.
+  if (VANILLA_MARKERS.some((marker) => marker in deps)) {
+    return { frameworks: [...frameworks, 'vanilla'], packageJson: pkg };
+  }
+
   return { frameworks, packageJson: pkg };
 }
 

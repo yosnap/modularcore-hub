@@ -1,10 +1,10 @@
 {
   "name": "ai-chat",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "title": "AI Chat",
   "type": "headless-core",
   "category": "ai",
-  "frameworks": ["react", "svelte", "vue", "angular", "web", "blade"],
+  "frameworks": ["react", "svelte", "vue", "angular", "vanilla", "blade"],
   "visibility": "public",
   "peerDependencies": {
     "react": ">=18",
