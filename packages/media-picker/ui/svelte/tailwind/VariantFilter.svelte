@@ -1,7 +1,9 @@
-<script lang="ts">
+<script module lang="ts">
   /** Valor con el que `ListOptions.variant` pide los originales que no tienen ninguna derivada. */
-  const NO_VARIANTS = 'none';
+  export const NO_VARIANTS = 'none';
+</script>
 
+<script lang="ts">
   let {
     options,
     selected,
@@ -26,6 +28,11 @@
   Es selección única, no casillas como MimeTypeFilter: filtrar por dos tamaños a la vez no
   significa nada —cada objeto se muestra una sola vez, con sus derivadas dentro— y `'none'` es
   excluyente con cualquier etiqueta por definición.
+
+  A diferencia de la versión de React, el `value` es de una sola dirección: si quien lo usa ignora
+  el `onChange` —porque el listado falló, por ejemplo— el desplegable se queda mostrando la
+  elección rechazada en lugar de volver a `selected`. Es el mismo comportamiento que MimeTypeFilter
+  y el resto de la UI de Svelte de este paquete.
 -->
 <label class="inline-flex items-center gap-2 text-xs text-zinc-600">
   Size

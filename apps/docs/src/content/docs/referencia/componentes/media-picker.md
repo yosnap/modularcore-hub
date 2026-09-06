@@ -86,7 +86,10 @@ porque cada objeto aparece una sola vez con sus derivadas dentro. Devuelve `unde
   selected={size}
   onChange={(variant) => {
     size = variant;
-    picker.listLibrary(provider, { ...filters, variant });
+    // La clave se añade sólo si hay tamaño: `{ ...filters, variant: undefined }` la dejaría
+    // presente, y un hook `list` que haga `new URLSearchParams({ ...options })` enviaría
+    // `variant=undefined` al backend.
+    picker.listLibrary(provider, { ...filters, ...(variant ? { variant } : {}) });
   }}
 />
 ```
@@ -108,6 +111,11 @@ Ambas recurren al original cuando ese tamaño no existe: el proveedor decide qu�
 así que pedir una ausente es normal y debe dar una imagen, no `undefined`. Se resuelve fuera del
 núcleo a propósito — la selección no cambia según el tamaño que quieras mostrar, y un mismo objeto
 puede necesitar tamaños distintos en dos sitios de la misma página.
+
+`selectionAtVariant` devuelve cada objeto **medido como el tamaño pedido**: junto a la URL viajan
+el ancho, el alto y el peso de esa derivada, para que `<img src={item.url} width={item.width}>` no
+maquete la miniatura en la caja del original. `variants` se conserva, así que puedes saltar a otro
+tamaño sin volver a listar.
 
 ## Uso sin framework (Astro, Blade, HTMX…)
 
@@ -174,9 +182,9 @@ autenticar.
 
 ## Variantes de estilo de UI
 
-Cada uno de los 6 componentes de UI (`MediaLibraryGrid`, `FolderSelect`, `MimeTypeFilter`,
-`ImageEditor`, `BulkActionsBar`, `RemoteUrlLoader`) se distribuye en 4 presentaciones, todas con
-las mismas props/comportamiento — solo cambia el marcado/CSS:
+Cada uno de los 7 componentes de UI (`MediaLibraryGrid`, `FolderSelect`, `MimeTypeFilter`,
+`VariantFilter`, `ImageEditor`, `BulkActionsBar`, `RemoteUrlLoader`) se distribuye en 4
+presentaciones, todas con las mismas props — solo cambia el marcado/CSS:
 
 - `ui/react/*.tsx`, `ui/svelte/*.svelte` — UI de referencia headless, sin estilos (la opción por
   defecto original).

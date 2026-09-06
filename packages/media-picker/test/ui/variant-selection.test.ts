@@ -22,8 +22,12 @@ const FILTERS = [
   'ui/svelte/vanilla/VariantFilter.svelte',
 ];
 
-function variant(label: string, url: string): ObjectVariant {
-  return { label, key: `k-${label}`, url, size: 100 };
+function variant(
+  label: string,
+  url: string,
+  overrides: Partial<ObjectVariant> = {},
+): ObjectVariant {
+  return { label, key: `k-${label}`, url, size: 100, ...overrides };
 }
 
 function item(overrides: Partial<LibraryItem> = {}): LibraryItem {
@@ -76,6 +80,54 @@ describe('selectionAtVariant', () => {
     ]);
     expect(resolved[0]?.key).toBe('2026/09/portada.png');
     expect(resolved[0]?.variants).toHaveLength(1);
+  });
+
+  it('trae también las medidas del tamaño pedido, no las del original', () => {
+    // Llevarse sólo la URL maquetaría la miniatura en la caja de 1920 px del original.
+    const selection = [
+      item({
+        width: 1920,
+        height: 1080,
+        size: 400_000,
+        variants: [
+          variant('thumb', 'https://cdn.example.com/thumb.png', {
+            width: 400,
+            height: 225,
+            size: 9_000,
+          }),
+        ],
+      }),
+    ];
+
+    const [resolved] = selectionAtVariant(selection, 'thumb');
+
+    expect([resolved?.width, resolved?.height, resolved?.size]).toEqual([400, 225, 9_000]);
+  });
+
+  it('conserva las medidas del original cuando ese tamaño no existe', () => {
+    const selection = [item({ width: 1920, height: 1080, size: 400_000 })];
+
+    const [resolved] = selectionAtVariant(selection, 'thumb');
+
+    expect([resolved?.width, resolved?.height, resolved?.size]).toEqual([1920, 1080, 400_000]);
+  });
+
+  it('descarta las medidas del original si el proveedor no informa de las de la derivada', () => {
+    // No saber el ancho es correcto; decir 1920 sobre una miniatura de 400 no lo es.
+    const selection = [
+      item({
+        width: 1920,
+        height: 1080,
+        variants: [variant('thumb', 'https://cdn.example.com/thumb.png', { size: 9_000 })],
+      }),
+    ];
+
+    const [resolved] = selectionAtVariant(selection, 'thumb');
+
+    expect(resolved?.url).toBe('https://cdn.example.com/thumb.png');
+    expect(resolved?.size).toBe(9_000);
+    expect(resolved?.width).toBeUndefined();
+    expect(resolved?.height).toBeUndefined();
   });
 
   it('no muta la selección recibida', () => {

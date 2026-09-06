@@ -57,9 +57,9 @@ serves them via `URL.createObjectURL` — never wire a real provider to unauthen
 
 ## UI style variants
 
-Each of the 6 UI components (`MediaLibraryGrid`, `FolderSelect`, `MimeTypeFilter`, `ImageEditor`,
-`BulkActionsBar`, `RemoteUrlLoader`) ships in 4 presentations, all with identical props/behavior —
-only markup/CSS differs:
+Each of the 7 UI components (`MediaLibraryGrid`, `FolderSelect`, `MimeTypeFilter`, `VariantFilter`,
+`ImageEditor`, `BulkActionsBar`, `RemoteUrlLoader`) ships in 4 presentations, all with identical
+props — only markup/CSS differs:
 
 - `ui/react/*.tsx`, `ui/svelte/*.svelte` — headless, unstyled reference UI (the original default).
 - `ui/{react,svelte}/tailwind/` — Tailwind CSS utility classes only.

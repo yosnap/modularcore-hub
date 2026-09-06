@@ -75,10 +75,34 @@ export function variantUrl(item: LibraryItem, label: string): string {
 }
 
 /**
- * Aplica `variantUrl` a una selección entera, devolviendo cada objeto con la URL del tamaño
- * pedido. El resto del objeto se conserva, `variants` incluido, para no perder información por el
- * camino.
+ * Aplica `variantUrl` a una selección entera, devolviendo cada objeto **medido como el tamaño
+ * pedido**: junto a la URL viajan el ancho, el alto y el peso de esa derivada.
+ *
+ * Llevarse sólo la URL sería peor que no hacer nada: quien pinte
+ * `<img src={item.url} width={item.width}>` maquetaría la miniatura en la caja de 1920 px del
+ * original, y cualquier recuento de bytes leería el peso del original. Cuando el tamaño no existe
+ * no se toca nada, porque entonces el objeto sigue siendo el original y sus medidas son las suyas.
+ *
+ * `variants` se conserva en ambos casos, para poder saltar a otro tamaño sin volver a listar.
  */
 export function selectionAtVariant(items: LibraryItem[], label: string): LibraryItem[] {
-  return items.map((item) => ({ ...item, url: variantUrl(item, label) }));
+  return items.map((item) => {
+    const match = item.variants?.find((variant) => variant.label === label);
+    if (!match) return { ...item };
+
+    // Las medidas del original se descartan junto con su URL. Si el proveedor no informa de las
+    // de la derivada, el objeto sale sin ellas: no saber el ancho es correcto, y decir 1920
+    // sobre una miniatura de 400 no lo es.
+    const withoutOriginalSize: LibraryItem = { ...item };
+    delete withoutOriginalSize.width;
+    delete withoutOriginalSize.height;
+
+    return {
+      ...withoutOriginalSize,
+      url: match.url,
+      size: match.size,
+      ...(match.width === undefined ? {} : { width: match.width }),
+      ...(match.height === undefined ? {} : { height: match.height }),
+    };
+  });
 }
