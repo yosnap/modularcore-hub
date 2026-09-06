@@ -28,6 +28,26 @@ describe('snippet de montaje para Astro', () => {
     expect(source).toContain('store.destroy()');
   });
 
+  it('retira el oyente del input al desmontar, no solo el suscriptor', async () => {
+    // Un nodo con `transition:persist` sobrevive al cambio de documento con su oyente puesto.
+    // Sin retirarlo, el siguiente montaje añade un segundo y elegir un fichero lo sube dos veces.
+    const source = await readFile(snippetPath, 'utf8');
+
+    expect(source).toContain('new AbortController()');
+    expect(source).toContain('{ signal: listeners.signal }');
+    expect(source).toContain('listeners.abort()');
+  });
+
+  it('monta también donde no existe astro:page-load', async () => {
+    // La cabecera promete que el mismo fichero sirve en Blade, HTMX o Rails. Ese evento sólo lo
+    // emite Astro, así que sin un respaldo el picker no montaría nunca fuera de él.
+    const source = await readFile(snippetPath, 'utf8');
+
+    expect(source).toContain("document.readyState === 'loading'");
+    expect(source).toContain("document.addEventListener('DOMContentLoaded', mountMediaPickers");
+    expect(source).toMatch(/else \{\s*mountMediaPickers\(\);/);
+  });
+
   it('no vuelve a montar un nodo ya montado', async () => {
     // Montar dos veces engancharía un segundo listener de `change` y cada selección subiría
     // el archivo por duplicado.
