@@ -10,6 +10,16 @@ export type ComponentType = 'frontend-component' | 'headless-core' | 'snippet' |
 
 export type SupportedFramework = 'react' | 'svelte' | (string & {});
 
+export interface PreviewImage {
+  /**
+   * En el descriptor, la ruta dentro del paquete (`preview/media-picker.png`). En lo que sirve el
+   * registry, la URL ya servible: `buildRegistry` copia el fichero y reescribe este campo.
+   */
+  image: string;
+  /** Texto alternativo. Obligatorio: la captura es contenido, no decoración. */
+  alt: string;
+}
+
 /** `internal` components are built and locally resolvable but excluded from the public `index.json`. */
 export type Visibility = 'public' | 'internal';
 
@@ -44,6 +54,15 @@ export interface RegistryDescriptor {
    * adaptar. Ver `ui-coverage.ts`.
    */
   ui?: Record<string, UiCoverage>;
+  /**
+   * Una captura del componente en funcionamiento, para el catálogo y para quien revise la
+   * aportación: nadie puede ejecutar un componente de un framework que no tiene instalado, pero
+   * sí ver qué hace.
+   *
+   * No va en `files[]` a propósito: aquello es lo que la CLI copia al proyecto de quien instala,
+   * y una captura no pinta nada en su `src/`.
+   */
+  preview?: PreviewImage;
   visibility: Visibility;
   /** Semver ranges keyed by peer framework, e.g. `{ "react": ">=18" }`. Gates `add` (Phase 3) before writing runes/hooks. */
   peerDependencies: Record<string, string>;
@@ -73,5 +92,7 @@ export interface RegistryIndexEntry {
   frameworks: SupportedFramework[];
   /** Cobertura de la UI de referencia, para que el catálogo distinga «instalable» de «con UI». */
   ui?: Record<string, UiCoverage>;
+  /** Captura del componente, con la URL ya servible que produce `buildRegistry`. */
+  preview?: PreviewImage;
   description?: string;
 }

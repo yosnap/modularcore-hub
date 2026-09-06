@@ -49,7 +49,7 @@ export function MediaLibraryGrid({ picker, onSelectSingle }: MediaLibraryGridPro
             {item.mimeType?.startsWith('image/') ? (
               <img src={item.url} alt={item.key} className="mc-grid__thumb" />
             ) : (
-              <span>{item.key}</span>
+              <span>{item.mimeType ?? 'file'}</span>
             )}
             <div className="mc-grid__caption">
               <span className="mc-grid__filename" title={item.key}>

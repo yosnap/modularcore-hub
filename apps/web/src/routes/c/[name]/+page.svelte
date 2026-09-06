@@ -10,6 +10,9 @@
 </script>
 
 <h1>{descriptor.title}</h1>
+{#if descriptor.preview}
+  <img class="shot" src={descriptor.preview.image} alt={descriptor.preview.alt} />
+{/if}
 <p class="meta">
   <span class="badge">{descriptor.category}</span>
   <span>v{descriptor.version}</span>
@@ -96,6 +99,16 @@ tar -xzf {descriptor.name}.tar.gz</code
 {/if}
 
 <style>
+  .shot {
+    display: block;
+    width: 100%;
+    max-width: 720px;
+    height: auto;
+    border: 1px solid hsl(var(--border));
+    border-radius: 8px;
+    margin: 1rem 0;
+  }
+
   .meta {
     display: flex;
     gap: 0.75rem;

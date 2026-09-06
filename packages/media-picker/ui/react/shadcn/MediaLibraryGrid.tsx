@@ -60,7 +60,9 @@ export function MediaLibraryGrid({ picker, onSelectSingle }: MediaLibraryGridPro
                 className="aspect-square w-full rounded-sm object-cover"
               />
             ) : (
-              <span className="block truncate text-xs text-muted-foreground">{item.key}</span>
+              <span className="block truncate text-xs text-muted-foreground">
+                {item.mimeType ?? 'file'}
+              </span>
             )}
             <div className="mt-1 leading-tight">
               <span className="block truncate text-xs text-foreground" title={item.key}>

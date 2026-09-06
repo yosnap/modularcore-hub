@@ -15,6 +15,7 @@ export {
 
 export type {
   ComponentType,
+  PreviewImage,
   EnvVariableDescriptor,
   FileEncoding,
   RegistryDescriptor,

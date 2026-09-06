@@ -23,16 +23,28 @@ export const prerender = false;
 
 // A single non-slash path segment: no traversal is possible even before the explicit pattern
 // check below, since `params.file` can never contain `/`.
-const VALID_FILENAME = /^[a-z0-9-]+\.(?:json|tar\.gz)$/i;
+const VALID_FILENAME = /^[a-z0-9-]+\.(?:json|tar\.gz|png|jpg|jpeg|webp)$/i;
 
 function registryDataDir(): string {
   return resolve(process.cwd(), 'registry-data');
 }
 
+// Las capturas de los componentes (`{name}-preview.png`) viven junto al resto de artefactos.
+// SVG no está admitido a propósito: servido con su propio Content-Type ejecuta el script que
+// lleve dentro, y estas imágenes las aporta quien contribuye.
+const IMAGE_TYPES: Record<string, string> = {
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+};
+
 function contentTypeFor(file: string): string | null {
   if (file.endsWith('.tar.gz')) return 'application/gzip';
   if (file.endsWith('.json')) return 'application/json';
-  return null;
+
+  const extension = file.slice(file.lastIndexOf('.')).toLowerCase();
+  return IMAGE_TYPES[extension] ?? null;
 }
 
 export const GET: RequestHandler = async ({ params }) => {

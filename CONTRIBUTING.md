@@ -150,6 +150,22 @@ La comprobación de `packages/registry` compara lo declarado con lo que hay y **
 sentidos**: si aparece una brecha que nadie declaró, y si sigue declarada una que ya se cubrió. La
 deuda no se acumula en silencio ni sobrevive a su arreglo.
 
+### Una captura del componente
+
+Si tu componente tiene interfaz, incluye **una** captura. No hace falta una por framework ni por
+presentación: basta con que se identifique qué hace.
+
+```json
+"preview": { "image": "preview/rating.png", "alt": "Cuadrícula con las estrellas de valoración" }
+```
+
+El fichero vive en tu paquete y el catálogo lo publica; **no va en `files[]`**, así que no acaba en
+el `src/` de quien instale el componente. Admitimos `.png`, `.jpg` y `.webp` — SVG no, porque
+servido con su propio tipo ejecutaría el script que llevara dentro.
+
+Sirve para dos cosas: el catálogo deja de ser una lista de títulos, y quien revise tu aportación
+puede ver qué hace aunque no tenga instalado tu framework para ejecutarla.
+
 ### Qué mirar al adaptar a otro framework
 
 - Las cuatro presentaciones comparten props y comportamiento; sólo cambian marcado y CSS.

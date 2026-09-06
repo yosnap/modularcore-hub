@@ -52,7 +52,7 @@ export function MediaLibraryGrid({ picker, onSelectSingle }: MediaLibraryGridPro
             {item.mimeType?.startsWith('image/') ? (
               <img src={item.url} alt={item.key} style={{ width: '100%', height: 'auto' }} />
             ) : (
-              <span>{item.key}</span>
+              <span>{item.mimeType ?? 'file'}</span>
             )}
             <div style={{ marginTop: 4, fontSize: 11, lineHeight: 1.3, overflow: 'hidden' }}>
               <span
