@@ -68,6 +68,9 @@
   {#each filteredComponents as component (component.name)}
     {@const playground = playgroundFor(component.name)}
     <li class="card">
+      {#if component.preview}
+        <img class="shot" src={component.preview.image} alt={component.preview.alt} loading="lazy" />
+      {/if}
       <div class="card-body">
         <div class="meta">
           <span class="badge" style="--accent: {accentFor(component.category)}">
@@ -284,6 +287,15 @@
   .card:hover h2 a,
   .card:hover h3 a {
     color: hsl(var(--primary));
+  }
+  /* Una captura dice del componente más que su descripción; sin ella la tarjeta no se rompe. */
+  .shot {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-bottom: 1px solid hsl(var(--border));
+    background: hsl(var(--muted));
   }
   .frameworks {
     display: flex;

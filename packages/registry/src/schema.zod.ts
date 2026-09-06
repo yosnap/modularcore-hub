@@ -50,6 +50,12 @@ export const registryDescriptorSchema = z.object({
   type: componentTypeSchema,
   category: z.string().min(1),
   frameworks: z.array(z.string().min(1)).min(1),
+  preview: z
+    .object({
+      image: z.string().min(1),
+      alt: z.string().min(1),
+    })
+    .optional(),
   ui: z
     .record(
       z.string().min(1),
@@ -85,6 +91,12 @@ export const registryIndexEntrySchema = z.object({
   category: z.string(),
   version: z.string(),
   frameworks: z.array(z.string()),
+  preview: z
+    .object({
+      image: z.string().min(1),
+      alt: z.string().min(1),
+    })
+    .optional(),
   ui: z
     .record(
       z.string().min(1),

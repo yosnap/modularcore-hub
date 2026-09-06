@@ -15,6 +15,7 @@
 - Frameworks que trae este PR:
 - Frameworks que quedan por adaptar:
 - ¿Hay algún equivalente que no exista en otro framework (una dependencia de UI, una primitiva)?
+- Si el componente tiene interfaz: ¿lleva una captura en `preview`? Con una basta.
 
 ## Checklist
 
