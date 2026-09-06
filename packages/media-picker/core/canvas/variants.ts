@@ -37,8 +37,10 @@ export interface GenerateVariantsOptions {
 
 /**
  * Genera los tamaños derivados de una imagen, en orden descendente y **sin escalar nunca hacia
- * arriba**: un tamaño mayor que el original se omite en lugar de producir una copia borrosa y
- * más pesada que la fuente.
+ * arriba**: una medida mayor o igual que el lado más largo del original se omite, en lugar de
+ * producir una copia borrosa —o una recodificación del mismo tamaño— más pesada que la fuente.
+ * Quien resuelva `variants.find(v => v.label === 'large')` debe contemplar que no exista y usar
+ * el original.
  *
  * Es una función pura sobre `compressImage`: no sube nada ni conoce el almacenamiento. Quien la
  * llama decide qué hacer con los blobs — normalmente subirlos con `variantOf`/`variantLabel`
@@ -61,13 +63,18 @@ export async function generateVariants(
   for (const size of applicable) {
     options.signal?.throwIfAborted();
 
-    const mimeType = size.mimeType ?? options.mimeType ?? source.type ?? 'image/jpeg';
+    // `Blob.type` es cadena vacía —no `undefined`— cuando el blob no lleva tipo, así que `??`
+    // nunca llegaría al valor de reserva y `compressImage` recibiría `''`, que su propio
+    // parámetro por defecto tampoco corrige y acaba emitiendo PNG: una «miniatura» sin pérdida
+    // y más pesada que el JPEG original que se quería reducir.
+    const mimeType = size.mimeType || options.mimeType || source.type || 'image/jpeg';
+    const quality = size.quality ?? options.quality;
     const blob = await compressImage(
       source,
       {
         maxDimension: size.maxDimension,
         mimeType,
-        ...((size.quality ?? options.quality) ? { quality: size.quality ?? options.quality } : {}),
+        ...(quality !== undefined ? { quality } : {}),
       },
       env,
     );
