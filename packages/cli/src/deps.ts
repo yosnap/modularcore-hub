@@ -3,6 +3,8 @@ import semver from 'semver';
 import { CompatibilityError, DependencyCycleError } from './errors.js';
 
 import type { RegistryClient } from '@modularcore/registry-client';
+import { dependenciesForFiles, selectFilesForFramework } from '@modularcore/registry';
+
 import type { RegistryEntry } from '@modularcore/registry';
 
 const frameworkPeerByFramework: Record<string, string> = {
@@ -124,9 +126,25 @@ export function parseNpmDependencySpec(raw: string): NpmDependencySpec {
  * package manager (see commands/add.ts). This function also fails loudly on a same-name
  * conflicting version range across entries instead of silently picking one.
  */
-export function collectNpmDependencies(entries: RegistryEntry[]): NpmDependencySpec[] {
+/**
+ * Las dependencias que hacen falta para lo que se va a escribir de verdad.
+ *
+ * Con `framework`, se recorta igual que los ficheros: un proyecto React no debe llevarse
+ * `bits-ui`, que sólo usan las presentaciones de Svelte, y que además exige `svelte` como peer.
+ * Sin `framework` se toman todas, para quien llame a esto fuera del flujo de instalación.
+ */
+export function collectNpmDependencies(
+  entries: RegistryEntry[],
+  framework?: string,
+): NpmDependencySpec[] {
   const byName = new Map<string, NpmDependencySpec>();
+  const needed = new Set<string>();
+
   for (const entry of entries) {
+    // Todas se validan, incluso las que este proyecto no va a instalar: son el único punto donde
+    // se comprueba que la declaración tenga la forma `nombre@rango` y que dos componentes no
+    // pidan versiones distintas del mismo paquete. Filtrar antes dejaría pasar en silencio una
+    // declaración rota de otro framework, que sólo estallaría para quien sí la usa.
     for (const raw of entry.dependencies) {
       const spec = parseNpmDependencySpec(raw);
       const existing = byName.get(spec.name);
@@ -138,6 +156,17 @@ export function collectNpmDependencies(entries: RegistryEntry[]): NpmDependencyS
       }
       byName.set(spec.name, spec);
     }
+
+    const forThisProject =
+      framework === undefined
+        ? entry.dependencies
+        : dependenciesForFiles(
+            entry.dependencies,
+            selectFilesForFramework(entry.files, framework),
+            entry.files,
+          );
+    for (const raw of forThisProject) needed.add(parseNpmDependencySpec(raw).name);
   }
-  return [...byName.values()];
+
+  return [...byName.values()].filter((spec) => needed.has(spec.name));
 }

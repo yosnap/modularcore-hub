@@ -20,7 +20,7 @@
     "title": "Multi Adapter",
     "category": "test-fixture",
     "version": "1.0.0",
-    "frameworks": ["react", "vue", "vanilla", "blade"],
+    "frameworks": ["react", "vue", "vanilla", "blade", "svelte"],
     "description": "Fixture with one adapter per framework, used to check that add only writes the project's own."
   }
 ]
