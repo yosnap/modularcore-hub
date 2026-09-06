@@ -19,3 +19,13 @@ tenía las cuatro. Nada lo señalaba hasta que alguien instalaba.
 
 No exige paridad completa a quien aporta un componente: se aportan los frameworks que se dominan y
 el resto queda declarado como trabajo pendiente.
+
+De paso, dos correcciones en el recorte de ficheros por framework:
+
+- La herencia entre frameworks se limita a los adaptadores. `blade` se apoya en el binding
+  `vanilla` porque su plantilla lo monta, pero arrastraba también los snippets: un proyecto
+  Laravel recibía la isla de Astro, cuyo único punto de entrada escucha `astro:page-load` y no se
+  dispara jamás fuera de Astro.
+- `ui/vanilla/` deja de tratarse como framework. `vanilla` nombra dos ejes —una página sin
+  framework y la presentación de CSS plano— y bajo `ui/` manda el segundo: clasificarlo como
+  framework habría borrado esos ficheros de toda instalación de React o Svelte.

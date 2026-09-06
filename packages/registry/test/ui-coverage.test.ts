@@ -98,6 +98,18 @@ describe('findCoverageMismatches', () => {
     ).toEqual([]);
   });
 
+  it('caza los ficheros de un framework que no está declarado en ninguna parte', () => {
+    // El agujero que esta comprobación existe para tapar: nadie instalaría esos ficheros, porque
+    // ningún proyecto puede declarar un framework que el componente no soporta.
+    const conVue = [...files, { path: 'ui/vue/Grid.vue' }];
+
+    const problems = findCoverageMismatches(declared, conVue, ['react', 'svelte']);
+
+    expect(problems).toHaveLength(1);
+    expect(problems[0]?.framework).toBe('vue');
+    expect(problems[0]?.problem).toContain('nadie los instalaría');
+  });
+
   it('un componente sólo-headless en todos los frameworks no es una brecha', () => {
     // `ModernSelect` es de apoyo: vive en headless y ninguna presentación lo reviste.
     const conApoyo = [

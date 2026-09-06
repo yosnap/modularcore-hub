@@ -124,6 +124,18 @@ export function findCoverageMismatches(
     }
   }
 
+  // Un framework con ficheros de UI y sin entrada en `ui` no lo veía ninguna de las
+  // comprobaciones siguientes, que recorren lo declarado: la brecha se colaba justo por donde este
+  // módulo promete no dejar pasar ninguna. Y esos ficheros no se instalan en ningún sitio, porque
+  // ningún proyecto puede declarar un framework que el componente no soporta.
+  for (const framework of actual.keys()) {
+    if (declared[framework]) continue;
+    mismatches.push({
+      framework,
+      problem: `hay ficheros en ui/${framework}/ y el descriptor no lo declara ni en "frameworks" ni en "ui": nadie los instalaría`,
+    });
+  }
+
   for (const [framework, coverage] of Object.entries(declared)) {
     const byPresentation = actual.get(framework) ?? new Map<Presentation, Set<string>>();
 
