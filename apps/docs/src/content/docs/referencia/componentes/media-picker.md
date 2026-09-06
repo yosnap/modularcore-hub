@@ -43,8 +43,10 @@ implementas.
 
 Una biblioteca de medios rara vez quiere servir el original de 4000 px en una cuadrícula de
 miniaturas. `generateVariants` produce los tamaños a partir del blob ya cargado, reutilizando
-`compressImage`, y **nunca escala hacia arriba**: una medida mayor que el original se omite en vez
-de generar una copia borrosa y más pesada que la fuente.
+`compressImage`, y **nunca escala hacia arriba**: una medida mayor o igual que el lado más largo del
+original se omite, en vez de generar una copia borrosa —o una recodificación del mismo tamaño— más
+pesada que la fuente. Quien resuelva `variants.find(v => v.label === 'large')` debe contemplar que
+ese tamaño no exista y recurrir al original.
 
 ```ts
 const { original, variants, failed } = await picker.uploadWithVariants(provider, [
@@ -54,7 +56,10 @@ const { original, variants, failed } = await picker.uploadWithVariants(provider,
 ]);
 ```
 
-El original se sube primero, porque cada derivada necesita su clave para enlazarse. Un fallo en una
+El original se sube primero, porque cada derivada necesita su clave para enlazarse. Las derivadas
+no heredan `key`, `overwriteKey` ni `contentType`: los tres describen al original, y reenviar
+`overwriteKey` —que significa «escribe en esta clave exacta»— haría que cada tamaño pisara al
+original. Cada derivada anuncia su propio formato. Un fallo en una
 derivada no tumba la operación —el original ya está guardado y perderlo por una miniatura sería un
 mal negocio—: los tamaños que fallaron llegan en `failed` para que la interfaz avise o reintente.
 
