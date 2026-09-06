@@ -1,5 +1,67 @@
 # @modularcore/media-picker
 
+## 0.5.0
+
+### Minor Changes
+
+- 49069f2: Add Vue and Angular headless adapters, Azure Blob SAS uploads, and Laravel/Blade integration snippets.
+- 3dbcca3: Alinear los `MediaLibraryGrid` de React con el rediseño que sólo había alcanzado a Svelte.
+
+  Las cuatro presentaciones de React pintaban la miniatura y nada más. Ahora llevan el mismo pie que
+  las de Svelte —nombre de fichero truncado con la clave completa en el `title`, tamaño legible y un
+  distintivo por cada tamaño derivado—, usando `formatBytes`, `sortVariants` y `formatVariantBadge`
+  de `core/format.ts` para que las ocho rendericen exactamente lo mismo.
+
+  `basename` sube también a `core/format.ts`: estaba copiado en las cuatro presentaciones de Svelte y
+  ahora hay una sola definición.
+
+  Aparte, se repara la página de documentación de `media-picker`, publicada con un conflicto de merge
+  entero dentro. Nada lo detectaba: el markdown con marcadores sigue siendo válido, `*.md` está en
+  `.prettierignore` y ningún test leía ese fichero. La prueba nueva de `registry` recorre el árbol de
+  fuentes y falla ante cualquier marcador sin resolver.
+
+- e7971d7: Añadir tamaños derivados (variantes) a la biblioteca de medios.
+
+  - `core/canvas/variants.ts`: `generateVariants` produce los tamaños a partir del blob cargado
+    reutilizando `compressImage`, en orden descendente y sin escalar nunca hacia arriba — una medida
+    mayor que el original se omite en lugar de generar una copia borrosa y más pesada que la fuente.
+  - `MediaPicker.uploadWithVariants` sube el original y luego las derivadas, que necesitan su clave
+    para enlazarse. Un fallo en una derivada no tumba la operación: el original ya está guardado y
+    los tamaños fallidos se devuelven en `failed`.
+  - Contrato: `UploadOptions.variantOf`/`variantLabel` para subir una derivada,
+    `ListedObject.variants` para recibirlas junto al original —nunca como entradas propias— y
+    `ListOptions.variant` para filtrar. El núcleo no persiste nada: reenvía los campos al proveedor,
+    igual que hace con `scope`, `query` o `sort`, y un proveedor que los ignore sigue siendo válido.
+  - Las cuatro presentaciones de `MediaLibraryGrid` en Svelte pintan un distintivo por tamaño,
+    usando `sortVariants` y `formatVariantBadge` compartidos desde `core/format.ts` para que las
+    cuatro rendericen exactamente lo mismo.
+
+  Cierra el issue #28.
+
+- 02afa1b: Incluir en los descriptores los ficheros que ya existían en el paquete pero que la CLI nunca
+  copiaba, de modo que el código instalado no compilaba en el proyecto de destino.
+
+  - `media-picker`: faltaban `core/format.ts`, `core/canvas/zoom.ts`, `ui/react/ModernSelect.tsx`,
+    `ui/svelte/ModernSelect.svelte`, `ui/modern-select.css` y los cuatro `MediaLibraryModal.svelte`
+    (headless, tailwind, shadcn y vanilla). Trece imports quedaban sin resolver: `FolderSelect` e
+    `ImageEditor` de React apuntaban a `ModernSelect`, y los `MediaLibraryGrid`/`ImageEditor` de
+    Svelte a `core/format` y `core/canvas/zoom`. Como efecto secundario, el modal de biblioteca
+    pasa a estar realmente disponible para quien instale el componente.
+  - `modals`: faltaba `ui/safe/message.ts`, importado por `safe-render.ts` y `OverlayBody.svelte`.
+
+- 462c0c5: Añadir un adaptador sin framework (`adapters/vanilla`) y declarar `vanilla` entre los frameworks
+  soportados del componente.
+
+  Los adaptadores existentes traducen el estado del núcleo al sistema reactivo de su framework y se
+  apoyan en su ciclo de vida para darse de baja. En una página sin framework no hay ninguno de los
+  dos, así que `createMediaPickerStore` expone `subscribe` —que invoca al oyente de inmediato con el
+  estado actual— y `destroy`, dejando la limpieza en manos de quien crea el store.
+
+  Habilita Astro, cuya interactividad son `<script>` con TypeScript plano y que hasta ahora no tenía
+  forma de usar el componente sin cargar React o Svelte solo para eso, y sirve igual en Blade, HTMX o
+  Rails. Incluye `snippets/astro/media-picker-island.ts` como montaje de referencia, con limpieza en
+  `astro:before-swap` para las View Transitions.
+
 ## 0.4.0
 
 ### Minor Changes
