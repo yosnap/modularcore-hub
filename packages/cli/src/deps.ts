@@ -138,17 +138,14 @@ export function collectNpmDependencies(
   framework?: string,
 ): NpmDependencySpec[] {
   const byName = new Map<string, NpmDependencySpec>();
-  for (const entry of entries) {
-    const dependencies =
-      framework === undefined
-        ? entry.dependencies
-        : dependenciesForFiles(
-            entry.dependencies,
-            selectFilesForFramework(entry.files, framework),
-            entry.files,
-          );
+  const needed = new Set<string>();
 
-    for (const raw of dependencies) {
+  for (const entry of entries) {
+    // Todas se validan, incluso las que este proyecto no va a instalar: son el único punto donde
+    // se comprueba que la declaración tenga la forma `nombre@rango` y que dos componentes no
+    // pidan versiones distintas del mismo paquete. Filtrar antes dejaría pasar en silencio una
+    // declaración rota de otro framework, que sólo estallaría para quien sí la usa.
+    for (const raw of entry.dependencies) {
       const spec = parseNpmDependencySpec(raw);
       const existing = byName.get(spec.name);
       if (existing && existing.version !== spec.version) {
@@ -159,6 +156,17 @@ export function collectNpmDependencies(
       }
       byName.set(spec.name, spec);
     }
+
+    const forThisProject =
+      framework === undefined
+        ? entry.dependencies
+        : dependenciesForFiles(
+            entry.dependencies,
+            selectFilesForFramework(entry.files, framework),
+            entry.files,
+          );
+    for (const raw of forThisProject) needed.add(parseNpmDependencySpec(raw).name);
   }
-  return [...byName.values()];
+
+  return [...byName.values()].filter((spec) => needed.has(spec.name));
 }

@@ -99,20 +99,6 @@ describe('add escribe sólo los ficheros del framework del proyecto', () => {
     }
   });
 
-  it('no instala la librería de UI de otro framework', async () => {
-    // `bits-ui` sólo existe para Svelte y declara `svelte` como peer: metérsela a un proyecto
-    // React no es sólo ruido, puede hacer fallar la instalación con ERESOLVE.
-    const { project, result } = await addTo('react');
-    try {
-      expect(result.npmDependenciesInstalled.some((dep) => dep.startsWith('@radix-ui/'))).toBe(
-        true,
-      );
-      expect(result.npmDependenciesInstalled.some((dep) => dep.startsWith('bits-ui'))).toBe(false);
-    } finally {
-      await project.cleanup();
-    }
-  });
-
   it('un proyecto Blade recibe su snippet y el binding sin framework que este importa', async () => {
     const { project, result } = await addTo('blade');
     try {

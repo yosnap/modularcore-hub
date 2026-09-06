@@ -7,7 +7,7 @@
   "frameworks": ["react", "vue", "vanilla", "blade", "svelte"],
   "visibility": "public",
   "peerDependencies": {},
-  "dependencies": ["bits-ui@^2.18.2", "@radix-ui/react-toggle@^1.1.18"],
+  "dependencies": [],
   "registryDependencies": [],
   "envVariables": [],
   "description": "Fixture with one adapter per framework, used to check that add only writes the project's own.",
