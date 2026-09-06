@@ -100,6 +100,15 @@ describe('captura del componente', () => {
     ).rejects.toThrow(/not found|unreadable/i);
   });
 
+  it('el esquema rechaza una ruta que se sale del paquete, sin llegar a leer nada', async () => {
+    // El resto de rutas del descriptor ya se validaban así; la captura se quedó fuera al añadirla.
+    const packagesRoot = await componentWithPreview({ image: '../../../etc/hosts.png', alt: 'X' });
+
+    await expect(
+      buildRegistry({ packagesRoot, outputDir: join(packagesRoot, 'out') }),
+    ).rejects.toThrow();
+  });
+
   it('un componente sin captura sigue construyéndose', async () => {
     const packagesRoot = await componentWithPreview(undefined);
     const outputDir = join(packagesRoot, 'out');

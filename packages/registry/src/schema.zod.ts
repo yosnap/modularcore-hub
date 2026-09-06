@@ -52,7 +52,7 @@ export const registryDescriptorSchema = z.object({
   frameworks: z.array(z.string().min(1)).min(1),
   preview: z
     .object({
-      image: z.string().min(1),
+      image: safeRelativePathSchema,
       alt: z.string().min(1),
     })
     .optional(),
@@ -93,7 +93,7 @@ export const registryIndexEntrySchema = z.object({
   frameworks: z.array(z.string()),
   preview: z
     .object({
-      image: z.string().min(1),
+      image: safeRelativePathSchema,
       alt: z.string().min(1),
     })
     .optional(),
