@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { buildRegistry } from '../src/build-registry.js';
+import { registryEntrySchema, registryIndexEntrySchema } from '../src/schema.zod.js';
 
 /** PNG de 1×1 real: el build copia bytes, así que el fichero tiene que serlo de verdad. */
 const PNG_1X1 = Buffer.from(
@@ -69,6 +70,22 @@ describe('captura del componente', () => {
       image: '/registry/widget-preview.png',
       alt: 'La cuadrícula de la biblioteca',
     });
+  });
+
+  it('lo que sale del build lo aceptan los esquemas que lo van a leer', async () => {
+    // La ruta del descriptor y la URL servida son dos formas del mismo campo. Validar la segunda
+    // con las reglas de la primera rechazaba la salida del propio build, y el cliente del registry
+    // habría dejado de poder leer el índice entero en cuanto un componente declarase una captura.
+    const packagesRoot = await componentWithPreview({ image: 'preview/shot.png', alt: 'Captura' });
+    const outputDir = join(packagesRoot, 'out');
+
+    await buildRegistry({ packagesRoot, outputDir });
+
+    const entry = JSON.parse(await readFile(join(outputDir, 'widget.json'), 'utf8'));
+    const index = JSON.parse(await readFile(join(outputDir, 'index.json'), 'utf8'));
+
+    expect(registryEntrySchema.safeParse(entry).success).toBe(true);
+    expect(registryIndexEntrySchema.safeParse(index[0]).success).toBe(true);
   });
 
   it('no la mete en los ficheros que se copian al proyecto de quien instala', async () => {
