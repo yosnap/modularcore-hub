@@ -1,3 +1,7 @@
+import { BUILTIN_FRAMEWORKS } from './framework-catalog.js';
+
+import type { FrameworkDefinition } from './framework-catalog.js';
+
 /**
  * Cobertura de la UI de referencia por framework.
  *
@@ -27,13 +31,14 @@ export interface UiCoverage {
   missing?: string[];
 }
 
-/** Extensiones de la UI de referencia, por framework. */
-const UI_EXTENSIONS: Record<string, string> = {
-  react: '.tsx',
-  svelte: '.svelte',
-  vue: '.vue',
-  angular: '.component.ts',
-};
+/** Extensiones de la UI de referencia, tomadas del catálogo: un framework aportado trae la suya. */
+function uiExtensionsOf(catalog: Record<string, FrameworkDefinition>): Record<string, string> {
+  const extensions: Record<string, string> = {};
+  for (const [name, definition] of Object.entries(catalog)) {
+    if (definition.uiExtension) extensions[name] = definition.uiExtension;
+  }
+  return extensions;
+}
 
 export interface DescribedFile {
   path: string;
@@ -52,14 +57,18 @@ export interface ComponentLocation {
  * `ui/<framework>/<Componente>` es la presentación headless; `ui/<framework>/<presentación>/…` es
  * cada una de las otras tres.
  */
-export function locateUiFile(path: string): ComponentLocation | null {
+export function locateUiFile(
+  path: string,
+  catalog: Record<string, FrameworkDefinition> = BUILTIN_FRAMEWORKS,
+): ComponentLocation | null {
   const segments = path.split('/');
   if (segments[0] !== 'ui' || segments.length < 3) return null;
 
   const framework = segments[1];
-  if (!framework || !(framework in UI_EXTENSIONS)) return null;
+  const extensions = uiExtensionsOf(catalog);
+  if (!framework || !(framework in extensions)) return null;
 
-  const extension = UI_EXTENSIONS[framework]!;
+  const extension = extensions[framework]!;
   const last = segments[segments.length - 1]!;
   if (!last.endsWith(extension)) return null;
 
@@ -76,11 +85,14 @@ export function locateUiFile(path: string): ComponentLocation | null {
 export type ActualCoverage = Map<string, Map<Presentation, Set<string>>>;
 
 /** Cobertura real que se desprende de los ficheros que el descriptor enumera. */
-export function readActualCoverage(files: DescribedFile[]): ActualCoverage {
+export function readActualCoverage(
+  files: DescribedFile[],
+  catalog: Record<string, FrameworkDefinition> = BUILTIN_FRAMEWORKS,
+): ActualCoverage {
   const coverage: ActualCoverage = new Map();
 
   for (const file of files) {
-    const located = locateUiFile(file.path);
+    const located = locateUiFile(file.path, catalog);
     if (!located) continue;
 
     const byPresentation = coverage.get(located.framework) ?? new Map();
@@ -110,12 +122,14 @@ export function findCoverageMismatches(
   declared: Record<string, UiCoverage>,
   files: DescribedFile[],
   frameworks: string[],
+  catalog: Record<string, FrameworkDefinition> = BUILTIN_FRAMEWORKS,
 ): CoverageMismatch[] {
-  const actual = readActualCoverage(files);
+  const actual = readActualCoverage(files, catalog);
+  const extensions = uiExtensionsOf(catalog);
   const mismatches: CoverageMismatch[] = [];
 
   for (const framework of frameworks) {
-    if (!UI_EXTENSIONS[framework]) continue; // blade y vanilla se sirven con snippets, no con UI.
+    if (!extensions[framework]) continue; // blade y vanilla se sirven con snippets, no con UI.
     if (!declared[framework]) {
       mismatches.push({
         framework,

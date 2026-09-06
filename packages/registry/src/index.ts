@@ -1,3 +1,12 @@
+export {
+  AGNOSTIC_FRAMEWORK as AGNOSTIC,
+  BUILTIN_FRAMEWORKS,
+  buildFrameworkCatalog,
+  frameworksKnownTo,
+  undefinedFrameworks,
+} from './framework-catalog.js';
+export type { FrameworkDefinition } from './framework-catalog.js';
+
 export { dependenciesForFiles, dependencyNameOf, npmImportsOf } from './dependency-usage.js';
 export type { FileWithContent } from './dependency-usage.js';
 

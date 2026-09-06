@@ -56,6 +56,25 @@ export const registryDescriptorSchema = z.object({
       alt: z.string().min(1),
     })
     .optional(),
+  frameworkDefs: z
+    .record(
+      z.string().min(1),
+      z.object({
+        title: z.string().min(1),
+        uiExtension: z
+          .string()
+          .regex(/^\.[a-z.]+$/i)
+          .optional(),
+        detect: z
+          .object({ npm: z.string().optional(), composer: z.string().optional() })
+          .optional(),
+        peer: z.string().min(1).optional(),
+        paths: z.object({ components: z.string().min(1), lib: z.string().min(1) }).optional(),
+        basedOn: z.string().min(1).optional(),
+        snippetDirectory: z.string().min(1).optional(),
+      }),
+    )
+    .optional(),
   ui: z
     .record(
       z.string().min(1),
