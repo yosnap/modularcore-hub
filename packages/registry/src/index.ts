@@ -1,3 +1,6 @@
+export { dependenciesForFiles, dependencyNameOf, npmImportsOf } from './dependency-usage.js';
+export type { FileWithContent } from './dependency-usage.js';
+
 export {
   PRESENTATIONS,
   findCoverageMismatches,

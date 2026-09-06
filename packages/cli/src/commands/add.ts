@@ -25,6 +25,11 @@ export interface AddResult {
   installedComponents: string[];
   filesWritten: WriteResult[];
   envKeysAdded: string[];
+  /**
+   * Dependencias npm instaladas, con su rango. Sólo las que necesitan los ficheros que se han
+   * escrito de verdad: un proyecto React no se lleva las de las presentaciones de Svelte.
+   */
+  npmDependenciesInstalled: string[];
 }
 
 export async function runAdd(
@@ -42,7 +47,7 @@ export async function runAdd(
     );
   }
 
-  const npmDeps = collectNpmDependencies(entries);
+  const npmDeps = collectNpmDependencies(entries, config.framework);
   if (npmDeps.length > 0) {
     prompts.note(
       npmDeps.map((dep) => `${dep.name}@${dep.version}`).join('\n'),
@@ -104,5 +109,6 @@ export async function runAdd(
     installedComponents: entries.map((entry) => entry.name),
     filesWritten,
     envKeysAdded,
+    npmDependenciesInstalled: npmDeps.map((dep) => `${dep.name}@${dep.version}`),
   };
 }
