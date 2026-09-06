@@ -8,6 +8,8 @@ export interface WorkspaceDescriptor {
   name: string;
   frameworks: string[];
   files: { path: string; target: string }[];
+  dependencies: string[];
+  peerDependencies: Record<string, string>;
 }
 
 export interface FoundDescriptor {
@@ -23,12 +25,20 @@ export async function findWorkspaceDescriptors(): Promise<FoundDescriptor[]> {
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
     const packageDir = join(packagesRoot, entry.name);
+
+    let raw: string;
     try {
-      const raw = await readFile(join(packageDir, 'modularcore.json'), 'utf8');
-      found.push({ packageDir, descriptor: JSON.parse(raw) as WorkspaceDescriptor });
-    } catch {
-      // Un paquete sin descriptor (registry, cli, mcp-server…) no publica componentes.
+      raw = await readFile(join(packageDir, 'modularcore.json'), 'utf8');
+    } catch (error) {
+      // Un paquete sin descriptor (registry, cli, mcp-server…) no publica componentes: ese es
+      // el único motivo aceptable para saltárselo. Cualquier otro error se propaga, porque
+      // tragarlo dejaría el paquete sin validar para siempre y en silencio.
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') continue;
+      throw error;
     }
+
+    // Un JSON mal formado rompe la prueba en lugar de excluir el paquete de la validación.
+    found.push({ packageDir, descriptor: JSON.parse(raw) as WorkspaceDescriptor });
   }
 
   return found;
