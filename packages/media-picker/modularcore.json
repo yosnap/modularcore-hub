@@ -1,6 +1,6 @@
 {
   "name": "media-picker",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "title": "Universal Media Picker",
   "type": "headless-core",
   "category": "media",
@@ -12,7 +12,11 @@
     "vue": ">=3.3",
     "@angular/core": ">=17"
   },
-  "dependencies": [],
+  "dependencies": [
+    "@radix-ui/react-slider@^1.4.7",
+    "@radix-ui/react-toggle@^1.1.18",
+    "bits-ui@^2.18.2"
+  ],
   "registryDependencies": [],
   "envVariables": [
     {
@@ -124,6 +128,12 @@
       "encoding": "utf8"
     },
     {
+      "path": "core/format.ts",
+      "target": "src/modularcore/media-picker/core/format.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
       "path": "core/providers/s3-compatible.ts",
       "target": "src/modularcore/media-picker/core/providers/s3-compatible.ts",
       "type": "headless-core",
@@ -168,7 +178,7 @@
     {
       "path": "adapters/vanilla/create-media-picker-store.ts",
       "target": "src/modularcore/media-picker/adapters/vanilla/create-media-picker-store.ts",
-      "type": "headless-core",
+      "type": "adapter",
       "encoding": "utf8"
     },
     {
@@ -490,12 +500,6 @@
       "encoding": "utf8"
     },
     {
-      "path": "core/format.ts",
-      "target": "src/modularcore/media-picker/core/format.ts",
-      "type": "headless-core",
-      "encoding": "utf8"
-    },
-    {
       "path": "core/canvas/zoom.ts",
       "target": "src/modularcore/media-picker/core/canvas/zoom.ts",
       "type": "headless-core",
@@ -547,6 +551,54 @@
       "path": "snippets/astro/media-picker-island.ts",
       "target": "src/modularcore/media-picker/media-picker-island.ts",
       "type": "snippet",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/VariantFilter.tsx",
+      "target": "src/modularcore/media-picker/ui/react/VariantFilter.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/VariantFilter.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/VariantFilter.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/tailwind/VariantFilter.tsx",
+      "target": "src/modularcore/media-picker/ui/react/tailwind/VariantFilter.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/VariantFilter.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/tailwind/VariantFilter.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/shadcn/VariantFilter.tsx",
+      "target": "src/modularcore/media-picker/ui/react/shadcn/VariantFilter.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/VariantFilter.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/shadcn/VariantFilter.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/vanilla/VariantFilter.tsx",
+      "target": "src/modularcore/media-picker/ui/react/vanilla/VariantFilter.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/VariantFilter.svelte",
+      "target": "src/modularcore/media-picker/ui/svelte/vanilla/VariantFilter.svelte",
+      "type": "ui",
       "encoding": "utf8"
     }
   ]

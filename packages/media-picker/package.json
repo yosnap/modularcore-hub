@@ -1,6 +1,6 @@
 {
   "name": "@modularcore/media-picker",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "type": "module",
   "main": "./dist/core/media-picker.js",
@@ -37,6 +37,10 @@
     "./library-state": {
       "types": "./dist/core/library-state.d.ts",
       "default": "./dist/core/library-state.js"
+    },
+    "./format": {
+      "types": "./dist/core/format.d.ts",
+      "default": "./dist/core/format.js"
     },
     "./providers/s3-compatible": {
       "types": "./dist/core/providers/s3-compatible.d.ts",
@@ -81,6 +85,10 @@
     "./ui/react/MimeTypeFilter": {
       "types": "./dist/ui/react/MimeTypeFilter.d.ts",
       "default": "./dist/ui/react/MimeTypeFilter.js"
+    },
+    "./ui/react/VariantFilter": {
+      "types": "./dist/ui/react/VariantFilter.d.ts",
+      "default": "./dist/ui/react/VariantFilter.js"
     },
     "./ui/react/ImageEditor": {
       "types": "./dist/ui/react/ImageEditor.d.ts",

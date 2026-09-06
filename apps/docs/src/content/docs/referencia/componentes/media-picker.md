@@ -43,8 +43,10 @@ implementas.
 
 Una biblioteca de medios rara vez quiere servir el original de 4000 px en una cuadrícula de
 miniaturas. `generateVariants` produce los tamaños a partir del blob ya cargado, reutilizando
-`compressImage`, y **nunca escala hacia arriba**: una medida mayor que el original se omite en vez
-de generar una copia borrosa y más pesada que la fuente.
+`compressImage`, y **nunca escala hacia arriba**: una medida mayor o igual que el lado más largo del
+original se omite, en vez de generar una copia borrosa —o una recodificación del mismo tamaño— más
+pesada que la fuente. Quien resuelva `variants.find(v => v.label === 'large')` debe contemplar que
+ese tamaño no exista y recurrir al original.
 
 ```ts
 const { original, variants, failed } = await picker.uploadWithVariants(provider, [
@@ -54,7 +56,12 @@ const { original, variants, failed } = await picker.uploadWithVariants(provider,
 ]);
 ```
 
-El original se sube primero, porque cada derivada necesita su clave para enlazarse. Un fallo en una
+El original se sube primero, porque cada derivada necesita su clave para enlazarse. Las derivadas
+no heredan `key`, `overwriteKey` ni `contentType`: los tres describen al original, y reenviar
+`overwriteKey` —que significa «escribe en esta clave exacta»— haría que cada tamaño pisara al
+original. Cada derivada anuncia su propio formato. Para situarlas junto al original, el endpoint de
+firma tiene en `variantOf` la clave de este y puede derivar de ahí la carpeta; no basta con
+reutilizar la `key` que pediste para el original. Un fallo en una
 derivada no tumba la operación —el original ya está guardado y perderlo por una miniatura sería un
 mal negocio—: los tamaños que fallaron llegan en `failed` para que la interfaz avise o reintente.
 
@@ -72,6 +79,50 @@ ofrecerá variantes.
 Las ocho presentaciones de `MediaLibraryGrid` —cuatro de React y cuatro de Svelte— muestran un pie
 con el nombre del fichero y su tamaño, y un distintivo por cada tamaño derivado disponible, con el
 ancho en píxeles cuando el proveedor lo informa.
+
+### Filtrar por tamaño
+
+`VariantFilter` alimenta `ListOptions.variant`, también en las ocho presentaciones. Es selección
+única, no casillas como `MimeTypeFilter`: filtrar por dos tamaños a la vez no significa nada,
+porque cada objeto aparece una sola vez con sus derivadas dentro. Devuelve `undefined` al volver a
+«todos», para que `variant` se omita del listado en lugar de viajar como cadena vacía.
+
+```svelte
+<VariantFilter
+  options={['large', 'medium', 'thumb']}
+  selected={size}
+  onChange={(variant) => {
+    size = variant;
+    // La clave se añade sólo si hay tamaño: `{ ...filters, variant: undefined }` la dejaría
+    // presente, y un hook `list` que haga `new URLSearchParams({ ...options })` enviaría
+    // `variant=undefined` al backend.
+    picker.listLibrary(provider, { ...filters, ...(variant ? { variant } : {}) });
+  }}
+/>
+```
+
+### Elegir el tamaño al confirmar
+
+`confirmSelection()` devuelve siempre el original, con sus derivadas dentro. Para quedarte con un
+tamaño concreto —la portada de un post que quiere el mediano, por ejemplo— tienes dos funciones
+puras en `core/format.ts`:
+
+```ts
+import { selectionAtVariant, variantUrl } from '@modularcore/media-picker/format';
+
+const cover = variantUrl(picker.confirmSelection()[0], 'medium');
+const gallery = selectionAtVariant(picker.confirmSelection(), 'thumb');
+```
+
+Ambas recurren al original cuando ese tamaño no existe: el proveedor decide qué derivadas guarda,
+así que pedir una ausente es normal y debe dar una imagen, no `undefined`. Se resuelve fuera del
+núcleo a propósito — la selección no cambia según el tamaño que quieras mostrar, y un mismo objeto
+puede necesitar tamaños distintos en dos sitios de la misma página.
+
+`selectionAtVariant` devuelve cada objeto **medido como el tamaño pedido**: junto a la URL viajan
+el ancho, el alto y el peso de esa derivada, para que `<img src={item.url} width={item.width}>` no
+maquete la miniatura en la caja del original. `variants` se conserva, así que puedes saltar a otro
+tamaño sin volver a listar.
 
 ## Uso sin framework (Astro, Blade, HTMX…)
 
@@ -96,9 +147,14 @@ store.destroy();
 ```
 
 Astro es el caso más directo: su interactividad son `<script>` con TypeScript plano, sin runtime
-reactivo propio. El snippet `snippets/astro/media-picker-island.ts` monta el picker sobre elementos
-marcados con `data-media-picker` y se limpia en `astro:before-swap`, el evento que dispara View
-Transitions antes de sustituir el documento. El mismo patrón sirve tal cual en Blade, HTMX o Rails.
+reactivo propio. Elige `vanilla` al ejecutar `modularcore init` —no se detecta solo, porque no es
+una dependencia sino la ausencia de framework— y la CLI instalará el componente con normalidad.
+
+El snippet `snippets/astro/media-picker-island.ts` monta el picker sobre los elementos marcados con
+`data-media-picker`. Registra el montaje en `astro:page-load` y no solo al cargar el módulo, porque
+Astro no vuelve a ejecutar un script ya cargado tras una navegación con View Transitions; y libera
+las suscripciones en `astro:before-swap`, antes de que el documento sea sustituido. El mismo patrón
+sirve tal cual en Blade, HTMX o Rails.
 
 ## Proveedores de almacenamiento soportados
 
@@ -138,9 +194,9 @@ autenticar.
 
 ## Variantes de estilo de UI
 
-Cada uno de los 6 componentes de UI (`MediaLibraryGrid`, `FolderSelect`, `MimeTypeFilter`,
-`ImageEditor`, `BulkActionsBar`, `RemoteUrlLoader`) se distribuye en 4 presentaciones, todas con
-las mismas props/comportamiento — solo cambia el marcado/CSS:
+Cada uno de los 7 componentes de UI (`MediaLibraryGrid`, `FolderSelect`, `MimeTypeFilter`,
+`VariantFilter`, `ImageEditor`, `BulkActionsBar`, `RemoteUrlLoader`) se distribuye en 4
+presentaciones, todas con las mismas props — solo cambia el marcado/CSS:
 
 - `ui/react/*.tsx`, `ui/svelte/*.svelte` — UI de referencia headless, sin estilos (la opción por
   defecto original).
@@ -156,7 +212,8 @@ Junto a esos seis se instalan dos componentes de apoyo:
 - `MediaLibraryModal` (solo Svelte, en las cuatro presentaciones) — envuelve la biblioteca en un
   modal con pestañas Biblioteca / Subir archivo / Desde URL, paginación numerada, búsqueda y
   orden.
-- `ModernSelect` (React y Svelte, con `ui/modern-select.css`) — el desplegable que usan
-  `FolderSelect` e `ImageEditor`.
+- `ModernSelect` — el desplegable que usan `FolderSelect` e `ImageEditor`. La versión de React
+  no tiene dependencias y se estiliza con `ui/modern-select.css`; la de Svelte se apoya en
+  `bits-ui`, que la CLI instala junto al componente.
 
 Prueba este componente en vivo en el [Playground de Media Picker](/referencia/playground/media-picker/).

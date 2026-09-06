@@ -83,6 +83,21 @@ describe('createMediaPickerStore (sin framework)', () => {
     expect(listener).toHaveBeenCalledTimes(1);
   });
 
+  it('la misma función suscrita dos veces recibe dos suscripciones independientes', () => {
+    // El núcleo guarda los oyentes en un Set: sin envolverlos, la primera baja silenciaría
+    // también a la segunda. Sin framework es normal reutilizar una función de pintado.
+    const store = createMediaPickerStore();
+    const render = vi.fn();
+    const unsubscribeFirst = store.subscribe(render);
+    store.subscribe(render);
+    render.mockClear();
+
+    unsubscribeFirst();
+    store.loadLocalFile(new Blob(['image']) as File);
+
+    expect(render).toHaveBeenCalledTimes(1);
+  });
+
   it('reenvía los comandos al núcleo', async () => {
     const store = createMediaPickerStore();
     const reset = vi.spyOn(MediaPicker.prototype, 'reset');

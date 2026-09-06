@@ -115,6 +115,49 @@ describe('MediaPicker.uploadWithVariants', () => {
     expect(result.failed.map((entry) => entry.label)).toEqual(['medium', 'thumb']);
   });
 
+  it('no reenvía overwriteKey a las derivadas: pisarían al original', async () => {
+    // Sobreescribir significa «escribe en esta clave exacta». Con el valor reenviado, cada
+    // tamaño se escribía encima del original y el «original» acababa siendo la miniatura, sin
+    // ningún error visible.
+    const provider = createProvider();
+    const { picker } = createPicker([variant('medium'), variant('thumb')]);
+
+    await picker.uploadWithVariants(provider, SIZES, { overwriteKey: 'fotos/portada.jpg' });
+
+    expect(provider.calls[0]?.options?.overwriteKey).toBe('fotos/portada.jpg');
+    expect(provider.calls[1]?.options?.overwriteKey).toBeUndefined();
+    expect(provider.calls[2]?.options?.overwriteKey).toBeUndefined();
+  });
+
+  it('tampoco reenvía la clave deseada, que apuntaría todas las subidas al mismo sitio', async () => {
+    const provider = createProvider();
+    const { picker } = createPicker([variant('thumb')]);
+
+    await picker.uploadWithVariants(provider, SIZES, { key: 'fotos/portada.jpg' });
+
+    expect(provider.calls[0]?.options?.key).toBe('fotos/portada.jpg');
+    expect(provider.calls[1]?.options?.key).toBeUndefined();
+  });
+
+  it('anuncia el formato real de cada derivada, no el del original', async () => {
+    // Con `contentType` heredado, un original PNG convertido a JPEG se almacenaba y servía
+    // como image/png.
+    const provider = createProvider();
+    const generated = {
+      label: 'thumb',
+      blob: new Blob(['x'], { type: 'image/jpeg' }),
+      width: 1,
+      height: 1,
+    };
+    const picker = new MediaPicker({ generateVariants: vi.fn(async () => [generated]) });
+    picker.loadLocalFile(new Blob(['original'], { type: 'image/png' }) as File);
+
+    await picker.uploadWithVariants(provider, SIZES, { contentType: 'image/png' });
+
+    expect(provider.calls[0]?.options?.contentType).toBe('image/png');
+    expect(provider.calls[1]?.options?.contentType).toBe('image/jpeg');
+  });
+
   it('falla claramente si no hay ninguna imagen cargada', async () => {
     const provider = createProvider();
     const picker = new MediaPicker();
