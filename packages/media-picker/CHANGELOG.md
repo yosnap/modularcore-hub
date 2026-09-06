@@ -1,5 +1,76 @@
 # @modularcore/media-picker
 
+## 0.6.0
+
+### Minor Changes
+
+- 5b8cb4e: Entregar en los descriptores todo lo que el código instalado necesita para compilar. Hasta ahora
+  faltaban ficheros y dependencias npm, así que la CLI escribía proyectos que no arrancaban.
+
+  - `media-picker`: faltaban nueve ficheros (`core/format.ts`, `core/canvas/zoom.ts`, los dos
+    `ModernSelect` con `ui/modern-select.css` y los cuatro `MediaLibraryModal.svelte`), lo que dejaba
+    diecisiete imports sin resolver. Como efecto secundario, el modal de biblioteca pasa a estar
+    disponible para quien instale el componente. También faltaban por declarar `bits-ui` —que usa el
+    `ModernSelect` de Svelte en las cuatro presentaciones— y `@radix-ui/react-slider` y
+    `@radix-ui/react-toggle`, que ya usaba la presentación shadcn de React.
+  - `modals`: faltaba `ui/safe/message.ts` y, sobre todo, las presentaciones tailwind, shadcn y
+    vanilla al completo (24 ficheros y `ui/vanilla-styles.css`). El componente documenta cuatro
+    presentaciones y la CLI solo entregaba la headless.
+  - `auto-seo`: faltaba declarar `schema-dts`, que importa el código entregado. Solo aporta tipos,
+    pero sin él el proyecto de destino no compila y el descriptor todavía no distingue entre
+    dependencias de ejecución y de desarrollo.
+
+  Ninguna de estas dependencias se recorta por framework: la CLI filtra los ficheros que escribe,
+  pero instala todas las dependencias declaradas, de modo que un proyecto React recibe también
+  `bits-ui`. El descriptor no tiene hoy eje de framework para dependencias.
+
+- e2b5336: Completar los tamaños derivados en la UI: filtrar por tamaño y elegirlo al confirmar.
+
+  El contrato admitía ambas cosas desde la versión anterior —`ListOptions.variant` viaja hasta el
+  hook `list` del proveedor y `ListedObject.variants` llega con cada objeto— pero no había forma de
+  usarlas sin llamar al núcleo a mano.
+
+  - **`VariantFilter`**, en las ocho presentaciones. Alimenta `ListOptions.variant`. Es selección
+    única, no casillas como `MimeTypeFilter`: filtrar por dos tamaños a la vez no significa nada,
+    porque cada objeto aparece una sola vez con sus derivadas dentro, y `'none'` es excluyente con
+    cualquier etiqueta por definición. Devuelve `undefined` al volver a «todos», para que `variant`
+    se omita del listado en lugar de viajar como cadena vacía.
+  - **`variantUrl` y `selectionAtVariant`** en `core/format.ts`, con el nuevo export
+    `@modularcore/media-picker/format`. Resuelven la URL de un tamaño concreto sobre lo que devuelve
+    `confirmSelection()`, recurriendo al original cuando ese tamaño no existe: el proveedor decide
+    qué derivadas guarda, así que pedir una ausente es normal y debe dar una imagen, no `undefined`.
+
+  `MediaPicker` no cambia. La selección no depende del tamaño que quieras mostrar, y un mismo objeto
+  seleccionado puede necesitar tamaños distintos en dos sitios de la misma página, así que resolverlo
+  con funciones puras encaja mejor que con un argumento en `confirmSelection()`.
+
+### Patch Changes
+
+- 0a4ce6e: Incluir `variant` en la clave de filtros de `listPage`, para que cambiar el tamaño derivado
+  reinicie la paginación como cualquier otro filtro.
+
+  `listPage` decide si invalidar su caché de cursores comparando una clave construida con
+  `folder`, `mimeTypes`, `scope`, `query` y `sort`. `variant` llegó al contrato después y no se
+  añadió ahí, así que elegir un tamaño desde el `VariantFilter` mientras se estaba en la página 3
+  dejaba la clave intacta: la caché no se invalidaba y la siguiente página se pedía con un cursor
+  que pertenecía al listado sin filtrar, devolviendo elementos de otro conjunto de resultados.
+
+- 84e23a7: Corregir tres fallos en la generación de tamaños y en el montaje sin framework, detectados al
+  revisar el código ya integrado.
+
+  - `uploadWithVariants` reenviaba a cada derivada las opciones de la subida original. `key` y
+    `overwriteKey` significan «escribe exactamente en esta clave», así que cada tamaño se escribía
+    encima del original: el «original» acababa siendo la miniatura de 400 px y, como la clave
+    devuelta seguía apuntando ahí, no se veía ningún error. `contentType` tenía el mismo problema en
+    menor grado: una derivada convertida a JPEG se almacenaba y se servía como el tipo del original.
+    Ahora esas tres opciones se omiten y cada derivada anuncia el tipo real de su blob.
+  - `generateVariants` daba por hecho que el formato pedido siempre venía informado; sin él, un
+    original JPEG salía como PNG y la miniatura pesaba más que la imagen de la que venía.
+  - El snippet de Astro se montaba una sola vez y no se limpiaba entre navegaciones con View
+    Transitions, de modo que al volver a una página el picker quedaba muerto. Ahora monta en
+    `astro:page-load`, se da de baja en `astro:before-swap` y no deja el `<input type="file">` con el
+    fichero anterior seleccionado.
+
 ## 0.5.0
 
 ### Minor Changes
