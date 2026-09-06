@@ -128,6 +128,12 @@
       "encoding": "utf8"
     },
     {
+      "path": "core/format.ts",
+      "target": "src/modularcore/media-picker/core/format.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
       "path": "core/providers/s3-compatible.ts",
       "target": "src/modularcore/media-picker/core/providers/s3-compatible.ts",
       "type": "headless-core",
