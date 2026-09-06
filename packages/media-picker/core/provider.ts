@@ -33,6 +33,14 @@ export interface UploadOptions {
    */
   variantOf?: string;
   variantLabel?: string;
+  /**
+   * Medidas y formato reales de la derivada que se está subiendo. Sin esto el proveedor no tiene
+   * de dónde sacarlos, así que `ListedObject.variants` volvería siempre sin `width`, y el
+   * distintivo de la cuadrícula —que muestra el ancho en píxeles cuando se conoce— no podría
+   * mostrarlo nunca.
+   */
+  variantWidth?: number;
+  variantHeight?: number;
   onProgress?: (loadedBytes: number, totalBytes: number) => void;
   signal?: AbortSignal;
 }
@@ -53,6 +61,11 @@ export interface ObjectVariant {
   size: number;
   width?: number;
   height?: number;
+  /**
+   * Formato de la derivada, que no tiene por qué ser el del original: `generateVariants` admite
+   * recodificar, así que un PNG puede tener su miniatura en JPEG.
+   */
+  mimeType?: string;
 }
 
 export interface ListedObject {

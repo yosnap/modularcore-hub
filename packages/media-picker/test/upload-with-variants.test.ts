@@ -167,6 +167,40 @@ describe('MediaPicker.uploadWithVariants', () => {
     );
   });
 
+  it('manda las medidas de cada derivada, para que el proveedor pueda guardarlas', async () => {
+    // Sin ellas, `ListedObject.variants` vuelve siempre sin `width` y el distintivo de la
+    // cuadrícula —que muestra el ancho en píxeles— no puede mostrarlo nunca.
+    const provider = createProvider();
+    const { picker } = createPicker([variant('thumb')]);
+
+    await picker.uploadWithVariants(provider, SIZES);
+
+    expect(provider.calls[1]?.options).toMatchObject({ variantWidth: 100, variantHeight: 50 });
+  });
+
+  it('un reset() mientras se generan las derivadas detiene lo que queda', async () => {
+    // Seguirían subiéndose contra la clave de un original que el usuario ya abandonó, sin que
+    // nada lo observe ni lo pare: el estado dice `done` desde que subió el original.
+    const provider = createProvider();
+    const generateVariants = vi.fn(async () => [variant('medium'), variant('thumb')]);
+    const picker = new MediaPicker({ generateVariants });
+    picker.loadLocalFile(new Blob(['original']) as File);
+
+    const original = provider.upload.bind(provider);
+    let llamada = 0;
+    provider.upload = async (blob, options) => {
+      llamada += 1;
+      // Justo después de subir la primera derivada, el usuario empieza de cero.
+      if (llamada === 2) picker.reset();
+      return original(blob, options);
+    };
+
+    const result = await picker.uploadWithVariants(provider, SIZES);
+
+    expect(result.variants.map((entry) => entry.label)).toEqual(['medium']);
+    expect(provider.calls).toHaveLength(2);
+  });
+
   it('deja el estado en done, como una subida normal', async () => {
     const provider = createProvider();
     const { picker } = createPicker([variant('thumb')]);
