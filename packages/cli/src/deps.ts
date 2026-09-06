@@ -3,7 +3,11 @@ import semver from 'semver';
 import { CompatibilityError, DependencyCycleError } from './errors.js';
 
 import type { RegistryClient } from '@modularcore/registry-client';
-import { dependenciesForFiles, selectFilesForFramework } from '@modularcore/registry';
+import {
+  dependenciesForFiles,
+  frameworksKnownTo,
+  selectFilesForFramework,
+} from '@modularcore/registry';
 
 import type { RegistryEntry } from '@modularcore/registry';
 
@@ -162,7 +166,7 @@ export function collectNpmDependencies(
         ? entry.dependencies
         : dependenciesForFiles(
             entry.dependencies,
-            selectFilesForFramework(entry.files, framework),
+            selectFilesForFramework(entry.files, framework, frameworksKnownTo(entry)),
             entry.files,
           );
     for (const raw of forThisProject) needed.add(parseNpmDependencySpec(raw).name);

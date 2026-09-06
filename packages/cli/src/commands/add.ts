@@ -9,7 +9,7 @@ import { appendEnvExample, remapTarget } from '../files.js';
 import { installNpmDependencies } from '../install.js';
 import { CliError } from '../errors.js';
 import { isTrackedWriteError, writeFilesTracked } from '@modularcore/registry-client';
-import { selectFilesForFramework } from '@modularcore/registry';
+import { frameworksKnownTo, selectFilesForFramework } from '@modularcore/registry';
 
 import type { RegistryClient } from '@modularcore/registry-client';
 import type { PromptAdapter } from '../prompts.js';
@@ -75,7 +75,13 @@ export async function runAdd(
     for (const entry of entries) {
       // Sólo los ficheros del framework de este proyecto: escribir los adaptadores de los demás
       // dejaría módulos que importan runtimes que no están instalados.
-      const remappedFiles = selectFilesForFramework(entry.files, config.framework).map((file) => ({
+      // El catálogo sale del propio componente: si aporta su framework, sus ficheros tienen
+      // dueño y no se cuelan en la instalación de los demás.
+      const remappedFiles = selectFilesForFramework(
+        entry.files,
+        config.framework,
+        frameworksKnownTo(entry),
+      ).map((file) => ({
         ...file,
         target: remapTarget(file.target, config.paths),
       }));

@@ -141,3 +141,17 @@ export const registryIndexEntrySchema = z.object({
     .optional(),
   description: z.string().optional(),
 });
+
+/** Catálogo de frameworks servido en `frameworks.json`. */
+export const frameworkCatalogSchema = z.record(
+  z.string().min(1),
+  z.object({
+    title: z.string().min(1),
+    uiExtension: z.string().optional(),
+    detect: z.object({ npm: z.string().optional(), composer: z.string().optional() }).optional(),
+    peer: z.string().optional(),
+    paths: z.object({ components: z.string(), lib: z.string() }).optional(),
+    basedOn: z.string().optional(),
+    snippetDirectory: z.string().optional(),
+  }),
+);

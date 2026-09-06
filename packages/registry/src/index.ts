@@ -39,6 +39,8 @@ export type {
   Visibility,
 } from './schema.js';
 
+export { frameworkCatalogSchema } from './schema.zod.js';
+
 export {
   envVariableSchema,
   fileEncodingSchema,

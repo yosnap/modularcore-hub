@@ -1,51 +1,61 @@
+import { BUILTIN_FRAMEWORKS } from '@modularcore/registry';
+import { createRegistryClient } from '@modularcore/registry-client';
+
 import { detectFrameworks, detectPackageManager, isWorkspaceRoot } from '../framework-detect.js';
 import { writeProjectConfig } from '../config.js';
 
+import type { FrameworkDefinition } from '@modularcore/registry';
 import type { ProjectConfig } from '../config.js';
 import type { DetectedFramework } from '../framework-detect.js';
 import type { PromptAdapter } from '../prompts.js';
 
-const FRAMEWORK_OPTIONS: DetectedFramework[] = [
-  'react',
-  'svelte',
-  'vue',
-  'angular',
-  'blade',
-  'vanilla',
-];
-const FRAMEWORK_LABELS: Record<DetectedFramework, string> = {
-  react: 'react',
-  svelte: 'svelte',
-  vue: 'vue',
-  angular: 'angular',
-  blade: 'blade',
-  vanilla: 'vanilla (sin framework: Astro, HTMX, Rails…)',
-};
 const DEFAULT_REGISTRY_URL = 'http://localhost:5173/registry';
-const DEFAULT_PATHS: Record<DetectedFramework, Record<string, string>> = {
-  blade: { components: 'resources/views/components', lib: 'resources/js/modularcore' },
-  react: { components: 'src/components', lib: 'src/lib/modularcore' },
-  svelte: { components: 'src/components', lib: 'src/lib/modularcore' },
-  vue: { components: 'src/components', lib: 'src/lib/modularcore' },
-  angular: { components: 'src/components', lib: 'src/lib/modularcore' },
-  vanilla: { components: 'src/components', lib: 'src/lib/modularcore' },
-};
+const FALLBACK_PATHS = { components: 'src/components', lib: 'src/lib/modularcore' };
 
 export interface InitOptions {
   cwd: string;
   prompts: PromptAdapter;
+  /**
+   * De dónde sale el catálogo de frameworks. Inyectable para las pruebas, que así no dependen de
+   * que haya un registry escuchando.
+   */
+  fetchCatalog?: (registryUrl: string) => Promise<Record<string, FrameworkDefinition>>;
+}
+
+async function fetchCatalogFromRegistry(
+  registryUrl: string,
+): Promise<Record<string, FrameworkDefinition>> {
+  return createRegistryClient(registryUrl).getFrameworkCatalog();
 }
 
 /**
  * AD2: only auto-picks the framework when detection is unambiguous (exactly one match,
  * cwd isn't a workspace root). Anything else — 0 matches, >1 matches, or a monorepo
  * root — prompts explicitly instead of guessing.
+ *
+ * La URL del registry se pregunta la primera porque de ahí sale el catálogo de frameworks, y ese
+ * catálogo es el que decide qué se puede detectar y ofrecer: un componente puede aportar el suyo,
+ * así que la lista no vive en este código. Si el registry no responde se sigue con los frameworks
+ * de casa, para que `init` funcione sin red.
  */
-export async function runInit({ cwd, prompts }: InitOptions): Promise<ProjectConfig> {
+export async function runInit({ cwd, prompts, fetchCatalog }: InitOptions): Promise<ProjectConfig> {
   prompts.intro('modularcore init');
 
+  const registryUrl = await prompts.text('URL del registry', DEFAULT_REGISTRY_URL);
+
+  let catalog = BUILTIN_FRAMEWORKS;
+  try {
+    catalog = await (fetchCatalog ?? fetchCatalogFromRegistry)(registryUrl);
+  } catch {
+    prompts.note(
+      `No se pudo leer el catálogo de frameworks de "${registryUrl}". Se usan los conocidos por la CLI; ` +
+        'un componente que aporte su propio framework no aparecerá en la lista.',
+      'Registry no disponible',
+    );
+  }
+
   const [{ frameworks }, workspaceRoot, packageManager] = await Promise.all([
-    detectFrameworks(cwd),
+    detectFrameworks(cwd, catalog),
     isWorkspaceRoot(cwd),
     detectPackageManager(cwd),
   ]);
@@ -61,20 +71,22 @@ export async function runInit({ cwd, prompts }: InitOptions): Promise<ProjectCon
         ? 'no se detectó ningún framework soportado'
         : `se detectaron varios frameworks (${frameworks.join(', ')})`;
     prompts.note(reason, 'Selección manual requerida');
-    framework = (await prompts.select(
+    framework = await prompts.select(
       '¿Qué framework usa este proyecto?',
-      FRAMEWORK_OPTIONS.map((value) => ({ value, label: FRAMEWORK_LABELS[value] })),
-    )) as DetectedFramework;
+      Object.entries(catalog).map(([value, definition]) => ({
+        value,
+        label: `${value} — ${definition.title}`,
+      })),
+    );
   }
 
-  const defaultPaths = DEFAULT_PATHS[framework];
+  const defaultPaths = catalog[framework]?.paths ?? FALLBACK_PATHS;
 
   const componentsPath = await prompts.text(
     'Ruta para componentes (paths.components)',
     defaultPaths.components,
   );
   const libPath = await prompts.text('Ruta para librería (paths.lib)', defaultPaths.lib);
-  const registryUrl = await prompts.text('URL del registry', DEFAULT_REGISTRY_URL);
 
   const config: ProjectConfig = {
     registryUrl,

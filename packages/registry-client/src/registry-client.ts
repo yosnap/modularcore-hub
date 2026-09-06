@@ -1,9 +1,13 @@
-import { registryEntrySchema, registryIndexEntrySchema } from '@modularcore/registry';
+import {
+  frameworkCatalogSchema,
+  registryEntrySchema,
+  registryIndexEntrySchema,
+} from '@modularcore/registry';
 import { z } from 'zod';
 
 import { RegistryClientError } from './errors.js';
 
-import type { RegistryEntry, RegistryIndexEntry } from '@modularcore/registry';
+import type { FrameworkDefinition, RegistryEntry, RegistryIndexEntry } from '@modularcore/registry';
 
 const registryIndexSchema = z.array(registryIndexEntrySchema);
 
@@ -44,6 +48,11 @@ async function fetchJson(url: string, notFoundLabel: string): Promise<unknown> {
 
 export interface RegistryClient {
   getIndex(): Promise<RegistryIndexEntry[]>;
+  /**
+   * Catálogo de frameworks del registry: los de casa más los que aporte cualquier componente.
+   * Es lo que permite a `init` ofrecer y detectar un framework que ningún código nuestro conoce.
+   */
+  getFrameworkCatalog(): Promise<Record<string, FrameworkDefinition>>;
   getDescriptor(name: string): Promise<RegistryEntry>;
   getTarball(name: string): Promise<Buffer>;
 }
@@ -57,6 +66,17 @@ export function createRegistryClient(registryUrl: string): RegistryClient {
       if (!parsed.success) {
         throw new RegistryClientError(
           `El índice del registry en "${url}" no tiene el formato esperado: ${parsed.error.message}`,
+        );
+      }
+      return parsed.data;
+    },
+    async getFrameworkCatalog() {
+      const url = joinUrl(registryUrl, 'frameworks.json');
+      const json = await fetchJson(url, 'Catálogo de frameworks no encontrado');
+      const parsed = frameworkCatalogSchema.safeParse(json);
+      if (!parsed.success) {
+        throw new RegistryClientError(
+          `El catálogo de frameworks en "${url}" no tiene el formato esperado: ${parsed.error.message}`,
         );
       }
       return parsed.data;
