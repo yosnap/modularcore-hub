@@ -293,19 +293,30 @@ export class MediaPicker {
     try {
       generated = await this.deps.generateVariants(source, {
         sizes,
-        ...(options?.mimeType ? { mimeType: options.mimeType } : {}),
-        ...(options?.quality ? { quality: options.quality } : {}),
-        ...(options?.signal ? { signal: options.signal } : {}),
+        ...(options?.mimeType !== undefined ? { mimeType: options.mimeType } : {}),
+        ...(options?.quality !== undefined ? { quality: options.quality } : {}),
+        ...(options?.signal !== undefined ? { signal: options.signal } : {}),
       });
     } catch (error) {
       for (const size of sizes) failed.push({ label: size.label, error: error as Error });
       return { original, variants, failed };
     }
 
+    // `key`, `overwriteKey` y `contentType` describen al original y no pueden viajar con las
+    // derivadas: `overwriteKey` significa «escribe en esta clave exacta», así que reenviarlo
+    // haría que cada tamaño pisara al original —el «original» acabaría siendo la miniatura, y
+    // sin error visible—; `key` apuntaría todas las subidas a la misma ruta deseada; y
+    // `contentType` describiría un formato que la derivada quizá no tenga.
+    const shared: UploadOptions = { ...options };
+    delete shared.key;
+    delete shared.overwriteKey;
+    delete shared.contentType;
+
     for (const variant of generated) {
       try {
         const result = await provider.upload(variant.blob, {
-          ...options,
+          ...shared,
+          contentType: variant.blob.type || undefined,
           variantOf: original.key,
           variantLabel: variant.label,
           onProgress: undefined,
