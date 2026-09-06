@@ -93,6 +93,41 @@ describe('generateVariants (píxeles reales con node-canvas)', () => {
     expect(variants).toEqual([]);
   });
 
+  it('usa JPEG cuando el blob no declara tipo, en vez de emitir PNG', async () => {
+    // `Blob.type` es cadena vacía, no `undefined`: con `??` se colaba ese vacío hasta el
+    // canvas, que emite PNG sin pérdida — una «miniatura» más pesada que el original.
+    const sinTipo = new Blob([await createQuadrantImageBlob(1000, 500).arrayBuffer()]);
+
+    const [variant] = await generateVariants(sinTipo, { sizes: [SIZES[2]!] }, env);
+
+    expect(variant!.blob.type).toBe('image/jpeg');
+  });
+
+  it('respeta una calidad de 0, que es una petición legítima de compresión máxima', async () => {
+    const source = createQuadrantImageBlob(1000, 500);
+
+    const [maxima] = await generateVariants(
+      source,
+      { sizes: [SIZES[2]!], mimeType: 'image/jpeg', quality: 0 },
+      env,
+    );
+    const [porDefecto] = await generateVariants(
+      source,
+      { sizes: [SIZES[2]!], mimeType: 'image/jpeg' },
+      env,
+    );
+
+    expect(maxima!.blob.size).toBeLessThan(porDefecto!.blob.size);
+  });
+
+  it('omite una medida igual al lado más largo: recodificar no aporta nada', async () => {
+    const source = createQuadrantImageBlob(400, 200);
+
+    const variants = await generateVariants(source, { sizes: [SIZES[2]!] }, env);
+
+    expect(variants).toEqual([]);
+  });
+
   it('aborta en cuanto se cancela la señal', async () => {
     const source = createQuadrantImageBlob(2000, 1000);
     const controller = new AbortController();

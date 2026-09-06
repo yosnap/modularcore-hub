@@ -69,7 +69,12 @@ export function createMediaPickerStore(
   return {
     getState: () => picker.getState(),
     subscribe: (listener) => {
-      const unsubscribe = picker.subscribe(listener);
+      // El núcleo guarda los oyentes en un Set, así que suscribir dos veces la misma función
+      // registraría una sola entrada y la primera baja silenciaría también a la segunda. Cada
+      // llamada envuelve al oyente para que su baja afecte solo a esa suscripción: sin
+      // framework es normal reutilizar una misma función de pintado en varias zonas del DOM.
+      const wrapped = (state: MediaPickerState) => listener(state);
+      const unsubscribe = picker.subscribe(wrapped);
       unsubscribes.add(unsubscribe);
       listener(picker.getState());
 

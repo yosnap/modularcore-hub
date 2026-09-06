@@ -43,8 +43,10 @@ implementas.
 
 Una biblioteca de medios rara vez quiere servir el original de 4000 px en una cuadrícula de
 miniaturas. `generateVariants` produce los tamaños a partir del blob ya cargado, reutilizando
-`compressImage`, y **nunca escala hacia arriba**: una medida mayor que el original se omite en vez
-de generar una copia borrosa y más pesada que la fuente.
+`compressImage`, y **nunca escala hacia arriba**: una medida mayor o igual que el lado más largo del
+original se omite, en vez de generar una copia borrosa —o una recodificación del mismo tamaño— más
+pesada que la fuente. Quien resuelva `variants.find(v => v.label === 'large')` debe contemplar que
+ese tamaño no exista y recurrir al original.
 
 ```ts
 const { original, variants, failed } = await picker.uploadWithVariants(provider, [
@@ -54,7 +56,12 @@ const { original, variants, failed } = await picker.uploadWithVariants(provider,
 ]);
 ```
 
-El original se sube primero, porque cada derivada necesita su clave para enlazarse. Un fallo en una
+El original se sube primero, porque cada derivada necesita su clave para enlazarse. Las derivadas
+no heredan `key`, `overwriteKey` ni `contentType`: los tres describen al original, y reenviar
+`overwriteKey` —que significa «escribe en esta clave exacta»— haría que cada tamaño pisara al
+original. Cada derivada anuncia su propio formato. Para situarlas junto al original, el endpoint de
+firma tiene en `variantOf` la clave de este y puede derivar de ahí la carpeta; no basta con
+reutilizar la `key` que pediste para el original. Un fallo en una
 derivada no tumba la operación —el original ya está guardado y perderlo por una miniatura sería un
 mal negocio—: los tamaños que fallaron llegan en `failed` para que la interfaz avise o reintente.
 
@@ -140,9 +147,14 @@ store.destroy();
 ```
 
 Astro es el caso más directo: su interactividad son `<script>` con TypeScript plano, sin runtime
-reactivo propio. El snippet `snippets/astro/media-picker-island.ts` monta el picker sobre elementos
-marcados con `data-media-picker` y se limpia en `astro:before-swap`, el evento que dispara View
-Transitions antes de sustituir el documento. El mismo patrón sirve tal cual en Blade, HTMX o Rails.
+reactivo propio. Elige `vanilla` al ejecutar `modularcore init` —no se detecta solo, porque no es
+una dependencia sino la ausencia de framework— y la CLI instalará el componente con normalidad.
+
+El snippet `snippets/astro/media-picker-island.ts` monta el picker sobre los elementos marcados con
+`data-media-picker`. Registra el montaje en `astro:page-load` y no solo al cargar el módulo, porque
+Astro no vuelve a ejecutar un script ya cargado tras una navegación con View Transitions; y libera
+las suscripciones en `astro:before-swap`, antes de que el documento sea sustituido. El mismo patrón
+sirve tal cual en Blade, HTMX o Rails.
 
 ## Proveedores de almacenamiento soportados
 
@@ -200,7 +212,8 @@ Junto a esos seis se instalan dos componentes de apoyo:
 - `MediaLibraryModal` (solo Svelte, en las cuatro presentaciones) — envuelve la biblioteca en un
   modal con pestañas Biblioteca / Subir archivo / Desde URL, paginación numerada, búsqueda y
   orden.
-- `ModernSelect` (React y Svelte, con `ui/modern-select.css`) — el desplegable que usan
-  `FolderSelect` e `ImageEditor`.
+- `ModernSelect` — el desplegable que usan `FolderSelect` e `ImageEditor`. La versión de React
+  no tiene dependencias y se estiliza con `ui/modern-select.css`; la de Svelte se apoya en
+  `bits-ui`, que la CLI instala junto al componente.
 
 Prueba este componente en vivo en el [Playground de Media Picker](/referencia/playground/media-picker/).
