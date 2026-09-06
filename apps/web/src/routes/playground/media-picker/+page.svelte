@@ -7,7 +7,7 @@
   // NOTE: these 4 style variants per component (headless + tailwind + shadcn + vanilla) are kept
   // imported even though only MediaLibraryModal/ImageEditor are rendered by this playground's
   // flow below — MediaLibraryModal/ImageEditor internally compose their own variant's
-  // BulkActionsBar/FolderSelect/MediaLibraryGrid/MimeTypeFilter/RemoteUrlLoader, so those aren't
+  // BulkActionsBar/FolderSelect/MediaLibraryGrid/MimeTypeFilter/VariantFilter/RemoteUrlLoader, so those aren't
   // wired standalone here anymore (superseded by the modal redesign), but the imports are kept
   // resolvable to guard against silently breaking one variant's compile while editing this file.
   import BulkActionsBarHeadless from '@modularcore/media-picker/ui/svelte/BulkActionsBar.svelte';
@@ -16,6 +16,7 @@
   import MediaLibraryGridHeadless from '@modularcore/media-picker/ui/svelte/MediaLibraryGrid.svelte';
   import MediaLibraryModalHeadless from '@modularcore/media-picker/ui/svelte/MediaLibraryModal.svelte';
   import MimeTypeFilterHeadless from '@modularcore/media-picker/ui/svelte/MimeTypeFilter.svelte';
+  import VariantFilterHeadless from '@modularcore/media-picker/ui/svelte/VariantFilter.svelte';
   import RemoteUrlLoaderHeadless from '@modularcore/media-picker/ui/svelte/RemoteUrlLoader.svelte';
 
   import BulkActionsBarTailwind from '@modularcore/media-picker/ui/svelte/tailwind/BulkActionsBar.svelte';
@@ -24,6 +25,7 @@
   import MediaLibraryGridTailwind from '@modularcore/media-picker/ui/svelte/tailwind/MediaLibraryGrid.svelte';
   import MediaLibraryModalTailwind from '@modularcore/media-picker/ui/svelte/tailwind/MediaLibraryModal.svelte';
   import MimeTypeFilterTailwind from '@modularcore/media-picker/ui/svelte/tailwind/MimeTypeFilter.svelte';
+  import VariantFilterTailwind from '@modularcore/media-picker/ui/svelte/tailwind/VariantFilter.svelte';
   import RemoteUrlLoaderTailwind from '@modularcore/media-picker/ui/svelte/tailwind/RemoteUrlLoader.svelte';
 
   import BulkActionsBarShadcn from '@modularcore/media-picker/ui/svelte/shadcn/BulkActionsBar.svelte';
@@ -32,6 +34,7 @@
   import MediaLibraryGridShadcn from '@modularcore/media-picker/ui/svelte/shadcn/MediaLibraryGrid.svelte';
   import MediaLibraryModalShadcn from '@modularcore/media-picker/ui/svelte/shadcn/MediaLibraryModal.svelte';
   import MimeTypeFilterShadcn from '@modularcore/media-picker/ui/svelte/shadcn/MimeTypeFilter.svelte';
+  import VariantFilterShadcn from '@modularcore/media-picker/ui/svelte/shadcn/VariantFilter.svelte';
   import RemoteUrlLoaderShadcn from '@modularcore/media-picker/ui/svelte/shadcn/RemoteUrlLoader.svelte';
 
   import BulkActionsBarVanilla from '@modularcore/media-picker/ui/svelte/vanilla/BulkActionsBar.svelte';
@@ -40,6 +43,7 @@
   import MediaLibraryGridVanilla from '@modularcore/media-picker/ui/svelte/vanilla/MediaLibraryGrid.svelte';
   import MediaLibraryModalVanilla from '@modularcore/media-picker/ui/svelte/vanilla/MediaLibraryModal.svelte';
   import MimeTypeFilterVanilla from '@modularcore/media-picker/ui/svelte/vanilla/MimeTypeFilter.svelte';
+  import VariantFilterVanilla from '@modularcore/media-picker/ui/svelte/vanilla/VariantFilter.svelte';
   import RemoteUrlLoaderVanilla from '@modularcore/media-picker/ui/svelte/vanilla/RemoteUrlLoader.svelte';
 
   import { createDemoStorageProvider } from '$lib/demo-storage-provider';

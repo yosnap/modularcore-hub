@@ -73,6 +73,50 @@ Las ocho presentaciones de `MediaLibraryGrid` —cuatro de React y cuatro de Sve
 con el nombre del fichero y su tamaño, y un distintivo por cada tamaño derivado disponible, con el
 ancho en píxeles cuando el proveedor lo informa.
 
+### Filtrar por tamaño
+
+`VariantFilter` alimenta `ListOptions.variant`, también en las ocho presentaciones. Es selección
+única, no casillas como `MimeTypeFilter`: filtrar por dos tamaños a la vez no significa nada,
+porque cada objeto aparece una sola vez con sus derivadas dentro. Devuelve `undefined` al volver a
+«todos», para que `variant` se omita del listado en lugar de viajar como cadena vacía.
+
+```svelte
+<VariantFilter
+  options={['large', 'medium', 'thumb']}
+  selected={size}
+  onChange={(variant) => {
+    size = variant;
+    // La clave se añade sólo si hay tamaño: `{ ...filters, variant: undefined }` la dejaría
+    // presente, y un hook `list` que haga `new URLSearchParams({ ...options })` enviaría
+    // `variant=undefined` al backend.
+    picker.listLibrary(provider, { ...filters, ...(variant ? { variant } : {}) });
+  }}
+/>
+```
+
+### Elegir el tamaño al confirmar
+
+`confirmSelection()` devuelve siempre el original, con sus derivadas dentro. Para quedarte con un
+tamaño concreto —la portada de un post que quiere el mediano, por ejemplo— tienes dos funciones
+puras en `core/format.ts`:
+
+```ts
+import { selectionAtVariant, variantUrl } from '@modularcore/media-picker/format';
+
+const cover = variantUrl(picker.confirmSelection()[0], 'medium');
+const gallery = selectionAtVariant(picker.confirmSelection(), 'thumb');
+```
+
+Ambas recurren al original cuando ese tamaño no existe: el proveedor decide qué derivadas guarda,
+así que pedir una ausente es normal y debe dar una imagen, no `undefined`. Se resuelve fuera del
+núcleo a propósito — la selección no cambia según el tamaño que quieras mostrar, y un mismo objeto
+puede necesitar tamaños distintos en dos sitios de la misma página.
+
+`selectionAtVariant` devuelve cada objeto **medido como el tamaño pedido**: junto a la URL viajan
+el ancho, el alto y el peso de esa derivada, para que `<img src={item.url} width={item.width}>` no
+maquete la miniatura en la caja del original. `variants` se conserva, así que puedes saltar a otro
+tamaño sin volver a listar.
+
 ## Uso sin framework (Astro, Blade, HTMX…)
 
 Los demás adaptadores traducen el estado del núcleo al sistema reactivo de su framework y usan su
@@ -138,9 +182,9 @@ autenticar.
 
 ## Variantes de estilo de UI
 
-Cada uno de los 6 componentes de UI (`MediaLibraryGrid`, `FolderSelect`, `MimeTypeFilter`,
-`ImageEditor`, `BulkActionsBar`, `RemoteUrlLoader`) se distribuye en 4 presentaciones, todas con
-las mismas props/comportamiento — solo cambia el marcado/CSS:
+Cada uno de los 7 componentes de UI (`MediaLibraryGrid`, `FolderSelect`, `MimeTypeFilter`,
+`VariantFilter`, `ImageEditor`, `BulkActionsBar`, `RemoteUrlLoader`) se distribuye en 4
+presentaciones, todas con las mismas props — solo cambia el marcado/CSS:
 
 - `ui/react/*.tsx`, `ui/svelte/*.svelte` — UI de referencia headless, sin estilos (la opción por
   defecto original).
