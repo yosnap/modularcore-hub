@@ -5,6 +5,14 @@
   "type": "headless-core",
   "category": "spike",
   "frameworks": ["react", "svelte"],
+  "ui": {
+    "react": {
+      "presentations": []
+    },
+    "svelte": {
+      "presentations": []
+    }
+  },
   "visibility": "internal",
   "peerDependencies": {},
   "dependencies": [],

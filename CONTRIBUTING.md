@@ -109,6 +109,58 @@ carpeta de pruebas. Ejemplo de estructura (Media Picker): `core/` (lógica isom�
 
 ---
 
+## Aportar un componente: cobertura por framework
+
+Ofrecemos cada componente en varios frameworks, y ese es el valor del catálogo: quien instala
+`media-picker` en Angular espera lo mismo que quien lo instala en React.
+
+**No te pedimos que cubras todos los frameworks.** Aporta los que domines —uno basta— y dilo en el
+PR; completar el resto es trabajo del mantenimiento. Lo que sí te pedimos es que la cobertura quede
+*declarada*, para que nadie descubra el hueco al instalar.
+
+### Los dos ejes, que no son el mismo
+
+- **`frameworks`** — dónde se puede *instalar*. Exige núcleo headless (`core/`) y un adaptador
+  (`adapters/<framework>/`). Es lo que la CLI comprueba antes de escribir nada.
+- **`ui`** — dónde hay además *componentes de interfaz*, y en qué presentaciones de las cuatro
+  (`headless`, `tailwind`, `shadcn`, `vanilla`).
+
+Un componente puede declarar `vue` en `frameworks` y `{ "presentations": [] }` en `ui`: se instala
+en un proyecto Vue y el consumidor monta su propia interfaz sobre el adaptador. Lo que no puede es
+callarse la diferencia.
+
+### Cómo se declara
+
+```json
+"frameworks": ["react", "svelte", "vue"],
+"ui": {
+  "react": { "presentations": ["headless", "tailwind", "shadcn", "vanilla"] },
+  "svelte": { "presentations": ["headless", "tailwind", "shadcn", "vanilla"] },
+  "vue": { "presentations": [] }
+}
+```
+
+Si tu componente existe en un framework y no en otro, nómbralo:
+
+```json
+"react": { "presentations": ["headless"], "missing": ["MediaLibraryModal"] }
+```
+
+La comprobación de `packages/registry` compara lo declarado con lo que hay y **falla en los dos
+sentidos**: si aparece una brecha que nadie declaró, y si sigue declarada una que ya se cubrió. La
+deuda no se acumula en silencio ni sobrevive a su arreglo.
+
+### Qué mirar al adaptar a otro framework
+
+- Las cuatro presentaciones comparten props y comportamiento; sólo cambian marcado y CSS.
+- La lógica que decide *qué* se pinta va en `core/`, no en la presentación: así las ocho versiones
+  rinden lo mismo (ver `core/format.ts` de `media-picker`).
+- Las dependencias de UI son propias de cada framework —`bits-ui` en Svelte, `@radix-ui/*` en
+  React— y van declaradas en `dependencies` del descriptor. Si el equivalente no existe para tu
+  framework, dilo en el PR antes de inventar uno.
+
+---
+
 ## Flujo de trabajo Git
 
 El proyecto sigue un modelo de tres niveles **feature → `develop` → `main`**
@@ -246,6 +298,7 @@ Además:
 - [ ] Se añadió un changeset si el cambio afecta a un paquete publicable.
 - [ ] El PR trata un solo tema y su descripción explica el *qué* y el *porqué*.
 - [ ] Si este PR cambia el comportamiento de CLI, MCP o Web, se ha actualizado `apps/docs` en este mismo PR (o se justifica abajo por qué no aplica).
+- [ ] Si el PR toca un componente, `ui` en su `modularcore.json` refleja la cobertura real: presentaciones que trae y, con nombre, lo que queda por adaptar.
 
 ### Publicar una versión de la documentación
 

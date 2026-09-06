@@ -1,3 +1,5 @@
+import type { UiCoverage } from './ui-coverage.js';
+
 /**
  * Descriptor types for a ModularCore registry component (`modularcore.json`).
  * Runtime validation lives in `schema.zod.ts`; keep both in sync.
@@ -36,6 +38,12 @@ export interface RegistryDescriptor {
   type: ComponentType;
   category: string;
   frameworks: SupportedFramework[];
+  /**
+   * Cobertura de la UI de referencia por framework. `frameworks` dice dónde se puede instalar
+   * —núcleo y adaptador—; esto dice dónde hay además componentes de interfaz, y qué falta por
+   * adaptar. Ver `ui-coverage.ts`.
+   */
+  ui?: Record<string, UiCoverage>;
   visibility: Visibility;
   /** Semver ranges keyed by peer framework, e.g. `{ "react": ">=18" }`. Gates `add` (Phase 3) before writing runes/hooks. */
   peerDependencies: Record<string, string>;
@@ -63,5 +71,7 @@ export interface RegistryIndexEntry {
   category: string;
   version: string;
   frameworks: SupportedFramework[];
+  /** Cobertura de la UI de referencia, para que el catálogo distinga «instalable» de «con UI». */
+  ui?: Record<string, UiCoverage>;
   description?: string;
 }
