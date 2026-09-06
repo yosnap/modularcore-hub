@@ -73,6 +73,42 @@ Las ocho presentaciones de `MediaLibraryGrid` —cuatro de React y cuatro de Sve
 con el nombre del fichero y su tamaño, y un distintivo por cada tamaño derivado disponible, con el
 ancho en píxeles cuando el proveedor lo informa.
 
+### Filtrar por tamaño
+
+`VariantFilter` alimenta `ListOptions.variant`, también en las ocho presentaciones. Es selección
+única, no casillas como `MimeTypeFilter`: filtrar por dos tamaños a la vez no significa nada,
+porque cada objeto aparece una sola vez con sus derivadas dentro. Devuelve `undefined` al volver a
+«todos», para que `variant` se omita del listado en lugar de viajar como cadena vacía.
+
+```svelte
+<VariantFilter
+  options={['large', 'medium', 'thumb']}
+  selected={size}
+  onChange={(variant) => {
+    size = variant;
+    picker.listLibrary(provider, { ...filters, variant });
+  }}
+/>
+```
+
+### Elegir el tamaño al confirmar
+
+`confirmSelection()` devuelve siempre el original, con sus derivadas dentro. Para quedarte con un
+tamaño concreto —la portada de un post que quiere el mediano, por ejemplo— tienes dos funciones
+puras en `core/format.ts`:
+
+```ts
+import { selectionAtVariant, variantUrl } from '@modularcore/media-picker/format';
+
+const cover = variantUrl(picker.confirmSelection()[0], 'medium');
+const gallery = selectionAtVariant(picker.confirmSelection(), 'thumb');
+```
+
+Ambas recurren al original cuando ese tamaño no existe: el proveedor decide qué derivadas guarda,
+así que pedir una ausente es normal y debe dar una imagen, no `undefined`. Se resuelve fuera del
+núcleo a propósito — la selección no cambia según el tamaño que quieras mostrar, y un mismo objeto
+puede necesitar tamaños distintos en dos sitios de la misma página.
+
 ## Uso sin framework (Astro, Blade, HTMX…)
 
 Los demás adaptadores traducen el estado del núcleo al sistema reactivo de su framework y usan su

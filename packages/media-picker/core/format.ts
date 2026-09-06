@@ -1,9 +1,12 @@
 /**
- * Human-readable byte-size formatting shared by every UI variant's `MediaLibraryGrid` (filename
- * + size caption, Phase 2) — kept as a pure `core/` function (not duplicated per-variant) so all
- * 4 Svelte/React style variants render the identical string for the same `size`.
+ * Funciones puras que comparten las ocho presentaciones de la UI —cuatro de React y cuatro de
+ * Svelte— para que todas rindan exactamente lo mismo a partir del mismo objeto: el tamaño en
+ * bytes, el nombre del fichero, y el orden, el texto y la elección de los tamaños derivados.
+ *
+ * Viven en `core/` y no duplicadas por presentación precisamente para eso.
  */
 
+import type { LibraryItem } from './library-state.js';
 import type { ObjectVariant } from './provider.js';
 
 const UNITS = ['B', 'KB', 'MB', 'GB', 'TB'] as const;
@@ -53,4 +56,29 @@ export function formatVariantBadge(variant: ObjectVariant): string {
  */
 export function basename(key: string): string {
   return key.split('/').pop() || key;
+}
+
+/**
+ * La URL del tamaño `label` de este objeto, o la del original si no existe.
+ *
+ * El caso típico es la portada de un post que quiere el tamaño mediano: `confirmSelection()`
+ * devuelve el original con sus derivadas dentro, y esto elige entre ellas. Se resuelve aquí, en
+ * una función pura, y no en `MediaPicker`: la selección no cambia según el tamaño que quiera
+ * mostrarse, y un mismo objeto seleccionado puede necesitar tamaños distintos en dos sitios de
+ * la misma página.
+ *
+ * Recurrir al original ante una etiqueta ausente es deliberado: el proveedor decide qué derivadas
+ * guarda, así que pedir un tamaño que no existe es normal y debe dar una imagen, no `undefined`.
+ */
+export function variantUrl(item: LibraryItem, label: string): string {
+  return item.variants?.find((variant) => variant.label === label)?.url ?? item.url;
+}
+
+/**
+ * Aplica `variantUrl` a una selección entera, devolviendo cada objeto con la URL del tamaño
+ * pedido. El resto del objeto se conserva, `variants` incluido, para no perder información por el
+ * camino.
+ */
+export function selectionAtVariant(items: LibraryItem[], label: string): LibraryItem[] {
+  return items.map((item) => ({ ...item, url: variantUrl(item, label) }));
 }

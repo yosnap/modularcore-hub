@@ -38,6 +38,10 @@
       "types": "./dist/core/library-state.d.ts",
       "default": "./dist/core/library-state.js"
     },
+    "./format": {
+      "types": "./dist/core/format.d.ts",
+      "default": "./dist/core/format.js"
+    },
     "./providers/s3-compatible": {
       "types": "./dist/core/providers/s3-compatible.d.ts",
       "default": "./dist/core/providers/s3-compatible.js"
@@ -81,6 +85,10 @@
     "./ui/react/MimeTypeFilter": {
       "types": "./dist/ui/react/MimeTypeFilter.d.ts",
       "default": "./dist/ui/react/MimeTypeFilter.js"
+    },
+    "./ui/react/VariantFilter": {
+      "types": "./dist/ui/react/VariantFilter.d.ts",
+      "default": "./dist/ui/react/VariantFilter.js"
     },
     "./ui/react/ImageEditor": {
       "types": "./dist/ui/react/ImageEditor.d.ts",
