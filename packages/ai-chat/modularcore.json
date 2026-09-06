@@ -5,6 +5,20 @@
   "type": "headless-core",
   "category": "ai",
   "frameworks": ["react", "svelte", "vue", "angular", "vanilla", "blade"],
+  "ui": {
+    "react": {
+      "presentations": []
+    },
+    "svelte": {
+      "presentations": []
+    },
+    "vue": {
+      "presentations": []
+    },
+    "angular": {
+      "presentations": []
+    }
+  },
   "visibility": "public",
   "peerDependencies": {
     "react": ">=18",

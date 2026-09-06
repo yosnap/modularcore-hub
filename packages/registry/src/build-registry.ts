@@ -129,6 +129,7 @@ function toIndexEntry(descriptor: RegistryDescriptorParsed): RegistryIndexEntry 
     category: descriptor.category,
     version: descriptor.version,
     frameworks: descriptor.frameworks,
+    ...(descriptor.ui ? { ui: descriptor.ui } : {}),
     description: descriptor.description,
   };
 }

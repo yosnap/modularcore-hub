@@ -5,6 +5,21 @@
   "type": "headless-core",
   "category": "media",
   "frameworks": ["react", "svelte", "vue", "angular", "blade", "vanilla"],
+  "ui": {
+    "react": {
+      "presentations": ["headless", "tailwind", "shadcn", "vanilla"],
+      "missing": ["MediaLibraryModal"]
+    },
+    "svelte": {
+      "presentations": ["headless", "tailwind", "shadcn", "vanilla"]
+    },
+    "vue": {
+      "presentations": []
+    },
+    "angular": {
+      "presentations": []
+    }
+  },
   "visibility": "public",
   "peerDependencies": {
     "react": ">=18",

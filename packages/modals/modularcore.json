@@ -5,6 +5,14 @@
   "type": "headless-core",
   "category": "ui",
   "frameworks": ["react", "svelte"],
+  "ui": {
+    "react": {
+      "presentations": ["headless"]
+    },
+    "svelte": {
+      "presentations": ["headless", "tailwind", "shadcn", "vanilla"]
+    }
+  },
   "visibility": "public",
   "peerDependencies": {
     "react": ">=18",

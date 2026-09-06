@@ -1,4 +1,12 @@
 export {
+  PRESENTATIONS,
+  findCoverageMismatches,
+  locateUiFile,
+  readActualCoverage,
+} from './ui-coverage.js';
+export type { Presentation, UiCoverage } from './ui-coverage.js';
+
+export {
   AGNOSTIC_FRAMEWORK,
   KNOWN_FRAMEWORKS,
   frameworkOfFile,

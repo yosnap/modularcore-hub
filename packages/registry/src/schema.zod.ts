@@ -50,6 +50,15 @@ export const registryDescriptorSchema = z.object({
   type: componentTypeSchema,
   category: z.string().min(1),
   frameworks: z.array(z.string().min(1)).min(1),
+  ui: z
+    .record(
+      z.string().min(1),
+      z.object({
+        presentations: z.array(z.enum(['headless', 'tailwind', 'shadcn', 'vanilla'])),
+        missing: z.array(z.string().min(1)).optional(),
+      }),
+    )
+    .optional(),
   visibility: visibilitySchema,
   peerDependencies: z.record(z.string(), z.string()).default({}),
   dependencies: z.array(z.string()).default([]),
@@ -76,5 +85,14 @@ export const registryIndexEntrySchema = z.object({
   category: z.string(),
   version: z.string(),
   frameworks: z.array(z.string()),
+  ui: z
+    .record(
+      z.string().min(1),
+      z.object({
+        presentations: z.array(z.enum(['headless', 'tailwind', 'shadcn', 'vanilla'])),
+        missing: z.array(z.string().min(1)).optional(),
+      }),
+    )
+    .optional(),
   description: z.string().optional(),
 });
