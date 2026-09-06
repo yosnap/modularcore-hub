@@ -24,6 +24,15 @@ export interface UploadOptions {
    */
   overwriteKey?: string;
   contentType?: string;
+  /**
+   * Marca esta subida como un tamaño derivado del objeto identificado por `variantOf`, con la
+   * etiqueta `variantLabel`. El núcleo no persiste nada: se limita a transportar ambos campos
+   * hasta el proveedor, que decide cómo relacionarlos (una columna en tu base de datos, un
+   * prefijo en la clave, metadatos del objeto…). Un proveedor que los ignore sigue siendo una
+   * implementación válida de esta interfaz; simplemente no ofrecerá variantes.
+   */
+  variantOf?: string;
+  variantLabel?: string;
   onProgress?: (loadedBytes: number, totalBytes: number) => void;
   signal?: AbortSignal;
 }
@@ -35,6 +44,17 @@ export interface UploadResult {
   contentType: string;
 }
 
+/** Un tamaño derivado que el proveedor guarda junto al original. */
+export interface ObjectVariant {
+  /** La misma etiqueta con la que se subió (`UploadOptions.variantLabel`). */
+  label: string;
+  key: string;
+  url: string;
+  size: number;
+  width?: number;
+  height?: number;
+}
+
 export interface ListedObject {
   key: string;
   url: string;
@@ -43,6 +63,12 @@ export interface ListedObject {
   mimeType?: string;
   width?: number;
   height?: number;
+  /**
+   * Tamaños derivados de este objeto, si el proveedor los guarda. Un listado solo devuelve
+   * originales: las variantes viajan aquí, nunca como entradas propias, para que la biblioteca
+   * no muestre cinco copias de la misma imagen.
+   */
+  variants?: ObjectVariant[];
 }
 
 /**
@@ -72,6 +98,13 @@ export interface ListOptions {
   query?: string;
   /** Requested sort order. Not guaranteed to be honored by every provider — see the trust-boundary note above. */
   sort?: 'newest' | 'oldest' | 'name' | 'size';
+  /**
+   * Conserva únicamente los originales que tengan el tamaño derivado indicado (`'thumb'`,
+   * `'large'`…), o los que no tengan ninguno con `'none'`. Como `scope`, `query` y `sort`, se
+   * reenvía tal cual al hook `list` del consumidor: el núcleo no filtra nada por su cuenta y un
+   * proveedor que lo ignore sigue siendo válido.
+   */
+  variant?: string;
   cursor?: string;
   limit?: number;
 }

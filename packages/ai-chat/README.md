@@ -21,7 +21,7 @@ the browser.
 - `core/history/*` — pluggable conversation history (local storage or your own backend).
 - `ui/markdown.ts` — dependency-free Markdown → HTML renderer that escapes all untrusted text
   before adding any formatting markup, so its output is safe to assign to `innerHTML`/`{@html}`.
-- `adapters/react`, `adapters/svelte`, `adapters/web` — thin bindings over `Chat` for each
+- `adapters/react`, `adapters/svelte`, `adapters/vanilla` — thin bindings over `Chat` for each
   framework (Svelte adapter uses Svelte 5 runes).
 - `adapters/vue`, `adapters/angular` — per-component Composition API/signals bindings with
   lifecycle cleanup; they do not share conversation state globally.

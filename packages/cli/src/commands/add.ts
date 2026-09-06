@@ -9,6 +9,7 @@ import { appendEnvExample, remapTarget } from '../files.js';
 import { installNpmDependencies } from '../install.js';
 import { CliError } from '../errors.js';
 import { isTrackedWriteError, writeFilesTracked } from '@modularcore/registry-client';
+import { selectFilesForFramework } from '@modularcore/registry';
 
 import type { RegistryClient } from '@modularcore/registry-client';
 import type { PromptAdapter } from '../prompts.js';
@@ -67,7 +68,9 @@ export async function runAdd(
   const filesWritten: WriteResult[] = [];
   try {
     for (const entry of entries) {
-      const remappedFiles = entry.files.map((file) => ({
+      // Sólo los ficheros del framework de este proyecto: escribir los adaptadores de los demás
+      // dejaría módulos que importan runtimes que no están instalados.
+      const remappedFiles = selectFilesForFramework(entry.files, config.framework).map((file) => ({
         ...file,
         target: remapTarget(file.target, config.paths),
       }));

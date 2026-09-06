@@ -1,5 +1,13 @@
 # @modularcore/registry-client
 
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [3dbcca3]
+  - @modularcore/registry@0.3.0
+
 ## 0.3.0
 
 ### Minor Changes

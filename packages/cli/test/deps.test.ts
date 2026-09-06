@@ -81,6 +81,30 @@ describe('deps', () => {
     expect(() => assertCompatible(agnosticEntry, 'svelte', () => undefined)).not.toThrow();
   });
 
+  it('a vanilla project installs a vanilla component without any framework peer installed', async () => {
+    server = await startFixtureRegistryServer();
+    const client = createRegistryClient(server.url);
+    const entry = await client.getDescriptor('widget');
+    // Un descriptor con adaptadores para varios frameworks declara sus peers; un proyecto sin
+    // framework no tiene ninguno instalado y no debe necesitarlos para llevarse el binding vanilla.
+    const multiFramework = {
+      ...entry,
+      frameworks: ['react', 'svelte', 'vanilla'],
+      peerDependencies: { react: '>=18', svelte: '>=5' },
+    };
+    expect(() => assertCompatible(multiFramework, 'vanilla', () => undefined)).not.toThrow();
+  });
+
+  it('rejects a component with no vanilla binding in a frameworkless project', async () => {
+    server = await startFixtureRegistryServer();
+    const client = createRegistryClient(server.url);
+    const entry = await client.getDescriptor('widget');
+    const reactOnly = { ...entry, frameworks: ['react'], peerDependencies: {} };
+    expect(() => assertCompatible(reactOnly, 'vanilla', () => undefined)).toThrow(
+      CompatibilityError,
+    );
+  });
+
   it('SA2: rejects a dependency without a pinned/semver version', async () => {
     server = await startFixtureRegistryServer();
     const client = createRegistryClient(server.url);

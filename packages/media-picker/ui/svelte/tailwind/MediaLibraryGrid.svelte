@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { formatBytes } from '../../../core/format.js';
+  import { basename, formatBytes, formatVariantBadge, sortVariants } from '../../../core/format.js';
 
   import type { MediaPickerRune } from '../../../adapters/svelte/create-media-picker.svelte.js';
   import type { LibraryItem } from '../../../core/media-picker.js';
@@ -24,9 +24,6 @@
     return picker.state.selection.some((selected) => selected.key === item.key);
   }
 
-  function basename(key: string): string {
-    return key.split('/').pop() || key;
-  }
 </script>
 
 <!-- Tailwind variant: same props/behavior as the headless MediaLibraryGrid. -->
@@ -50,6 +47,17 @@
       <div class="mt-1 leading-tight">
         <span class="block truncate text-xs text-zinc-600" title={item.key}>{basename(item.key)}</span>
         <span class="block text-[11px] text-zinc-400">{formatBytes(item.size)}</span>
+        {#if item.variants?.length}
+          <span class="mt-0.5 flex flex-wrap gap-1">
+            {#each sortVariants(item.variants) as variant (variant.key)}
+              <span
+                title={variant.label}
+                class="rounded bg-zinc-800 px-1 text-[10px] leading-4 text-zinc-400"
+                >{formatVariantBadge(variant)}</span
+              >
+            {/each}
+          </span>
+        {/if}
       </div>
     </button>
   {/each}

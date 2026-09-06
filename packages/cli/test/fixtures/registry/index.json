@@ -14,5 +14,13 @@
     "version": "1.0.0",
     "frameworks": ["react"],
     "description": "Fixture with an npm dependency and a registryDependency."
+  },
+  {
+    "name": "multi-adapter",
+    "title": "Multi Adapter",
+    "category": "test-fixture",
+    "version": "1.0.0",
+    "frameworks": ["react", "vue", "vanilla", "blade"],
+    "description": "Fixture with one adapter per framework, used to check that add only writes the project's own."
   }
 ]

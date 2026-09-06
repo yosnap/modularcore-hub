@@ -1,6 +1,6 @@
 {
   "name": "@modularcore/ai-chat",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "main": "./dist/core/chat.js",
@@ -58,9 +58,9 @@
       "types": "./dist/adapters/angular/chat.service.d.ts",
       "default": "./dist/adapters/angular/chat.service.js"
     },
-    "./web": {
-      "types": "./dist/adapters/web/chat-element.d.ts",
-      "default": "./dist/adapters/web/chat-element.js"
+    "./vanilla": {
+      "types": "./dist/adapters/vanilla/chat-element.d.ts",
+      "default": "./dist/adapters/vanilla/chat-element.js"
     },
     "./markdown": {
       "types": "./dist/ui/markdown.d.ts",

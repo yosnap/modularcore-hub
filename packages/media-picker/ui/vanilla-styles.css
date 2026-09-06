@@ -51,6 +51,22 @@
   color: #a1a1aa;
 }
 
+.mc-grid__variants {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 2px;
+}
+
+.mc-grid__variant {
+  border-radius: 3px;
+  background: #f4f4f5;
+  padding: 0 3px;
+  font-size: 10px;
+  line-height: 16px;
+  color: #71717a;
+}
+
 .mc-alert {
   color: #b00020;
   font-size: 0.875rem;

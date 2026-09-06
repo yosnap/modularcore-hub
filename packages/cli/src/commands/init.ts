@@ -5,7 +5,22 @@ import type { ProjectConfig } from '../config.js';
 import type { DetectedFramework } from '../framework-detect.js';
 import type { PromptAdapter } from '../prompts.js';
 
-const FRAMEWORK_OPTIONS: DetectedFramework[] = ['react', 'svelte', 'vue', 'angular', 'blade'];
+const FRAMEWORK_OPTIONS: DetectedFramework[] = [
+  'react',
+  'svelte',
+  'vue',
+  'angular',
+  'blade',
+  'vanilla',
+];
+const FRAMEWORK_LABELS: Record<DetectedFramework, string> = {
+  react: 'react',
+  svelte: 'svelte',
+  vue: 'vue',
+  angular: 'angular',
+  blade: 'blade',
+  vanilla: 'vanilla (sin framework: Astro, HTMX, Rails…)',
+};
 const DEFAULT_REGISTRY_URL = 'http://localhost:5173/registry';
 const DEFAULT_PATHS: Record<DetectedFramework, Record<string, string>> = {
   blade: { components: 'resources/views/components', lib: 'resources/js/modularcore' },
@@ -13,6 +28,7 @@ const DEFAULT_PATHS: Record<DetectedFramework, Record<string, string>> = {
   svelte: { components: 'src/components', lib: 'src/lib/modularcore' },
   vue: { components: 'src/components', lib: 'src/lib/modularcore' },
   angular: { components: 'src/components', lib: 'src/lib/modularcore' },
+  vanilla: { components: 'src/components', lib: 'src/lib/modularcore' },
 };
 
 export interface InitOptions {
@@ -47,7 +63,7 @@ export async function runInit({ cwd, prompts }: InitOptions): Promise<ProjectCon
     prompts.note(reason, 'Selección manual requerida');
     framework = (await prompts.select(
       '¿Qué framework usa este proyecto?',
-      FRAMEWORK_OPTIONS.map((value) => ({ value, label: value })),
+      FRAMEWORK_OPTIONS.map((value) => ({ value, label: FRAMEWORK_LABELS[value] })),
     )) as DetectedFramework;
   }
 

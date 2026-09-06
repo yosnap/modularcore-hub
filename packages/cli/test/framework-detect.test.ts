@@ -56,6 +56,42 @@ describe('framework-detect', () => {
     }
   });
 
+  it('detects vanilla from Astro: its interactivity is plain TypeScript in a <script>', async () => {
+    const project = await createTmpProject({
+      packageJson: { name: 'app', dependencies: { astro: '^5.0.0' } },
+    });
+    try {
+      const { frameworks } = await detectFrameworks(project.dir);
+      expect(frameworks).toEqual(['vanilla']);
+    } finally {
+      await project.cleanup();
+    }
+  });
+
+  it("reports both when Astro carries React islands: choosing between them is the project's call", async () => {
+    const project = await createTmpProject({
+      packageJson: { name: 'app', dependencies: { astro: '^5.0.0', react: '^18.2.0' } },
+    });
+    try {
+      const { frameworks } = await detectFrameworks(project.dir);
+      expect(frameworks.sort()).toEqual(['react', 'vanilla']);
+    } finally {
+      await project.cleanup();
+    }
+  });
+
+  it('does not infer vanilla from the mere absence of markers: an empty project is unknown, not frameworkless', async () => {
+    const project = await createTmpProject({
+      packageJson: { name: 'app', dependencies: { lodash: '^4.17.0' } },
+    });
+    try {
+      const { frameworks } = await detectFrameworks(project.dir);
+      expect(frameworks).toEqual([]);
+    } finally {
+      await project.cleanup();
+    }
+  });
+
   it('flags a package.json with "workspaces" as a workspace root', async () => {
     const project = await createTmpProject({
       packageJson: { name: 'root', workspaces: ['packages/*'] },

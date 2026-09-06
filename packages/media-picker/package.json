@@ -1,6 +1,6 @@
 {
   "name": "@modularcore/media-picker",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "type": "module",
   "main": "./dist/core/media-picker.js",
@@ -29,6 +29,10 @@
     "./canvas/transform": {
       "types": "./dist/core/canvas/transform.d.ts",
       "default": "./dist/core/canvas/transform.js"
+    },
+    "./canvas/variants": {
+      "types": "./dist/core/canvas/variants.d.ts",
+      "default": "./dist/core/canvas/variants.js"
     },
     "./library-state": {
       "types": "./dist/core/library-state.d.ts",
@@ -61,6 +65,10 @@
     "./angular": {
       "types": "./dist/adapters/angular/media-picker.service.d.ts",
       "default": "./dist/adapters/angular/media-picker.service.js"
+    },
+    "./vanilla": {
+      "types": "./dist/adapters/vanilla/create-media-picker-store.d.ts",
+      "default": "./dist/adapters/vanilla/create-media-picker-store.js"
     },
     "./ui/react/MediaLibraryGrid": {
       "types": "./dist/ui/react/MediaLibraryGrid.d.ts",

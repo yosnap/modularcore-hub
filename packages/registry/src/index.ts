@@ -1,3 +1,10 @@
+export {
+  AGNOSTIC_FRAMEWORK,
+  KNOWN_FRAMEWORKS,
+  frameworkOfFile,
+  selectFilesForFramework,
+} from './framework-files.js';
+
 export type {
   ComponentType,
   EnvVariableDescriptor,
