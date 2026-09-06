@@ -78,8 +78,55 @@ describe('selectionAtVariant', () => {
       // Sin ese tamaño: se queda con su original.
       'https://cdn.example.com/b.png',
     ]);
-    expect(resolved[0]?.key).toBe('2026/09/portada.png');
-    expect(resolved[0]?.variants).toHaveLength(1);
+    // El objeto que sale describe la derivada entera: su clave también.
+    expect(resolved[0]?.key).toBe('k-medium');
+    // Y no arrastra derivadas: una miniatura no tiene miniaturas propias.
+    expect(resolved[0]?.variants).toBeUndefined();
+    // El objeto sin ese tamaño se queda intacto, con su clave y sus derivadas.
+    expect(resolved[1]?.key).toBe('otra.png');
+  });
+
+  it('la clave y la URL describen el mismo objeto, para que un remove() no borre el original', () => {
+    const selection = [
+      item({
+        variants: [variant('thumb', 'https://cdn.example.com/thumb.png', { key: 'claves/thumb' })],
+      }),
+    ];
+
+    const [resolved] = selectionAtVariant(selection, 'thumb');
+
+    expect(resolved?.key).toBe('claves/thumb');
+    expect(resolved?.url).toBe('https://cdn.example.com/thumb.png');
+  });
+
+  it('copia el formato de la derivada cuando lo declara: puede no ser el del original', () => {
+    const selection = [
+      item({
+        mimeType: 'image/png',
+        variants: [
+          variant('thumb', 'https://cdn.example.com/thumb.jpg', { mimeType: 'image/jpeg' }),
+        ],
+      }),
+    ];
+
+    const [resolved] = selectionAtVariant(selection, 'thumb');
+
+    expect(resolved?.mimeType).toBe('image/jpeg');
+  });
+
+  it('conserva el formato del original si la derivada no lo declara', () => {
+    // Borrarlo haría que la cuadrícula dejara de reconocerla como imagen y pintara el hueco de un
+    // fichero cualquiera: un fallo peor y seguro frente a uno impreciso e improbable.
+    const selection = [
+      item({
+        mimeType: 'image/png',
+        variants: [variant('thumb', 'https://cdn.example.com/thumb.png')],
+      }),
+    ];
+
+    const [resolved] = selectionAtVariant(selection, 'thumb');
+
+    expect(resolved?.mimeType).toBe('image/png');
   });
 
   it('trae también las medidas del tamaño pedido, no las del original', () => {

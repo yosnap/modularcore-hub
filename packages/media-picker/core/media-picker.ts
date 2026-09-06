@@ -284,7 +284,10 @@ export class MediaPicker {
       throw new Error('media-picker: uploadWithVariants() called with no source loaded');
     }
     const source = this.state.blob;
+    // La generación vigente al empezar. `upload()` la incrementa por dentro, así que se lee
+    // después: lo que interesa es detectar un `reset()` o una carga nueva *posteriores*.
     const original = await this.upload(provider, options);
+    const generation = this.generation;
 
     const variants: UploadWithVariantsResult['variants'] = [];
     const failed: UploadWithVariantsResult['failed'] = [];
@@ -313,12 +316,19 @@ export class MediaPicker {
     delete shared.contentType;
 
     for (const variant of generated) {
+      // Un `reset()` o una carga nueva mientras se generaban las derivadas dejan sin sentido lo
+      // que queda: seguirían subiéndose contra la clave de un original que el usuario ya
+      // abandonó. Se para aquí, con lo conseguido hasta el momento.
+      if (this.generation !== generation) break;
+
       try {
         const result = await provider.upload(variant.blob, {
           ...shared,
           contentType: variant.blob.type || undefined,
           variantOf: original.key,
           variantLabel: variant.label,
+          variantWidth: variant.width,
+          variantHeight: variant.height,
           onProgress: undefined,
         });
         variants.push({ label: variant.label, result });

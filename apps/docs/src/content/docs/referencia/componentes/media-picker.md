@@ -119,10 +119,20 @@ así que pedir una ausente es normal y debe dar una imagen, no `undefined`. Se r
 núcleo a propósito — la selección no cambia según el tamaño que quieras mostrar, y un mismo objeto
 puede necesitar tamaños distintos en dos sitios de la misma página.
 
-`selectionAtVariant` devuelve cada objeto **medido como el tamaño pedido**: junto a la URL viajan
-el ancho, el alto y el peso de esa derivada, para que `<img src={item.url} width={item.width}>` no
-maquete la miniatura en la caja del original. `variants` se conserva, así que puedes saltar a otro
-tamaño sin volver a listar.
+`selectionAtVariant` devuelve cada objeto describiendo **la derivada entera**: su clave, su URL, su
+peso, sus medidas y su formato. Así `<img src={item.url} width={item.width}>` no maqueta la
+miniatura en la caja del original, y sobre todo la clave y la URL apuntan al mismo sitio — dejar la
+del original junto a la URL de la miniatura convertía un `provider.remove(item.key)` en un borrado
+del original.
+
+Ese objeto no lleva `variants`, porque una derivada no tiene derivadas propias. Para saltar a otro
+tamaño se parte de `confirmSelection()` sin transformar, que sigue siendo el original con todas sus
+derivadas dentro.
+
+Las medidas sólo viajan si el proveedor las conoce. Para que las conozca, `uploadWithVariants` se
+las manda al subir en `variantWidth`/`variantHeight`, junto a `variantOf` y `variantLabel`: si tu
+hook `upload` no las persiste, `ListedObject.variants` volverá sin ancho y el distintivo de la
+cuadrícula mostrará la etiqueta en vez de los píxeles.
 
 ## Uso sin framework (Astro, Blade, HTMX…)
 
