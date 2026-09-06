@@ -50,6 +50,21 @@ export const registryDescriptorSchema = z.object({
   type: componentTypeSchema,
   category: z.string().min(1),
   frameworks: z.array(z.string().min(1)).min(1),
+  preview: z
+    .object({
+      image: safeRelativePathSchema,
+      alt: z.string().min(1),
+    })
+    .optional(),
+  ui: z
+    .record(
+      z.string().min(1),
+      z.object({
+        presentations: z.array(z.enum(['headless', 'tailwind', 'shadcn', 'vanilla'])),
+        missing: z.array(z.string().min(1)).optional(),
+      }),
+    )
+    .optional(),
   visibility: visibilitySchema,
   peerDependencies: z.record(z.string(), z.string()).default({}),
   dependencies: z.array(z.string()).default([]),
@@ -66,9 +81,28 @@ export const registryFileWithContentSchema = registryFileSchema.extend({
   content: z.string(),
 });
 
+/**
+ * `preview.image` tiene dos formas según dónde se lea, y por eso hay dos esquemas.
+ *
+ * En el descriptor es una ruta dentro del paquete (`preview/rating.png`), validada como cualquier
+ * otra ruta. En lo que sirve el registry es ya la URL servible, porque `buildRegistry` copia el
+ * fichero y reescribe el campo. Validar la segunda con las reglas de la primera rechazaba la
+ * salida del propio build: en cuanto un componente declarase una captura, el cliente del registry
+ * habría dejado de poder leer el índice entero.
+ */
+const servedPreviewSchema = z.object({
+  image: z.string().regex(/^\/registry\/[a-z0-9-]+\.(?:png|jpg|jpeg|webp)$/i, {
+    message: 'Served preview must be a /registry/{name}-preview.{ext} URL',
+  }),
+  alt: z.string().min(1),
+});
+
 export const registryEntrySchema = registryDescriptorSchema
-  .omit({ files: true })
-  .extend({ files: z.array(registryFileWithContentSchema).min(1) });
+  .omit({ files: true, preview: true })
+  .extend({
+    files: z.array(registryFileWithContentSchema).min(1),
+    preview: servedPreviewSchema.optional(),
+  });
 
 export const registryIndexEntrySchema = z.object({
   name: z.string(),
@@ -76,5 +110,15 @@ export const registryIndexEntrySchema = z.object({
   category: z.string(),
   version: z.string(),
   frameworks: z.array(z.string()),
+  preview: servedPreviewSchema.optional(),
+  ui: z
+    .record(
+      z.string().min(1),
+      z.object({
+        presentations: z.array(z.enum(['headless', 'tailwind', 'shadcn', 'vanilla'])),
+        missing: z.array(z.string().min(1)).optional(),
+      }),
+    )
+    .optional(),
   description: z.string().optional(),
 });

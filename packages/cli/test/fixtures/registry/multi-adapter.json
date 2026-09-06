@@ -4,7 +4,7 @@
   "title": "Multi Adapter",
   "type": "headless-core",
   "category": "test-fixture",
-  "frameworks": ["react", "vue", "vanilla", "blade"],
+  "frameworks": ["react", "vue", "vanilla", "blade", "svelte"],
   "visibility": "public",
   "peerDependencies": {},
   "dependencies": [],
@@ -45,7 +45,7 @@
       "target": "src/modularcore/multi-adapter/ui/react/Thing.tsx",
       "type": "ui",
       "encoding": "utf8",
-      "content": "export const Thing = () => null;\n"
+      "content": "import * as Toggle from '@radix-ui/react-toggle';\nexport const Thing = () => null;\n"
     },
     {
       "path": "ui/plain-styles.css",
@@ -60,6 +60,13 @@
       "type": "snippet",
       "encoding": "utf8",
       "content": "export const mount = () => {};\n"
+    },
+    {
+      "path": "ui/svelte/Thing.svelte",
+      "target": "src/modularcore/multi-adapter/ui/svelte/Thing.svelte",
+      "type": "ui",
+      "encoding": "utf8",
+      "content": "<script lang=\"ts\">\n  import { Toggle } from 'bits-ui';\n</script>\n"
     }
   ]
 }

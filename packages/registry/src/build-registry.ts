@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import {
+  copyFile,
   mkdir,
   mkdtemp,
   readFile,
@@ -10,13 +11,18 @@ import {
   stat,
   writeFile,
 } from 'node:fs/promises';
-import { dirname, join, resolve, sep } from 'node:path';
+import { dirname, extname, join, resolve, sep } from 'node:path';
 
 import { registryDescriptorSchema } from './schema.zod.js';
 import { buildTarball } from './tarball.js';
 
 import type { RegistryDescriptorParsed } from './schema.zod.js';
-import type { RegistryEntry, RegistryFileWithContent, RegistryIndexEntry } from './schema.js';
+import type {
+  PreviewImage,
+  RegistryEntry,
+  RegistryFileWithContent,
+  RegistryIndexEntry,
+} from './schema.js';
 
 export interface BuildRegistryOptions {
   packagesRoot: string;
@@ -122,6 +128,40 @@ async function buildEntry(
   return { ...descriptor, files };
 }
 
+/**
+ * Formatos admitidos para la captura. **SVG queda fuera a propósito**: servido desde nuestro
+ * dominio con su propio `Content-Type`, un SVG abierto directamente ejecuta el script que lleve
+ * dentro, y estas imágenes las aporta quien contribuye.
+ */
+const PREVIEW_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp'];
+
+/**
+ * Copia la captura del componente junto a los demás artefactos y devuelve el `preview` con la URL
+ * ya servible, que es lo que el catálogo consume. El nombre de destino se deriva del componente,
+ * así que dos paquetes no pueden pisarse.
+ */
+async function copyPreview(
+  descriptor: RegistryDescriptorParsed,
+  componentDir: string,
+  tmpRoot: string,
+): Promise<PreviewImage | undefined> {
+  if (!descriptor.preview) return undefined;
+
+  const extension = extname(descriptor.preview.image).toLowerCase();
+  if (!PREVIEW_EXTENSIONS.includes(extension)) {
+    throw new Error(
+      `"${descriptor.name}": la captura debe ser ${PREVIEW_EXTENSIONS.join(', ')} y es "${extension || 'sin extensión'}"`,
+    );
+  }
+
+  const componentRealDir = await realpath(componentDir);
+  const source = await assertSafeSourcePath(componentRealDir, descriptor.preview.image);
+  const fileName = `${descriptor.name}-preview${extension}`;
+  await copyFile(source, join(tmpRoot, fileName));
+
+  return { image: `/registry/${fileName}`, alt: descriptor.preview.alt };
+}
+
 function toIndexEntry(descriptor: RegistryDescriptorParsed): RegistryIndexEntry {
   return {
     name: descriptor.name,
@@ -129,6 +169,8 @@ function toIndexEntry(descriptor: RegistryDescriptorParsed): RegistryIndexEntry 
     category: descriptor.category,
     version: descriptor.version,
     frameworks: descriptor.frameworks,
+    ...(descriptor.ui ? { ui: descriptor.ui } : {}),
+    ...(descriptor.preview ? { preview: descriptor.preview } : {}),
     description: descriptor.description,
   };
 }
@@ -166,12 +208,14 @@ export async function buildRegistry({
 
   const entries: RegistryEntry[] = [];
   const seenNames = new Set<string>();
+  const componentDirByName = new Map<string, string>();
   for (const componentDir of componentDirs) {
     const descriptor = await loadDescriptor(componentDir);
     if (seenNames.has(descriptor.name)) {
       throw new Error(`Duplicate component name "${descriptor.name}" across packages/*`);
     }
     seenNames.add(descriptor.name);
+    componentDirByName.set(descriptor.name, componentDir);
     entries.push(await buildEntry(descriptor, componentDir));
   }
 
@@ -184,6 +228,9 @@ export async function buildRegistry({
   try {
     const publicIndex: RegistryIndexEntry[] = [];
     for (const entry of entries) {
+      const preview = await copyPreview(entry, componentDirByName.get(entry.name)!, tmpRoot);
+      if (preview) entry.preview = preview;
+
       await writeFile(join(tmpRoot, `${entry.name}.json`), JSON.stringify(entry, null, 2), 'utf8');
       const tarball = await buildTarball(entry.files);
       await writeFile(join(tmpRoot, `${entry.name}.tar.gz`), tarball);

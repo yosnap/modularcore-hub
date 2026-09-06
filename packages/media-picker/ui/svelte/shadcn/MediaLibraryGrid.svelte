@@ -47,7 +47,7 @@
       {#if item.mimeType?.startsWith('image/')}
         <img src={item.url} alt={item.key} class="aspect-square w-full rounded-sm object-cover" />
       {:else}
-        <span class="block truncate text-xs text-muted-foreground">{item.key}</span>
+        <span class="block truncate text-xs text-muted-foreground">{item.mimeType ?? 'file'}</span>
       {/if}
       <div class="mt-1 leading-tight">
         <span class="block truncate text-xs text-foreground" title={item.key}>{basename(item.key)}</span>

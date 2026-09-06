@@ -45,7 +45,7 @@
       {#if item.mimeType?.startsWith('image/')}
         <img src={item.url} alt={item.key} style="width:100%;height:auto" />
       {:else}
-        <span>{item.key}</span>
+        <span>{item.mimeType ?? 'file'}</span>
       {/if}
       <div style="margin-top:4px;font-size:11px;line-height:1.3;overflow:hidden">
         <span

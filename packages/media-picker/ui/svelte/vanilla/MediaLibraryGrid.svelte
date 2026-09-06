@@ -43,7 +43,7 @@
       {#if item.mimeType?.startsWith('image/')}
         <img src={item.url} alt={item.key} class="mc-grid__thumb" />
       {:else}
-        <span>{item.key}</span>
+        <span>{item.mimeType ?? 'file'}</span>
       {/if}
       <div class="mc-grid__caption">
         <span class="mc-grid__filename" title={item.key}>{basename(item.key)}</span>

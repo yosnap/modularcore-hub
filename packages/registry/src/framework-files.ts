@@ -34,10 +34,20 @@ const SNIPPET_FRAMEWORKS: Record<string, string> = {
 const FRAMEWORK_ROOTS = ['adapters', 'ui'];
 
 /**
- * Frameworks que se apoyan en el binding de otro. Blade no tiene runtime propio en el navegador:
+ * Los únicos frameworks con UI de referencia propia. `blade` y `vanilla` se sirven con snippets, y
+ * `vanilla` además nombra una presentación de estilo, así que bajo `ui/` nunca es un framework.
+ */
+const UI_CAPABLE_FRAMEWORKS = ['react', 'svelte', 'vue', 'angular'];
+
+/**
+ * Frameworks que se apoyan en el *binding* de otro. Blade no tiene runtime propio en el navegador:
  * sus plantillas montan el mismo código sin framework que usaría una página suelta, y de hecho el
- * snippet de Laravel de `ai-chat` importa `adapters/vanilla` directamente. Un proyecto Blade se
- * lleva por tanto los ficheros `vanilla` además de los suyos.
+ * snippet de Laravel de `ai-chat` importa `adapters/vanilla` directamente.
+ *
+ * La herencia alcanza a los adaptadores y no a los snippets: aquéllos son el binding que la
+ * plantilla monta, mientras que un snippet es código de montaje para una herramienta concreta.
+ * Sin ese límite, un proyecto Laravel se llevaba la isla de Astro, cuyo único punto de entrada
+ * escucha `astro:page-load` y no se dispara jamás fuera de Astro.
  */
 const FRAMEWORK_BASES: Record<string, string[]> = {
   blade: ['vanilla'],
@@ -59,6 +69,14 @@ export function frameworkOfFile(path: string): string | null {
   if (path.split('/').length < 3) return null;
 
   if (root === 'snippets') return SNIPPET_FRAMEWORKS[second] ?? null;
+
+  // `vanilla` nombra dos ejes distintos: un framework (una página sin ninguno) y una presentación
+  // de estilo (CSS plano). Bajo `ui/` manda el segundo, así que `ui/vanilla/…` es marcado
+  // compartido y no el framework: tratarlo como framework lo borraría de toda instalación de
+  // React o Svelte, que es justo donde se usa.
+  if (root === 'ui') {
+    return UI_CAPABLE_FRAMEWORKS.includes(second) ? second : null;
+  }
   if (FRAMEWORK_ROOTS.includes(root)) {
     return (KNOWN_FRAMEWORKS as readonly string[]).includes(second) ? second : null;
   }
@@ -80,10 +98,12 @@ export function selectFilesForFramework<T extends { path: string }>(
   if (framework === AGNOSTIC_FRAMEWORK) return files;
   if (!(KNOWN_FRAMEWORKS as readonly string[]).includes(framework)) return files;
 
-  const served = new Set([framework, ...(FRAMEWORK_BASES[framework] ?? [])]);
+  const bases = new Set(FRAMEWORK_BASES[framework] ?? []);
 
   return files.filter((file) => {
     const owner = frameworkOfFile(file.path);
-    return owner === null || served.has(owner);
+    if (owner === null || owner === framework) return true;
+    // Lo heredado se limita a los adaptadores del framework base.
+    return bases.has(owner) && file.path.startsWith('adapters/');
   });
 }

@@ -65,22 +65,32 @@ export function mountMediaPicker(root: HTMLElement): MediaPickerStore | null {
     status.dataset.status = state.status;
   });
 
-  fileInput.addEventListener('change', async () => {
-    const file = fileInput.files?.[0];
-    if (!file) return;
+  // El oyente del input se retira junto al store. Un nodo con `transition:persist` sobrevive al
+  // cambio de documento con su oyente puesto: sin esto, el siguiente montaje añadiría un segundo
+  // oyente y elegir un fichero lo subiría dos veces, además de dejar al primero manejando un
+  // store ya destruido.
+  const listeners = new AbortController();
 
-    // El valor se limpia antes de subir: si no, volver a elegir el mismo archivo tras un fallo
-    // no dispara `change` y el reintento parece que no hace nada.
-    fileInput.value = '';
+  fileInput.addEventListener(
+    'change',
+    async () => {
+      const file = fileInput.files?.[0];
+      if (!file) return;
 
-    store.loadLocalFile(file);
-    try {
-      await store.upload(provider);
-    } catch {
-      // El error ya viaja en el estado y lo pinta el suscriptor de arriba; se captura aquí
-      // para no dejar una promesa rechazada sin gestionar en la consola del proyecto.
-    }
-  });
+      // El valor se limpia antes de subir: si no, volver a elegir el mismo archivo tras un fallo
+      // no dispara `change` y el reintento parece que no hace nada.
+      fileInput.value = '';
+
+      store.loadLocalFile(file);
+      try {
+        await store.upload(provider);
+      } catch {
+        // El error ya viaja en el estado y lo pinta el suscriptor de arriba; se captura aquí
+        // para no dejar una promesa rechazada sin gestionar en la consola del proyecto.
+      }
+    },
+    { signal: listeners.signal },
+  );
 
   // Astro sustituye el documento entero en cada navegación con View Transitions, así que el
   // store se destruye antes de que la página desaparezca para no dejar oyentes vivos.
@@ -88,6 +98,7 @@ export function mountMediaPicker(root: HTMLElement): MediaPickerStore | null {
     'astro:before-swap',
     () => {
       unsubscribe();
+      listeners.abort();
       store.destroy();
       // Un nodo con `transition:persist` sobrevive al cambio de documento. Si conservara la
       // marca, el siguiente `astro:page-load` lo daría por montado y el picker persistido
@@ -105,10 +116,23 @@ export function mountMediaPickers(): void {
 }
 
 /**
+ * Deja el picker montado ahora y en cada navegación posterior.
+ *
  * Astro no vuelve a ejecutar un módulo ya cargado tras una navegación con View Transitions, así
- * que montar solo al cargar el script deja el picker muerto al volver a una página ya visitada.
- * `astro:page-load` se dispara en la carga inicial y en cada navegación.
+ * que montar solo al cargar el script deja el picker muerto al volver a una página ya visitada:
+ * de ahí `astro:page-load`, que se dispara en la carga inicial y en cada navegación.
+ *
+ * Ese evento no existe fuera de Astro, así que además se monta cuando el documento está listo.
+ * Eso hace que el mismo fichero sirva tal cual en Blade, HTMX, Rails o una página suelta, que es
+ * lo que promete la cabecera. No hay doble montaje: `mountMediaPicker` marca cada raíz y se salta
+ * las que ya lo están.
  */
 export function registerMediaPickers(): void {
   document.addEventListener('astro:page-load', mountMediaPickers);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mountMediaPickers, { once: true });
+  } else {
+    mountMediaPickers();
+  }
 }

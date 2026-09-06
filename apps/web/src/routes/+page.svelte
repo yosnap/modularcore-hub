@@ -21,6 +21,26 @@
     const index = [...name].reduce((sum, char) => sum + char.charCodeAt(0), 0) % accents.length;
     return accents[index] ?? accents[0]!;
   }
+  /**
+   * `frameworks` dice dónde se puede instalar; `ui` dice dónde hay además componentes de
+   * interfaz. El catálogo distingue los dos para no prometer una UI que todavía no existe.
+   */
+  function hasUi(component: { ui?: Record<string, { presentations: string[] }> }, framework: string): boolean {
+    return (component.ui?.[framework]?.presentations.length ?? 0) > 0;
+  }
+
+  function uiTitle(
+    component: { ui?: Record<string, { presentations: string[]; missing?: string[] }> },
+    framework: string,
+  ): string {
+    const coverage = component.ui?.[framework];
+    if (!coverage || coverage.presentations.length === 0) {
+      return `${framework}: núcleo y adaptador, sin UI de referencia todavía`;
+    }
+    const missing = coverage.missing?.length ? ` — falta por adaptar: ${coverage.missing.join(', ')}` : '';
+    return `${framework}: UI en ${coverage.presentations.join(', ')}${missing}`;
+  }
+
 </script>
 
 <section class="hero">
@@ -48,6 +68,9 @@
   {#each filteredComponents as component (component.name)}
     {@const playground = playgroundFor(component.name)}
     <li class="card">
+      {#if component.preview}
+        <img class="shot" src={component.preview.image} alt={component.preview.alt} loading="lazy" />
+      {/if}
       <div class="card-body">
         <div class="meta">
           <span class="badge" style="--accent: {accentFor(component.category)}">
@@ -57,7 +80,13 @@
           <span class="ver">v{component.version}</span>
         </div>
         <h2><a href={`/c/${component.name}`}>{component.title}</a></h2>
-        <p class="frameworks">{component.frameworks.join(' · ')}</p>
+        <p class="frameworks">
+          {#each component.frameworks as framework (framework)}
+            <span class="fw" class:with-ui={hasUi(component, framework)} title={uiTitle(component, framework)}>
+              {framework}
+            </span>
+          {/each}
+        </p>
         {#if component.description}
           <p class="desc">{component.description}</p>
         {/if}
@@ -259,11 +288,34 @@
   .card:hover h3 a {
     color: hsl(var(--primary));
   }
+  /* Una captura dice del componente más que su descripción; sin ella la tarjeta no se rompe. */
+  .shot {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-bottom: 1px solid hsl(var(--border));
+    background: hsl(var(--muted));
+  }
   .frameworks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
     font-family: var(--mc-font-mono);
     font-size: 0.78rem;
     color: hsl(var(--muted-foreground));
     margin: 0 0 0.75rem;
+  }
+  /* Sin UI de referencia: se instala, pero la interfaz la pone el consumidor. */
+  .fw {
+    border: 1px dashed hsl(var(--border));
+    border-radius: 999px;
+    padding: 0 0.5rem;
+    line-height: 1.6;
+  }
+  .fw.with-ui {
+    border-style: solid;
+    color: hsl(var(--foreground));
   }
   .desc {
     font-size: 0.92rem;

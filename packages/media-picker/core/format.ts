@@ -90,19 +90,34 @@ export function selectionAtVariant(items: LibraryItem[], label: string): Library
     const match = item.variants?.find((variant) => variant.label === label);
     if (!match) return { ...item };
 
-    // Las medidas del original se descartan junto con su URL. Si el proveedor no informa de las
-    // de la derivada, el objeto sale sin ellas: no saber el ancho es correcto, y decir 1920
-    // sobre una miniatura de 400 no lo es.
-    const withoutOriginalSize: LibraryItem = { ...item };
-    delete withoutOriginalSize.width;
-    delete withoutOriginalSize.height;
+    // El objeto que sale describe **la derivada entera**, no un híbrido: su clave, su URL, su
+    // peso, sus medidas y su formato. Dejar la clave del original junto a la URL de la miniatura
+    // era una trampa — quien guardase la pareja registraría dos cosas distintas, y un
+    // `provider.remove(item.key)` habría borrado el original creyendo borrar la miniatura.
+    //
+    // Las medidas sólo se copian si el proveedor las conoce: no saber el ancho es correcto, y
+    // decir 1920 sobre una miniatura de 400 no lo es.
+    //
+    // El formato es distinto: si la derivada no lo declara se conserva el del original. Suele
+    // acertar —`generateVariants` mantiene el formato salvo que se le pida otro— y borrarlo haría
+    // que la cuadrícula dejara de reconocer la miniatura como imagen y pintara el hueco de un
+    // fichero cualquiera, que es un fallo peor y seguro frente a uno impreciso e improbable.
+    //
+    // `variants` desaparece porque una derivada no tiene derivadas propias. Quien necesite saltar
+    // a otro tamaño parte de `confirmSelection()` sin transformar, que sigue siendo el original.
+    const derived: LibraryItem = { ...item };
+    delete derived.width;
+    delete derived.height;
+    delete derived.variants;
 
     return {
-      ...withoutOriginalSize,
+      ...derived,
+      key: match.key,
       url: match.url,
       size: match.size,
       ...(match.width === undefined ? {} : { width: match.width }),
       ...(match.height === undefined ? {} : { height: match.height }),
+      ...(match.mimeType === undefined ? {} : { mimeType: match.mimeType }),
     };
   });
 }
