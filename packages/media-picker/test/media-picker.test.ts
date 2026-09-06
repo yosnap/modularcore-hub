@@ -442,6 +442,22 @@ describe('MediaPicker (state machine, collaborators injected — not the canvas 
       expect(picker.getState().libraryItems).toEqual([libraryItem('a'), libraryItem('b')]);
     });
 
+    it('changing the derived-size filter also resets the cache', async () => {
+      // `variant` llegó al contrato después que el resto de filtros. Sin él en la clave, elegir
+      // un tamaño desde la cuadrícula reutilizaba los cursores cacheados para el listado sin
+      // filtrar, y la página 2 se pedía con un cursor de otro conjunto de resultados.
+      const provider = pagedProvider();
+      const picker = new MediaPicker();
+
+      await picker.listPage(provider, { page: 1 });
+      await picker.listPage(provider, { page: 2 });
+
+      await picker.listPage(provider, { page: 2, variant: 'thumb' });
+
+      expect(picker.getState().libraryPage.currentPage).toBe(1);
+      expect(picker.getState().libraryItems).toEqual([libraryItem('a'), libraryItem('b')]);
+    });
+
     it('stores libraryQuery/librarySort from the request options', async () => {
       const provider = pagedProvider();
       const picker = new MediaPicker();
