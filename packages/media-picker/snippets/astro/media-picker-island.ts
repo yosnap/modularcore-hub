@@ -89,6 +89,10 @@ export function mountMediaPicker(root: HTMLElement): MediaPickerStore | null {
     () => {
       unsubscribe();
       store.destroy();
+      // Un nodo con `transition:persist` sobrevive al cambio de documento. Si conservara la
+      // marca, el siguiente `astro:page-load` lo daría por montado y el picker persistido
+      // quedaría muerto, con su store ya destruido.
+      delete root.dataset[MOUNTED];
     },
     { once: true },
   );

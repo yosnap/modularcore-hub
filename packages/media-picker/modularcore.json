@@ -500,12 +500,6 @@
       "encoding": "utf8"
     },
     {
-      "path": "core/format.ts",
-      "target": "src/modularcore/media-picker/core/format.ts",
-      "type": "headless-core",
-      "encoding": "utf8"
-    },
-    {
       "path": "core/canvas/zoom.ts",
       "target": "src/modularcore/media-picker/core/canvas/zoom.ts",
       "type": "headless-core",

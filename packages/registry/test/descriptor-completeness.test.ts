@@ -182,6 +182,9 @@ describe('integridad de los descriptores de componentes', async () => {
 
       for (const file of descriptor.files) {
         if (!SOURCE_EXTENSIONS.some((extension) => file.path.endsWith(extension))) continue;
+        // Un `@import "tailwindcss"` de una hoja de estilo no es una dependencia npm del
+        // componente, y el patrón de imports desnudos no sabe distinguirlo.
+        if (file.path.endsWith('.css')) continue;
 
         const contents = stripComments(await readFile(join(packageDir, file.path), 'utf8'));
         for (const [, specifier] of contents.matchAll(BARE_IMPORT_PATTERN)) {
@@ -195,6 +198,21 @@ describe('integridad de los descriptores de componentes', async () => {
         [...undeclared].map(([name, file]) => `${name} (usado en ${file})`),
         `${descriptor.name} no declara:`,
       ).toEqual([]);
+    });
+
+    it(`${descriptor.name}: no describe dos veces el mismo fichero`, () => {
+      // `writeRegistryEntryFiles` y `buildTarball` recorren la lista sin deduplicar: una entrada
+      // repetida escribe el fichero dos veces, mete dos entradas con el mismo nombre en el tar y
+      // devuelve un recuento inflado de lo instalado.
+      const seen = new Set<string>();
+      const repeated: string[] = [];
+
+      for (const { path } of descriptor.files) {
+        if (seen.has(path)) repeated.push(path);
+        seen.add(path);
+      }
+
+      expect(repeated, `${descriptor.name} describe por duplicado:`).toEqual([]);
     });
 
     it(`${descriptor.name}: ningún fuente publicable queda fuera del descriptor`, async () => {

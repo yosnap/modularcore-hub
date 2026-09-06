@@ -59,7 +59,9 @@ const { original, variants, failed } = await picker.uploadWithVariants(provider,
 El original se sube primero, porque cada derivada necesita su clave para enlazarse. Las derivadas
 no heredan `key`, `overwriteKey` ni `contentType`: los tres describen al original, y reenviar
 `overwriteKey` —que significa «escribe en esta clave exacta»— haría que cada tamaño pisara al
-original. Cada derivada anuncia su propio formato. Un fallo en una
+original. Cada derivada anuncia su propio formato. Para situarlas junto al original, el endpoint de
+firma tiene en `variantOf` la clave de este y puede derivar de ahí la carpeta; no basta con
+reutilizar la `key` que pediste para el original. Un fallo en una
 derivada no tumba la operación —el original ya está guardado y perderlo por una miniatura sería un
 mal negocio—: los tamaños que fallaron llegan en `failed` para que la interfaz avise o reintente.
 
