@@ -457,7 +457,7 @@ export class MediaPicker {
    * cannot serve this: their cursor-present-means-append rule would concatenate pages).
    *
    * Resolves `options.page` against the cached page-to-cursor map. Changing any filter
-   * (`folder`/`mimeTypes`/`scope`/`query`/`sort`) versus the last call resets that cache and
+   * (`folder`/`mimeTypes`/`scope`/`query`/`sort`/`variant`) versus the last call resets that cache and
    * restarts at page 1, regardless of which page was requested — a filter change invalidates
    * every previously-recorded cursor. Requesting a page beyond the last known one throws
    * instead of silently fetching the wrong page — the caller (UI) must walk forward
@@ -475,6 +475,7 @@ export class MediaPicker {
       filters.scope,
       filters.query,
       filters.sort,
+      filters.variant,
     ]);
     const filterChanged = filterKey !== this.libraryFilterKey;
     this.libraryFilterKey = filterKey;
