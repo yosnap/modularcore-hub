@@ -78,4 +78,56 @@ describe('renderDocsMarkdown', () => {
     expect(html).toContain('<strong>núcleo</strong>');
     expect(html).toContain('<code>core/media-picker.ts</code>');
   });
+
+  it('no entrelaza el marcado cuando el código lleva asteriscos', () => {
+    // Aplicar cursiva sobre el contenido del código abría un <em> dentro de un <code> y lo
+    // cerraba dentro del siguiente.
+    const html = renderDocsMarkdown('Usa `glob **/*.ts` y `a * b * c`.\n');
+
+    expect(html).not.toContain('<em>');
+    expect(html).toContain('<code>glob **/*.ts</code>');
+    expect(html).toContain('<code>a * b * c</code>');
+  });
+
+  it('convierte las listas ordenadas, que se juntaban en un párrafo', () => {
+    const html = renderDocsMarkdown('1. uno\n2. dos\n');
+
+    expect(html).toContain('<ol><li>uno</li><li>dos</li></ol>');
+  });
+
+  it('conserva la jerarquía de una lista anidada', () => {
+    const html = renderDocsMarkdown('- uno\n  - anidado\n- dos\n');
+
+    expect(html).toContain('<li>uno</li><ul><li>anidado</li></ul><li>dos</li>');
+  });
+
+  it('convierte las tablas, que salían como un párrafo lleno de barras', () => {
+    const html = renderDocsMarkdown('| a | b |\n| --- | --- |\n| 1 | 2 |\n');
+
+    expect(html).toContain('<th>a</th>');
+    expect(html).toContain('<td>1</td>');
+    expect(html).not.toContain('| --- |');
+  });
+
+  it('procesa los títulos de nivel cinco y seis', () => {
+    const html = renderDocsMarkdown('##### Quinto\n###### Sexto\n');
+
+    expect(html).toContain('<h5>Quinto</h5>');
+    expect(html).toContain('<h6>Sexto</h6>');
+    expect(html).not.toContain('#####');
+  });
+
+  it('no trunca una URL con paréntesis dentro', () => {
+    const html = renderDocsMarkdown('[Foo](https://es.wikipedia.org/wiki/Foo_(bar))\n');
+
+    expect(html).toContain('href="https://es.wikipedia.org/wiki/Foo_(bar)"');
+  });
+
+  it('no deja a la vista el marcador interno de un bloque de código', () => {
+    const html = renderDocsMarkdown('Texto ```js\nx\n``` fin\n');
+
+    expect(html).not.toContain('@@MC-');
+    expect(html).toContain('Texto');
+    expect(html).toContain('fin');
+  });
 });

@@ -30,12 +30,15 @@
       files: selectFilesForFramework(descriptor.files, framework, data.catalog),
     })),
   );
-  let activeTab = $state(0);
-  $effect(() => {
-    // Si cambia de componente, la pestaña vuelve a la primera en vez de quedar fuera de rango.
-    descriptor.name;
-    activeTab = 0;
-  });
+  let selectedTab = $state(0);
+  /**
+   * Recortado al rango válido de forma derivada, no en un `$effect`: un efecto corre después de
+   * pintar los nuevos `frameworkTabs`, así que al navegar de un componente con 6 frameworks (la
+   * pestaña 5 activa) a uno con 1, habría un pintado intermedio sin ninguna pestaña que
+   * coincidiera con `activeTab` — la tabla desaparecería un instante antes de que el efecto la
+   * corrigiera.
+   */
+  let activeTab = $derived(Math.min(selectedTab, frameworkTabs.length - 1));
 </script>
 
 <h1>{descriptor.title}</h1>
@@ -96,15 +99,34 @@
 tar -xzf {descriptor.name}.tar.gz</code
     ></pre>
 
-  <div class="tabs" role="tablist" aria-label="Archivos por framework">
+  <div
+    class="tabs"
+    role="tablist"
+    aria-label="Archivos por framework"
+    onkeydown={(event) => {
+      // Flechas para moverse entre pestañas, como espera quien navega con teclado un `tablist`.
+      if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+      event.preventDefault();
+      const delta = event.key === 'ArrowRight' ? 1 : -1;
+      const next = (activeTab + delta + frameworkTabs.length) % frameworkTabs.length;
+      selectedTab = next;
+      const target = event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]')[
+        next
+      ];
+      target?.focus();
+    }}
+  >
     {#each frameworkTabs as tab, index (tab.framework)}
       <button
         type="button"
         role="tab"
+        id={`tab-${tab.framework}`}
         class="tab"
         class:active={activeTab === index}
         aria-selected={activeTab === index}
-        onclick={() => (activeTab = index)}
+        aria-controls={`panel-${tab.framework}`}
+        tabindex={activeTab === index ? 0 : -1}
+        onclick={() => (selectedTab = index)}
       >
         {tab.framework}
         <span class="count">{tab.files.length}</span>
@@ -114,7 +136,11 @@ tar -xzf {descriptor.name}.tar.gz</code
 
   {#each frameworkTabs as tab, index (tab.framework)}
     {#if activeTab === index}
-      <table>
+      <table
+        role="tabpanel"
+        id={`panel-${tab.framework}`}
+        aria-labelledby={`tab-${tab.framework}`}
+      >
         <thead>
           <tr>
             <th>Origen</th>
