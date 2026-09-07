@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { selectFilesForFramework } from '@modularcore/registry';
+  import { selectFilesForFramework } from '@modularcore/registry/client';
 
   import { playgroundFor } from '$lib/playgrounds';
 
