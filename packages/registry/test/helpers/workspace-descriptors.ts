@@ -2,6 +2,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import type { FrameworkDefinition } from '../../src/framework-catalog.js';
 import type { UiCoverage } from '../../src/ui-coverage.js';
 
 const packagesRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -11,6 +12,7 @@ export interface WorkspaceDescriptor {
   frameworks: string[];
   /** Cobertura de la UI de referencia por framework — ver `src/ui-coverage.ts`. */
   ui?: Record<string, UiCoverage>;
+  frameworkDefs?: Record<string, FrameworkDefinition>;
   files: { path: string; target: string }[];
   dependencies: string[];
   peerDependencies: Record<string, string>;

@@ -1,3 +1,7 @@
+import { AGNOSTIC_FRAMEWORK, BUILTIN_FRAMEWORKS, isDefined } from './framework-catalog.js';
+
+import type { FrameworkDefinition } from './framework-catalog.js';
+
 /**
  * Un descriptor enumera los ficheros de todos sus adaptadores a la vez, porque el registry sirve
  * un único catálogo para cualquier proyecto. Al instalar, en cambio, sólo tienen sentido los del
@@ -9,49 +13,7 @@
  * considera compartido y se escribe siempre: ante la duda, sobra un fichero antes que falte uno.
  */
 
-/** Vocabulario del eje `frameworks` de un descriptor. `agnostic` es el comodín: sirve a cualquiera. */
-export const KNOWN_FRAMEWORKS = [
-  'react',
-  'svelte',
-  'vue',
-  'angular',
-  'blade',
-  /** Páginas sin framework (Astro, HTMX, Rails…): el nombre canónico del eje. */
-  'vanilla',
-] as const;
-
-export const AGNOSTIC_FRAMEWORK = 'agnostic';
-
-/**
- * Un snippet toma el nombre del generador al que sirve, no el del eje, porque es código de
- * montaje para esa herramienta concreta.
- */
-const SNIPPET_FRAMEWORKS: Record<string, string> = {
-  astro: 'vanilla',
-  laravel: 'blade',
-};
-
 const FRAMEWORK_ROOTS = ['adapters', 'ui'];
-
-/**
- * Los únicos frameworks con UI de referencia propia. `blade` y `vanilla` se sirven con snippets, y
- * `vanilla` además nombra una presentación de estilo, así que bajo `ui/` nunca es un framework.
- */
-const UI_CAPABLE_FRAMEWORKS = ['react', 'svelte', 'vue', 'angular'];
-
-/**
- * Frameworks que se apoyan en el *binding* de otro. Blade no tiene runtime propio en el navegador:
- * sus plantillas montan el mismo código sin framework que usaría una página suelta, y de hecho el
- * snippet de Laravel de `ai-chat` importa `adapters/vanilla` directamente.
- *
- * La herencia alcanza a los adaptadores y no a los snippets: aquéllos son el binding que la
- * plantilla monta, mientras que un snippet es código de montaje para una herramienta concreta.
- * Sin ese límite, un proyecto Laravel se llevaba la isla de Astro, cuyo único punto de entrada
- * escucha `astro:page-load` y no se dispara jamás fuera de Astro.
- */
-const FRAMEWORK_BASES: Record<string, string[]> = {
-  blade: ['vanilla'],
-};
 
 /**
  * El framework al que pertenece un fichero del descriptor, o `null` si sirve a todos.
@@ -59,7 +21,10 @@ const FRAMEWORK_BASES: Record<string, string[]> = {
  * Se lee del `path` —la estructura dentro del paquete— y no del `target`, que para los snippets
  * apunta a un árbol distinto en el proyecto de destino.
  */
-export function frameworkOfFile(path: string): string | null {
+export function frameworkOfFile(
+  path: string,
+  catalog: Record<string, FrameworkDefinition> = BUILTIN_FRAMEWORKS,
+): string | null {
   const [root, second] = path.split('/');
   if (!root || !second) return null;
 
@@ -68,17 +33,27 @@ export function frameworkOfFile(path: string): string | null {
   // un eje distinto, y lo comparten las cuatro presentaciones de todos los frameworks.
   if (path.split('/').length < 3) return null;
 
-  if (root === 'snippets') return SNIPPET_FRAMEWORKS[second] ?? null;
+  if (root === 'snippets') {
+    // Un snippet toma el nombre de la herramienta a la que sirve —`snippets/laravel/` para
+    // Blade, `snippets/astro/` para una página sin framework—, así que el dueño se busca por
+    // ese directorio y no por el nombre del framework.
+    const owner = Object.entries(catalog).find(
+      ([name, definition]) => (definition.snippetDirectory ?? name) === second,
+    );
+    return owner?.[0] ?? null;
+  }
 
   // `vanilla` nombra dos ejes distintos: un framework (una página sin ninguno) y una presentación
   // de estilo (CSS plano). Bajo `ui/` manda el segundo, así que `ui/vanilla/…` es marcado
   // compartido y no el framework: tratarlo como framework lo borraría de toda instalación de
   // React o Svelte, que es justo donde se usa.
   if (root === 'ui') {
-    return UI_CAPABLE_FRAMEWORKS.includes(second) ? second : null;
+    // Sólo cuenta como framework quien tiene UI propia. `vanilla` no la tiene, así que
+    // `ui/vanilla/` es la presentación de CSS plano y no el framework sin framework.
+    return isDefined(catalog, second) && catalog[second]?.uiExtension ? second : null;
   }
   if (FRAMEWORK_ROOTS.includes(root)) {
-    return (KNOWN_FRAMEWORKS as readonly string[]).includes(second) ? second : null;
+    return isDefined(catalog, second) ? second : null;
   }
 
   return null;
@@ -94,14 +69,18 @@ export function frameworkOfFile(path: string): string | null {
 export function selectFilesForFramework<T extends { path: string }>(
   files: T[],
   framework: string,
+  catalog: Record<string, FrameworkDefinition> = BUILTIN_FRAMEWORKS,
 ): T[] {
   if (framework === AGNOSTIC_FRAMEWORK) return files;
-  if (!(KNOWN_FRAMEWORKS as readonly string[]).includes(framework)) return files;
+  // Un framework que este catálogo no conoce recibe el descriptor entero: recortar con
+  // información incompleta arriesga dejarlo sin ficheros que sí necesita.
+  if (!isDefined(catalog, framework)) return files;
 
-  const bases = new Set(FRAMEWORK_BASES[framework] ?? []);
+  const base = catalog[framework]!.basedOn;
+  const bases = new Set(base ? [base] : []);
 
   return files.filter((file) => {
-    const owner = frameworkOfFile(file.path);
+    const owner = frameworkOfFile(file.path, catalog);
     if (owner === null || owner === framework) return true;
     // Lo heredado se limita a los adaptadores del framework base.
     return bases.has(owner) && file.path.startsWith('adapters/');
