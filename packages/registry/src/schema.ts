@@ -1,3 +1,4 @@
+import type { FrameworkDefinition } from './framework-catalog.js';
 import type { UiCoverage } from './ui-coverage.js';
 
 /**
@@ -54,6 +55,11 @@ export interface RegistryDescriptor {
    * adaptar. Ver `ui-coverage.ts`.
    */
   ui?: Record<string, UiCoverage>;
+  /**
+   * Frameworks que este componente aporta al catálogo, para los que el registry no trae
+   * definición de casa. Permite traer un componente en Solid o Qwik sin tocar código nuestro.
+   */
+  frameworkDefs?: Record<string, FrameworkDefinition>;
   /**
    * Una captura del componente en funcionamiento, para el catálogo y para quien revise la
    * aportación: nadie puede ejecutar un componente de un framework que no tiene instalado, pero

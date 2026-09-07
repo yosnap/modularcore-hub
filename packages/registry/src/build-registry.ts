@@ -13,6 +13,7 @@ import {
 } from 'node:fs/promises';
 import { dirname, extname, join, resolve, sep } from 'node:path';
 
+import { buildFrameworkCatalog } from './framework-catalog.js';
 import { registryDescriptorSchema } from './schema.zod.js';
 import { buildTarball } from './tarball.js';
 
@@ -239,6 +240,14 @@ export async function buildRegistry({
       }
     }
     await writeFile(join(tmpRoot, 'index.json'), JSON.stringify(publicIndex, null, 2), 'utf8');
+
+    // El catálogo de frameworks, reunido de todos los componentes: es lo que permite a la CLI
+    // detectar y ofrecer un framework que ningún código nuestro conoce.
+    await writeFile(
+      join(tmpRoot, 'frameworks.json'),
+      JSON.stringify(buildFrameworkCatalog(entries), null, 2),
+      'utf8',
+    );
 
     await validateBuildOutput(
       tmpRoot,

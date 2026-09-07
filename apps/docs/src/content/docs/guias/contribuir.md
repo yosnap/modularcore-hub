@@ -36,6 +36,31 @@ Un componente puede declarar `vue` y no traer UI: se instala en un proyecto Vue 
 monta su interfaz sobre el adaptador. Lo que no puede es callarse la diferencia — el catálogo
 distingue visualmente un framework con UI de uno que sólo trae núcleo y adaptador.
 
+### Si tu framework no está entre los seis
+
+No hay lista blanca. El registry define React, Svelte, Vue, Angular, Blade y `vanilla` (páginas sin
+framework), pero un componente puede traer el suyo y entra sin que el mantenimiento toque código:
+
+```json
+"frameworks": ["solid"],
+"frameworkDefs": {
+  "solid": {
+    "title": "Solid",
+    "uiExtension": ".tsx",
+    "detect": { "npm": "solid-js" },
+    "peer": "solid-js",
+    "paths": { "components": "src/components", "lib": "src/lib/modularcore" }
+  }
+}
+```
+
+La definición aporta lo que el registry no puede deducir: la extensión de sus componentes, cómo se
+reconoce un proyecto suyo y dónde se instalan las cosas. El control de qué entra en el catálogo es
+la revisión del Pull Request, no una lista cerrada en el código.
+
+Sí se comprueba que todo framework declarado tenga definición: una errata deja el componente
+ininstalable y sus ficheros sin dueño, así que falla en CI.
+
 Una comprobación del registry compara lo declarado con lo que hay y falla en los dos sentidos: si
 aparece una brecha que nadie declaró, y si sigue declarada una que ya se cubrió. Así la deuda ni se
 acumula en silencio ni sobrevive a su arreglo.

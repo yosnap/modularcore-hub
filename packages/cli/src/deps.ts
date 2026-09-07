@@ -3,16 +3,28 @@ import semver from 'semver';
 import { CompatibilityError, DependencyCycleError } from './errors.js';
 
 import type { RegistryClient } from '@modularcore/registry-client';
-import { dependenciesForFiles, selectFilesForFramework } from '@modularcore/registry';
+import {
+  dependenciesForFiles,
+  frameworksKnownTo,
+  selectFilesForFramework,
+} from '@modularcore/registry';
 
-import type { RegistryEntry } from '@modularcore/registry';
+import type { FrameworkDefinition, RegistryEntry } from '@modularcore/registry';
 
-const frameworkPeerByFramework: Record<string, string> = {
-  react: 'react',
-  svelte: 'svelte',
-  vue: 'vue',
-  angular: '@angular/core',
-};
+/**
+ * Qué framework reclama cada peer, según el catálogo del propio componente.
+ *
+ * Estaba cableado a cuatro entradas, así que el peer de un framework aportado no casaba con
+ * ninguna: `add` lo exigía en todos los proyectos y el componente quedaba ininstalable fuera del
+ * suyo. La definición ya trae ese dato en `peer`.
+ */
+function frameworkPeers(entry: RegistryEntry): Map<string, string> {
+  const peers = new Map<string, string>();
+  for (const [name, definition] of Object.entries(frameworksKnownTo(entry))) {
+    if (definition.peer) peers.set(definition.peer, name);
+  }
+  return peers;
+}
 
 /**
  * AD2: rejects before any file is written if the project's framework isn't declared
@@ -30,13 +42,12 @@ export function assertCompatible(
         `Frameworks soportados: ${entry.frameworks.join(', ')}.`,
     );
   }
+  const peerOwners = frameworkPeers(entry);
   for (const [peerName, range] of Object.entries(entry.peerDependencies)) {
     // A descriptor can ship thin adapters for multiple frameworks. Only the framework peer
     // selected by this project is relevant; requiring every adapter runtime would make, for
     // example, `modularcore add` demand Angular from a Vue app.
-    const frameworkForPeer = Object.entries(frameworkPeerByFramework).find(
-      ([, peer]) => peer === peerName,
-    )?.[0];
+    const frameworkForPeer = peerOwners.get(peerName);
     if (frameworkForPeer && frameworkForPeer !== projectFramework) continue;
     const installedRange = installedPeerVersion(peerName);
     if (!installedRange) {
@@ -136,6 +147,7 @@ export function parseNpmDependencySpec(raw: string): NpmDependencySpec {
 export function collectNpmDependencies(
   entries: RegistryEntry[],
   framework?: string,
+  catalog?: Record<string, FrameworkDefinition>,
 ): NpmDependencySpec[] {
   const byName = new Map<string, NpmDependencySpec>();
   const needed = new Set<string>();
@@ -162,7 +174,11 @@ export function collectNpmDependencies(
         ? entry.dependencies
         : dependenciesForFiles(
             entry.dependencies,
-            selectFilesForFramework(entry.files, framework),
+            selectFilesForFramework(
+              entry.files,
+              framework,
+              catalog ? { ...catalog, ...frameworksKnownTo(entry) } : frameworksKnownTo(entry),
+            ),
             entry.files,
           );
     for (const raw of forThisProject) needed.add(parseNpmDependencySpec(raw).name);

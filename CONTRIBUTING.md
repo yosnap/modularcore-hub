@@ -150,6 +150,35 @@ La comprobación de `packages/registry` compara lo declarado con lo que hay y **
 sentidos**: si aparece una brecha que nadie declaró, y si sigue declarada una que ya se cubrió. La
 deuda no se acumula en silencio ni sobrevive a su arreglo.
 
+### Si tu framework no está en la lista
+
+No la hay. El registry trae definidos React, Svelte, Vue, Angular, Blade y `vanilla`, pero si tu
+componente es de Solid, Qwik o cualquier otro, **tráelo con su definición** y entra sin que nadie
+del mantenimiento toque código:
+
+```json
+"frameworks": ["solid"],
+"frameworkDefs": {
+  "solid": {
+    "title": "Solid",
+    "uiExtension": ".tsx",
+    "detect": { "npm": "solid-js" },
+    "peer": "solid-js",
+    "paths": { "components": "src/components", "lib": "src/lib/modularcore" }
+  }
+}
+```
+
+Eso es lo que el registry no puede adivinar: en qué fichero se escribe la UI, cómo se reconoce un
+proyecto suyo y dónde van las cosas al instalar. Sin `uiExtension` se entiende que ese framework no
+trae UI de referencia y se sirve con snippets, como Blade.
+
+Lo que sí se comprueba es que **todo framework declarado esté definido**: una errata como `sold`
+por `solid` deja el componente ininstalable y sus ficheros sin dueño, así que salta en CI.
+
+Un componente no puede redefinir uno de los de casa — la definición de React es siempre la misma
+para todo el catálogo.
+
 ### Una captura del componente
 
 Si tu componente tiene interfaz, incluye **una** captura. No hace falta una por framework ni por

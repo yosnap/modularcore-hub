@@ -1,7 +1,15 @@
+import { BUILTIN_FRAMEWORKS } from '@modularcore/registry';
+
+import type { FrameworkDefinition } from '@modularcore/registry';
+
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-export type DetectedFramework = 'react' | 'svelte' | 'vue' | 'angular' | 'blade' | 'vanilla';
+/**
+ * El nombre de un framework. Ya no es una unión cerrada: un componente puede aportar el suyo en
+ * `frameworkDefs`, así que la CLI trabaja con lo que el catálogo del registry le diga.
+ */
+export type DetectedFramework = string;
 export type PackageManager = 'pnpm' | 'yarn' | 'bun' | 'npm';
 
 export interface PackageJsonShape {
@@ -14,26 +22,6 @@ export interface PackageJsonShape {
 interface ComposerJsonShape {
   require?: Record<string, string>;
 }
-
-/**
- * `vanilla` no aparece aquí: no es un runtime que un proyecto declare como dependencia, sino la
- * ausencia de uno. Se deduce en `detectFrameworks` a partir de VANILLA_MARKERS.
- */
-const FRAMEWORK_MARKERS: Record<Exclude<DetectedFramework, 'vanilla'>, string> = {
-  react: 'react',
-  svelte: 'svelte',
-  vue: 'vue',
-  angular: '@angular/core',
-  blade: 'laravel/framework',
-};
-
-/**
- * Generadores cuya interactividad es TypeScript plano en un `<script>`, sin runtime reactivo
- * propio: consumen el binding `vanilla`. Un Astro con islas de React declara además `react`, así
- * que se detectan ambos y `init` pregunta — la elección entre la isla y el script plano es del
- * proyecto, no nuestra.
- */
-const VANILLA_MARKERS = ['astro'];
 
 export async function readPackageJson(cwd: string): Promise<PackageJsonShape | undefined> {
   try {
@@ -63,23 +51,34 @@ export interface FrameworkDetectionResult {
   packageJson: PackageJsonShape | undefined;
 }
 
-export async function detectFrameworks(cwd: string): Promise<FrameworkDetectionResult> {
+/**
+ * Los frameworks que este proyecto declara usar, según el catálogo que se le pase.
+ *
+ * Cada definición dice cómo se reconoce un proyecto suyo (`detect`), así que un framework
+ * aportado por un componente se detecta igual que los de casa, sin nada cableado aquí.
+ */
+export async function detectFrameworks(
+  cwd: string,
+  catalog: Record<string, FrameworkDefinition> = BUILTIN_FRAMEWORKS,
+): Promise<FrameworkDetectionResult> {
   const [pkg, composer] = await Promise.all([readPackageJson(cwd), readComposerJson(cwd)]);
   const deps = pkg ? allDeclaredDeps(pkg) : {};
-  const frameworks = (
-    Object.keys(FRAMEWORK_MARKERS) as Exclude<DetectedFramework, 'vanilla'>[]
-  ).filter((framework) =>
-    framework === 'blade'
-      ? FRAMEWORK_MARKERS.blade in (composer?.require ?? {})
-      : FRAMEWORK_MARKERS[framework] in deps,
-  );
+  const composerDeps = composer?.require ?? {};
 
-  // Sólo con señal positiva. La ausencia de todo marcador no es un proyecto sin framework: es un
-  // proyecto del que no sabemos nada —quizá aún no ha instalado el suyo— y ahí AD2 manda
-  // preguntar, ahora con `vanilla` entre las opciones de `init`.
-  const frameworkless = VANILLA_MARKERS.some((marker) => marker in deps);
+  const frameworks = Object.entries(catalog)
+    .filter(([, definition]) => {
+      const npm = definition.detect?.npm;
+      const composerPackage = definition.detect?.composer;
+      // `Object.hasOwn` y no `in`: los marcadores los aporta quien contribuye, y un
+      // `detect: { npm: 'constructor' }` casaría con todos los proyectos por el prototipo.
+      return (
+        (npm !== undefined && Object.hasOwn(deps, npm)) ||
+        (composerPackage !== undefined && Object.hasOwn(composerDeps, composerPackage))
+      );
+    })
+    .map(([name]) => name);
 
-  return { frameworks: frameworkless ? [...frameworks, 'vanilla'] : frameworks, packageJson: pkg };
+  return { frameworks, packageJson: pkg };
 }
 
 /**
