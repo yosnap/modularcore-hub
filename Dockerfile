@@ -22,6 +22,10 @@ RUN pnpm install --frozen-lockfile
 COPY apps/web ./apps/web
 # Fuente única de la versión publicada de la documentación, que la web enlaza y muestra.
 COPY apps/docs/versions.json ./apps/docs/versions.json
+# La referencia de cada componente, que la ficha de `/c/{nombre}` muestra en español. Sin esto,
+# `import.meta.glob` no encuentra nada —devuelve `{}` sin error— y la web cae al README del
+# paquete, que está en inglés: el arreglo funcionaría en local y sería un no-op en producción.
+COPY apps/docs/src/content/docs/referencia/componentes ./apps/docs/src/content/docs/referencia/componentes
 COPY assets ./assets
 
 # Run the workspace pipeline so registry assets are generated before SvelteKit builds. Acotado a
