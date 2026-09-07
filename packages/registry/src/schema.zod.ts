@@ -61,12 +61,21 @@ export const registryDescriptorSchema = z.object({
       z.string().min(1),
       z.object({
         title: z.string().min(1),
+        // Una extensión de verdad: uno o más tramos `.algo`, admitiendo dígitos y guiones
+        // (`.component.ts`, `.vue`). El patrón anterior aceptaba `..` y rechazaba `.mjs2`.
         uiExtension: z
           .string()
-          .regex(/^\.[a-z.]+$/i)
+          .regex(/^(?:\.[a-z0-9-]+)+$/i, {
+            message: 'uiExtension debe ser como ".tsx" o ".component.ts"',
+          })
           .optional(),
+        // Con al menos una forma de reconocerlo: un `detect` vacío, o con cadenas vacías, no
+        // detecta nada y deja al framework inservible para `init`.
         detect: z
-          .object({ npm: z.string().optional(), composer: z.string().optional() })
+          .object({ npm: z.string().min(1).optional(), composer: z.string().min(1).optional() })
+          .refine((value) => value.npm !== undefined || value.composer !== undefined, {
+            message: 'detect debe declarar npm o composer',
+          })
           .optional(),
         peer: z.string().min(1).optional(),
         paths: z.object({ components: z.string().min(1), lib: z.string().min(1) }).optional(),

@@ -1,8 +1,10 @@
 export {
-  AGNOSTIC_FRAMEWORK as AGNOSTIC,
+  AGNOSTIC_FRAMEWORK,
   BUILTIN_FRAMEWORKS,
+  FrameworkConflictError,
   buildFrameworkCatalog,
   frameworksKnownTo,
+  isDefined,
   undefinedFrameworks,
 } from './framework-catalog.js';
 export type { FrameworkDefinition } from './framework-catalog.js';
@@ -18,12 +20,7 @@ export {
 } from './ui-coverage.js';
 export type { Presentation, UiCoverage } from './ui-coverage.js';
 
-export {
-  AGNOSTIC_FRAMEWORK,
-  KNOWN_FRAMEWORKS,
-  frameworkOfFile,
-  selectFilesForFramework,
-} from './framework-files.js';
+export { frameworkOfFile, selectFilesForFramework } from './framework-files.js';
 
 export type {
   ComponentType,
