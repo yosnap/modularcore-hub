@@ -2,11 +2,13 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { error } from '@sveltejs/kit';
-import { renderMarkdownToHtml } from '@modularcore/ai-chat/markdown';
+import { renderDocsMarkdown } from '$lib/render-docs';
 
 import { getComponentDocsMarkdown } from '$lib/docs';
 
-import type { RegistryEntry, RegistryIndexEntry } from '@modularcore/registry';
+import { BUILTIN_FRAMEWORKS } from '@modularcore/registry';
+
+import type { FrameworkDefinition, RegistryEntry, RegistryIndexEntry } from '@modularcore/registry';
 import type { PageServerLoad } from './$types';
 
 // Prerenderable: the registry is generated at build time (`build:registry`) and is the single
@@ -36,7 +38,17 @@ export const load: PageServerLoad = async ({ params }) => {
   }
 
   const docsMarkdown = getComponentDocsMarkdown(params.name);
-  const docsHtml = docsMarkdown ? renderMarkdownToHtml(docsMarkdown) : null;
+  const docsHtml = docsMarkdown ? renderDocsMarkdown(docsMarkdown) : null;
 
-  return { descriptor, docsHtml };
+  // El catálogo que publica el build: sin él, un framework aportado por este mismo componente no
+  // tendría dueño y sus ficheros aparecerían en la pestaña de todos los demás.
+  let catalog: Record<string, FrameworkDefinition> = BUILTIN_FRAMEWORKS;
+  try {
+    const catalogPath = resolve(process.cwd(), 'registry-data', 'frameworks.json');
+    catalog = JSON.parse(readFileSync(catalogPath, 'utf8')) as Record<string, FrameworkDefinition>;
+  } catch {
+    // Un registry sin `frameworks.json` (build anterior) sigue mostrando los de casa.
+  }
+
+  return { descriptor, docsHtml, catalog };
 };
