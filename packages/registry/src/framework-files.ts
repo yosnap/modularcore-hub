@@ -1,4 +1,4 @@
-import { BUILTIN_FRAMEWORKS } from './framework-catalog.js';
+import { AGNOSTIC_FRAMEWORK, BUILTIN_FRAMEWORKS, isDefined } from './framework-catalog.js';
 
 import type { FrameworkDefinition } from './framework-catalog.js';
 
@@ -12,19 +12,6 @@ import type { FrameworkDefinition } from './framework-catalog.js';
  * descriptores actuales siguen sin excepción. Un fichero que no encaje en ninguna regla se
  * considera compartido y se escribe siempre: ante la duda, sobra un fichero antes que falte uno.
  */
-
-/** Vocabulario del eje `frameworks` de un descriptor. `agnostic` es el comodín: sirve a cualquiera. */
-export const KNOWN_FRAMEWORKS = [
-  'react',
-  'svelte',
-  'vue',
-  'angular',
-  'blade',
-  /** Páginas sin framework (Astro, HTMX, Rails…): el nombre canónico del eje. */
-  'vanilla',
-] as const;
-
-export const AGNOSTIC_FRAMEWORK = 'agnostic';
 
 const FRAMEWORK_ROOTS = ['adapters', 'ui'];
 
@@ -63,10 +50,10 @@ export function frameworkOfFile(
   if (root === 'ui') {
     // Sólo cuenta como framework quien tiene UI propia. `vanilla` no la tiene, así que
     // `ui/vanilla/` es la presentación de CSS plano y no el framework sin framework.
-    return catalog[second]?.uiExtension ? second : null;
+    return isDefined(catalog, second) && catalog[second]?.uiExtension ? second : null;
   }
   if (FRAMEWORK_ROOTS.includes(root)) {
-    return catalog[second] ? second : null;
+    return isDefined(catalog, second) ? second : null;
   }
 
   return null;
@@ -87,9 +74,9 @@ export function selectFilesForFramework<T extends { path: string }>(
   if (framework === AGNOSTIC_FRAMEWORK) return files;
   // Un framework que este catálogo no conoce recibe el descriptor entero: recortar con
   // información incompleta arriesga dejarlo sin ficheros que sí necesita.
-  if (!catalog[framework]) return files;
+  if (!isDefined(catalog, framework)) return files;
 
-  const base = catalog[framework].basedOn;
+  const base = catalog[framework]!.basedOn;
   const bases = new Set(base ? [base] : []);
 
   return files.filter((file) => {

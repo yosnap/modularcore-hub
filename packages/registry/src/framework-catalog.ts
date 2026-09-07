@@ -89,21 +89,63 @@ export interface DescriptorWithFrameworks {
   frameworkDefs?: Record<string, FrameworkDefinition>;
 }
 
+export class FrameworkConflictError extends Error {}
+
+/** `Object.hasOwn` y no un acceso directo: `catalog['constructor']` sería siempre verdadero. */
+export function isDefined(catalog: Record<string, FrameworkDefinition>, name: string): boolean {
+  return Object.hasOwn(catalog, name);
+}
+
 /**
  * Reúne los frameworks de casa con los que declaren los componentes.
  *
- * Ante dos definiciones del mismo nombre gana la primera, y las de casa ganan siempre: un
- * componente no puede redefinir qué es React para todo el catálogo. La revisión de la PR es donde
- * se detecta que alguien lo intente.
+ * Las definiciones de casa mandan siempre: un componente no puede redefinir qué es React para
+ * todo el catálogo. Entre dos aportadas, en cambio, una discrepancia es un conflicto y se
+ * denuncia, porque resolverla por orden de llegada dejaría al perdedor con sus ficheros sin dueño.
  */
 export function buildFrameworkCatalog(
   descriptors: DescriptorWithFrameworks[],
 ): Record<string, FrameworkDefinition> {
-  const catalog: Record<string, FrameworkDefinition> = { ...BUILTIN_FRAMEWORKS };
+  // Sin prototipo: así `catalog['toString']` no devuelve una función heredada y un descriptor no
+  // puede colar `constructor` como si fuera un framework definido.
+  const catalog: Record<string, FrameworkDefinition> = Object.assign(
+    Object.create(null),
+    BUILTIN_FRAMEWORKS,
+  );
+  // Los de casa reservan ya su carpeta: un framework aportado no puede quedarse con `laravel`
+  // ni con `astro`, que perderían sus snippets en favor de Blade o de `vanilla`.
+  const snippetOwners = new Map<string, string>();
+  for (const [name, definition] of Object.entries(BUILTIN_FRAMEWORKS)) {
+    snippetOwners.set(definition.snippetDirectory ?? name, name);
+  }
 
   for (const descriptor of descriptors) {
     for (const [name, definition] of Object.entries(descriptor.frameworkDefs ?? {})) {
-      if (catalog[name]) continue;
+      // Un componente no redefine uno de casa: la definición de React es la misma para todos.
+      if (Object.hasOwn(BUILTIN_FRAMEWORKS, name)) continue;
+
+      const previous = catalog[name];
+      if (previous) {
+        // Dos componentes definiendo el mismo framework de forma distinta es un conflicto real,
+        // no algo que resolver en silencio por orden de llegada: el que pierda vería sus
+        // ficheros sin dueño y su UI dada por no cubierta.
+        if (JSON.stringify(previous) !== JSON.stringify(definition)) {
+          throw new FrameworkConflictError(
+            `Dos componentes definen "${name}" de forma distinta. Unifica la definición en ambos descriptores.`,
+          );
+        }
+        continue;
+      }
+
+      const directory = definition.snippetDirectory ?? name;
+      const owner = snippetOwners.get(directory);
+      if (owner) {
+        throw new FrameworkConflictError(
+          `"${name}" y "${owner}" reclaman los snippets de "${directory}". Cada carpeta de snippets tiene un solo dueño.`,
+        );
+      }
+      snippetOwners.set(directory, name);
+
       catalog[name] = definition;
     }
   }
@@ -125,6 +167,6 @@ export function frameworksKnownTo(
 export function undefinedFrameworks(descriptor: DescriptorWithFrameworks): string[] {
   const known = frameworksKnownTo(descriptor);
   return descriptor.frameworks.filter(
-    (framework) => framework !== AGNOSTIC_FRAMEWORK && !known[framework],
+    (framework) => framework !== AGNOSTIC_FRAMEWORK && !isDefined(known, framework),
   );
 }

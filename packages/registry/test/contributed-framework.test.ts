@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   BUILTIN_FRAMEWORKS,
+  FrameworkConflictError,
   buildFrameworkCatalog,
   frameworksKnownTo,
   undefinedFrameworks,
@@ -133,12 +134,36 @@ describe('buildFrameworkCatalog', () => {
     expect(buildFrameworkCatalog([secuestro])['react']).toEqual(BUILTIN_FRAMEWORKS['react']);
   });
 
-  it('ante dos definiciones del mismo nombre gana la primera', () => {
+  it('dos definiciones distintas del mismo nombre son un conflicto, no un empate', () => {
+    // Resolverlo por orden de llegada dejaría al perdedor con sus ficheros sin dueño y su UI
+    // dada por no cubierta, sin que nada lo dijera.
     const otro = {
       frameworks: ['solid'],
       frameworkDefs: { solid: { title: 'Otro Solid', uiExtension: '.jsx' } },
     };
 
-    expect(buildFrameworkCatalog([solid, otro])['solid']?.title).toBe('Solid');
+    expect(() => buildFrameworkCatalog([solid, otro])).toThrow(FrameworkConflictError);
+  });
+
+  it('dos componentes con la misma definición conviven', () => {
+    const mismo = { frameworks: ['solid'], frameworkDefs: solid.frameworkDefs };
+
+    expect(buildFrameworkCatalog([solid, mismo])['solid']?.title).toBe('Solid');
+  });
+
+  it('un framework aportado no puede quedarse con la carpeta de snippets de otro', () => {
+    const ladron = {
+      frameworks: ['otro'],
+      frameworkDefs: { otro: { title: 'Otro', snippetDirectory: 'laravel' } },
+    };
+
+    expect(() => buildFrameworkCatalog([ladron])).toThrow(/laravel/);
+  });
+
+  it('una clave heredada de Object no cuenta como framework definido', () => {
+    // `catalog['constructor']` sería siempre verdadero con un objeto normal, así que
+    // `frameworks: ['constructor']` habría pasado la comprobación de CI.
+    expect(undefinedFrameworks({ frameworks: ['constructor'] })).toEqual(['constructor']);
+    expect(undefinedFrameworks({ frameworks: ['toString'] })).toEqual(['toString']);
   });
 });
