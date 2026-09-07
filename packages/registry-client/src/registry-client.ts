@@ -19,10 +19,17 @@ function joinUrl(base: string, path: string): string {
   return `${trimmedBase}/${path}`;
 }
 
+/**
+ * Un host que descarta paquetes en vez de rechazar la conexión —una VPN, un cortafuegos— deja el
+ * `fetch` colgado para siempre. Con esto, `init` cae a los frameworks de casa en vez de quedarse
+ * esperando sin forma de saltárselo.
+ */
+const REQUEST_TIMEOUT_MS = 10_000;
+
 async function fetchJson(url: string, notFoundLabel: string): Promise<unknown> {
   let response: Response;
   try {
-    response = await fetch(url);
+    response = await fetch(url, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
   } catch (error) {
     throw new RegistryClientError(
       `No se pudo conectar con el registry en "${url}": ${(error as Error).message}`,

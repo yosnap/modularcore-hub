@@ -40,6 +40,36 @@ export const componentTypeSchema = z.union([
 
 export const visibilitySchema = z.enum(['public', 'internal']).default('public');
 
+/**
+ * Las reglas de una definición de framework, compartidas por el descriptor y por el catálogo que
+ * el registry sirve. Tenerlas por duplicado dejaba el segundo mucho más laxo: aceptaba rutas
+ * vacías, y `init` acababa escribiendo `paths.components: ""`, con lo que todo `add` posterior
+ * remapeaba los ficheros a la raíz del proyecto.
+ */
+const frameworkDefinitionSchema = z.object({
+  title: z.string().min(1),
+  // Una extensión de verdad: uno o más tramos `.algo`, admitiendo dígitos y guiones
+  // (`.component.ts`, `.vue`). El patrón anterior aceptaba `..` y rechazaba `.mjs2`.
+  uiExtension: z
+    .string()
+    .regex(/^(?:\.[a-z0-9-]+)+$/i, {
+      message: 'uiExtension debe ser como ".tsx" o ".component.ts"',
+    })
+    .optional(),
+  // Con al menos una forma de reconocerlo: un `detect` vacío, o con cadenas vacías, no
+  // detecta nada y deja al framework inservible para `init`.
+  detect: z
+    .object({ npm: z.string().min(1).optional(), composer: z.string().min(1).optional() })
+    .refine((value) => value.npm !== undefined || value.composer !== undefined, {
+      message: 'detect debe declarar npm o composer',
+    })
+    .optional(),
+  peer: z.string().min(1).optional(),
+  paths: z.object({ components: z.string().min(1), lib: z.string().min(1) }).optional(),
+  basedOn: z.string().min(1).optional(),
+  snippetDirectory: z.string().min(1).optional(),
+});
+
 export const registryDescriptorSchema = z.object({
   name: z
     .string()
@@ -56,34 +86,7 @@ export const registryDescriptorSchema = z.object({
       alt: z.string().min(1),
     })
     .optional(),
-  frameworkDefs: z
-    .record(
-      z.string().min(1),
-      z.object({
-        title: z.string().min(1),
-        // Una extensión de verdad: uno o más tramos `.algo`, admitiendo dígitos y guiones
-        // (`.component.ts`, `.vue`). El patrón anterior aceptaba `..` y rechazaba `.mjs2`.
-        uiExtension: z
-          .string()
-          .regex(/^(?:\.[a-z0-9-]+)+$/i, {
-            message: 'uiExtension debe ser como ".tsx" o ".component.ts"',
-          })
-          .optional(),
-        // Con al menos una forma de reconocerlo: un `detect` vacío, o con cadenas vacías, no
-        // detecta nada y deja al framework inservible para `init`.
-        detect: z
-          .object({ npm: z.string().min(1).optional(), composer: z.string().min(1).optional() })
-          .refine((value) => value.npm !== undefined || value.composer !== undefined, {
-            message: 'detect debe declarar npm o composer',
-          })
-          .optional(),
-        peer: z.string().min(1).optional(),
-        paths: z.object({ components: z.string().min(1), lib: z.string().min(1) }).optional(),
-        basedOn: z.string().min(1).optional(),
-        snippetDirectory: z.string().min(1).optional(),
-      }),
-    )
-    .optional(),
+  frameworkDefs: z.record(z.string().min(1), frameworkDefinitionSchema).optional(),
   ui: z
     .record(
       z.string().min(1),
@@ -151,16 +154,5 @@ export const registryIndexEntrySchema = z.object({
   description: z.string().optional(),
 });
 
-/** Catálogo de frameworks servido en `frameworks.json`. */
-export const frameworkCatalogSchema = z.record(
-  z.string().min(1),
-  z.object({
-    title: z.string().min(1),
-    uiExtension: z.string().optional(),
-    detect: z.object({ npm: z.string().optional(), composer: z.string().optional() }).optional(),
-    peer: z.string().optional(),
-    paths: z.object({ components: z.string(), lib: z.string() }).optional(),
-    basedOn: z.string().optional(),
-    snippetDirectory: z.string().optional(),
-  }),
-);
+/** Catálogo de frameworks servido en `frameworks.json`, con las mismas reglas que el descriptor. */
+export const frameworkCatalogSchema = z.record(z.string().min(1), frameworkDefinitionSchema);

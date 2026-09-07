@@ -1,3 +1,5 @@
+import { BUILTIN_FRAMEWORKS } from '@modularcore/registry';
+
 import { describe, expect, it } from 'vitest';
 
 import { runInit } from '../src/commands/init.js';
@@ -39,7 +41,11 @@ describe('init: selección de framework en proyectos sin framework', () => {
     });
     try {
       const { prompts, seen } = recordingPrompts('react');
-      const config = await runInit({ cwd: project.dir, prompts });
+      const config = await runInit({
+        cwd: project.dir,
+        prompts,
+        fetchCatalog: async () => BUILTIN_FRAMEWORKS,
+      });
       expect(config.framework).toBe('vanilla');
       expect(seen.selectCalled).toBe(false);
       expect(config.paths.components).toBe('src/components');
@@ -54,7 +60,11 @@ describe('init: selección de framework en proyectos sin framework', () => {
     });
     try {
       const { prompts, seen } = recordingPrompts('vanilla');
-      const config = await runInit({ cwd: project.dir, prompts });
+      const config = await runInit({
+        cwd: project.dir,
+        prompts,
+        fetchCatalog: async () => BUILTIN_FRAMEWORKS,
+      });
       expect(seen.selectCalled).toBe(true);
       expect(seen.options).toContain('vanilla');
       expect(config.framework).toBe('vanilla');
@@ -69,7 +79,7 @@ describe('init: selección de framework en proyectos sin framework', () => {
     });
     try {
       const { prompts, seen } = recordingPrompts('vanilla');
-      await runInit({ cwd: project.dir, prompts });
+      await runInit({ cwd: project.dir, prompts, fetchCatalog: async () => BUILTIN_FRAMEWORKS });
       expect(seen.selectCalled).toBe(true);
       expect(seen.notes.join(' ')).toContain('no se detectó ningún framework');
     } finally {

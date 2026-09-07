@@ -45,10 +45,12 @@ async function updateComponent(
   paths: Record<string, string>,
   framework: string,
 ): Promise<UpdateResult> {
+  const catalog = await client.getFrameworkCatalog().catch(() => undefined);
   const entry = await client.getDescriptor(name);
   const outcomes: UpdateFileOutcome[] = [];
   // Mismo recorte que en `add`: un update no debe reintroducir los adaptadores que `add` omitió.
-  for (const file of selectFilesForFramework(entry.files, framework, frameworksKnownTo(entry))) {
+  const known = catalog ? { ...catalog, ...frameworksKnownTo(entry) } : frameworksKnownTo(entry);
+  for (const file of selectFilesForFramework(entry.files, framework, known)) {
     const localPath = resolveTargetPath(cwd, remapTarget(file.target, paths));
     const localBuffer = await readLocalFileBuffer(localPath);
     const registryBuffer = decodeFileContent(file);

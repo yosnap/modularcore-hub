@@ -69,9 +69,11 @@ export async function detectFrameworks(
     .filter(([, definition]) => {
       const npm = definition.detect?.npm;
       const composerPackage = definition.detect?.composer;
+      // `Object.hasOwn` y no `in`: los marcadores los aporta quien contribuye, y un
+      // `detect: { npm: 'constructor' }` casaría con todos los proyectos por el prototipo.
       return (
-        (npm !== undefined && npm in deps) ||
-        (composerPackage !== undefined && composerPackage in composerDeps)
+        (npm !== undefined && Object.hasOwn(deps, npm)) ||
+        (composerPackage !== undefined && Object.hasOwn(composerDeps, composerPackage))
       );
     })
     .map(([name]) => name);

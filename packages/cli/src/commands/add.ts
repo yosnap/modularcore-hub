@@ -40,6 +40,12 @@ export async function runAdd(
   const packageManager = await detectPackageManager(cwd);
   const projectPackageJson = await readPackageJson(cwd);
 
+  // El catálogo del registry entero, no el de cada componente: si el proyecto usa un framework
+  // que aportó OTRO componente, `frameworksKnownTo(entry)` no lo conocería y el recorte caería en
+  // su rama de «framework desconocido → escribe todo», colando los ficheros de React y Svelte en
+  // un proyecto Solid. Si el registry no lo sirve, se cae a lo que el propio componente declare.
+  const catalog = await client.getFrameworkCatalog().catch(() => undefined);
+
   const entries = await resolveRegistryDependencies(client, name);
   for (const entry of entries) {
     assertCompatible(entry, config.framework, (peerName) =>
@@ -47,7 +53,7 @@ export async function runAdd(
     );
   }
 
-  const npmDeps = collectNpmDependencies(entries, config.framework);
+  const npmDeps = collectNpmDependencies(entries, config.framework, catalog);
   if (npmDeps.length > 0) {
     prompts.note(
       npmDeps.map((dep) => `${dep.name}@${dep.version}`).join('\n'),
@@ -80,7 +86,7 @@ export async function runAdd(
       const remappedFiles = selectFilesForFramework(
         entry.files,
         config.framework,
-        frameworksKnownTo(entry),
+        catalog ? { ...catalog, ...frameworksKnownTo(entry) } : frameworksKnownTo(entry),
       ).map((file) => ({
         ...file,
         target: remapTarget(file.target, config.paths),

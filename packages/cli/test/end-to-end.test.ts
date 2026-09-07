@@ -1,3 +1,5 @@
+import { BUILTIN_FRAMEWORKS } from '@modularcore/registry';
+
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -33,6 +35,8 @@ describe('init -> add end-to-end (KPI: well under 5 minutes)', () => {
       const config = await runInit({
         cwd: project.dir,
         prompts: createFakePrompts({ text: [], select: [] }),
+        // Sin esto la prueba saldría a la red, contra el puerto del servidor de desarrollo.
+        fetchCatalog: async () => BUILTIN_FRAMEWORKS,
       });
       expect(config.framework).toBe('react');
       expect(config.registryUrl).toBe('http://localhost:5173/registry');
@@ -76,6 +80,8 @@ describe('init -> add end-to-end (KPI: well under 5 minutes)', () => {
       const config = await runInit({
         cwd: project.dir,
         prompts: createFakePrompts({ text: [], select: [] }),
+        // Sin esto la prueba saldría a la red, contra el puerto del servidor de desarrollo.
+        fetchCatalog: async () => BUILTIN_FRAMEWORKS,
       });
       expect(config).toMatchObject({
         framework: 'blade',

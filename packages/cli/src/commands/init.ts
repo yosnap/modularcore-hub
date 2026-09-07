@@ -45,7 +45,12 @@ export async function runInit({ cwd, prompts, fetchCatalog }: InitOptions): Prom
 
   let catalog = BUILTIN_FRAMEWORKS;
   try {
-    catalog = await (fetchCatalog ?? fetchCatalogFromRegistry)(registryUrl);
+    // Se fusiona sobre los de casa en lugar de reemplazarlos: un registry que sirva un catálogo
+    // vacío o incompleto dejaría el prompt sin una sola opción que elegir.
+    catalog = {
+      ...BUILTIN_FRAMEWORKS,
+      ...(await (fetchCatalog ?? fetchCatalogFromRegistry)(registryUrl)),
+    };
   } catch {
     prompts.note(
       `No se pudo leer el catálogo de frameworks de "${registryUrl}". Se usan los conocidos por la CLI; ` +
