@@ -115,8 +115,14 @@ export function buildFrameworkCatalog(
   // Los de casa reservan ya su carpeta: un framework aportado no puede quedarse con `laravel`
   // ni con `astro`, que perderían sus snippets en favor de Blade o de `vanilla`.
   const snippetOwners = new Map<string, string>();
+  // Dos frameworks con el mismo marcador de detección hacen que `init` deje de auto-detectar y
+  // pregunte siempre; con el mismo peer, `assertCompatible` no sabría a cuál corresponde.
+  const markerOwners = new Map<string, string>();
   for (const [name, definition] of Object.entries(BUILTIN_FRAMEWORKS)) {
     snippetOwners.set(definition.snippetDirectory ?? name, name);
+    for (const marker of [definition.detect?.npm, definition.detect?.composer, definition.peer]) {
+      if (marker) markerOwners.set(marker, name);
+    }
   }
 
   for (const descriptor of descriptors) {
@@ -145,6 +151,19 @@ export function buildFrameworkCatalog(
         );
       }
       snippetOwners.set(directory, name);
+
+      for (const marker of [definition.detect?.npm, definition.detect?.composer, definition.peer]) {
+        if (!marker) continue;
+        const markerOwner = markerOwners.get(marker);
+        // Que un framework use el mismo paquete para detectarse y como peer es lo normal
+        // —Solid se reconoce por `solid-js` y lo exige como peer—, así que sólo choca con otros.
+        if (markerOwner && markerOwner !== name) {
+          throw new FrameworkConflictError(
+            `"${name}" y "${markerOwner}" usan ambos "${marker}" para detectarse o como peer. Cada marcador identifica a un solo framework.`,
+          );
+        }
+        markerOwners.set(marker, name);
+      }
 
       catalog[name] = definition;
     }

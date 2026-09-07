@@ -11,7 +11,7 @@ import {
 import { readProjectConfig, writeProjectConfig } from '../config.js';
 import { formatDiffLines } from './diff.js';
 import { resolveTargetPath } from '@modularcore/registry-client';
-import { selectFilesForFramework } from '@modularcore/registry';
+import { frameworksKnownTo, selectFilesForFramework } from '@modularcore/registry';
 
 import type { RegistryClient } from '@modularcore/registry-client';
 import type { PromptAdapter } from '../prompts.js';
@@ -45,10 +45,12 @@ async function updateComponent(
   paths: Record<string, string>,
   framework: string,
 ): Promise<UpdateResult> {
+  const catalog = await client.getFrameworkCatalog().catch(() => undefined);
   const entry = await client.getDescriptor(name);
   const outcomes: UpdateFileOutcome[] = [];
   // Mismo recorte que en `add`: un update no debe reintroducir los adaptadores que `add` omitió.
-  for (const file of selectFilesForFramework(entry.files, framework)) {
+  const known = catalog ? { ...catalog, ...frameworksKnownTo(entry) } : frameworksKnownTo(entry);
+  for (const file of selectFilesForFramework(entry.files, framework, known)) {
     const localPath = resolveTargetPath(cwd, remapTarget(file.target, paths));
     const localBuffer = await readLocalFileBuffer(localPath);
     const registryBuffer = decodeFileContent(file);

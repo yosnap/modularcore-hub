@@ -9,7 +9,7 @@ import { appendEnvExample, remapTarget } from '../files.js';
 import { installNpmDependencies } from '../install.js';
 import { CliError } from '../errors.js';
 import { isTrackedWriteError, writeFilesTracked } from '@modularcore/registry-client';
-import { selectFilesForFramework } from '@modularcore/registry';
+import { frameworksKnownTo, selectFilesForFramework } from '@modularcore/registry';
 
 import type { RegistryClient } from '@modularcore/registry-client';
 import type { PromptAdapter } from '../prompts.js';
@@ -40,6 +40,12 @@ export async function runAdd(
   const packageManager = await detectPackageManager(cwd);
   const projectPackageJson = await readPackageJson(cwd);
 
+  // El catálogo del registry entero, no el de cada componente: si el proyecto usa un framework
+  // que aportó OTRO componente, `frameworksKnownTo(entry)` no lo conocería y el recorte caería en
+  // su rama de «framework desconocido → escribe todo», colando los ficheros de React y Svelte en
+  // un proyecto Solid. Si el registry no lo sirve, se cae a lo que el propio componente declare.
+  const catalog = await client.getFrameworkCatalog().catch(() => undefined);
+
   const entries = await resolveRegistryDependencies(client, name);
   for (const entry of entries) {
     assertCompatible(entry, config.framework, (peerName) =>
@@ -47,7 +53,7 @@ export async function runAdd(
     );
   }
 
-  const npmDeps = collectNpmDependencies(entries, config.framework);
+  const npmDeps = collectNpmDependencies(entries, config.framework, catalog);
   if (npmDeps.length > 0) {
     prompts.note(
       npmDeps.map((dep) => `${dep.name}@${dep.version}`).join('\n'),
@@ -75,7 +81,13 @@ export async function runAdd(
     for (const entry of entries) {
       // Sólo los ficheros del framework de este proyecto: escribir los adaptadores de los demás
       // dejaría módulos que importan runtimes que no están instalados.
-      const remappedFiles = selectFilesForFramework(entry.files, config.framework).map((file) => ({
+      // El catálogo sale del propio componente: si aporta su framework, sus ficheros tienen
+      // dueño y no se cuelan en la instalación de los demás.
+      const remappedFiles = selectFilesForFramework(
+        entry.files,
+        config.framework,
+        catalog ? { ...catalog, ...frameworksKnownTo(entry) } : frameworksKnownTo(entry),
+      ).map((file) => ({
         ...file,
         target: remapTarget(file.target, config.paths),
       }));

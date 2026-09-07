@@ -9,7 +9,7 @@ import {
   selectFilesForFramework,
 } from '@modularcore/registry';
 
-import type { RegistryEntry } from '@modularcore/registry';
+import type { FrameworkDefinition, RegistryEntry } from '@modularcore/registry';
 
 /**
  * Qué framework reclama cada peer, según el catálogo del propio componente.
@@ -147,6 +147,7 @@ export function parseNpmDependencySpec(raw: string): NpmDependencySpec {
 export function collectNpmDependencies(
   entries: RegistryEntry[],
   framework?: string,
+  catalog?: Record<string, FrameworkDefinition>,
 ): NpmDependencySpec[] {
   const byName = new Map<string, NpmDependencySpec>();
   const needed = new Set<string>();
@@ -173,7 +174,11 @@ export function collectNpmDependencies(
         ? entry.dependencies
         : dependenciesForFiles(
             entry.dependencies,
-            selectFilesForFramework(entry.files, framework),
+            selectFilesForFramework(
+              entry.files,
+              framework,
+              catalog ? { ...catalog, ...frameworksKnownTo(entry) } : frameworksKnownTo(entry),
+            ),
             entry.files,
           );
     for (const raw of forThisProject) needed.add(parseNpmDependencySpec(raw).name);
