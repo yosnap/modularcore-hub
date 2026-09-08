@@ -36,7 +36,7 @@ export function FullscreenOverlay({ config, onDismiss }: FullscreenOverlayProps)
       ref={dialogRef}
       role="dialog"
       aria-modal="true"
-      aria-label={config.title ?? config.name ?? 'Dialog'}
+      aria-label={config.title ?? config.name ?? 'Diálogo'}
       className={`modals-fullscreen${prefersReducedMotion() ? ' modals-no-motion' : ''}`}
     >
       <OverlayBody

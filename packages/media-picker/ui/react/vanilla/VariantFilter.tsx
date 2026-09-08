@@ -19,18 +19,18 @@ export interface VariantFilterProps {
 export function VariantFilter({ options, selected, onChange }: VariantFilterProps): JSX.Element {
   return (
     <label className="mc-variant-filter">
-      Size
+      Tamaño
       <select
         value={selected ?? ''}
         onChange={(event) => onChange(event.target.value || undefined)}
       >
-        <option value="">All sizes</option>
+        <option value="">Todos los tamaños</option>
         {options.map((label) => (
           <option key={label} value={label}>
             {label}
           </option>
         ))}
-        <option value={NO_VARIANTS}>Without derived sizes</option>
+        <option value={NO_VARIANTS}>Sin tamaños derivados</option>
       </select>
     </label>
   );

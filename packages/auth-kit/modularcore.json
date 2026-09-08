@@ -1,0 +1,975 @@
+{
+  "name": "auth-kit",
+  "version": "0.1.0",
+  "title": "Auth Kit",
+  "type": "headless-core",
+  "category": "auth",
+  "frameworks": ["react", "svelte", "vue", "angular", "vanilla"],
+  "ui": {
+    "react": {
+      "presentations": ["headless", "tailwind", "shadcn", "vanilla"],
+      "missing": [
+        "change-password-form",
+        "forgot-password-form",
+        "login-form",
+        "register-form",
+        "reset-password-form",
+        "turnstile-widget",
+        "verify-email-form"
+      ]
+    },
+    "svelte": {
+      "presentations": ["headless", "tailwind", "shadcn", "vanilla"],
+      "missing": [
+        "change-password-form",
+        "forgot-password-form",
+        "icons",
+        "login-form",
+        "register-form",
+        "reset-password-form",
+        "turnstile-widget",
+        "verify-email-form"
+      ]
+    },
+    "vue": {
+      "presentations": ["headless", "tailwind", "shadcn", "vanilla"],
+      "missing": [
+        "change-password-form",
+        "forgot-password-form",
+        "icons",
+        "login-form",
+        "register-form",
+        "reset-password-form",
+        "turnstile-widget",
+        "verify-email-form"
+      ]
+    },
+    "angular": {
+      "presentations": ["headless", "tailwind", "shadcn", "vanilla"],
+      "missing": [
+        "ChangePasswordForm",
+        "ForgotPasswordForm",
+        "LoginForm",
+        "RegisterForm",
+        "ResetPasswordForm",
+        "TurnstileWidget",
+        "VerifyEmailForm",
+        "icons"
+      ]
+    },
+    "vanilla": {
+      "presentations": ["headless", "tailwind", "shadcn", "vanilla"],
+      "missing": [
+        "TurnstileWidget",
+        "change-password-form",
+        "forgot-password-form",
+        "login-form",
+        "register-form",
+        "reset-password-form",
+        "turnstile-widget",
+        "verify-email-form"
+      ]
+    }
+  },
+  "visibility": "public",
+  "peerDependencies": {
+    "zod": ">=4",
+    "react": ">=18",
+    "svelte": ">=5",
+    "vue": ">=3.3",
+    "@angular/core": ">=17",
+    "@angular/common": ">=17",
+    "@radix-ui/react-checkbox": ">=1",
+    "@radix-ui/react-label": ">=2",
+    "@radix-ui/react-tabs": ">=1",
+    "@radix-ui/react-select": ">=2"
+  },
+  "dependencies": [],
+  "registryDependencies": [],
+  "envVariables": [],
+  "description": "Componente de autenticación todo en uno (login, registro, cambio de contraseña, olvido/restablecimiento de contraseña, verificación de email + reenvío) con un widget opcional de Cloudflare Turnstile y campos opcionales declarativos (nombre/apellidos, teléfono, consentimiento legal, tipo de perfil). Núcleo headless + hooks que conectas a tu propio backend — este componente no incluye credenciales ni servidor de autenticación. Adaptadores para React, Svelte, Vue, Angular y vanilla, cada uno con presentaciones headless/tailwind/shadcn/vanilla.",
+  "files": [
+    {
+      "path": "adapters/angular/auth-kit.service.ts",
+      "target": "src/modularcore/auth-kit/adapters/angular/auth-kit.service.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/react/use-auth-kit.ts",
+      "target": "src/modularcore/auth-kit/adapters/react/use-auth-kit.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/svelte/create-auth-kit.svelte.ts",
+      "target": "src/modularcore/auth-kit/adapters/svelte/create-auth-kit.svelte.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/vanilla/create-auth-kit-store.ts",
+      "target": "src/modularcore/auth-kit/adapters/vanilla/create-auth-kit-store.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "adapters/vue/use-auth-kit.ts",
+      "target": "src/modularcore/auth-kit/adapters/vue/use-auth-kit.ts",
+      "type": "adapter",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/auth-kit.ts",
+      "target": "src/modularcore/auth-kit/core/auth-kit.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/field-config.ts",
+      "target": "src/modularcore/auth-kit/core/field-config.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/password-strength.ts",
+      "target": "src/modularcore/auth-kit/core/password-strength.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/turnstile.ts",
+      "target": "src/modularcore/auth-kit/core/turnstile.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/types.ts",
+      "target": "src/modularcore/auth-kit/core/types.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/validation.ts",
+      "target": "src/modularcore/auth-kit/core/validation.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/change-password-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/change-password-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/forgot-password-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/forgot-password-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/login-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/login-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/register-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/register-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/reset-password-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/reset-password-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/shadcn/change-password-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/shadcn/change-password-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/shadcn/forgot-password-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/shadcn/forgot-password-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/shadcn/login-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/shadcn/login-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/shadcn/register-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/shadcn/register-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/shadcn/reset-password-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/shadcn/reset-password-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/shadcn/verify-email-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/shadcn/verify-email-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/tailwind/change-password-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/tailwind/change-password-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/tailwind/forgot-password-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/tailwind/forgot-password-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/tailwind/login-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/tailwind/login-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/tailwind/register-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/tailwind/register-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/tailwind/reset-password-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/tailwind/reset-password-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/tailwind/verify-email-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/tailwind/verify-email-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/turnstile-widget.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/turnstile-widget.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/vanilla/change-password-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/vanilla/change-password-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/vanilla/forgot-password-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/vanilla/forgot-password-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/vanilla/login-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/vanilla/login-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/vanilla/register-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/vanilla/register-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/vanilla/reset-password-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/vanilla/reset-password-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/vanilla/verify-email-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/vanilla/verify-email-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/angular/verify-email-form.component.ts",
+      "target": "src/modularcore/auth-kit/ui/angular/verify-email-form.component.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/ChangePasswordForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/ChangePasswordForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/ForgotPasswordForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/ForgotPasswordForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/LoginForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/LoginForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/RegisterForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/RegisterForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/ResetPasswordForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/ResetPasswordForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/TurnstileWidget.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/TurnstileWidget.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/VerifyEmailForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/VerifyEmailForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/icons.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/icons.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/internal/change-password-form-state.ts",
+      "target": "src/modularcore/auth-kit/ui/react/internal/change-password-form-state.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/internal/forgot-password-form-state.ts",
+      "target": "src/modularcore/auth-kit/ui/react/internal/forgot-password-form-state.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/internal/login-form-state.ts",
+      "target": "src/modularcore/auth-kit/ui/react/internal/login-form-state.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/internal/register-form-state.ts",
+      "target": "src/modularcore/auth-kit/ui/react/internal/register-form-state.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/internal/reset-password-form-state.ts",
+      "target": "src/modularcore/auth-kit/ui/react/internal/reset-password-form-state.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/internal/verify-email-form-state.ts",
+      "target": "src/modularcore/auth-kit/ui/react/internal/verify-email-form-state.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/shadcn/ChangePasswordForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/shadcn/ChangePasswordForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/shadcn/ForgotPasswordForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/shadcn/ForgotPasswordForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/shadcn/LoginForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/shadcn/LoginForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/shadcn/RegisterForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/shadcn/RegisterForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/shadcn/ResetPasswordForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/shadcn/ResetPasswordForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/shadcn/VerifyEmailForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/shadcn/VerifyEmailForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/tailwind/ChangePasswordForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/tailwind/ChangePasswordForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/tailwind/ForgotPasswordForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/tailwind/ForgotPasswordForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/tailwind/LoginForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/tailwind/LoginForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/tailwind/RegisterForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/tailwind/RegisterForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/tailwind/ResetPasswordForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/tailwind/ResetPasswordForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/tailwind/VerifyEmailForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/tailwind/VerifyEmailForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/vanilla/ChangePasswordForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/vanilla/ChangePasswordForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/vanilla/ForgotPasswordForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/vanilla/ForgotPasswordForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/vanilla/LoginForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/vanilla/LoginForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/vanilla/RegisterForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/vanilla/RegisterForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/vanilla/ResetPasswordForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/vanilla/ResetPasswordForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/react/vanilla/VerifyEmailForm.tsx",
+      "target": "src/modularcore/auth-kit/ui/react/vanilla/VerifyEmailForm.tsx",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/shadcn-theme.css",
+      "target": "src/modularcore/auth-kit/ui/shadcn-theme.css",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/ChangePasswordForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/ChangePasswordForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/ForgotPasswordForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/ForgotPasswordForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/LoginForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/LoginForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/RegisterForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/RegisterForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/ResetPasswordForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/ResetPasswordForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/TurnstileWidget.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/TurnstileWidget.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/VerifyEmailForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/VerifyEmailForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/icons.ts",
+      "target": "src/modularcore/auth-kit/ui/svelte/icons.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/ChangePasswordForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/shadcn/ChangePasswordForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/ForgotPasswordForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/shadcn/ForgotPasswordForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/LoginForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/shadcn/LoginForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/RegisterForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/shadcn/RegisterForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/ResetPasswordForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/shadcn/ResetPasswordForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/shadcn/VerifyEmailForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/shadcn/VerifyEmailForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/ChangePasswordForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/tailwind/ChangePasswordForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/ForgotPasswordForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/tailwind/ForgotPasswordForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/LoginForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/tailwind/LoginForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/RegisterForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/tailwind/RegisterForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/ResetPasswordForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/tailwind/ResetPasswordForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/tailwind/VerifyEmailForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/tailwind/VerifyEmailForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/ChangePasswordForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/vanilla/ChangePasswordForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/ForgotPasswordForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/vanilla/ForgotPasswordForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/LoginForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/vanilla/LoginForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/RegisterForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/vanilla/RegisterForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/ResetPasswordForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/vanilla/ResetPasswordForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/svelte/vanilla/VerifyEmailForm.svelte",
+      "target": "src/modularcore/auth-kit/ui/svelte/vanilla/VerifyEmailForm.svelte",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla-styles.css",
+      "target": "src/modularcore/auth-kit/ui/vanilla-styles.css",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/ChangePasswordForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/ChangePasswordForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/ForgotPasswordForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/ForgotPasswordForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/LoginForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/LoginForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/RegisterForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/RegisterForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/ResetPasswordForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/ResetPasswordForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/VerifyEmailForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/VerifyEmailForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/icons.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/icons.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/internal/dom.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/internal/dom.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/shadcn/ChangePasswordForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/shadcn/ChangePasswordForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/shadcn/ForgotPasswordForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/shadcn/ForgotPasswordForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/shadcn/LoginForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/shadcn/LoginForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/shadcn/RegisterForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/shadcn/RegisterForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/shadcn/ResetPasswordForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/shadcn/ResetPasswordForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/shadcn/VerifyEmailForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/shadcn/VerifyEmailForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/tailwind/ChangePasswordForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/tailwind/ChangePasswordForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/tailwind/ForgotPasswordForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/tailwind/ForgotPasswordForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/tailwind/LoginForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/tailwind/LoginForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/tailwind/RegisterForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/tailwind/RegisterForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/tailwind/ResetPasswordForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/tailwind/ResetPasswordForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/tailwind/VerifyEmailForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/tailwind/VerifyEmailForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/vanilla/ChangePasswordForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/vanilla/ChangePasswordForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/vanilla/ForgotPasswordForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/vanilla/ForgotPasswordForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/vanilla/LoginForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/vanilla/LoginForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/vanilla/RegisterForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/vanilla/RegisterForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/vanilla/ResetPasswordForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/vanilla/ResetPasswordForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/vanilla/VerifyEmailForm.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/vanilla/VerifyEmailForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/ChangePasswordForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/ChangePasswordForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/ForgotPasswordForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/ForgotPasswordForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/LoginForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/LoginForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/RegisterForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/RegisterForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/ResetPasswordForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/ResetPasswordForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/TurnstileWidget.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/TurnstileWidget.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/VerifyEmailForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/VerifyEmailForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/shadcn/ChangePasswordForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/shadcn/ChangePasswordForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/shadcn/ForgotPasswordForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/shadcn/ForgotPasswordForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/shadcn/LoginForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/shadcn/LoginForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/shadcn/RegisterForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/shadcn/RegisterForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/shadcn/ResetPasswordForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/shadcn/ResetPasswordForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/shadcn/VerifyEmailForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/shadcn/VerifyEmailForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/tailwind/ChangePasswordForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/tailwind/ChangePasswordForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/tailwind/ForgotPasswordForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/tailwind/ForgotPasswordForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/tailwind/LoginForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/tailwind/LoginForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/tailwind/RegisterForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/tailwind/RegisterForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/tailwind/ResetPasswordForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/tailwind/ResetPasswordForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/tailwind/VerifyEmailForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/tailwind/VerifyEmailForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/vanilla/ChangePasswordForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/vanilla/ChangePasswordForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/vanilla/ForgotPasswordForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/vanilla/ForgotPasswordForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/vanilla/LoginForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/vanilla/LoginForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/vanilla/RegisterForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/vanilla/RegisterForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/vanilla/ResetPasswordForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/vanilla/ResetPasswordForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vue/vanilla/VerifyEmailForm.vue",
+      "target": "src/modularcore/auth-kit/ui/vue/vanilla/VerifyEmailForm.vue",
+      "type": "ui",
+      "encoding": "utf8"
+    }
+  ]
+}

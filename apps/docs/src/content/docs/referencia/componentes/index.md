@@ -37,6 +37,8 @@ sus dependencias de tipo `peer` declaradas explícitamente. Esto significa:
   Schema.org.
 - [Media Picker](/referencia/componentes/media-picker/) — selector de medios con recorte,
   compresión y subida a distintos proveedores de almacenamiento.
+- [Auth Kit](/referencia/componentes/auth-kit/) — login, registro, cambio de contraseña,
+  recuperación y verificación de email, contra el backend o librería de autenticación que ya usas.
 - [Modals](/referencia/componentes/modals/) — sistema unificado de overlays (modal, fullscreen,
   banners, slide-in, toast) con elegibilidad y frecuencia de aparición.
 - [Hello Core](/referencia/componentes/hello-core/) — componente mínimo de ejemplo usado como

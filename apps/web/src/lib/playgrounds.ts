@@ -10,6 +10,7 @@ export const PLAYGROUNDS: readonly PlaygroundEntry[] = [
   { component: 'auto-seo', label: 'Auto SEO', href: '/playground/auto-seo' },
   { component: 'media-picker', label: 'Media Picker', href: '/playground/media-picker' },
   { component: 'modals', label: 'Modals', href: '/playground/modals' },
+  { component: 'auth-kit', label: 'Auth Kit', href: '/playground/auth-kit' },
 ];
 
 export function playgroundFor(component: string): PlaygroundEntry | undefined {

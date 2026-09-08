@@ -298,7 +298,7 @@
             {#if previewUrl}
               <img
               src={previewUrl}
-              alt="Editor preview"
+              alt="Vista previa del editor"
               style="transform:scale({zoom});transform-origin:center;width:100%;height:auto;display:block"
             />
             {/if}

@@ -17,19 +17,19 @@ export interface VariantFilterProps {
 export function VariantFilter({ options, selected, onChange }: VariantFilterProps): JSX.Element {
   return (
     <label className="inline-flex items-center gap-2 text-xs text-zinc-600">
-      Size
+      Tamaño
       <select
         value={selected ?? ''}
         onChange={(event) => onChange(event.target.value || undefined)}
         className="rounded-md border border-zinc-300 px-2 py-1 text-xs"
       >
-        <option value="">All sizes</option>
+        <option value="">Todos los tamaños</option>
         {options.map((label) => (
           <option key={label} value={label}>
             {label}
           </option>
         ))}
-        <option value={NO_VARIANTS}>Without derived sizes</option>
+        <option value={NO_VARIANTS}>Sin tamaños derivados</option>
       </select>
     </label>
   );

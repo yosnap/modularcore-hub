@@ -40,10 +40,10 @@ export function FolderSelect({
         disabled={foldersLoading}
         onChange={onChange}
         options={[
-          { value: '', label: 'All folders' },
+          { value: '', label: 'Todas las carpetas' },
           ...folders.map((folder) => ({ value: folder.id, label: folder.name })),
         ]}
-        placeholder="All folders"
+        placeholder="Todas las carpetas"
       />
       {foldersError ? (
         <p role="alert" className="mc-alert">
@@ -55,12 +55,12 @@ export function FolderSelect({
           <input
             type="text"
             value={newFolderName}
-            placeholder="New folder"
+            placeholder="Nueva carpeta"
             onChange={(event) => setNewFolderName(event.target.value)}
             className="mc-input"
           />
           <button type="button" onClick={() => void handleCreate()} className="mc-button">
-            Create
+            Crear
           </button>
         </span>
       ) : null}

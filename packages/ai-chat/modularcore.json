@@ -17,6 +17,9 @@
     },
     "angular": {
       "presentations": []
+    },
+    "vanilla": {
+      "presentations": []
     }
   },
   "visibility": "public",
@@ -31,21 +34,21 @@
   "envVariables": [
     {
       "key": "OPENROUTER_API_KEY",
-      "description": "API key for OpenRouter, the default OpenAI-compatible provider (baseURL https://openrouter.ai/api/v1). BYOK — passed by your app into ChatConfig.apiKey, never hardcoded in this component.",
+      "description": "Clave de API de OpenRouter, el proveedor compatible con OpenAI por defecto (baseURL https://openrouter.ai/api/v1). BYOK — se pasa desde tu app a ChatConfig.apiKey, nunca va hardcodeada en este componente.",
       "required": false
     },
     {
       "key": "OPENAI_API_KEY",
-      "description": "API key used only if you set LLM_BASE_URL to point at OpenAI directly instead of OpenRouter.",
+      "description": "Clave de API usada solo si defines LLM_BASE_URL para apuntar directamente a OpenAI en lugar de a OpenRouter.",
       "required": false
     },
     {
       "key": "LLM_BASE_URL",
-      "description": "Optional override for ChatConfig.baseURL. Defaults to OpenRouter; set to any OpenAI-compatible /chat/completions endpoint (OpenAI, LiteLLM, self-hosted gateway).",
+      "description": "Override opcional de ChatConfig.baseURL. Por defecto usa OpenRouter; puedes apuntarlo a cualquier endpoint /chat/completions compatible con OpenAI (OpenAI, LiteLLM, gateway propio).",
       "required": false
     }
   ],
-  "description": "Headless AI chat core (OpenAI-compatible streaming, model fallback, token estimation, function calling with human-in-the-loop confirmation, local/backend history) with React, Svelte, Vue, Angular and frameworkless adapters plus Blade snippets. BYOK — the API key always comes from your app's server-side config, never hardcoded.",
+  "description": "Núcleo headless de chat con IA (streaming compatible con OpenAI, fallback entre modelos, estimación de tokens, function calling con confirmación humana, historial local/backend) con adaptadores para React, Svelte, Vue, Angular y sin framework, más snippets de Blade. BYOK — la clave de API siempre viene de la configuración server-side de tu app, nunca va hardcodeada.",
   "files": [
     {
       "path": "core/client.ts",

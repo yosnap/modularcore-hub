@@ -75,6 +75,12 @@ export const BUILTIN_FRAMEWORKS: Record<string, FrameworkDefinition> = {
   },
   vanilla: {
     title: 'Sin framework (Astro, HTMX, Rails…)',
+    // A diferencia de `blade`, `vanilla` sí puede traer UI de referencia propia (DOM imperativo,
+    // sin JSX/plantillas) — la trae `auth-kit`. Sin esta extensión, `ui/vanilla/…` se confunde con
+    // la presentación «CSS plano» de los demás frameworks y se trata como fichero compartido: se
+    // escribía en toda instalación, incluida una de React, arrastrando un adaptador que esa
+    // instalación no tiene.
+    uiExtension: '.ts',
     detect: { npm: 'astro' },
     snippetDirectory: 'astro',
     paths: { components: 'src/components', lib: 'src/lib/modularcore' },

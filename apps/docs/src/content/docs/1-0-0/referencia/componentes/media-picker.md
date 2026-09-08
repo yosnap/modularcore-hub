@@ -1,0 +1,233 @@
+---
+title: "Media Picker"
+description: "Selector de medios headless con recorte, compresión y subida a proveedores de almacenamiento S3-compatible, Cloudinary y Azure Blob."
+archived: true
+pagefind: false
+banner:
+  content: 'Documentación archivada de la versión 1-0-0. <a href="/">Ver la versión actual</a>.'
+---
+
+`@modularcore/media-picker` es un selector de medios headless — fuentes de archivo local, URL
+remota y biblioteca, recorte y compresión con canvas, y proveedores de almacenamiento
+S3-compatible, Cloudinary y Azure Blob — con adaptadores para React, Svelte, Vue 3, Angular
+standalone y páginas sin framework (Astro, Blade, HTMX…).
+
+## Las credenciales nunca viven en este componente
+
+`StorageProvider` (ver `core/provider.ts`) es el único punto de contacto con un backend de
+almacenamiento, y su interfaz no tiene ningún lugar por donde pasar un secreto de larga duración
+(access key, API secret). Cualquier proveedor real (`core/providers/s3-compatible.ts`,
+`core/providers/cloudinary.ts`) obtiene credenciales de corta duración y con alcance limitado (una
+URL prefirmada, un payload de subida firmado) desde un endpoint de backend que tú controlas e
+implementas.
+
+## Qué incluye el paquete
+
+- `core/media-picker.ts` — `MediaPicker`, el orquestador headless (cargar → recortar → comprimir →
+  subir), con estado protegido por generación para que los resultados asíncronos obsoletos nunca
+  sobrescriban a los más recientes.
+- `core/provider.ts` — la interfaz `StorageProvider` contra la que implementa cada backend.
+- `core/sources.ts` — carga un `Blob` desde un `File` local, una URL remota (protegida contra
+  SSRF) o una clave de biblioteca respaldada por un proveedor.
+- `core/canvas/crop.ts`, `core/canvas/compress.ts` — transformaciones de imagen basadas en canvas.
+- `core/net/ssrf-guard.ts` — bloquea objetivos privados/loopback/link-local antes de cualquier
+  fetch remoto.
+- `core/providers/s3-compatible.ts`, `core/providers/cloudinary.ts` — implementaciones reales de
+  proveedor que llaman a tu backend de firmado.
+- `adapters/react`, `adapters/svelte` — bindings finos sobre `MediaPicker` (el adaptador de Svelte
+  usa runas de Svelte 5).
+- `adapters/vue`, `adapters/angular` — bindings por componente sobre el mismo core. Vue usa refs;
+  Angular usa signals más `DestroyRef`.
+- `adapters/vanilla` — binding sin framework: expone `subscribe` y `destroy` en lugar de apoyarse
+  en un sistema reactivo o en un ciclo de vida ajeno.
+- `core/providers/azure-blob.ts` — subida desde el navegador a través de un target SAS de corta
+  duración y con alcance de blob, emitido por tu propio backend.
+
+## Tamaños derivados (variantes)
+
+Una biblioteca de medios rara vez quiere servir el original de 4000 px en una cuadrícula de
+miniaturas. `generateVariants` produce los tamaños a partir del blob ya cargado, reutilizando
+`compressImage`, y **nunca escala hacia arriba**: una medida mayor o igual que el lado más largo del
+original se omite, en vez de generar una copia borrosa —o una recodificación del mismo tamaño— más
+pesada que la fuente. Quien resuelva `variants.find(v => v.label === 'large')` debe contemplar que
+ese tamaño no exista y recurrir al original.
+
+```ts
+const { original, variants, failed } = await picker.uploadWithVariants(provider, [
+  { label: 'large', maxDimension: 1920 },
+  { label: 'medium', maxDimension: 1200 },
+  { label: 'thumb', maxDimension: 400 },
+]);
+```
+
+El original se sube primero, porque cada derivada necesita su clave para enlazarse. Las derivadas
+no heredan `key`, `overwriteKey` ni `contentType`: los tres describen al original, y reenviar
+`overwriteKey` —que significa «escribe en esta clave exacta»— haría que cada tamaño pisara al
+original. Cada derivada anuncia su propio formato. Para situarlas junto al original, el endpoint de
+firma tiene en `variantOf` la clave de este y puede derivar de ahí la carpeta; no basta con
+reutilizar la `key` que pediste para el original. Un fallo en una
+derivada no tumba la operación —el original ya está guardado y perderlo por una miniatura sería un
+mal negocio—: los tamaños que fallaron llegan en `failed` para que la interfaz avise o reintente.
+
+Como con el resto del componente, **el núcleo no persiste nada**. Cada derivada se sube con
+`variantOf` (la clave del original) y `variantLabel`, y es tu proveedor quien decide cómo
+relacionarlas: una columna en tu base de datos, un prefijo en la clave, metadatos del objeto… Al
+listar, esas derivadas vuelven en `ListedObject.variants`, nunca como entradas propias, para que la
+biblioteca no muestre cinco copias de la misma imagen. `ListOptions.variant` viaja igual que
+`query` o `sort`: se reenvía tal cual a tu hook `list` para filtrar por un tamaño concreto, o por
+`'none'` para quedarte con los originales sin derivadas.
+
+Un proveedor que ignore estos campos sigue siendo una implementación válida; simplemente no
+ofrecerá variantes.
+
+Las ocho presentaciones de `MediaLibraryGrid` —cuatro de React y cuatro de Svelte— muestran un pie
+con el nombre del fichero y su tamaño, y un distintivo por cada tamaño derivado disponible, con el
+ancho en píxeles cuando el proveedor lo informa.
+
+### Filtrar por tamaño
+
+`VariantFilter` alimenta `ListOptions.variant`, también en las ocho presentaciones. Es selección
+única, no casillas como `MimeTypeFilter`: filtrar por dos tamaños a la vez no significa nada,
+porque cada objeto aparece una sola vez con sus derivadas dentro. Devuelve `undefined` al volver a
+«todos», para que `variant` se omita del listado en lugar de viajar como cadena vacía.
+
+```svelte
+<VariantFilter
+  options={['large', 'medium', 'thumb']}
+  selected={size}
+  onChange={(variant) => {
+    size = variant;
+    // La clave se añade sólo si hay tamaño: `{ ...filters, variant: undefined }` la dejaría
+    // presente, y un hook `list` que haga `new URLSearchParams({ ...options })` enviaría
+    // `variant=undefined` al backend.
+    picker.listLibrary(provider, { ...filters, ...(variant ? { variant } : {}) });
+  }}
+/>
+```
+
+### Elegir el tamaño al confirmar
+
+`confirmSelection()` devuelve siempre el original, con sus derivadas dentro. Para quedarte con un
+tamaño concreto —la portada de un post que quiere el mediano, por ejemplo— tienes dos funciones
+puras en `core/format.ts`:
+
+```ts
+import { selectionAtVariant, variantUrl } from '@modularcore/media-picker/format';
+
+const cover = variantUrl(picker.confirmSelection()[0], 'medium');
+const gallery = selectionAtVariant(picker.confirmSelection(), 'thumb');
+```
+
+Ambas recurren al original cuando ese tamaño no existe: el proveedor decide qué derivadas guarda,
+así que pedir una ausente es normal y debe dar una imagen, no `undefined`. Se resuelve fuera del
+núcleo a propósito — la selección no cambia según el tamaño que quieras mostrar, y un mismo objeto
+puede necesitar tamaños distintos en dos sitios de la misma página.
+
+`selectionAtVariant` devuelve cada objeto describiendo **la derivada entera**: su clave, su URL, su
+peso, sus medidas y su formato. Así `<img src={item.url} width={item.width}>` no maqueta la
+miniatura en la caja del original, y sobre todo la clave y la URL apuntan al mismo sitio — dejar la
+del original junto a la URL de la miniatura convertía un `provider.remove(item.key)` en un borrado
+del original.
+
+Ese objeto no lleva `variants`, porque una derivada no tiene derivadas propias. Para saltar a otro
+tamaño se parte de `confirmSelection()` sin transformar, que sigue siendo el original con todas sus
+derivadas dentro.
+
+Las medidas sólo viajan si el proveedor las conoce. Para que las conozca, `uploadWithVariants` se
+las manda al subir en `variantWidth`/`variantHeight`, junto a `variantOf` y `variantLabel`: si tu
+hook `upload` no las persiste, `ListedObject.variants` volverá sin ancho y el distintivo de la
+cuadrícula mostrará la etiqueta en vez de los píxeles.
+
+## Uso sin framework (Astro, Blade, HTMX…)
+
+Los demás adaptadores traducen el estado del núcleo al sistema reactivo de su framework y usan su
+ciclo de vida para darse de baja. En una página sin framework no existe ninguno de los dos, así que
+`createMediaPickerStore` expone la suscripción tal cual y deja la limpieza en tus manos:
+
+```ts
+import { createMediaPickerStore } from '@modularcore/media-picker/vanilla';
+
+const store = createMediaPickerStore();
+
+// `subscribe` invoca al oyente de inmediato con el estado actual, así que el primer pintado
+// no necesita una llamada aparte a `getState`.
+const unsubscribe = store.subscribe((state) => {
+  status.textContent = state.error ? state.error.message : state.status;
+});
+
+// Al desmontar la isla, la página o el widget:
+unsubscribe();
+store.destroy();
+```
+
+Astro es el caso más directo: su interactividad son `<script>` con TypeScript plano, sin runtime
+reactivo propio. Elige `vanilla` al ejecutar `modularcore init` —no se detecta solo, porque no es
+una dependencia sino la ausencia de framework— y la CLI instalará el componente con normalidad.
+
+El snippet `snippets/astro/media-picker-island.ts` monta el picker sobre los elementos marcados con
+`data-media-picker`. Registra el montaje en `astro:page-load` y no solo al cargar el módulo, porque
+Astro no vuelve a ejecutar un script ya cargado tras una navegación con View Transitions; y libera
+las suscripciones en `astro:before-swap`, antes de que el documento sea sustituido. El mismo patrón
+sirve tal cual en Blade, HTMX o Rails.
+
+## Proveedores de almacenamiento soportados
+
+- **S3-compatible** (`core/providers/s3-compatible.ts`) — cualquier backend compatible con la API
+  de S3 (AWS S3, MinIO, etc.), a través de una URL de subida prefirmada que obtienes de tu propio
+  endpoint.
+- **Cloudinary** (`core/providers/cloudinary.ts`) — a través de un payload de subida firmado por tu
+  backend.
+- **Azure Blob** (`core/providers/azure-blob.ts`) — a través de un target SAS de corta duración
+  emitido por tu backend.
+
+## Azure Blob y Laravel
+
+Usa `createAzureBlobProvider` solo con un endpoint de target SAS que tú controles. El endpoint
+autentica, autoriza, valida el archivo y genera la clave antes de devolver una URL de corta
+duración. Consulta `snippets/laravel/` para snippets Laravel; ninguno envía credenciales de cuenta
+al navegador.
+
+## Uso básico (Svelte 5)
+
+```ts
+import { createMediaPicker } from '@modularcore/media-picker/svelte';
+import { createS3CompatibleProvider } from '@modularcore/media-picker/providers/s3-compatible';
+
+const picker = createMediaPicker();
+const provider = createS3CompatibleProvider({ getUploadUrl: /* tu llamada al endpoint de firmado */ });
+
+picker.loadLocalFile(file);
+await picker.crop({ x: 0, y: 0, width: 512, height: 512 });
+await picker.upload(provider);
+```
+
+Para una demo/playground sin backend real, se implementa un `StorageProvider` mínimo en memoria
+(`apps/web/src/lib/demo-storage-provider.ts` en este monorepo) que guarda los blobs en un `Map` y
+los sirve vía `URL.createObjectURL` — nunca conectes un proveedor real a una página de demo sin
+autenticar.
+
+## Variantes de estilo de UI
+
+Cada uno de los 7 componentes de UI (`MediaLibraryGrid`, `FolderSelect`, `MimeTypeFilter`,
+`VariantFilter`, `ImageEditor`, `BulkActionsBar`, `RemoteUrlLoader`) se distribuye en 4
+presentaciones, todas con las mismas props — solo cambia el marcado/CSS:
+
+- `ui/react/*.tsx`, `ui/svelte/*.svelte` — UI de referencia headless, sin estilos (la opción por
+  defecto original).
+- `ui/{react,svelte}/tailwind/` — solo clases utilitarias de Tailwind CSS.
+- `ui/{react,svelte}/shadcn/` — tema Shadcn/ui, usando `@radix-ui/react-toggle` +
+  `@radix-ui/react-slider` reales (React) o `bits-ui` (Svelte) como peer dependencies opcionales.
+  Requiere Tailwind CSS v4.
+- `ui/{react,svelte}/vanilla/` — CSS plano (`ui/vanilla-styles.css`, prefijo de clase `mc-*`), sin
+  dependencia de framework, funciona con o sin bundler.
+
+Junto a esos seis se instalan dos componentes de apoyo:
+
+- `MediaLibraryModal` (solo Svelte, en las cuatro presentaciones) — envuelve la biblioteca en un
+  modal con pestañas Biblioteca / Subir archivo / Desde URL, paginación numerada, búsqueda y
+  orden.
+- `ModernSelect` — el desplegable que usan `FolderSelect` e `ImageEditor`. La versión de React
+  no tiene dependencias y se estiliza con `ui/modern-select.css`; la de Svelte se apoya en
+  `bits-ui`, que la CLI instala junto al componente.
+
+Prueba este componente en vivo en el [Playground de Media Picker](/1-0-0/referencia/playground/media-picker/).

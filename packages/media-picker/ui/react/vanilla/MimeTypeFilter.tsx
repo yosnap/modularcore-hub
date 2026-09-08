@@ -19,7 +19,7 @@ export function MimeTypeFilter({ options, selected, onChange }: MimeTypeFilterPr
   };
 
   return (
-    <div role="group" aria-label="Filter by file type" className="mc-mime-group">
+    <div role="group" aria-label="Filtrar por tipo de archivo" className="mc-mime-group">
       {options.map((mimeType) => (
         <label key={mimeType} className="mc-mime-pill">
           <input

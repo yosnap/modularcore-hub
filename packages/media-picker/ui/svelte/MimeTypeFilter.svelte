@@ -18,7 +18,7 @@
   }
 </script>
 
-<div role="group" aria-label="Filter by file type">
+<div role="group" aria-label="Filtrar por tipo de archivo">
   {#each options as mimeType (mimeType)}
     <label style="margin-right:8px">
       <input type="checkbox" checked={selected.includes(mimeType)} onchange={() => toggle(mimeType)} />

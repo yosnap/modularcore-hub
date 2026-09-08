@@ -19,9 +19,9 @@
 </script>
 
 {#if multiple && picker.state.selection.length > 0}
-  <div role="toolbar" aria-label="Bulk actions" class="mc-toolbar">
+  <div role="toolbar" aria-label="Acciones en lote" class="mc-toolbar">
     <span>{picker.state.selection.length} selected</span>
-    <button type="button" onclick={handleConfirm} class="mc-button">Confirm</button>
-    <button type="button" onclick={() => picker.clearSelection()} class="mc-button">Clear</button>
+    <button type="button" onclick={handleConfirm} class="mc-button">Confirmar</button>
+    <button type="button" onclick={() => picker.clearSelection()} class="mc-button">Vaciar</button>
   </div>
 {/if}

@@ -23,13 +23,13 @@ export function BulkActionsBar({
   };
 
   return (
-    <div role="toolbar" aria-label="Bulk actions" className="mc-toolbar">
+    <div role="toolbar" aria-label="Acciones en lote" className="mc-toolbar">
       <span>{selection.length} selected</span>
       <button type="button" onClick={handleConfirm} className="mc-button">
-        Confirm
+        Confirmar
       </button>
       <button type="button" onClick={() => picker.clearSelection()} className="mc-button">
-        Clear
+        Vaciar
       </button>
     </div>
   );

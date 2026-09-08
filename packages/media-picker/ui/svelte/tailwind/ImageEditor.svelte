@@ -300,7 +300,7 @@
             {#if previewUrl}
               <img
                 src={previewUrl}
-                alt="Editor preview"
+                alt="Vista previa del editor"
                 style="transform:scale({zoom});transform-origin:center"
                 class="block h-auto w-full"
               />

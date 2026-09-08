@@ -35,16 +35,16 @@
   y el resto de la UI de Svelte de este paquete.
 -->
 <label class="inline-flex items-center gap-2 text-xs text-zinc-600">
-  Size
+  Tamaño
   <select
     value={selected ?? ''}
     onchange={handleChange}
     class="rounded-md border border-zinc-300 px-2 py-1 text-xs"
   >
-    <option value="">All sizes</option>
+    <option value="">Todos los tamaños</option>
     {#each options as label (label)}
       <option value={label}>{label}</option>
     {/each}
-    <option value={NO_VARIANTS}>Without derived sizes</option>
+    <option value={NO_VARIANTS}>Sin tamaños derivados</option>
   </select>
 </label>

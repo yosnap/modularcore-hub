@@ -18,7 +18,7 @@ export function MimeTypeFilter({ options, selected, onChange }: MimeTypeFilterPr
   };
 
   return (
-    <div role="group" aria-label="Filter by file type" className="flex flex-wrap gap-2">
+    <div role="group" aria-label="Filtrar por tipo de archivo" className="flex flex-wrap gap-2">
       {options.map((mimeType) => (
         <label
           key={mimeType}

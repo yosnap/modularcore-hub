@@ -195,9 +195,9 @@ describe('las ocho presentaciones de VariantFilter', () => {
     for (const filter of FILTERS) {
       const source = await readFile(join(packageRoot, filter), 'utf8');
 
-      expect(source, `${filter} debe ofrecer «todos los tamaños»`).toContain('All sizes');
+      expect(source, `${filter} debe ofrecer «todos los tamaños»`).toContain('Todos los tamaños');
       expect(source, `${filter} debe ofrecer el filtro de originales`).toContain(
-        'Without derived sizes',
+        'Sin tamaños derivados',
       );
       expect(source, `${filter} debe usar el valor 'none' del contrato`).toContain("'none'");
       // Sin esto, `ListOptions.variant` viajaría como cadena vacía en lugar de omitirse.
