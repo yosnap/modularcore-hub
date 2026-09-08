@@ -17,15 +17,15 @@ export interface MountRegisterFormOptions {
 export function mountRegisterForm(container: HTMLElement, { authKit, fieldConfig, passwordPolicy }: MountRegisterFormOptions): () => void {
   const fields = resolveFieldConfig(fieldConfig);
 
-  const email = field('Email', { id: 'auth-kit-register-email', type: 'email', autocomplete: 'email' });
+  const email = field('Correo electrónico', { id: 'auth-kit-register-email', type: 'email', autocomplete: 'email' });
   const emailError = errorText();
-  const password = field('Password', { id: 'auth-kit-register-password', type: 'password', autocomplete: 'new-password' });
+  const password = field('Contraseña', { id: 'auth-kit-register-password', type: 'password', autocomplete: 'new-password' });
   const passwordError = errorText();
-  const showPassword = el('button', { type: 'button' }, ['Show']);
-  const confirmPassword = field('Confirm password', { id: 'auth-kit-register-confirm-password', type: 'password', autocomplete: 'new-password' });
+  const showPassword = el('button', { type: 'button' }, ['Mostrar']);
+  const confirmPassword = field('Confirmar contraseña', { id: 'auth-kit-register-confirm-password', type: 'password', autocomplete: 'new-password' });
   const confirmPasswordError = errorText();
-  const showConfirm = el('button', { type: 'button' }, ['Show']);
-  const submit = el('button', { type: 'submit' }, ['Create account']);
+  const showConfirm = el('button', { type: 'button' }, ['Mostrar']);
+  const submit = el('button', { type: 'submit' }, ['Crear cuenta']);
   const submitError = errorText();
   const success = el('p');
   success.hidden = true;
@@ -97,21 +97,21 @@ export function mountRegisterForm(container: HTMLElement, { authKit, fieldConfig
   showPassword.addEventListener('click', () => {
     const showing = password.input.type === 'text';
     password.input.type = showing ? 'password' : 'text';
-    showPassword.textContent = showing ? 'Show' : 'Hide';
+    showPassword.textContent = showing ? 'Mostrar' : 'Ocultar';
   });
   showConfirm.addEventListener('click', () => {
     const showing = confirmPassword.input.type === 'text';
     confirmPassword.input.type = showing ? 'password' : 'text';
-    showConfirm.textContent = showing ? 'Show' : 'Hide';
+    showConfirm.textContent = showing ? 'Mostrar' : 'Ocultar';
   });
 
   const unsubscribe = authKit.subscribe((state) => {
     const { status, error } = state.register;
     submit.toggleAttribute('disabled', status === 'submitting');
-    submit.textContent = status === 'submitting' ? 'Creating account…' : 'Create account';
+    submit.textContent = status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Account created.' : '';
+    success.textContent = status === 'success' ? 'Cuenta creada.' : '';
   });
 
   const handleSubmit = (event: Event): void => {

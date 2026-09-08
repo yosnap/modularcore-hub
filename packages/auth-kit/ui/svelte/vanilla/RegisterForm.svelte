@@ -101,7 +101,7 @@
 <!-- Vanilla CSS variant — same props/behavior as headless, styled with `auth-kit-*` classes. -->
 <form onsubmit={handleSubmit} novalidate class="auth-kit-form">
   <label class="auth-kit-field" for="auth-kit-register-email">
-    Email
+    Correo electrónico
     <input id="auth-kit-register-email" type="email" bind:value={email} oninput={() => clearError('email')} onblur={() => validateField('email')} autocomplete="email" class="auth-kit-input" />
   </label>
   {#if fieldErrors.email}<p class="auth-kit-error">{fieldErrors.email}</p>{/if}
@@ -142,7 +142,7 @@
   {/if}
 
   <div class="auth-kit-field">
-    <label for="auth-kit-register-password">Password</label>
+    <label for="auth-kit-register-password">Contraseña</label>
     <div class="auth-kit-field__control">
       <input
         id="auth-kit-register-password"
@@ -151,7 +151,7 @@
         autocomplete="new-password"
         class="auth-kit-input"
       />
-      <button type="button" onclick={() => (showPassword = !showPassword)} aria-label={showPassword ? 'Hide password' : 'Show password'} class="auth-kit-eye-button">
+      <button type="button" onclick={() => (showPassword = !showPassword)} aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'} class="auth-kit-eye-button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           {@html showPassword ? EYE_OFF_PATH : EYE_PATH}
         </svg>
@@ -161,7 +161,7 @@
   {#if fieldErrors.password}<p class="auth-kit-error">{fieldErrors.password}</p>{/if}
 
   <div class="auth-kit-field">
-    <label for="auth-kit-register-confirm-password">Confirm password</label>
+    <label for="auth-kit-register-confirm-password">Confirmar contraseña</label>
     <div class="auth-kit-field__control">
       <input
         id="auth-kit-register-confirm-password"
@@ -170,7 +170,7 @@
         autocomplete="new-password"
         class="auth-kit-input"
       />
-      <button type="button" onclick={() => (showConfirm = !showConfirm)} aria-label={showConfirm ? 'Hide password' : 'Show password'} class="auth-kit-eye-button">
+      <button type="button" onclick={() => (showConfirm = !showConfirm)} aria-label={showConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'} class="auth-kit-eye-button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           {@html showConfirm ? EYE_OFF_PATH : EYE_PATH}
         </svg>
@@ -204,14 +204,14 @@
   {/if}
 
   <button type="submit" disabled={flow.status === 'submitting'} class="auth-kit-button auth-kit-button--primary">
-    {flow.status === 'submitting' ? 'Creating account…' : 'Create account'}
+    {flow.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta'}
   </button>
   {#if flow.status === 'error' && flow.error}<p class="auth-kit-error">{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p class="auth-kit-success">Account created.</p>{/if}
+  {#if flow.status === 'success'}<p class="auth-kit-success">Cuenta creada.</p>{/if}
 
   {#if onNavigateToLogin}
     <p class="auth-kit-status">
-      Already have an account? <button type="button" onclick={onNavigateToLogin} class="auth-kit-button auth-kit-button--ghost">Sign in</button>
+      ¿Ya tienes una cuenta? <button type="button" onclick={onNavigateToLogin} class="auth-kit-button auth-kit-button--ghost">Iniciar sesión</button>
     </p>
   {/if}
 </form>

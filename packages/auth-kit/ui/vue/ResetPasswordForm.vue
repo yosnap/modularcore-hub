@@ -52,22 +52,22 @@ function handleSubmit(): void {
 <template>
   <form novalidate @submit.prevent="handleSubmit">
     <div>
-      <label for="auth-kit-reset-new">New password</label>
+      <label for="auth-kit-reset-new">Contraseña nueva</label>
       <input id="auth-kit-reset-new" v-model="newPassword" @input="clearError('newPassword')" @blur="validateField('newPassword')" :type="showPassword ? 'text' : 'password'" autocomplete="new-password" />
-      <button type="button" @click="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }}</button>
+      <button type="button" @click="showPassword = !showPassword">{{ showPassword ? 'Ocultar' : 'Mostrar' }}</button>
       <p v-if="fieldErrors.newPassword" role="alert">{{ fieldErrors.newPassword }}</p>
     </div>
     <div>
-      <label for="auth-kit-reset-confirm">Confirm new password</label>
+      <label for="auth-kit-reset-confirm">Confirmar contraseña nueva</label>
       <input id="auth-kit-reset-confirm" v-model="confirmPassword" @input="clearError('confirmPassword')" @blur="validateField('confirmPassword')" :type="showPassword ? 'text' : 'password'" autocomplete="new-password" />
       <p v-if="fieldErrors.confirmPassword" role="alert">{{ fieldErrors.confirmPassword }}</p>
     </div>
     <button type="submit" :disabled="authKit.state.value.resetPassword.status === 'submitting'">
-      {{ authKit.state.value.resetPassword.status === 'submitting' ? 'Resetting…' : 'Reset password' }}
+      {{ authKit.state.value.resetPassword.status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña' }}
     </button>
     <p v-if="authKit.state.value.resetPassword.status === 'error' && authKit.state.value.resetPassword.error" role="alert">
       {{ authKit.state.value.resetPassword.error.message }}
     </p>
-    <p v-if="authKit.state.value.resetPassword.status === 'success'">Password reset.</p>
+    <p v-if="authKit.state.value.resetPassword.status === 'success'">Contraseña restablecida.</p>
   </form>
 </template>

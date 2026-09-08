@@ -46,15 +46,15 @@
 <div class="flex flex-col gap-4">
   {#if token}
     <div role="status" class="text-sm">
-      {#if verifyFlow.status === 'submitting'}<p class="text-zinc-700">Verifying your email…</p>{/if}
-      {#if verifyFlow.status === 'success'}<p class="text-green-600">Your email is verified.</p>{/if}
+      {#if verifyFlow.status === 'submitting'}<p class="text-zinc-700">Verificando tu email…</p>{/if}
+      {#if verifyFlow.status === 'success'}<p class="text-green-600">Tu email está verificado.</p>{/if}
       {#if verifyFlow.status === 'error' && verifyFlow.error}<p class={errorClass}>{verifyFlow.error.message}</p>{/if}
     </div>
   {/if}
 
   <form onsubmit={handleResendSubmit} novalidate class="flex flex-col gap-3">
     <label class={labelClass} for="auth-kit-resend-email">
-      Email
+      Correo electrónico
       <input id="auth-kit-resend-email" type="email" bind:value={email} autocomplete="email" class={inputClass} />
     </label>
     {#if fieldErrors.email}<p class={errorClass}>{fieldErrors.email}</p>{/if}
@@ -66,9 +66,9 @@
       disabled={resendFlow.status === 'submitting'}
       class="rounded-md border border-zinc-300 px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50"
     >
-      {resendFlow.status === 'submitting' ? 'Sending…' : 'Resend verification email'}
+      {resendFlow.status === 'submitting' ? 'Enviando…' : 'Reenviar email de verificación'}
     </button>
     {#if resendFlow.status === 'error' && resendFlow.error}<p class={errorClass}>{resendFlow.error.message}</p>{/if}
-    {#if resendFlow.status === 'success'}<p class="text-sm text-green-600">Verification email sent.</p>{/if}
+    {#if resendFlow.status === 'success'}<p class="text-sm text-green-600">Email de verificación enviado.</p>{/if}
   </form>
 </div>

@@ -28,7 +28,7 @@ export function ForgotPasswordForm({ authKit, turnstile, onNavigateToLogin }: Fo
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <LabelPrimitive.Root className={labelClass} htmlFor="auth-kit-forgot-email">
-          Email
+          Correo electrónico
         </LabelPrimitive.Root>
         <input
           id="auth-kit-forgot-email"
@@ -54,16 +54,16 @@ export function ForgotPasswordForm({ authKit, turnstile, onNavigateToLogin }: Fo
         disabled={flow.status === 'submitting'}
         className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
       >
-        {flow.status === 'submitting' ? 'Sending…' : 'Send reset link'}
+        {flow.status === 'submitting' ? 'Enviando…' : 'Enviar enlace'}
       </button>
       {flow.status === 'error' && flow.error && <p className={errorClass}>{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="text-sm text-green-600">Check your email for a reset link.</p>}
+      {flow.status === 'success' && <p className="text-sm text-green-600">Revisa tu correo para ver el enlace de restablecimiento.</p>}
 
       {onNavigateToLogin && (
         <p className="text-center text-sm text-muted-foreground">
-          Remembered your password?{' '}
+          ¿Recordaste tu contraseña?{' '}
           <button type="button" onClick={onNavigateToLogin} className="font-medium text-primary hover:underline">
-            Sign in
+            Iniciar sesión
           </button>
         </p>
       )}

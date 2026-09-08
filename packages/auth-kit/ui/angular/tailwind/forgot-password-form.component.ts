@@ -18,7 +18,7 @@ const INPUT_CLASS =
   template: `
     <form novalidate class="flex flex-col gap-3" (submit)="handleSubmit($event)">
       <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-forgot-email">
-        Email
+        Correo electrónico
         <input id="auth-kit-forgot-email" type="email" autocomplete="email" [class]="inputClass" [value]="email" (input)="email = $any($event.target).value; clearError('email')" (blur)="validateField('email')" />
       </label>
       <p *ngIf="fieldErrors['email']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['email'] }}</p>
@@ -34,21 +34,21 @@ const INPUT_CLASS =
         [disabled]="authKit.state().forgotPassword.status === 'submitting'"
         class="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
       >
-        {{ authKit.state().forgotPassword.status === 'submitting' ? 'Sending…' : 'Send reset link' }}
+        {{ authKit.state().forgotPassword.status === 'submitting' ? 'Enviando…' : 'Enviar enlace' }}
       </button>
       <p *ngIf="authKit.state().forgotPassword.status === 'error' && authKit.state().forgotPassword.error" class="text-sm text-red-600 dark:text-red-400">
         {{ authKit.state().forgotPassword.error?.message }}
       </p>
-      <p *ngIf="authKit.state().forgotPassword.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Check your email for a reset link.</p>
+      <p *ngIf="authKit.state().forgotPassword.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Revisa tu correo para ver el enlace de restablecimiento.</p>
 
       <p *ngIf="onNavigateToLogin" class="text-center text-sm text-zinc-600 dark:text-zinc-400">
-        Remembered your password?
+        ¿Recordaste tu contraseña?
         <button
           type="button"
           class="appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
           (click)="onNavigateToLogin()"
         >
-          Sign in
+          Iniciar sesión
         </button>
       </p>
     </form>

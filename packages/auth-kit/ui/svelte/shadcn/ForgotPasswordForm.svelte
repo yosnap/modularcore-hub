@@ -59,7 +59,7 @@
 <!-- Shadcn variant — self-contained, styled shadcn-like via native elements + the shared design tokens. Same props/behavior as headless. -->
 <form onsubmit={handleSubmit} novalidate class="flex flex-col gap-4">
   <div class="flex flex-col gap-1.5">
-    <label class={labelClass} for="auth-kit-forgot-email">Email</label>
+    <label class={labelClass} for="auth-kit-forgot-email">Correo electrónico</label>
     <input id="auth-kit-forgot-email" type="email" bind:value={email}
       oninput={clearEmailError}
       onblur={onEmailBlur}
@@ -76,14 +76,14 @@
     disabled={flow.status === 'submitting'}
     class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
   >
-    {flow.status === 'submitting' ? 'Sending…' : 'Send reset link'}
+    {flow.status === 'submitting' ? 'Enviando…' : 'Enviar enlace'}
   </button>
   {#if flow.status === 'error' && flow.error}<p class={errorClass}>{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p class="text-sm text-green-600">Check your email for a reset link.</p>{/if}
+  {#if flow.status === 'success'}<p class="text-sm text-green-600">Revisa tu correo para ver el enlace de restablecimiento.</p>{/if}
 
   {#if onNavigateToLogin}
     <p class="text-center text-sm text-muted-foreground">
-      Remembered your password? <button type="button" onclick={onNavigateToLogin} class={linkClass}>Sign in</button>
+      ¿Recordaste tu contraseña? <button type="button" onclick={onNavigateToLogin} class={linkClass}>Iniciar sesión</button>
     </p>
   {/if}
 </form>

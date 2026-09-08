@@ -26,7 +26,7 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
   return (
     <form onSubmit={state.handleSubmit} noValidate>
       <div>
-        <label htmlFor="auth-kit-register-email">Email</label>
+        <label htmlFor="auth-kit-register-email">Correo electrónico</label>
         <input
           id="auth-kit-register-email"
           type="email"
@@ -98,7 +98,7 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
       )}
 
       <div>
-        <label htmlFor="auth-kit-register-password">Password</label>
+        <label htmlFor="auth-kit-register-password">Contraseña</label>
         <input
           id="auth-kit-register-password"
           type={showPassword ? 'text' : 'password'}
@@ -108,13 +108,13 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
           autoComplete="new-password"
         />
         <button type="button" onClick={() => setShowPassword((value) => !value)}>
-          {showPassword ? 'Hide' : 'Show'}
+          {showPassword ? 'Ocultar' : 'Mostrar'}
         </button>
         {fieldErrors.password && <p role="alert">{fieldErrors.password}</p>}
       </div>
 
       <div>
-        <label htmlFor="auth-kit-register-confirm-password">Confirm password</label>
+        <label htmlFor="auth-kit-register-confirm-password">Confirmar contraseña</label>
         <input
           id="auth-kit-register-confirm-password"
           type={showConfirm ? 'text' : 'password'}
@@ -124,7 +124,7 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
           autoComplete="new-password"
         />
         <button type="button" onClick={() => setShowConfirm((value) => !value)}>
-          {showConfirm ? 'Hide' : 'Show'}
+          {showConfirm ? 'Ocultar' : 'Mostrar'}
         </button>
         {fieldErrors.confirmPassword && <p role="alert">{fieldErrors.confirmPassword}</p>}
       </div>
@@ -162,13 +162,13 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
       )}
 
       <button type="submit" disabled={flow.status === 'submitting'}>
-        {flow.status === 'submitting' ? 'Creating account…' : 'Create account'}
+        {flow.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta'}
       </button>
       {flow.status === 'error' && flow.error && <p role="alert">{flow.error.message}</p>}
-      {flow.status === 'success' && <p>Account created.</p>}
+      {flow.status === 'success' && <p>Cuenta creada.</p>}
       {onNavigateToLogin && (
         <button type="button" onClick={onNavigateToLogin}>
-          Sign in
+          Iniciar sesión
         </button>
       )}
     </form>

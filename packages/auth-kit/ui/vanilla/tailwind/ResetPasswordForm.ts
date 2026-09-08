@@ -21,17 +21,17 @@ const EYE_BUTTON_CLASS =
 /** Tailwind variant — same options/behavior as headless, styled with the media-picker zinc palette. */
 export function mountResetPasswordForm(container: HTMLElement, { authKit, token, passwordPolicy }: MountResetPasswordFormOptions): () => void {
   const next = field(
-    'New password',
+    'Contraseña nueva',
     { id: 'auth-kit-reset-new', type: 'password', autocomplete: 'new-password' },
     { label: LABEL_CLASS, input: `${INPUT_CLASS} pr-9` },
   );
   const nextError = errorText(ERROR_CLASS);
-  const showPassword = el('button', { type: 'button', 'aria-label': 'Show password', class: EYE_BUTTON_CLASS });
+  const showPassword = el('button', { type: 'button', 'aria-label': 'Mostrar contraseña', class: EYE_BUTTON_CLASS });
   showPassword.innerHTML = eyeSvg(true);
   const nextWrapper = el('div', { class: 'relative' }, [next.input, showPassword]);
 
   const confirm = field(
-    'Confirm new password',
+    'Confirmar contraseña nueva',
     { id: 'auth-kit-reset-confirm', type: 'password', autocomplete: 'new-password' },
     { label: LABEL_CLASS, input: INPUT_CLASS },
   );
@@ -43,7 +43,7 @@ export function mountResetPasswordForm(container: HTMLElement, { authKit, token,
       class:
         'rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300',
     },
-    ['Reset password'],
+    ['Restablecer contraseña'],
   );
   const submitError = errorText(ERROR_CLASS);
   const success = el('p', { class: 'text-sm text-green-600 dark:text-green-400' });
@@ -66,16 +66,16 @@ export function mountResetPasswordForm(container: HTMLElement, { authKit, token,
     next.input.type = showing ? 'password' : 'text';
     confirm.input.type = next.input.type;
     showPassword.innerHTML = eyeSvg(showing);
-    showPassword.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    showPassword.setAttribute('aria-label', showing ? 'Mostrar contraseña' : 'Ocultar contraseña');
   });
 
   const unsubscribe = authKit.subscribe((state) => {
     const { status, error } = state.resetPassword;
     submit.toggleAttribute('disabled', status === 'submitting');
-    submit.textContent = status === 'submitting' ? 'Resetting…' : 'Reset password';
+    submit.textContent = status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Password reset.' : '';
+    success.textContent = status === 'success' ? 'Contraseña restablecida.' : '';
   });
 
   const handleSubmit = (event: Event): void => {

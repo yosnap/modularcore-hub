@@ -17,7 +17,7 @@ import type { PasswordPolicy } from '../../../core/validation.js';
   template: `
     <form novalidate class="auth-kit-form" (submit)="handleSubmit($event)">
       <label class="auth-kit-field" for="auth-kit-register-email">
-        Email
+        Correo electrónico
         <input id="auth-kit-register-email" type="email" autocomplete="email" class="auth-kit-input" [value]="email" (input)="email = $any($event.target).value; clearError('email')" (blur)="validateField('email')" />
       </label>
       <p *ngIf="fieldErrors['email']" class="auth-kit-error">{{ fieldErrors['email'] }}</p>
@@ -48,7 +48,7 @@ import type { PasswordPolicy } from '../../../core/validation.js';
       </label>
 
       <label class="auth-kit-field" for="auth-kit-register-password">
-        Password
+        Contraseña
         <span class="auth-kit-field__row">
           <input
             id="auth-kit-register-password"
@@ -58,13 +58,13 @@ import type { PasswordPolicy } from '../../../core/validation.js';
             [value]="password"
             (input)="password = $any($event.target).value; clearError('password')" (blur)="validateField('password')"
           />
-          <button type="button" class="auth-kit-button auth-kit-button--ghost" (click)="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }}</button>
+          <button type="button" class="auth-kit-button auth-kit-button--ghost" (click)="showPassword = !showPassword">{{ showPassword ? 'Ocultar' : 'Mostrar' }}</button>
         </span>
       </label>
       <p *ngIf="fieldErrors['password']" class="auth-kit-error">{{ fieldErrors['password'] }}</p>
 
       <label class="auth-kit-field" for="auth-kit-register-confirm-password">
-        Confirm password
+        Confirmar contraseña
         <span class="auth-kit-field__row">
           <input
             id="auth-kit-register-confirm-password"
@@ -74,7 +74,7 @@ import type { PasswordPolicy } from '../../../core/validation.js';
             [value]="confirmPassword"
             (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')" (blur)="validateField('confirmPassword')"
           />
-          <button type="button" class="auth-kit-button auth-kit-button--ghost" (click)="showConfirm = !showConfirm">{{ showConfirm ? 'Hide' : 'Show' }}</button>
+          <button type="button" class="auth-kit-button auth-kit-button--ghost" (click)="showConfirm = !showConfirm">{{ showConfirm ? 'Ocultar' : 'Mostrar' }}</button>
         </span>
       </label>
       <p *ngIf="fieldErrors['confirmPassword']" class="auth-kit-error">{{ fieldErrors['confirmPassword'] }}</p>
@@ -101,12 +101,12 @@ import type { PasswordPolicy } from '../../../core/validation.js';
       ></auth-kit-turnstile-widget>
 
       <button type="submit" [disabled]="authKit.state().register.status === 'submitting'" class="auth-kit-button auth-kit-button--primary">
-        {{ authKit.state().register.status === 'submitting' ? 'Creating account…' : 'Create account' }}
+        {{ authKit.state().register.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta' }}
       </button>
       <p *ngIf="authKit.state().register.status === 'error' && authKit.state().register.error" class="auth-kit-error">
         {{ authKit.state().register.error?.message }}
       </p>
-      <p *ngIf="authKit.state().register.status === 'success'" class="auth-kit-success">Account created.</p>
+      <p *ngIf="authKit.state().register.status === 'success'" class="auth-kit-success">Cuenta creada.</p>
     </form>
   `,
 })

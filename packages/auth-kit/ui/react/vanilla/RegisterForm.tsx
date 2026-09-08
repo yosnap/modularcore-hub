@@ -27,7 +27,7 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
   return (
     <form onSubmit={state.handleSubmit} noValidate className="auth-kit-form">
       <label className="auth-kit-field" htmlFor="auth-kit-register-email">
-        Email
+        Correo electrónico
         <input
           id="auth-kit-register-email"
           type="email"
@@ -104,7 +104,7 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
       )}
 
       <label className="auth-kit-field" htmlFor="auth-kit-register-password">
-        Password
+        Contraseña
         <span className="auth-kit-field__row">
           <input
             id="auth-kit-register-password"
@@ -116,14 +116,14 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
             className="auth-kit-input"
           />
           <button type="button" onClick={() => setShowPassword((value) => !value)} className="auth-kit-button auth-kit-button--ghost">
-            {showPassword ? 'Hide' : 'Show'}
+            {showPassword ? 'Ocultar' : 'Mostrar'}
           </button>
         </span>
       </label>
       {fieldErrors.password && <p className="auth-kit-error">{fieldErrors.password}</p>}
 
       <label className="auth-kit-field" htmlFor="auth-kit-register-confirm-password">
-        Confirm password
+        Confirmar contraseña
         <span className="auth-kit-field__row">
           <input
             id="auth-kit-register-confirm-password"
@@ -135,7 +135,7 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
             className="auth-kit-input"
           />
           <button type="button" onClick={() => setShowConfirm((value) => !value)} className="auth-kit-button auth-kit-button--ghost">
-            {showConfirm ? 'Hide' : 'Show'}
+            {showConfirm ? 'Ocultar' : 'Mostrar'}
           </button>
         </span>
       </label>
@@ -176,13 +176,13 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
       )}
 
       <button type="submit" disabled={flow.status === 'submitting'} className="auth-kit-button auth-kit-button--primary">
-        {flow.status === 'submitting' ? 'Creating account…' : 'Create account'}
+        {flow.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta'}
       </button>
       {flow.status === 'error' && flow.error && <p className="auth-kit-error">{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="auth-kit-success">Account created.</p>}
+      {flow.status === 'success' && <p className="auth-kit-success">Cuenta creada.</p>}
       {onNavigateToLogin && (
         <button type="button" onClick={onNavigateToLogin} className="auth-kit-button auth-kit-button--ghost">
-          Sign in
+          Iniciar sesión
         </button>
       )}
     </form>

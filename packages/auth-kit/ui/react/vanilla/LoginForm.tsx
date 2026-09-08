@@ -25,7 +25,7 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
   return (
     <form onSubmit={handleSubmit} noValidate className="auth-kit-form">
       <label className="auth-kit-field" htmlFor="auth-kit-login-identifier">
-        Email or username
+        Correo electrónico o nombre de usuario
         <input
           id="auth-kit-login-identifier"
           type="text"
@@ -39,7 +39,7 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
       {fieldErrors.identifier && <p className="auth-kit-error">{fieldErrors.identifier}</p>}
 
       <label className="auth-kit-field" htmlFor="auth-kit-login-password">
-        Password
+        Contraseña
         <span className="auth-kit-field__row">
           <input
             id="auth-kit-login-password"
@@ -51,7 +51,7 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
             className="auth-kit-input"
           />
           <button type="button" onClick={() => setShowPassword((value) => !value)} className="auth-kit-button auth-kit-button--ghost">
-            {showPassword ? 'Hide' : 'Show'}
+            {showPassword ? 'Ocultar' : 'Mostrar'}
           </button>
         </span>
       </label>
@@ -67,18 +67,18 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
       )}
 
       <button type="submit" disabled={flow.status === 'submitting'} className="auth-kit-button auth-kit-button--primary">
-        {flow.status === 'submitting' ? 'Signing in…' : 'Sign in'}
+        {flow.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión'}
       </button>
       {flow.status === 'error' && flow.error && <p className="auth-kit-error">{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="auth-kit-success">Signed in.</p>}
+      {flow.status === 'success' && <p className="auth-kit-success">Sesión iniciada.</p>}
       {onNavigateToForgotPassword && (
         <button type="button" onClick={onNavigateToForgotPassword} className="auth-kit-button auth-kit-button--ghost">
-          Forgot your password?
+          ¿Olvidaste tu contraseña?
         </button>
       )}
       {onNavigateToRegister && (
         <button type="button" onClick={onNavigateToRegister} className="auth-kit-button auth-kit-button--ghost">
-          Sign up
+          Registrarse
         </button>
       )}
     </form>

@@ -107,7 +107,7 @@
 <!-- Tailwind variant — same props/behavior as headless, styled with the media-picker zinc palette. -->
 <form onsubmit={handleSubmit} novalidate class="flex flex-col gap-3">
   <label class={labelClass} for="auth-kit-register-email">
-    Email
+    Correo electrónico
     <input id="auth-kit-register-email" type="email" bind:value={email} oninput={() => clearError('email')} onblur={() => validateField('email')} autocomplete="email" class={inputClass} />
   </label>
   {#if fieldErrors.email}<p class={errorClass}>{fieldErrors.email}</p>{/if}
@@ -148,7 +148,7 @@
   {/if}
 
   <label class={labelClass} for="auth-kit-register-password">
-    Password
+    Contraseña
     <div class="relative">
       <input
         id="auth-kit-register-password"
@@ -157,7 +157,7 @@
         autocomplete="new-password"
         class="{inputClass} pr-9"
       />
-      <button type="button" onclick={() => (showPassword = !showPassword)} aria-label={showPassword ? 'Hide password' : 'Show password'} class={eyeButtonClass}>
+      <button type="button" onclick={() => (showPassword = !showPassword)} aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'} class={eyeButtonClass}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
           {@html showPassword ? EYE_OFF_PATH : EYE_PATH}
         </svg>
@@ -167,7 +167,7 @@
   {#if fieldErrors.password}<p class={errorClass}>{fieldErrors.password}</p>{/if}
 
   <label class={labelClass} for="auth-kit-register-confirm-password">
-    Confirm password
+    Confirmar contraseña
     <div class="relative">
       <input
         id="auth-kit-register-confirm-password"
@@ -176,7 +176,7 @@
         autocomplete="new-password"
         class="{inputClass} pr-9"
       />
-      <button type="button" onclick={() => (showConfirm = !showConfirm)} aria-label={showConfirm ? 'Hide password' : 'Show password'} class={eyeButtonClass}>
+      <button type="button" onclick={() => (showConfirm = !showConfirm)} aria-label={showConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'} class={eyeButtonClass}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
           {@html showConfirm ? EYE_OFF_PATH : EYE_PATH}
         </svg>
@@ -214,14 +214,14 @@
     disabled={flow.status === 'submitting'}
     class="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
   >
-    {flow.status === 'submitting' ? 'Creating account…' : 'Create account'}
+    {flow.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta'}
   </button>
   {#if flow.status === 'error' && flow.error}<p class={errorClass}>{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p class="text-sm text-green-600 dark:text-green-400">Account created.</p>{/if}
+  {#if flow.status === 'success'}<p class="text-sm text-green-600 dark:text-green-400">Cuenta creada.</p>{/if}
 
   {#if onNavigateToLogin}
     <p class="text-center text-sm text-zinc-600 dark:text-zinc-400">
-      Already have an account? <button type="button" onclick={onNavigateToLogin} class="appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300">Sign in</button>
+      ¿Ya tienes una cuenta? <button type="button" onclick={onNavigateToLogin} class="appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300">Iniciar sesión</button>
     </p>
   {/if}
 </form>

@@ -43,15 +43,15 @@
 <div>
   {#if token}
     <div role="status" class="auth-kit-status">
-      {#if verifyFlow.status === 'submitting'}<p>Verifying your email…</p>{/if}
-      {#if verifyFlow.status === 'success'}<p class="auth-kit-success">Your email is verified.</p>{/if}
+      {#if verifyFlow.status === 'submitting'}<p>Verificando tu email…</p>{/if}
+      {#if verifyFlow.status === 'success'}<p class="auth-kit-success">Tu email está verificado.</p>{/if}
       {#if verifyFlow.status === 'error' && verifyFlow.error}<p class="auth-kit-error">{verifyFlow.error.message}</p>{/if}
     </div>
   {/if}
 
   <form onsubmit={handleResendSubmit} novalidate class="auth-kit-form">
     <label class="auth-kit-field" for="auth-kit-resend-email">
-      Email
+      Correo electrónico
       <input id="auth-kit-resend-email" type="email" bind:value={email} autocomplete="email" class="auth-kit-input" />
     </label>
     {#if fieldErrors.email}<p class="auth-kit-error">{fieldErrors.email}</p>{/if}
@@ -59,9 +59,9 @@
       <TurnstileWidget siteKey={turnstile.siteKey} theme={turnstile.theme} mode={turnstile.mode} onToken={(t) => (turnstileToken = t)} />
     {/if}
     <button type="submit" disabled={resendFlow.status === 'submitting'} class="auth-kit-button">
-      {resendFlow.status === 'submitting' ? 'Sending…' : 'Resend verification email'}
+      {resendFlow.status === 'submitting' ? 'Enviando…' : 'Reenviar email de verificación'}
     </button>
     {#if resendFlow.status === 'error' && resendFlow.error}<p class="auth-kit-error">{resendFlow.error.message}</p>{/if}
-    {#if resendFlow.status === 'success'}<p class="auth-kit-success">Verification email sent.</p>{/if}
+    {#if resendFlow.status === 'success'}<p class="auth-kit-success">Email de verificación enviado.</p>{/if}
   </form>
 </div>

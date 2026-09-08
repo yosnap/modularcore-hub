@@ -15,13 +15,13 @@ import type { TurnstileFieldConfig } from '../../../core/field-config.js';
   template: `
     <form novalidate class="auth-kit-form" (submit)="handleSubmit($event)">
       <label class="auth-kit-field" for="auth-kit-login-identifier">
-        Email or username
+        Correo electrónico o nombre de usuario
         <input id="auth-kit-login-identifier" type="text" autocomplete="username" class="auth-kit-input" [value]="identifier" (input)="identifier = $any($event.target).value; clearError('identifier')" (blur)="validateField('identifier')" />
       </label>
       <p *ngIf="fieldErrors['identifier']" class="auth-kit-error">{{ fieldErrors['identifier'] }}</p>
 
       <label class="auth-kit-field" for="auth-kit-login-password">
-        Password
+        Contraseña
         <span class="auth-kit-field__row">
           <input
             id="auth-kit-login-password"
@@ -31,7 +31,7 @@ import type { TurnstileFieldConfig } from '../../../core/field-config.js';
             [value]="password"
             (input)="password = $any($event.target).value; clearError('password')" (blur)="validateField('password')"
           />
-          <button type="button" class="auth-kit-button auth-kit-button--ghost" (click)="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }}</button>
+          <button type="button" class="auth-kit-button auth-kit-button--ghost" (click)="showPassword = !showPassword">{{ showPassword ? 'Ocultar' : 'Mostrar' }}</button>
         </span>
       </label>
       <p *ngIf="fieldErrors['password']" class="auth-kit-error">{{ fieldErrors['password'] }}</p>
@@ -45,12 +45,12 @@ import type { TurnstileFieldConfig } from '../../../core/field-config.js';
       ></auth-kit-turnstile-widget>
 
       <button type="submit" [disabled]="authKit.state().login.status === 'submitting'" class="auth-kit-button auth-kit-button--primary">
-        {{ authKit.state().login.status === 'submitting' ? 'Signing in…' : 'Sign in' }}
+        {{ authKit.state().login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión' }}
       </button>
       <p *ngIf="authKit.state().login.status === 'error' && authKit.state().login.error" class="auth-kit-error">
         {{ authKit.state().login.error?.message }}
       </p>
-      <p *ngIf="authKit.state().login.status === 'success'" class="auth-kit-success">Signed in.</p>
+      <p *ngIf="authKit.state().login.status === 'success'" class="auth-kit-success">Sesión iniciada.</p>
     </form>
   `,
 })

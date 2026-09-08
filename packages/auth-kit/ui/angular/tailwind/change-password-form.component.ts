@@ -22,7 +22,7 @@ const EYE_OFF_PATH =
   template: `
     <form novalidate class="flex flex-col gap-3" (submit)="handleSubmit($event)">
       <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-change-current">
-        Current password
+        Contraseña actual
         <div class="relative">
           <input
             id="auth-kit-change-current"
@@ -32,7 +32,7 @@ const EYE_OFF_PATH =
             [value]="currentPassword"
             (input)="currentPassword = $any($event.target).value; clearError('currentPassword')" (blur)="validateField('currentPassword')"
           />
-          <button type="button" [attr.aria-label]="showCurrent ? 'Hide password' : 'Show password'" [class]="eyeButtonClass" (click)="showCurrent = !showCurrent">
+          <button type="button" [attr.aria-label]="showCurrent ? 'Ocultar contraseña' : 'Mostrar contraseña'" [class]="eyeButtonClass" (click)="showCurrent = !showCurrent">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
               <ng-container *ngIf="showCurrent; else eyeOpenCurrent">
                 <path [attr.d]="eyeOffPath" />
@@ -49,7 +49,7 @@ const EYE_OFF_PATH =
       <p *ngIf="fieldErrors['currentPassword']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['currentPassword'] }}</p>
 
       <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-change-new">
-        New password
+        Contraseña nueva
         <div class="relative">
           <input
             id="auth-kit-change-new"
@@ -59,7 +59,7 @@ const EYE_OFF_PATH =
             [value]="newPassword"
             (input)="newPassword = $any($event.target).value; clearError('newPassword')" (blur)="validateField('newPassword')"
           />
-          <button type="button" [attr.aria-label]="showNew ? 'Hide password' : 'Show password'" [class]="eyeButtonClass" (click)="showNew = !showNew">
+          <button type="button" [attr.aria-label]="showNew ? 'Ocultar contraseña' : 'Mostrar contraseña'" [class]="eyeButtonClass" (click)="showNew = !showNew">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
               <ng-container *ngIf="showNew; else eyeOpenNew">
                 <path [attr.d]="eyeOffPath" />
@@ -76,7 +76,7 @@ const EYE_OFF_PATH =
       <p *ngIf="fieldErrors['newPassword']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['newPassword'] }}</p>
 
       <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-change-confirm">
-        Confirm new password
+        Confirmar contraseña nueva
         <input
           id="auth-kit-change-confirm"
           [type]="showNew ? 'text' : 'password'"
@@ -93,12 +93,12 @@ const EYE_OFF_PATH =
         [disabled]="authKit.state().changePassword.status === 'submitting'"
         class="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
       >
-        {{ authKit.state().changePassword.status === 'submitting' ? 'Updating…' : 'Update password' }}
+        {{ authKit.state().changePassword.status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña' }}
       </button>
       <p *ngIf="authKit.state().changePassword.status === 'error' && authKit.state().changePassword.error" class="text-sm text-red-600 dark:text-red-400">
         {{ authKit.state().changePassword.error?.message }}
       </p>
-      <p *ngIf="authKit.state().changePassword.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Password updated.</p>
+      <p *ngIf="authKit.state().changePassword.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Contraseña actualizada.</p>
     </form>
   `,
 })

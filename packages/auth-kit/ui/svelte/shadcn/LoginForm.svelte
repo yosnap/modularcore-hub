@@ -68,7 +68,7 @@
 <!-- Shadcn variant — self-contained, styled shadcn-like via native elements + the shared design tokens (no assumption the consumer has shadcn/ui installed). Same props/behavior as headless. -->
 <form onsubmit={handleSubmit} novalidate class="flex flex-col gap-4">
   <div class="flex flex-col gap-1.5">
-    <label class={labelClass} for="auth-kit-login-identifier">Email or username</label>
+    <label class={labelClass} for="auth-kit-login-identifier">Correo electrónico o nombre de usuario</label>
     <input id="auth-kit-login-identifier" type="text" bind:value={identifier}
       oninput={() => clearError('identifier')}
       onblur={() => validateField('identifier')}
@@ -80,9 +80,9 @@
 
   <div class="flex flex-col gap-1.5">
     <div class="flex items-center justify-between">
-      <label class={labelClass} for="auth-kit-login-password">Password</label>
+      <label class={labelClass} for="auth-kit-login-password">Contraseña</label>
       {#if onNavigateToForgotPassword}
-        <button type="button" onclick={onNavigateToForgotPassword} class={linkClass}>Forgot your password?</button>
+        <button type="button" onclick={onNavigateToForgotPassword} class={linkClass}>¿Olvidaste tu contraseña?</button>
       {/if}
     </div>
     <div class="relative">
@@ -98,7 +98,7 @@
       <button
         type="button"
         onclick={() => (showPassword = !showPassword)}
-        aria-label={showPassword ? 'Hide password' : 'Show password'}
+        aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
         class="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
@@ -118,14 +118,14 @@
     disabled={flow.status === 'submitting'}
     class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
   >
-    {flow.status === 'submitting' ? 'Signing in…' : 'Sign in'}
+    {flow.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión'}
   </button>
   {#if flow.status === 'error' && flow.error}<p class={errorClass}>{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p class="text-sm text-green-600">Signed in.</p>{/if}
+  {#if flow.status === 'success'}<p class="text-sm text-green-600">Sesión iniciada.</p>{/if}
 
   {#if onNavigateToRegister}
     <p class="text-center text-sm text-muted-foreground">
-      Don't have an account yet? <button type="button" onclick={onNavigateToRegister} class={linkClass}>Sign up</button>
+      ¿Aún no tienes una cuenta? <button type="button" onclick={onNavigateToRegister} class={linkClass}>Registrarse</button>
     </p>
   {/if}
 </form>

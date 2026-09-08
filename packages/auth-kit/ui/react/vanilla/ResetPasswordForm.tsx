@@ -22,7 +22,7 @@ export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPassw
   return (
     <form onSubmit={handleSubmit} noValidate className="auth-kit-form">
       <label className="auth-kit-field" htmlFor="auth-kit-reset-new">
-        New password
+        Contraseña nueva
         <span className="auth-kit-field__row">
           <input
             id="auth-kit-reset-new"
@@ -34,14 +34,14 @@ export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPassw
             className="auth-kit-input"
           />
           <button type="button" onClick={() => setShowPassword((value) => !value)} className="auth-kit-button auth-kit-button--ghost">
-            {showPassword ? 'Hide' : 'Show'}
+            {showPassword ? 'Ocultar' : 'Mostrar'}
           </button>
         </span>
       </label>
       {fieldErrors.newPassword && <p className="auth-kit-error">{fieldErrors.newPassword}</p>}
 
       <label className="auth-kit-field" htmlFor="auth-kit-reset-confirm">
-        Confirm new password
+        Confirmar contraseña nueva
         <input
           id="auth-kit-reset-confirm"
           type={showPassword ? 'text' : 'password'}
@@ -55,10 +55,10 @@ export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPassw
       {fieldErrors.confirmPassword && <p className="auth-kit-error">{fieldErrors.confirmPassword}</p>}
 
       <button type="submit" disabled={flow.status === 'submitting'} className="auth-kit-button auth-kit-button--primary">
-        {flow.status === 'submitting' ? 'Resetting…' : 'Reset password'}
+        {flow.status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña'}
       </button>
       {flow.status === 'error' && flow.error && <p className="auth-kit-error">{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="auth-kit-success">Password reset.</p>}
+      {flow.status === 'success' && <p className="auth-kit-success">Contraseña restablecida.</p>}
     </form>
   );
 }

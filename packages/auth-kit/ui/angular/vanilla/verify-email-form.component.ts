@@ -15,8 +15,8 @@ import type { TurnstileFieldConfig } from '../../../core/field-config.js';
   template: `
     <div>
       <div *ngIf="token" role="status" class="auth-kit-status">
-        <p *ngIf="authKit.state().verifyEmail.status === 'submitting'">Verifying your email…</p>
-        <p *ngIf="authKit.state().verifyEmail.status === 'success'" class="auth-kit-success">Your email is verified.</p>
+        <p *ngIf="authKit.state().verifyEmail.status === 'submitting'">Verificando tu email…</p>
+        <p *ngIf="authKit.state().verifyEmail.status === 'success'" class="auth-kit-success">Tu email está verificado.</p>
         <p *ngIf="authKit.state().verifyEmail.status === 'error' && authKit.state().verifyEmail.error" class="auth-kit-error">
           {{ authKit.state().verifyEmail.error?.message }}
         </p>
@@ -24,7 +24,7 @@ import type { TurnstileFieldConfig } from '../../../core/field-config.js';
 
       <form novalidate class="auth-kit-form" (submit)="handleResendSubmit($event)">
         <label class="auth-kit-field" for="auth-kit-resend-email">
-          Email
+          Correo electrónico
           <input id="auth-kit-resend-email" type="email" autocomplete="email" class="auth-kit-input" [value]="resendEmail" (input)="resendEmail = $any($event.target).value" />
         </label>
         <p *ngIf="fieldErrors['email']" class="auth-kit-error">{{ fieldErrors['email'] }}</p>
@@ -36,12 +36,12 @@ import type { TurnstileFieldConfig } from '../../../core/field-config.js';
           (token)="turnstileToken = $event"
         ></auth-kit-turnstile-widget>
         <button type="submit" [disabled]="authKit.state().resendVerification.status === 'submitting'" class="auth-kit-button">
-          {{ authKit.state().resendVerification.status === 'submitting' ? 'Sending…' : 'Resend verification email' }}
+          {{ authKit.state().resendVerification.status === 'submitting' ? 'Enviando…' : 'Reenviar email de verificación' }}
         </button>
         <p *ngIf="authKit.state().resendVerification.status === 'error' && authKit.state().resendVerification.error" class="auth-kit-error">
           {{ authKit.state().resendVerification.error?.message }}
         </p>
-        <p *ngIf="authKit.state().resendVerification.status === 'success'" class="auth-kit-success">Verification email sent.</p>
+        <p *ngIf="authKit.state().resendVerification.status === 'success'" class="auth-kit-success">Email de verificación enviado.</p>
       </form>
     </div>
   `,

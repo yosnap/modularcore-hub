@@ -48,7 +48,7 @@
 <!-- Headless variant — no CSS classes, fully consumer-styleable. Same props/behavior across every presentation. -->
 <form onsubmit={handleSubmit} novalidate>
   <div>
-    <label for="auth-kit-forgot-email">Email</label>
+    <label for="auth-kit-forgot-email">Correo electrónico</label>
     <input id="auth-kit-forgot-email" type="email" bind:value={email} oninput={() => clearError('email')} onblur={() => validateField('email')} autocomplete="email" />
     {#if fieldErrors.email}<p role="alert">{fieldErrors.email}</p>{/if}
   </div>
@@ -56,8 +56,8 @@
     <TurnstileWidget siteKey={turnstile.siteKey} theme={turnstile.theme} mode={turnstile.mode} onToken={(t) => (turnstileToken = t)} />
   {/if}
   <button type="submit" disabled={flow.status === 'submitting'}>
-    {flow.status === 'submitting' ? 'Sending…' : 'Send reset link'}
+    {flow.status === 'submitting' ? 'Enviando…' : 'Enviar enlace'}
   </button>
   {#if flow.status === 'error' && flow.error}<p role="alert">{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p>Check your email for a reset link.</p>{/if}
+  {#if flow.status === 'success'}<p>Revisa tu correo para ver el enlace de restablecimiento.</p>{/if}
 </form>

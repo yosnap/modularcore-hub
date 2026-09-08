@@ -25,7 +25,7 @@ const EYE_OFF_PATH =
   template: `
     <form novalidate class="flex flex-col gap-3" (submit)="handleSubmit($event)">
       <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-login-identifier">
-        Email or username
+        Correo electrónico o nombre de usuario
         <input
           id="auth-kit-login-identifier"
           type="text"
@@ -39,9 +39,9 @@ const EYE_OFF_PATH =
 
       <div class="flex flex-col gap-1">
         <div class="flex items-center justify-between">
-          <label class="text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-login-password">Password</label>
+          <label class="text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-login-password">Contraseña</label>
           <button *ngIf="onNavigateToForgotPassword" type="button" [class]="linkClass" (click)="onNavigateToForgotPassword()">
-            Forgot your password?
+            ¿Olvidaste tu contraseña?
           </button>
         </div>
         <div class="relative">
@@ -55,7 +55,7 @@ const EYE_OFF_PATH =
           />
           <button
             type="button"
-            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
             [class]="eyeButtonClass"
             (click)="showPassword = !showPassword"
           >
@@ -87,21 +87,21 @@ const EYE_OFF_PATH =
         [disabled]="authKit.state().login.status === 'submitting'"
         class="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
       >
-        {{ authKit.state().login.status === 'submitting' ? 'Signing in…' : 'Sign in' }}
+        {{ authKit.state().login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión' }}
       </button>
       <p *ngIf="authKit.state().login.status === 'error' && authKit.state().login.error" class="text-sm text-red-600 dark:text-red-400">
         {{ authKit.state().login.error?.message }}
       </p>
-      <p *ngIf="authKit.state().login.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Signed in.</p>
+      <p *ngIf="authKit.state().login.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Sesión iniciada.</p>
 
       <p *ngIf="onNavigateToRegister" class="text-center text-sm text-zinc-600 dark:text-zinc-400">
-        Don't have an account yet?
+        ¿Aún no tienes una cuenta?
         <button
           type="button"
           class="appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
           (click)="onNavigateToRegister()"
         >
-          Sign up
+          Registrarse
         </button>
       </p>
     </form>

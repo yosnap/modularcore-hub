@@ -14,22 +14,22 @@ export interface MountResetPasswordFormOptions {
 /** Vanilla CSS variant — same options/behavior as headless, styled with `auth-kit-*` classes. */
 export function mountResetPasswordForm(container: HTMLElement, { authKit, token, passwordPolicy }: MountResetPasswordFormOptions): () => void {
   const next = field(
-    'New password',
+    'Contraseña nueva',
     { id: 'auth-kit-reset-new', type: 'password', autocomplete: 'new-password' },
     { label: 'auth-kit-field', input: 'auth-kit-input' },
   );
   const nextError = errorText('auth-kit-error');
-  const showPassword = el('button', { type: 'button', 'aria-label': 'Show password', class: 'auth-kit-eye-button' });
+  const showPassword = el('button', { type: 'button', 'aria-label': 'Mostrar contraseña', class: 'auth-kit-eye-button' });
   showPassword.innerHTML = eyeSvg(true);
   const nextWrapper = el('div', { class: 'auth-kit-field__control' }, [next.input, showPassword]);
 
   const confirm = field(
-    'Confirm new password',
+    'Confirmar contraseña nueva',
     { id: 'auth-kit-reset-confirm', type: 'password', autocomplete: 'new-password' },
     { label: 'auth-kit-field', input: 'auth-kit-input' },
   );
   const confirmError = errorText('auth-kit-error');
-  const submit = el('button', { type: 'submit', class: 'auth-kit-button auth-kit-button--primary' }, ['Reset password']);
+  const submit = el('button', { type: 'submit', class: 'auth-kit-button auth-kit-button--primary' }, ['Restablecer contraseña']);
   const submitError = errorText('auth-kit-error');
   const success = el('p', { class: 'auth-kit-success' });
   success.hidden = true;
@@ -51,16 +51,16 @@ export function mountResetPasswordForm(container: HTMLElement, { authKit, token,
     next.input.type = showing ? 'password' : 'text';
     confirm.input.type = next.input.type;
     showPassword.innerHTML = eyeSvg(showing);
-    showPassword.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    showPassword.setAttribute('aria-label', showing ? 'Mostrar contraseña' : 'Ocultar contraseña');
   });
 
   const unsubscribe = authKit.subscribe((state) => {
     const { status, error } = state.resetPassword;
     submit.toggleAttribute('disabled', status === 'submitting');
-    submit.textContent = status === 'submitting' ? 'Resetting…' : 'Reset password';
+    submit.textContent = status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Password reset.' : '';
+    success.textContent = status === 'success' ? 'Contraseña restablecida.' : '';
   });
 
   const handleSubmit = (event: Event): void => {

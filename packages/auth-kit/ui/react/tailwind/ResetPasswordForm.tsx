@@ -29,7 +29,7 @@ export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPassw
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-3">
       <label className={labelClass} htmlFor="auth-kit-reset-new">
-        New password
+        Contraseña nueva
         <div className="relative">
           <input
             id="auth-kit-reset-new"
@@ -43,7 +43,7 @@ export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPassw
           <button
             type="button"
             onClick={() => setShowPassword((value) => !value)}
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             className={eyeButtonClass}
           >
             {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
@@ -53,7 +53,7 @@ export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPassw
       {fieldErrors.newPassword && <p className={errorClass}>{fieldErrors.newPassword}</p>}
 
       <label className={labelClass} htmlFor="auth-kit-reset-confirm">
-        Confirm new password
+        Confirmar contraseña nueva
         <input
           id="auth-kit-reset-confirm"
           type={showPassword ? 'text' : 'password'}
@@ -71,10 +71,10 @@ export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPassw
         disabled={flow.status === 'submitting'}
         className="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
       >
-        {flow.status === 'submitting' ? 'Resetting…' : 'Reset password'}
+        {flow.status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña'}
       </button>
       {flow.status === 'error' && flow.error && <p className={errorClass}>{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="text-sm text-green-600 dark:text-green-400">Password reset.</p>}
+      {flow.status === 'success' && <p className="text-sm text-green-600 dark:text-green-400">Contraseña restablecida.</p>}
     </form>
   );
 }

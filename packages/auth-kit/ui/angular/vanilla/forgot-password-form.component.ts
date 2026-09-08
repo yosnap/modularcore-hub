@@ -15,7 +15,7 @@ import type { TurnstileFieldConfig } from '../../../core/field-config.js';
   template: `
     <form novalidate class="auth-kit-form" (submit)="handleSubmit($event)">
       <label class="auth-kit-field" for="auth-kit-forgot-email">
-        Email
+        Correo electrónico
         <input id="auth-kit-forgot-email" type="email" autocomplete="email" class="auth-kit-input" [value]="email" (input)="email = $any($event.target).value; clearError('email')" (blur)="validateField('email')" />
       </label>
       <p *ngIf="fieldErrors['email']" class="auth-kit-error">{{ fieldErrors['email'] }}</p>
@@ -27,12 +27,12 @@ import type { TurnstileFieldConfig } from '../../../core/field-config.js';
         (token)="turnstileToken = $event"
       ></auth-kit-turnstile-widget>
       <button type="submit" [disabled]="authKit.state().forgotPassword.status === 'submitting'" class="auth-kit-button auth-kit-button--primary">
-        {{ authKit.state().forgotPassword.status === 'submitting' ? 'Sending…' : 'Send reset link' }}
+        {{ authKit.state().forgotPassword.status === 'submitting' ? 'Enviando…' : 'Enviar enlace' }}
       </button>
       <p *ngIf="authKit.state().forgotPassword.status === 'error' && authKit.state().forgotPassword.error" class="auth-kit-error">
         {{ authKit.state().forgotPassword.error?.message }}
       </p>
-      <p *ngIf="authKit.state().forgotPassword.status === 'success'" class="auth-kit-success">Check your email for a reset link.</p>
+      <p *ngIf="authKit.state().forgotPassword.status === 'success'" class="auth-kit-success">Revisa tu correo para ver el enlace de restablecimiento.</p>
     </form>
   `,
 })

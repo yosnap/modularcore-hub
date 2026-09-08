@@ -55,28 +55,28 @@ function handleSubmit(): void {
 <template>
   <form novalidate @submit.prevent="handleSubmit">
     <div>
-      <label for="auth-kit-change-current">Current password</label>
+      <label for="auth-kit-change-current">Contraseña actual</label>
       <input id="auth-kit-change-current" v-model="currentPassword" @input="clearError('currentPassword')" @blur="validateField('currentPassword')" :type="showCurrent ? 'text' : 'password'" autocomplete="current-password" />
-      <button type="button" @click="showCurrent = !showCurrent">{{ showCurrent ? 'Hide' : 'Show' }}</button>
+      <button type="button" @click="showCurrent = !showCurrent">{{ showCurrent ? 'Ocultar' : 'Mostrar' }}</button>
       <p v-if="fieldErrors.currentPassword" role="alert">{{ fieldErrors.currentPassword }}</p>
     </div>
     <div>
-      <label for="auth-kit-change-new">New password</label>
+      <label for="auth-kit-change-new">Contraseña nueva</label>
       <input id="auth-kit-change-new" v-model="newPassword" @input="clearError('newPassword')" @blur="validateField('newPassword')" :type="showNew ? 'text' : 'password'" autocomplete="new-password" />
-      <button type="button" @click="showNew = !showNew">{{ showNew ? 'Hide' : 'Show' }}</button>
+      <button type="button" @click="showNew = !showNew">{{ showNew ? 'Ocultar' : 'Mostrar' }}</button>
       <p v-if="fieldErrors.newPassword" role="alert">{{ fieldErrors.newPassword }}</p>
     </div>
     <div>
-      <label for="auth-kit-change-confirm">Confirm new password</label>
+      <label for="auth-kit-change-confirm">Confirmar contraseña nueva</label>
       <input id="auth-kit-change-confirm" v-model="confirmPassword" @input="clearError('confirmPassword')" @blur="validateField('confirmPassword')" :type="showNew ? 'text' : 'password'" autocomplete="new-password" />
       <p v-if="fieldErrors.confirmPassword" role="alert">{{ fieldErrors.confirmPassword }}</p>
     </div>
     <button type="submit" :disabled="authKit.state.value.changePassword.status === 'submitting'">
-      {{ authKit.state.value.changePassword.status === 'submitting' ? 'Updating…' : 'Update password' }}
+      {{ authKit.state.value.changePassword.status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña' }}
     </button>
     <p v-if="authKit.state.value.changePassword.status === 'error' && authKit.state.value.changePassword.error" role="alert">
       {{ authKit.state.value.changePassword.error.message }}
     </p>
-    <p v-if="authKit.state.value.changePassword.status === 'success'">Password updated.</p>
+    <p v-if="authKit.state.value.changePassword.status === 'success'">Contraseña actualizada.</p>
   </form>
 </template>

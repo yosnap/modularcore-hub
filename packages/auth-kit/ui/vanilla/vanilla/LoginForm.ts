@@ -20,16 +20,16 @@ export function mountLoginForm(
   { authKit, turnstile, onNavigateToRegister, onNavigateToForgotPassword }: MountLoginFormOptions,
 ): () => void {
   const identifier = field(
-    'Email or username',
+    'Correo electrónico o nombre de usuario',
     { id: 'auth-kit-login-identifier', type: 'text', autocomplete: 'username' },
     { label: 'auth-kit-field', input: 'auth-kit-input' },
   );
   const password = field(
-    'Password',
+    'Contraseña',
     { id: 'auth-kit-login-password', type: 'password', autocomplete: 'current-password' },
     { label: 'auth-kit-field', input: 'auth-kit-input' },
   );
-  const eyeButton = el('button', { type: 'button', 'aria-label': 'Show password', class: 'auth-kit-eye-button' });
+  const eyeButton = el('button', { type: 'button', 'aria-label': 'Mostrar contraseña', class: 'auth-kit-eye-button' });
   eyeButton.innerHTML = eyeSvg(true);
   const passwordWrapper = el('div', { class: 'auth-kit-field__control' }, [password.input, eyeButton]);
   const identifierError = errorText('auth-kit-error');
@@ -37,20 +37,20 @@ export function mountLoginForm(
   const submitError = errorText('auth-kit-error');
   const success = el('p', { class: 'auth-kit-success' });
   success.hidden = true;
-  const submit = el('button', { type: 'submit', class: 'auth-kit-button auth-kit-button--primary' }, ['Sign in']);
+  const submit = el('button', { type: 'submit', class: 'auth-kit-button auth-kit-button--primary' }, ['Iniciar sesión']);
 
   const passwordLabelRow = el('div', { class: 'auth-kit-field__row', style: 'justify-content: space-between' }, [password.label]);
   let forgotLink: HTMLButtonElement | undefined;
   if (onNavigateToForgotPassword) {
-    forgotLink = el('button', { type: 'button', class: 'auth-kit-button auth-kit-button--ghost' }, ['Forgot your password?']);
+    forgotLink = el('button', { type: 'button', class: 'auth-kit-button auth-kit-button--ghost' }, ['¿Olvidaste tu contraseña?']);
     passwordLabelRow.append(forgotLink);
   }
 
   let registerFooter: HTMLParagraphElement | undefined;
   let registerLink: HTMLButtonElement | undefined;
   if (onNavigateToRegister) {
-    registerLink = el('button', { type: 'button', class: 'auth-kit-button auth-kit-button--ghost' }, ['Sign up']);
-    registerFooter = el('p', { class: 'auth-kit-status' }, ["Don't have an account yet? ", registerLink]);
+    registerLink = el('button', { type: 'button', class: 'auth-kit-button auth-kit-button--ghost' }, ['Registrarse']);
+    registerFooter = el('p', { class: 'auth-kit-status' }, ["¿Aún no tienes una cuenta? ", registerLink]);
   }
 
   let turnstileToken: string | null = null;
@@ -83,7 +83,7 @@ export function mountLoginForm(
     const showing = password.input.type === 'text';
     password.input.type = showing ? 'password' : 'text';
     eyeButton.innerHTML = eyeSvg(showing);
-    eyeButton.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    eyeButton.setAttribute('aria-label', showing ? 'Mostrar contraseña' : 'Ocultar contraseña');
   });
   forgotLink?.addEventListener('click', () => onNavigateToForgotPassword?.());
   registerLink?.addEventListener('click', () => onNavigateToRegister?.());
@@ -91,10 +91,10 @@ export function mountLoginForm(
   const unsubscribe = authKit.subscribe((state) => {
     const { status, error } = state.login;
     submit.toggleAttribute('disabled', status === 'submitting');
-    submit.textContent = status === 'submitting' ? 'Signing in…' : 'Sign in';
+    submit.textContent = status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Signed in.' : '';
+    success.textContent = status === 'success' ? 'Sesión iniciada.' : '';
   });
 
   const handleSubmit = (event: Event): void => {

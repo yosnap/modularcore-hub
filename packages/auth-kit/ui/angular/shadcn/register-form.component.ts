@@ -41,7 +41,7 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-register-email">Email</label>
+        <label class="text-sm font-medium leading-none" for="auth-kit-register-email">Correo electrónico</label>
         <input id="auth-kit-register-email" type="email" autocomplete="email" [class]="inputClass" [value]="email" (input)="email = $any($event.target).value; clearError('email')" (blur)="validateField('email')" />
         <p *ngIf="fieldErrors['email']" class="text-sm text-destructive">{{ fieldErrors['email'] }}</p>
       </div>
@@ -65,7 +65,7 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-register-password">Password</label>
+        <label class="text-sm font-medium leading-none" for="auth-kit-register-password">Contraseña</label>
         <div class="relative">
           <input
             id="auth-kit-register-password"
@@ -77,7 +77,7 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
           />
           <button
             type="button"
-            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
             class="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
             (click)="showPassword = !showPassword"
           >
@@ -119,7 +119,7 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-register-confirm-password">Confirm password</label>
+        <label class="text-sm font-medium leading-none" for="auth-kit-register-confirm-password">Confirmar contraseña</label>
         <div class="relative">
           <input
             id="auth-kit-register-confirm-password"
@@ -131,7 +131,7 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
           />
           <button
             type="button"
-            [attr.aria-label]="showConfirm ? 'Hide password' : 'Show password'"
+            [attr.aria-label]="showConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'"
             class="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
             (click)="showConfirm = !showConfirm"
           >
@@ -182,15 +182,15 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
         [disabled]="authKit.state().register.status === 'submitting'"
         class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
       >
-        {{ authKit.state().register.status === 'submitting' ? 'Creating account…' : 'Create account' }}
+        {{ authKit.state().register.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta' }}
       </button>
       <p *ngIf="authKit.state().register.status === 'error' && authKit.state().register.error" class="text-sm text-destructive">
         {{ authKit.state().register.error?.message }}
       </p>
-      <p *ngIf="authKit.state().register.status === 'success'" class="text-sm text-green-600">Account created.</p>
+      <p *ngIf="authKit.state().register.status === 'success'" class="text-sm text-green-600">Cuenta creada.</p>
 
       <p *ngIf="onNavigateToLogin" class="text-center text-sm text-muted-foreground">
-        Already have an account? <button type="button" [class]="linkClass" (click)="onNavigateToLogin()">Sign in</button>
+        ¿Ya tienes una cuenta? <button type="button" [class]="linkClass" (click)="onNavigateToLogin()">Iniciar sesión</button>
       </p>
     </form>
   `,

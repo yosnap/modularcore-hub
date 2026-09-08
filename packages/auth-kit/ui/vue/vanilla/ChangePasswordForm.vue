@@ -56,12 +56,12 @@ function handleSubmit(): void {
 <template>
   <form novalidate class="auth-kit-form" @submit.prevent="handleSubmit">
     <div class="auth-kit-field">
-      <label for="auth-kit-change-current">Current password</label>
+      <label for="auth-kit-change-current">Contraseña actual</label>
       <div class="auth-kit-field__control">
         <input id="auth-kit-change-current" v-model="currentPassword" @input="clearError('currentPassword')" @blur="validateField('currentPassword')" :type="showCurrent ? 'text' : 'password'" autocomplete="current-password" class="auth-kit-input" />
         <button
           type="button"
-          :aria-label="showCurrent ? 'Hide password' : 'Show password'"
+          :aria-label="showCurrent ? 'Ocultar contraseña' : 'Mostrar contraseña'"
           class="auth-kit-eye-button"
           @click="showCurrent = !showCurrent"
         >
@@ -81,10 +81,10 @@ function handleSubmit(): void {
     <p v-if="fieldErrors.currentPassword" class="auth-kit-error">{{ fieldErrors.currentPassword }}</p>
 
     <div class="auth-kit-field">
-      <label for="auth-kit-change-new">New password</label>
+      <label for="auth-kit-change-new">Contraseña nueva</label>
       <div class="auth-kit-field__control">
         <input id="auth-kit-change-new" v-model="newPassword" @input="clearError('newPassword')" @blur="validateField('newPassword')" :type="showNew ? 'text' : 'password'" autocomplete="new-password" class="auth-kit-input" />
-        <button type="button" :aria-label="showNew ? 'Hide password' : 'Show password'" class="auth-kit-eye-button" @click="showNew = !showNew">
+        <button type="button" :aria-label="showNew ? 'Ocultar contraseña' : 'Mostrar contraseña'" class="auth-kit-eye-button" @click="showNew = !showNew">
           <svg v-if="showNew" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path
               d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a18.4 18.4 0 0 1 4.22-5.14M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
@@ -101,17 +101,17 @@ function handleSubmit(): void {
     <p v-if="fieldErrors.newPassword" class="auth-kit-error">{{ fieldErrors.newPassword }}</p>
 
     <label class="auth-kit-field" for="auth-kit-change-confirm">
-      Confirm new password
+      Confirmar contraseña nueva
       <input id="auth-kit-change-confirm" v-model="confirmPassword" @input="clearError('confirmPassword')" @blur="validateField('confirmPassword')" :type="showNew ? 'text' : 'password'" autocomplete="new-password" class="auth-kit-input" />
     </label>
     <p v-if="fieldErrors.confirmPassword" class="auth-kit-error">{{ fieldErrors.confirmPassword }}</p>
 
     <button type="submit" :disabled="authKit.state.value.changePassword.status === 'submitting'" class="auth-kit-button auth-kit-button--primary">
-      {{ authKit.state.value.changePassword.status === 'submitting' ? 'Updating…' : 'Update password' }}
+      {{ authKit.state.value.changePassword.status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña' }}
     </button>
     <p v-if="authKit.state.value.changePassword.status === 'error' && authKit.state.value.changePassword.error" class="auth-kit-error">
       {{ authKit.state.value.changePassword.error.message }}
     </p>
-    <p v-if="authKit.state.value.changePassword.status === 'success'" class="auth-kit-success">Password updated.</p>
+    <p v-if="authKit.state.value.changePassword.status === 'success'" class="auth-kit-success">Contraseña actualizada.</p>
   </form>
 </template>

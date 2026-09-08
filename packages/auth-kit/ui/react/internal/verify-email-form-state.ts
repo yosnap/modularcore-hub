@@ -25,7 +25,6 @@ export function useVerifyEmailFormState({ authKit, token, email: initialEmail }:
     verifyAttempted.current = true;
     void authKit.verifyEmail({ token }).catch(() => {});
     // authKit is a stable per-mount object from useAuthKit; token drives this effect.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const handleResendSubmit = (event: FormEvent<HTMLFormElement>): void => {

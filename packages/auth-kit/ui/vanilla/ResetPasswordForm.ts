@@ -12,12 +12,12 @@ export interface MountResetPasswordFormOptions {
 
 /** Headless variant — no CSS classes, fully consumer-styleable. Same options/behavior across every presentation. */
 export function mountResetPasswordForm(container: HTMLElement, { authKit, token, passwordPolicy }: MountResetPasswordFormOptions): () => void {
-  const next = field('New password', { id: 'auth-kit-reset-new', type: 'password', autocomplete: 'new-password' });
+  const next = field('Contraseña nueva', { id: 'auth-kit-reset-new', type: 'password', autocomplete: 'new-password' });
   const nextError = errorText();
-  const showPassword = el('button', { type: 'button' }, ['Show']);
-  const confirm = field('Confirm new password', { id: 'auth-kit-reset-confirm', type: 'password', autocomplete: 'new-password' });
+  const showPassword = el('button', { type: 'button' }, ['Mostrar']);
+  const confirm = field('Confirmar contraseña nueva', { id: 'auth-kit-reset-confirm', type: 'password', autocomplete: 'new-password' });
   const confirmError = errorText();
-  const submit = el('button', { type: 'submit' }, ['Reset password']);
+  const submit = el('button', { type: 'submit' }, ['Restablecer contraseña']);
   const submitError = errorText();
   const success = el('p');
   success.hidden = true;
@@ -35,16 +35,16 @@ export function mountResetPasswordForm(container: HTMLElement, { authKit, token,
     const showing = next.input.type === 'text';
     next.input.type = showing ? 'password' : 'text';
     confirm.input.type = next.input.type;
-    showPassword.textContent = showing ? 'Show' : 'Hide';
+    showPassword.textContent = showing ? 'Mostrar' : 'Ocultar';
   });
 
   const unsubscribe = authKit.subscribe((state) => {
     const { status, error } = state.resetPassword;
     submit.toggleAttribute('disabled', status === 'submitting');
-    submit.textContent = status === 'submitting' ? 'Resetting…' : 'Reset password';
+    submit.textContent = status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Password reset.' : '';
+    success.textContent = status === 'success' ? 'Contraseña restablecida.' : '';
   });
 
   const handleSubmit = (event: Event): void => {

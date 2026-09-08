@@ -19,7 +19,7 @@ const LINK_CLASS = 'text-xs font-medium appearance-none border-0 bg-transparent 
   template: `
     <form novalidate class="flex flex-col gap-4" (submit)="handleSubmit($event)">
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-forgot-email">Email</label>
+        <label class="text-sm font-medium leading-none" for="auth-kit-forgot-email">Correo electrónico</label>
         <input id="auth-kit-forgot-email" type="email" autocomplete="email" [class]="inputClass" [value]="email" (input)="email = $any($event.target).value; clearError('email')" (blur)="validateField('email')" />
         <p *ngIf="fieldErrors['email']" class="text-sm text-destructive">{{ fieldErrors['email'] }}</p>
       </div>
@@ -35,15 +35,15 @@ const LINK_CLASS = 'text-xs font-medium appearance-none border-0 bg-transparent 
         [disabled]="authKit.state().forgotPassword.status === 'submitting'"
         class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
       >
-        {{ authKit.state().forgotPassword.status === 'submitting' ? 'Sending…' : 'Send reset link' }}
+        {{ authKit.state().forgotPassword.status === 'submitting' ? 'Enviando…' : 'Enviar enlace' }}
       </button>
       <p *ngIf="authKit.state().forgotPassword.status === 'error' && authKit.state().forgotPassword.error" class="text-sm text-destructive">
         {{ authKit.state().forgotPassword.error?.message }}
       </p>
-      <p *ngIf="authKit.state().forgotPassword.status === 'success'" class="text-sm text-green-600">Check your email for a reset link.</p>
+      <p *ngIf="authKit.state().forgotPassword.status === 'success'" class="text-sm text-green-600">Revisa tu correo para ver el enlace de restablecimiento.</p>
 
       <p *ngIf="onNavigateToLogin" class="text-center text-sm text-muted-foreground">
-        Remembered your password? <button type="button" [class]="linkClass" (click)="onNavigateToLogin()">Sign in</button>
+        ¿Recordaste tu contraseña? <button type="button" [class]="linkClass" (click)="onNavigateToLogin()">Iniciar sesión</button>
       </p>
     </form>
   `,

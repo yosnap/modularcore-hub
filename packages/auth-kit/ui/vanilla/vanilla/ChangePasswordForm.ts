@@ -13,32 +13,32 @@ export interface MountChangePasswordFormOptions {
 /** Vanilla CSS variant — same options/behavior as headless, styled with `auth-kit-*` classes. */
 export function mountChangePasswordForm(container: HTMLElement, { authKit, passwordPolicy }: MountChangePasswordFormOptions): () => void {
   const current = field(
-    'Current password',
+    'Contraseña actual',
     { id: 'auth-kit-change-current', type: 'password', autocomplete: 'current-password' },
     { label: 'auth-kit-field', input: 'auth-kit-input' },
   );
   const currentError = errorText('auth-kit-error');
-  const showCurrent = el('button', { type: 'button', 'aria-label': 'Show password', class: 'auth-kit-eye-button' });
+  const showCurrent = el('button', { type: 'button', 'aria-label': 'Mostrar contraseña', class: 'auth-kit-eye-button' });
   showCurrent.innerHTML = eyeSvg(true);
   const currentWrapper = el('div', { class: 'auth-kit-field__control' }, [current.input, showCurrent]);
 
   const next = field(
-    'New password',
+    'Contraseña nueva',
     { id: 'auth-kit-change-new', type: 'password', autocomplete: 'new-password' },
     { label: 'auth-kit-field', input: 'auth-kit-input' },
   );
   const nextError = errorText('auth-kit-error');
-  const showNew = el('button', { type: 'button', 'aria-label': 'Show password', class: 'auth-kit-eye-button' });
+  const showNew = el('button', { type: 'button', 'aria-label': 'Mostrar contraseña', class: 'auth-kit-eye-button' });
   showNew.innerHTML = eyeSvg(true);
   const nextWrapper = el('div', { class: 'auth-kit-field__control' }, [next.input, showNew]);
 
   const confirm = field(
-    'Confirm new password',
+    'Confirmar contraseña nueva',
     { id: 'auth-kit-change-confirm', type: 'password', autocomplete: 'new-password' },
     { label: 'auth-kit-field', input: 'auth-kit-input' },
   );
   const confirmError = errorText('auth-kit-error');
-  const submit = el('button', { type: 'submit', class: 'auth-kit-button auth-kit-button--primary' }, ['Update password']);
+  const submit = el('button', { type: 'submit', class: 'auth-kit-button auth-kit-button--primary' }, ['Actualizar contraseña']);
   const submitError = errorText('auth-kit-error');
   const success = el('p', { class: 'auth-kit-success' });
   success.hidden = true;
@@ -62,23 +62,23 @@ export function mountChangePasswordForm(container: HTMLElement, { authKit, passw
     const showing = current.input.type === 'text';
     current.input.type = showing ? 'password' : 'text';
     showCurrent.innerHTML = eyeSvg(showing);
-    showCurrent.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    showCurrent.setAttribute('aria-label', showing ? 'Mostrar contraseña' : 'Ocultar contraseña');
   });
   showNew.addEventListener('click', () => {
     const showing = next.input.type === 'text';
     next.input.type = showing ? 'password' : 'text';
     confirm.input.type = next.input.type;
     showNew.innerHTML = eyeSvg(showing);
-    showNew.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    showNew.setAttribute('aria-label', showing ? 'Mostrar contraseña' : 'Ocultar contraseña');
   });
 
   const unsubscribe = authKit.subscribe((state) => {
     const { status, error } = state.changePassword;
     submit.toggleAttribute('disabled', status === 'submitting');
-    submit.textContent = status === 'submitting' ? 'Updating…' : 'Update password';
+    submit.textContent = status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Password updated.' : '';
+    success.textContent = status === 'success' ? 'Contraseña actualizada.' : '';
   });
 
   const handleSubmit = (event: Event): void => {

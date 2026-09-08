@@ -14,7 +14,7 @@ import type { PasswordPolicy } from '../../core/validation.js';
   template: `
     <form novalidate (submit)="handleSubmit($event)">
       <div>
-        <label for="auth-kit-reset-new">New password</label>
+        <label for="auth-kit-reset-new">Contraseña nueva</label>
         <input
           id="auth-kit-reset-new"
           [type]="showPassword ? 'text' : 'password'"
@@ -22,11 +22,11 @@ import type { PasswordPolicy } from '../../core/validation.js';
           [value]="newPassword"
           (input)="newPassword = $any($event.target).value; clearError('newPassword')" (blur)="validateField('newPassword')"
         />
-        <button type="button" (click)="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }}</button>
+        <button type="button" (click)="showPassword = !showPassword">{{ showPassword ? 'Ocultar' : 'Mostrar' }}</button>
         <p *ngIf="fieldErrors['newPassword']" role="alert">{{ fieldErrors['newPassword'] }}</p>
       </div>
       <div>
-        <label for="auth-kit-reset-confirm">Confirm new password</label>
+        <label for="auth-kit-reset-confirm">Confirmar contraseña nueva</label>
         <input
           id="auth-kit-reset-confirm"
           [type]="showPassword ? 'text' : 'password'"
@@ -37,12 +37,12 @@ import type { PasswordPolicy } from '../../core/validation.js';
         <p *ngIf="fieldErrors['confirmPassword']" role="alert">{{ fieldErrors['confirmPassword'] }}</p>
       </div>
       <button type="submit" [disabled]="authKit.state().resetPassword.status === 'submitting'">
-        {{ authKit.state().resetPassword.status === 'submitting' ? 'Resetting…' : 'Reset password' }}
+        {{ authKit.state().resetPassword.status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña' }}
       </button>
       <p *ngIf="authKit.state().resetPassword.status === 'error' && authKit.state().resetPassword.error" role="alert">
         {{ authKit.state().resetPassword.error?.message }}
       </p>
-      <p *ngIf="authKit.state().resetPassword.status === 'success'">Password reset.</p>
+      <p *ngIf="authKit.state().resetPassword.status === 'success'">Contraseña restablecida.</p>
     </form>
   `,
 })

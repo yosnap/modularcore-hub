@@ -92,7 +92,7 @@ function handleSubmit(): void {
 <template>
   <form novalidate @submit.prevent="handleSubmit">
     <div>
-      <label for="auth-kit-register-email">Email</label>
+      <label for="auth-kit-register-email">Correo electrónico</label>
       <input id="auth-kit-register-email" v-model="email" @input="clearError('email')" @blur="validateField('email')" type="email" autocomplete="email" />
       <p v-if="fieldErrors.email" role="alert">{{ fieldErrors.email }}</p>
     </div>
@@ -123,16 +123,16 @@ function handleSubmit(): void {
     </div>
 
     <div>
-      <label for="auth-kit-register-password">Password</label>
+      <label for="auth-kit-register-password">Contraseña</label>
       <input id="auth-kit-register-password" v-model="password" @input="clearError('password')" @blur="validateField('password')" :type="showPassword ? 'text' : 'password'" autocomplete="new-password" />
-      <button type="button" @click="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }}</button>
+      <button type="button" @click="showPassword = !showPassword">{{ showPassword ? 'Ocultar' : 'Mostrar' }}</button>
       <p v-if="fieldErrors.password" role="alert">{{ fieldErrors.password }}</p>
     </div>
 
     <div>
-      <label for="auth-kit-register-confirm-password">Confirm password</label>
+      <label for="auth-kit-register-confirm-password">Confirmar contraseña</label>
       <input id="auth-kit-register-confirm-password" v-model="confirmPassword" @input="clearError('confirmPassword')" @blur="validateField('confirmPassword')" :type="showConfirm ? 'text' : 'password'" autocomplete="new-password" />
-      <button type="button" @click="showConfirm = !showConfirm">{{ showConfirm ? 'Hide' : 'Show' }}</button>
+      <button type="button" @click="showConfirm = !showConfirm">{{ showConfirm ? 'Ocultar' : 'Mostrar' }}</button>
       <p v-if="fieldErrors.confirmPassword" role="alert">{{ fieldErrors.confirmPassword }}</p>
     </div>
 
@@ -156,11 +156,11 @@ function handleSubmit(): void {
     />
 
     <button type="submit" :disabled="authKit.state.value.register.status === 'submitting'">
-      {{ authKit.state.value.register.status === 'submitting' ? 'Creating account…' : 'Create account' }}
+      {{ authKit.state.value.register.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta' }}
     </button>
     <p v-if="authKit.state.value.register.status === 'error' && authKit.state.value.register.error" role="alert">
       {{ authKit.state.value.register.error.message }}
     </p>
-    <p v-if="authKit.state.value.register.status === 'success'">Account created.</p>
+    <p v-if="authKit.state.value.register.status === 'success'">Cuenta creada.</p>
   </form>
 </template>

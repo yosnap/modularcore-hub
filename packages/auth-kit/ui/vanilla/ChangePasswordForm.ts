@@ -11,15 +11,15 @@ export interface MountChangePasswordFormOptions {
 
 /** Headless variant — no CSS classes, fully consumer-styleable. Same options/behavior across every presentation. */
 export function mountChangePasswordForm(container: HTMLElement, { authKit, passwordPolicy }: MountChangePasswordFormOptions): () => void {
-  const current = field('Current password', { id: 'auth-kit-change-current', type: 'password', autocomplete: 'current-password' });
+  const current = field('Contraseña actual', { id: 'auth-kit-change-current', type: 'password', autocomplete: 'current-password' });
   const currentError = errorText();
-  const showCurrent = el('button', { type: 'button' }, ['Show']);
-  const next = field('New password', { id: 'auth-kit-change-new', type: 'password', autocomplete: 'new-password' });
+  const showCurrent = el('button', { type: 'button' }, ['Mostrar']);
+  const next = field('Contraseña nueva', { id: 'auth-kit-change-new', type: 'password', autocomplete: 'new-password' });
   const nextError = errorText();
-  const showNew = el('button', { type: 'button' }, ['Show']);
-  const confirm = field('Confirm new password', { id: 'auth-kit-change-confirm', type: 'password', autocomplete: 'new-password' });
+  const showNew = el('button', { type: 'button' }, ['Mostrar']);
+  const confirm = field('Confirmar contraseña nueva', { id: 'auth-kit-change-confirm', type: 'password', autocomplete: 'new-password' });
   const confirmError = errorText();
-  const submit = el('button', { type: 'submit' }, ['Update password']);
+  const submit = el('button', { type: 'submit' }, ['Actualizar contraseña']);
   const submitError = errorText();
   const success = el('p');
   success.hidden = true;
@@ -37,22 +37,22 @@ export function mountChangePasswordForm(container: HTMLElement, { authKit, passw
   showCurrent.addEventListener('click', () => {
     const showing = current.input.type === 'text';
     current.input.type = showing ? 'password' : 'text';
-    showCurrent.textContent = showing ? 'Show' : 'Hide';
+    showCurrent.textContent = showing ? 'Mostrar' : 'Ocultar';
   });
   showNew.addEventListener('click', () => {
     const showing = next.input.type === 'text';
     next.input.type = showing ? 'password' : 'text';
     confirm.input.type = next.input.type;
-    showNew.textContent = showing ? 'Show' : 'Hide';
+    showNew.textContent = showing ? 'Mostrar' : 'Ocultar';
   });
 
   const unsubscribe = authKit.subscribe((state) => {
     const { status, error } = state.changePassword;
     submit.toggleAttribute('disabled', status === 'submitting');
-    submit.textContent = status === 'submitting' ? 'Updating…' : 'Update password';
+    submit.textContent = status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Password updated.' : '';
+    success.textContent = status === 'success' ? 'Contraseña actualizada.' : '';
   });
 
   const handleSubmit = (event: Event): void => {

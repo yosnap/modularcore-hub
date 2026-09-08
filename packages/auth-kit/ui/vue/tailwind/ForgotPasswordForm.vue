@@ -58,7 +58,7 @@ function handleSubmit(): void {
 <template>
   <form novalidate class="flex flex-col gap-3" @submit.prevent="handleSubmit">
     <label :class="labelClass" for="auth-kit-forgot-email">
-      Email
+      Correo electrónico
       <input id="auth-kit-forgot-email" v-model="email" @input="clearError('email')" @blur="validateField('email')" type="email" autocomplete="email" :class="inputClass" />
     </label>
     <p v-if="fieldErrors.email" :class="errorClass">{{ fieldErrors.email }}</p>
@@ -74,21 +74,21 @@ function handleSubmit(): void {
       :disabled="authKit.state.value.forgotPassword.status === 'submitting'"
       class="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
     >
-      {{ authKit.state.value.forgotPassword.status === 'submitting' ? 'Sending…' : 'Send reset link' }}
+      {{ authKit.state.value.forgotPassword.status === 'submitting' ? 'Enviando…' : 'Enviar enlace' }}
     </button>
     <p v-if="authKit.state.value.forgotPassword.status === 'error' && authKit.state.value.forgotPassword.error" :class="errorClass">
       {{ authKit.state.value.forgotPassword.error.message }}
     </p>
-    <p v-if="authKit.state.value.forgotPassword.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Check your email for a reset link.</p>
+    <p v-if="authKit.state.value.forgotPassword.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Revisa tu correo para ver el enlace de restablecimiento.</p>
 
     <p v-if="onNavigateToLogin" class="text-center text-sm text-zinc-600 dark:text-zinc-400">
-      Remembered your password?
+      ¿Recordaste tu contraseña?
       <button
         type="button"
         class="appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
         @click="onNavigateToLogin"
       >
-        Sign in
+        Iniciar sesión
       </button>
     </p>
   </form>

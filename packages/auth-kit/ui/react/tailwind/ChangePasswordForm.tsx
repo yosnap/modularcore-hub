@@ -29,7 +29,7 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-3">
       <label className={labelClass} htmlFor="auth-kit-change-current">
-        Current password
+        Contraseña actual
         <div className="relative">
           <input
             id="auth-kit-change-current"
@@ -43,7 +43,7 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
           <button
             type="button"
             onClick={() => setShowCurrent((value) => !value)}
-            aria-label={showCurrent ? 'Hide password' : 'Show password'}
+            aria-label={showCurrent ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             className={eyeButtonClass}
           >
             {showCurrent ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
@@ -53,7 +53,7 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
       {fieldErrors.currentPassword && <p className={errorClass}>{fieldErrors.currentPassword}</p>}
 
       <label className={labelClass} htmlFor="auth-kit-change-new">
-        New password
+        Contraseña nueva
         <div className="relative">
           <input
             id="auth-kit-change-new"
@@ -67,7 +67,7 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
           <button
             type="button"
             onClick={() => setShowNew((value) => !value)}
-            aria-label={showNew ? 'Hide password' : 'Show password'}
+            aria-label={showNew ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             className={eyeButtonClass}
           >
             {showNew ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
@@ -77,7 +77,7 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
       {fieldErrors.newPassword && <p className={errorClass}>{fieldErrors.newPassword}</p>}
 
       <label className={labelClass} htmlFor="auth-kit-change-confirm">
-        Confirm new password
+        Confirmar contraseña nueva
         <input
           id="auth-kit-change-confirm"
           type={showNew ? 'text' : 'password'}
@@ -95,10 +95,10 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
         disabled={flow.status === 'submitting'}
         className="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
       >
-        {flow.status === 'submitting' ? 'Updating…' : 'Update password'}
+        {flow.status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña'}
       </button>
       {flow.status === 'error' && flow.error && <p className={errorClass}>{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="text-sm text-green-600 dark:text-green-400">Password updated.</p>}
+      {flow.status === 'success' && <p className="text-sm text-green-600 dark:text-green-400">Contraseña actualizada.</p>}
     </form>
   );
 }

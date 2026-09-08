@@ -126,7 +126,7 @@
   {/if}
 
   <div class="flex flex-col gap-1.5">
-    <label class={labelClass} for="auth-kit-register-email">Email</label>
+    <label class={labelClass} for="auth-kit-register-email">Correo electrónico</label>
     <input id="auth-kit-register-email" type="email" bind:value={email} oninput={() => clearError('email')} onblur={() => validateField('email')} autocomplete="email" class={inputClass} />
     {#if fieldErrors.email}<p class={errorClass}>{fieldErrors.email}</p>{/if}
   </div>
@@ -156,7 +156,7 @@
   {/if}
 
   <div class="flex flex-col gap-1.5">
-    <label class={labelClass} for="auth-kit-register-password">Password</label>
+    <label class={labelClass} for="auth-kit-register-password">Contraseña</label>
     <div class="relative">
       <input
         id="auth-kit-register-password"
@@ -170,7 +170,7 @@
       <button
         type="button"
         onclick={() => (showPassword = !showPassword)}
-        aria-label={showPassword ? 'Hide password' : 'Show password'}
+        aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
         class="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
@@ -203,7 +203,7 @@
   </div>
 
   <div class="flex flex-col gap-1.5">
-    <label class={labelClass} for="auth-kit-register-confirm-password">Confirm password</label>
+    <label class={labelClass} for="auth-kit-register-confirm-password">Confirmar contraseña</label>
     <div class="relative">
       <input
         id="auth-kit-register-confirm-password"
@@ -217,7 +217,7 @@
       <button
         type="button"
         onclick={() => (showConfirm = !showConfirm)}
-        aria-label={showConfirm ? 'Hide password' : 'Show password'}
+        aria-label={showConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'}
         class="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
@@ -263,14 +263,14 @@
     disabled={flow.status === 'submitting'}
     class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
   >
-    {flow.status === 'submitting' ? 'Creating account…' : 'Create account'}
+    {flow.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta'}
   </button>
   {#if flow.status === 'error' && flow.error}<p class={errorClass}>{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p class="text-sm text-green-600">Account created.</p>{/if}
+  {#if flow.status === 'success'}<p class="text-sm text-green-600">Cuenta creada.</p>{/if}
 
   {#if onNavigateToLogin}
     <p class="text-center text-sm text-muted-foreground">
-      Already have an account? <button type="button" onclick={onNavigateToLogin} class={linkClass}>Sign in</button>
+      ¿Ya tienes una cuenta? <button type="button" onclick={onNavigateToLogin} class={linkClass}>Iniciar sesión</button>
     </p>
   {/if}
 </form>

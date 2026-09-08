@@ -68,16 +68,16 @@
 <!-- Tailwind variant — same props/behavior as headless, styled with the media-picker zinc palette. -->
 <form onsubmit={handleSubmit} novalidate class="flex flex-col gap-3">
   <label class={labelClass} for="auth-kit-login-identifier">
-    Email or username
+    Correo electrónico o nombre de usuario
     <input id="auth-kit-login-identifier" type="text" bind:value={identifier} oninput={() => clearError('identifier')} onblur={() => validateField('identifier')} autocomplete="username" class={inputClass} />
   </label>
   {#if fieldErrors.identifier}<p class={errorClass}>{fieldErrors.identifier}</p>{/if}
 
   <div class="flex flex-col gap-1">
     <div class="flex items-center justify-between">
-      <label class="text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-login-password">Password</label>
+      <label class="text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-login-password">Contraseña</label>
       {#if onNavigateToForgotPassword}
-        <button type="button" onclick={onNavigateToForgotPassword} class={linkClass}>Forgot your password?</button>
+        <button type="button" onclick={onNavigateToForgotPassword} class={linkClass}>¿Olvidaste tu contraseña?</button>
       {/if}
     </div>
     <div class="relative">
@@ -91,7 +91,7 @@
       <button
         type="button"
         onclick={() => (showPassword = !showPassword)}
-        aria-label={showPassword ? 'Hide password' : 'Show password'}
+        aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
         class="absolute inset-y-0 right-0 flex w-9 appearance-none items-center justify-center border-0 bg-transparent p-0 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
@@ -111,14 +111,14 @@
     disabled={flow.status === 'submitting'}
     class="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
   >
-    {flow.status === 'submitting' ? 'Signing in…' : 'Sign in'}
+    {flow.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión'}
   </button>
   {#if flow.status === 'error' && flow.error}<p class={errorClass}>{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p class="text-sm text-green-600 dark:text-green-400">Signed in.</p>{/if}
+  {#if flow.status === 'success'}<p class="text-sm text-green-600 dark:text-green-400">Sesión iniciada.</p>{/if}
 
   {#if onNavigateToRegister}
     <p class="text-center text-sm text-zinc-600 dark:text-zinc-400">
-      Don't have an account yet? <button type="button" onclick={onNavigateToRegister} class="appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300">Sign up</button>
+      ¿Aún no tienes una cuenta? <button type="button" onclick={onNavigateToRegister} class="appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300">Registrarse</button>
     </p>
   {/if}
 </form>

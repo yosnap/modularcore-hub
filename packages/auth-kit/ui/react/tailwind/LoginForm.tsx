@@ -34,7 +34,7 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-3">
       <label className={labelClass} htmlFor="auth-kit-login-identifier">
-        Email or username
+        Correo electrónico o nombre de usuario
         <input
           id="auth-kit-login-identifier"
           type="text"
@@ -50,11 +50,11 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
           <label className="text-sm text-zinc-700 dark:text-zinc-300" htmlFor="auth-kit-login-password">
-            Password
+            Contraseña
           </label>
           {onNavigateToForgotPassword && (
             <button type="button" onClick={onNavigateToForgotPassword} className={linkClass}>
-              Forgot your password?
+              ¿Olvidaste tu contraseña?
             </button>
           )}
         </div>
@@ -71,7 +71,7 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
           <button
             type="button"
             onClick={() => setShowPassword((value) => !value)}
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             className={eyeButtonClass}
           >
             {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
@@ -94,19 +94,19 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
         disabled={flow.status === 'submitting'}
         className="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
       >
-        {flow.status === 'submitting' ? 'Signing in…' : 'Sign in'}
+        {flow.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión'}
       </button>
       {flow.status === 'error' && flow.error && <p className={errorClass}>{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="text-sm text-green-600 dark:text-green-400">Signed in.</p>}
+      {flow.status === 'success' && <p className="text-sm text-green-600 dark:text-green-400">Sesión iniciada.</p>}
       {onNavigateToRegister && (
         <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-          Don't have an account yet?{' '}
+          ¿Aún no tienes una cuenta?{' '}
           <button
             type="button"
             onClick={onNavigateToRegister}
             className="appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
           >
-            Sign up
+            Registrarse
           </button>
         </p>
       )}

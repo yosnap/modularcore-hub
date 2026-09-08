@@ -22,16 +22,16 @@ const EYE_OFF_PATH =
   template: `
     <form novalidate class="flex flex-col gap-4" (submit)="handleSubmit($event)">
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-login-identifier">Email or username</label>
+        <label class="text-sm font-medium leading-none" for="auth-kit-login-identifier">Correo electrónico o nombre de usuario</label>
         <input id="auth-kit-login-identifier" type="text" autocomplete="username" [class]="inputClass" [value]="identifier" (input)="identifier = $any($event.target).value; clearError('identifier')" (blur)="validateField('identifier')" />
         <p *ngIf="fieldErrors['identifier']" class="text-sm text-destructive">{{ fieldErrors['identifier'] }}</p>
       </div>
 
       <div class="flex flex-col gap-1.5">
         <div class="flex items-center justify-between">
-          <label class="text-sm font-medium leading-none" for="auth-kit-login-password">Password</label>
+          <label class="text-sm font-medium leading-none" for="auth-kit-login-password">Contraseña</label>
           <button *ngIf="onNavigateToForgotPassword" type="button" [class]="linkClass" (click)="onNavigateToForgotPassword()">
-            Forgot your password?
+            ¿Olvidaste tu contraseña?
           </button>
         </div>
         <div class="relative">
@@ -45,7 +45,7 @@ const EYE_OFF_PATH =
           />
           <button
             type="button"
-            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
             class="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
             (click)="showPassword = !showPassword"
           >
@@ -77,15 +77,15 @@ const EYE_OFF_PATH =
         [disabled]="authKit.state().login.status === 'submitting'"
         class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
       >
-        {{ authKit.state().login.status === 'submitting' ? 'Signing in…' : 'Sign in' }}
+        {{ authKit.state().login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión' }}
       </button>
       <p *ngIf="authKit.state().login.status === 'error' && authKit.state().login.error" class="text-sm text-destructive">
         {{ authKit.state().login.error?.message }}
       </p>
-      <p *ngIf="authKit.state().login.status === 'success'" class="text-sm text-green-600">Signed in.</p>
+      <p *ngIf="authKit.state().login.status === 'success'" class="text-sm text-green-600">Sesión iniciada.</p>
 
       <p *ngIf="onNavigateToRegister" class="text-center text-sm text-muted-foreground">
-        Don't have an account yet? <button type="button" [class]="linkClass" (click)="onNavigateToRegister()">Sign up</button>
+        ¿Aún no tienes una cuenta? <button type="button" [class]="linkClass" (click)="onNavigateToRegister()">Registrarse</button>
       </p>
     </form>
   `,

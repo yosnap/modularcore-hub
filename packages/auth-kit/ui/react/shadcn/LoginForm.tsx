@@ -32,7 +32,7 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
         <LabelPrimitive.Root className={labelClass} htmlFor="auth-kit-login-identifier">
-          Email or username
+          Correo electrónico o nombre de usuario
         </LabelPrimitive.Root>
         <input
           id="auth-kit-login-identifier"
@@ -49,7 +49,7 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between">
           <LabelPrimitive.Root className={labelClass} htmlFor="auth-kit-login-password">
-            Password
+            Contraseña
           </LabelPrimitive.Root>
           {onNavigateToForgotPassword && (
             <button
@@ -57,7 +57,7 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
               onClick={onNavigateToForgotPassword}
               className="text-xs font-medium appearance-none border-0 bg-transparent p-0 text-primary hover:underline"
             >
-              Forgot your password?
+              ¿Olvidaste tu contraseña?
             </button>
           )}
         </div>
@@ -74,7 +74,7 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
           <button
             type="button"
             onClick={() => setShowPassword((value) => !value)}
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             className="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
           >
             {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
@@ -97,16 +97,16 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
         disabled={flow.status === 'submitting'}
         className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
       >
-        {flow.status === 'submitting' ? 'Signing in…' : 'Sign in'}
+        {flow.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión'}
       </button>
       {flow.status === 'error' && flow.error && <p className="text-sm text-destructive">{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="text-sm text-green-600">Signed in.</p>}
+      {flow.status === 'success' && <p className="text-sm text-green-600">Sesión iniciada.</p>}
 
       {onNavigateToRegister && (
         <p className="text-center text-sm text-muted-foreground">
-          Don't have an account yet?{' '}
+          ¿Aún no tienes una cuenta?{' '}
           <button type="button" onClick={onNavigateToRegister} className="font-medium text-primary hover:underline">
-            Sign up
+            Registrarse
           </button>
         </p>
       )}

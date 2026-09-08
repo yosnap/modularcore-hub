@@ -23,7 +23,7 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
   template: `
     <form novalidate class="flex flex-col gap-4" (submit)="handleSubmit($event)">
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-reset-new">New password</label>
+        <label class="text-sm font-medium leading-none" for="auth-kit-reset-new">Contraseña nueva</label>
         <div class="relative">
           <input
             id="auth-kit-reset-new"
@@ -35,7 +35,7 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
           />
           <button
             type="button"
-            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
             class="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
             (click)="showPassword = !showPassword"
           >
@@ -73,7 +73,7 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-reset-confirm">Confirm new password</label>
+        <label class="text-sm font-medium leading-none" for="auth-kit-reset-confirm">Confirmar contraseña nueva</label>
         <input
           id="auth-kit-reset-confirm"
           [type]="showPassword ? 'text' : 'password'"
@@ -90,12 +90,12 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
         [disabled]="authKit.state().resetPassword.status === 'submitting'"
         class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
       >
-        {{ authKit.state().resetPassword.status === 'submitting' ? 'Resetting…' : 'Reset password' }}
+        {{ authKit.state().resetPassword.status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña' }}
       </button>
       <p *ngIf="authKit.state().resetPassword.status === 'error' && authKit.state().resetPassword.error" class="text-sm text-destructive">
         {{ authKit.state().resetPassword.error?.message }}
       </p>
-      <p *ngIf="authKit.state().resetPassword.status === 'success'" class="text-sm text-green-600">Password reset.</p>
+      <p *ngIf="authKit.state().resetPassword.status === 'success'" class="text-sm text-green-600">Contraseña restablecida.</p>
     </form>
   `,
 })

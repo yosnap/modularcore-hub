@@ -59,16 +59,16 @@ function handleSubmit(): void {
 <template>
   <form novalidate class="auth-kit-form" @submit.prevent="handleSubmit">
     <label class="auth-kit-field" for="auth-kit-login-identifier">
-      Email or username
+      Correo electrónico o nombre de usuario
       <input id="auth-kit-login-identifier" v-model="identifier" @input="clearError('identifier')" @blur="validateField('identifier')" type="text" autocomplete="username" class="auth-kit-input" />
     </label>
     <p v-if="fieldErrors.identifier" class="auth-kit-error">{{ fieldErrors.identifier }}</p>
 
     <div class="auth-kit-field">
       <div style="display: flex; align-items: center; justify-content: space-between">
-        <label for="auth-kit-login-password">Password</label>
+        <label for="auth-kit-login-password">Contraseña</label>
         <button v-if="onNavigateToForgotPassword" type="button" class="auth-kit-button auth-kit-button--ghost" @click="onNavigateToForgotPassword">
-          Forgot your password?
+          ¿Olvidaste tu contraseña?
         </button>
       </div>
       <div class="auth-kit-field__control">
@@ -81,7 +81,7 @@ function handleSubmit(): void {
         />
         <button
           type="button"
-          :aria-label="showPassword ? 'Hide password' : 'Show password'"
+          :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
           class="auth-kit-eye-button"
           @click="showPassword = !showPassword"
         >
@@ -109,15 +109,15 @@ function handleSubmit(): void {
     />
 
     <button type="submit" :disabled="authKit.state.value.login.status === 'submitting'" class="auth-kit-button auth-kit-button--primary">
-      {{ authKit.state.value.login.status === 'submitting' ? 'Signing in…' : 'Sign in' }}
+      {{ authKit.state.value.login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión' }}
     </button>
     <p v-if="authKit.state.value.login.status === 'error' && authKit.state.value.login.error" class="auth-kit-error">
       {{ authKit.state.value.login.error.message }}
     </p>
-    <p v-if="authKit.state.value.login.status === 'success'" class="auth-kit-success">Signed in.</p>
+    <p v-if="authKit.state.value.login.status === 'success'" class="auth-kit-success">Sesión iniciada.</p>
 
     <p v-if="onNavigateToRegister" class="auth-kit-status">
-      Don't have an account yet? <button type="button" class="auth-kit-button auth-kit-button--ghost" @click="onNavigateToRegister">Sign up</button>
+      ¿Aún no tienes una cuenta? <button type="button" class="auth-kit-button auth-kit-button--ghost" @click="onNavigateToRegister">Registrarse</button>
     </p>
   </form>
 </template>

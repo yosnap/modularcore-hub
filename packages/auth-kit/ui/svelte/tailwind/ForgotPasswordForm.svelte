@@ -57,7 +57,7 @@
 <!-- Tailwind variant — same props/behavior as headless, styled with the media-picker zinc palette. -->
 <form onsubmit={handleSubmit} novalidate class="flex flex-col gap-3">
   <label class={labelClass} for="auth-kit-forgot-email">
-    Email
+    Correo electrónico
     <input id="auth-kit-forgot-email" type="email" bind:value={email} oninput={() => clearError('email')} onblur={() => validateField('email')} autocomplete="email" class={inputClass} />
   </label>
   {#if fieldErrors.email}<p class={errorClass}>{fieldErrors.email}</p>{/if}
@@ -69,14 +69,14 @@
     disabled={flow.status === 'submitting'}
     class="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
   >
-    {flow.status === 'submitting' ? 'Sending…' : 'Send reset link'}
+    {flow.status === 'submitting' ? 'Enviando…' : 'Enviar enlace'}
   </button>
   {#if flow.status === 'error' && flow.error}<p class={errorClass}>{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p class="text-sm text-green-600 dark:text-green-400">Check your email for a reset link.</p>{/if}
+  {#if flow.status === 'success'}<p class="text-sm text-green-600 dark:text-green-400">Revisa tu correo para ver el enlace de restablecimiento.</p>{/if}
 
   {#if onNavigateToLogin}
     <p class="text-center text-sm text-zinc-600 dark:text-zinc-400">
-      Remembered your password? <button type="button" onclick={onNavigateToLogin} class="appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300">Sign in</button>
+      ¿Recordaste tu contraseña? <button type="button" onclick={onNavigateToLogin} class="appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300">Iniciar sesión</button>
     </p>
   {/if}
 </form>

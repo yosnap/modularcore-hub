@@ -55,7 +55,7 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
 
       <div className="flex flex-col gap-1.5">
         <LabelPrimitive.Root className={labelClass} htmlFor="auth-kit-register-email">
-          Email
+          Correo electrónico
         </LabelPrimitive.Root>
         <input
           id="auth-kit-register-email"
@@ -122,7 +122,7 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
 
       <div className="flex flex-col gap-1.5">
         <LabelPrimitive.Root className={labelClass} htmlFor="auth-kit-register-password">
-          Password
+          Contraseña
         </LabelPrimitive.Root>
         <div className="relative">
           <input
@@ -137,7 +137,7 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
           <button
             type="button"
             onClick={() => setShowPassword((value) => !value)}
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             className="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
           >
             {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
@@ -179,7 +179,7 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
 
       <div className="flex flex-col gap-1.5">
         <LabelPrimitive.Root className={labelClass} htmlFor="auth-kit-register-confirm-password">
-          Confirm password
+          Confirmar contraseña
         </LabelPrimitive.Root>
         <div className="relative">
           <input
@@ -194,7 +194,7 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
           <button
             type="button"
             onClick={() => setShowConfirm((value) => !value)}
-            aria-label={showConfirm ? 'Hide password' : 'Show password'}
+            aria-label={showConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'}
             className="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
           >
             {showConfirm ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
@@ -246,16 +246,16 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
         disabled={flow.status === 'submitting'}
         className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
       >
-        {flow.status === 'submitting' ? 'Creating account…' : 'Create account'}
+        {flow.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta'}
       </button>
       {flow.status === 'error' && flow.error && <p className={errorClass}>{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="text-sm text-green-600">Account created.</p>}
+      {flow.status === 'success' && <p className="text-sm text-green-600">Cuenta creada.</p>}
 
       {onNavigateToLogin && (
         <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{' '}
+          ¿Ya tienes una cuenta?{' '}
           <button type="button" onClick={onNavigateToLogin} className="font-medium text-primary hover:underline">
-            Sign in
+            Iniciar sesión
           </button>
         </p>
       )}

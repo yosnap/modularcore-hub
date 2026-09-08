@@ -21,7 +21,7 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
   return (
     <form onSubmit={handleSubmit} noValidate>
       <div>
-        <label htmlFor="auth-kit-change-current">Current password</label>
+        <label htmlFor="auth-kit-change-current">Contraseña actual</label>
         <input
           id="auth-kit-change-current"
           type={showCurrent ? 'text' : 'password'}
@@ -31,12 +31,12 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
           autoComplete="current-password"
         />
         <button type="button" onClick={() => setShowCurrent((value) => !value)}>
-          {showCurrent ? 'Hide' : 'Show'}
+          {showCurrent ? 'Ocultar' : 'Mostrar'}
         </button>
         {fieldErrors.currentPassword && <p role="alert">{fieldErrors.currentPassword}</p>}
       </div>
       <div>
-        <label htmlFor="auth-kit-change-new">New password</label>
+        <label htmlFor="auth-kit-change-new">Contraseña nueva</label>
         <input
           id="auth-kit-change-new"
           type={showNew ? 'text' : 'password'}
@@ -46,12 +46,12 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
           autoComplete="new-password"
         />
         <button type="button" onClick={() => setShowNew((value) => !value)}>
-          {showNew ? 'Hide' : 'Show'}
+          {showNew ? 'Ocultar' : 'Mostrar'}
         </button>
         {fieldErrors.newPassword && <p role="alert">{fieldErrors.newPassword}</p>}
       </div>
       <div>
-        <label htmlFor="auth-kit-change-confirm">Confirm new password</label>
+        <label htmlFor="auth-kit-change-confirm">Confirmar contraseña nueva</label>
         <input
           id="auth-kit-change-confirm"
           type={showNew ? 'text' : 'password'}
@@ -63,10 +63,10 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
         {fieldErrors.confirmPassword && <p role="alert">{fieldErrors.confirmPassword}</p>}
       </div>
       <button type="submit" disabled={flow.status === 'submitting'}>
-        {flow.status === 'submitting' ? 'Updating…' : 'Update password'}
+        {flow.status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña'}
       </button>
       {flow.status === 'error' && flow.error && <p role="alert">{flow.error.message}</p>}
-      {flow.status === 'success' && <p>Password updated.</p>}
+      {flow.status === 'success' && <p>Contraseña actualizada.</p>}
     </form>
   );
 }

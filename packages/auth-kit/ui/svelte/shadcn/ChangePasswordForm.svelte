@@ -66,7 +66,7 @@
 <!-- Shadcn variant — self-contained, styled shadcn-like via native elements + the shared design tokens. Same props/behavior as headless. -->
 <form onsubmit={handleSubmit} novalidate class="flex flex-col gap-4">
   <div class="flex flex-col gap-1.5">
-    <label class={labelClass} for="auth-kit-change-current">Current password</label>
+    <label class={labelClass} for="auth-kit-change-current">Contraseña actual</label>
     <div class="relative">
       <input
         id="auth-kit-change-current"
@@ -80,7 +80,7 @@
       <button
         type="button"
         onclick={() => (showCurrent = !showCurrent)}
-        aria-label={showCurrent ? 'Hide password' : 'Show password'}
+        aria-label={showCurrent ? 'Ocultar contraseña' : 'Mostrar contraseña'}
         class="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
@@ -92,7 +92,7 @@
   </div>
 
   <div class="flex flex-col gap-1.5">
-    <label class={labelClass} for="auth-kit-change-new">New password</label>
+    <label class={labelClass} for="auth-kit-change-new">Contraseña nueva</label>
     <div class="relative">
       <input
         id="auth-kit-change-new"
@@ -106,7 +106,7 @@
       <button
         type="button"
         onclick={() => (showNew = !showNew)}
-        aria-label={showNew ? 'Hide password' : 'Show password'}
+        aria-label={showNew ? 'Ocultar contraseña' : 'Mostrar contraseña'}
         class="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
@@ -139,7 +139,7 @@
   </div>
 
   <div class="flex flex-col gap-1.5">
-    <label class={labelClass} for="auth-kit-change-confirm">Confirm new password</label>
+    <label class={labelClass} for="auth-kit-change-confirm">Confirmar contraseña nueva</label>
     <input id="auth-kit-change-confirm" type={showNew ? 'text' : 'password'} bind:value={confirmPassword}
       oninput={() => clearError('confirmPassword')}
       onblur={() => validateField('confirmPassword')}
@@ -154,8 +154,8 @@
     disabled={flow.status === 'submitting'}
     class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
   >
-    {flow.status === 'submitting' ? 'Updating…' : 'Update password'}
+    {flow.status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña'}
   </button>
   {#if flow.status === 'error' && flow.error}<p class={errorClass}>{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p class="text-sm text-green-600">Password updated.</p>{/if}
+  {#if flow.status === 'success'}<p class="text-sm text-green-600">Contraseña actualizada.</p>{/if}
 </form>

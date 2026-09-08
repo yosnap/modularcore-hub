@@ -19,7 +19,7 @@ export function ForgotPasswordForm({ authKit, turnstile, onNavigateToLogin }: Fo
   return (
     <form onSubmit={handleSubmit} noValidate>
       <div>
-        <label htmlFor="auth-kit-forgot-email">Email</label>
+        <label htmlFor="auth-kit-forgot-email">Correo electrónico</label>
         <input
           id="auth-kit-forgot-email"
           type="email"
@@ -39,13 +39,13 @@ export function ForgotPasswordForm({ authKit, turnstile, onNavigateToLogin }: Fo
         />
       )}
       <button type="submit" disabled={flow.status === 'submitting'}>
-        {flow.status === 'submitting' ? 'Sending…' : 'Send reset link'}
+        {flow.status === 'submitting' ? 'Enviando…' : 'Enviar enlace'}
       </button>
       {flow.status === 'error' && flow.error && <p role="alert">{flow.error.message}</p>}
-      {flow.status === 'success' && <p>Check your email for a reset link.</p>}
+      {flow.status === 'success' && <p>Revisa tu correo para ver el enlace de restablecimiento.</p>}
       {onNavigateToLogin && (
         <button type="button" onClick={onNavigateToLogin}>
-          Sign in
+          Iniciar sesión
         </button>
       )}
     </form>

@@ -130,7 +130,7 @@ function handleSubmit(): void {
     </div>
 
     <div class="flex flex-col gap-1.5">
-      <label :class="labelClass" for="auth-kit-register-email">Email</label>
+      <label :class="labelClass" for="auth-kit-register-email">Correo electrónico</label>
       <input id="auth-kit-register-email" v-model="email" @input="clearError('email')" @blur="validateField('email')" type="email" autocomplete="email" :class="inputClass" />
       <p v-if="fieldErrors.email" :class="errorClass">{{ fieldErrors.email }}</p>
     </div>
@@ -154,7 +154,7 @@ function handleSubmit(): void {
     </div>
 
     <div class="flex flex-col gap-1.5">
-      <label :class="labelClass" for="auth-kit-register-password">Password</label>
+      <label :class="labelClass" for="auth-kit-register-password">Contraseña</label>
       <div class="relative">
         <input
           id="auth-kit-register-password"
@@ -165,7 +165,7 @@ function handleSubmit(): void {
         />
         <button
           type="button"
-          :aria-label="showPassword ? 'Hide password' : 'Show password'"
+          :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
           class="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
           @click="showPassword = !showPassword"
         >
@@ -213,7 +213,7 @@ function handleSubmit(): void {
     </div>
 
     <div class="flex flex-col gap-1.5">
-      <label :class="labelClass" for="auth-kit-register-confirm-password">Confirm password</label>
+      <label :class="labelClass" for="auth-kit-register-confirm-password">Confirmar contraseña</label>
       <div class="relative">
         <input
           id="auth-kit-register-confirm-password"
@@ -224,7 +224,7 @@ function handleSubmit(): void {
         />
         <button
           type="button"
-          :aria-label="showConfirm ? 'Hide password' : 'Show password'"
+          :aria-label="showConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'"
           class="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
           @click="showConfirm = !showConfirm"
         >
@@ -278,15 +278,15 @@ function handleSubmit(): void {
       :disabled="authKit.state.value.register.status === 'submitting'"
       class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
     >
-      {{ authKit.state.value.register.status === 'submitting' ? 'Creating account…' : 'Create account' }}
+      {{ authKit.state.value.register.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta' }}
     </button>
     <p v-if="authKit.state.value.register.status === 'error' && authKit.state.value.register.error" :class="errorClass">
       {{ authKit.state.value.register.error.message }}
     </p>
-    <p v-if="authKit.state.value.register.status === 'success'" class="text-sm text-green-600">Account created.</p>
+    <p v-if="authKit.state.value.register.status === 'success'" class="text-sm text-green-600">Cuenta creada.</p>
 
     <p v-if="onNavigateToLogin" class="text-center text-sm text-muted-foreground">
-      Already have an account? <button type="button" :class="linkClass" @click="onNavigateToLogin">Sign in</button>
+      ¿Ya tienes una cuenta? <button type="button" :class="linkClass" @click="onNavigateToLogin">Iniciar sesión</button>
     </p>
   </form>
 </template>

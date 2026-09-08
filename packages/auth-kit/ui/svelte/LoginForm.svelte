@@ -50,27 +50,27 @@
 <!-- Headless variant — no CSS classes, fully consumer-styleable. Same props/behavior across every presentation. -->
 <form onsubmit={handleSubmit} novalidate>
   <div>
-    <label for="auth-kit-login-identifier">Email or username</label>
+    <label for="auth-kit-login-identifier">Correo electrónico o nombre de usuario</label>
     <input id="auth-kit-login-identifier" type="text" bind:value={identifier} oninput={() => clearError('identifier')} onblur={() => validateField('identifier')} autocomplete="username" />
     {#if fieldErrors.identifier}<p role="alert">{fieldErrors.identifier}</p>{/if}
   </div>
   <div>
-    <label for="auth-kit-login-password">Password</label>
+    <label for="auth-kit-login-password">Contraseña</label>
     <input
       id="auth-kit-login-password"
       type={showPassword ? 'text' : 'password'}
       bind:value={password} oninput={() => clearError('password')} onblur={() => validateField('password')}
       autocomplete="current-password"
     />
-    <button type="button" onclick={() => (showPassword = !showPassword)}>{showPassword ? 'Hide' : 'Show'}</button>
+    <button type="button" onclick={() => (showPassword = !showPassword)}>{showPassword ? 'Ocultar' : 'Mostrar'}</button>
     {#if fieldErrors.password}<p role="alert">{fieldErrors.password}</p>{/if}
   </div>
   {#if turnstile?.enabled}
     <TurnstileWidget siteKey={turnstile.siteKey} theme={turnstile.theme} mode={turnstile.mode} onToken={(t) => (turnstileToken = t)} />
   {/if}
   <button type="submit" disabled={flow.status === 'submitting'}>
-    {flow.status === 'submitting' ? 'Signing in…' : 'Sign in'}
+    {flow.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión'}
   </button>
   {#if flow.status === 'error' && flow.error}<p role="alert">{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p>Signed in.</p>{/if}
+  {#if flow.status === 'success'}<p>Sesión iniciada.</p>{/if}
 </form>

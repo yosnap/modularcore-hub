@@ -12,15 +12,15 @@ export interface MountLoginFormOptions {
 
 /** Headless variant — no CSS classes, fully consumer-styleable. Same options/behavior across every presentation. */
 export function mountLoginForm(container: HTMLElement, { authKit, turnstile }: MountLoginFormOptions): () => void {
-  const identifier = field('Email or username', { id: 'auth-kit-login-identifier', type: 'text', autocomplete: 'username' });
-  const password = field('Password', { id: 'auth-kit-login-password', type: 'password', autocomplete: 'current-password' });
-  const toggleShow = el('button', { type: 'button' }, ['Show']);
+  const identifier = field('Correo electrónico o nombre de usuario', { id: 'auth-kit-login-identifier', type: 'text', autocomplete: 'username' });
+  const password = field('Contraseña', { id: 'auth-kit-login-password', type: 'password', autocomplete: 'current-password' });
+  const toggleShow = el('button', { type: 'button' }, ['Mostrar']);
   const identifierError = errorText();
   const passwordError = errorText();
   const submitError = errorText();
   const success = el('p');
   success.hidden = true;
-  const submit = el('button', { type: 'submit' }, ['Sign in']);
+  const submit = el('button', { type: 'submit' }, ['Iniciar sesión']);
 
   let turnstileToken: string | null = null;
   let unmountTurnstile: (() => void) | undefined;
@@ -52,16 +52,16 @@ export function mountLoginForm(container: HTMLElement, { authKit, turnstile }: M
   toggleShow.addEventListener('click', () => {
     const showing = password.input.type === 'text';
     password.input.type = showing ? 'password' : 'text';
-    toggleShow.textContent = showing ? 'Show' : 'Hide';
+    toggleShow.textContent = showing ? 'Mostrar' : 'Ocultar';
   });
 
   const unsubscribe = authKit.subscribe((state) => {
     const { status, error } = state.login;
     submit.toggleAttribute('disabled', status === 'submitting');
-    submit.textContent = status === 'submitting' ? 'Signing in…' : 'Sign in';
+    submit.textContent = status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Signed in.' : '';
+    success.textContent = status === 'success' ? 'Sesión iniciada.' : '';
   });
 
   const handleSubmit = (event: Event): void => {

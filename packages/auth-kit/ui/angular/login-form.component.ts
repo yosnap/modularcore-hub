@@ -15,7 +15,7 @@ import type { TurnstileFieldConfig } from '../../core/field-config.js';
   template: `
     <form novalidate (submit)="handleSubmit($event)">
       <div>
-        <label for="auth-kit-login-identifier">Email or username</label>
+        <label for="auth-kit-login-identifier">Correo electrónico o nombre de usuario</label>
         <input
           id="auth-kit-login-identifier"
           type="text"
@@ -26,7 +26,7 @@ import type { TurnstileFieldConfig } from '../../core/field-config.js';
         <p *ngIf="fieldErrors['identifier']" role="alert">{{ fieldErrors['identifier'] }}</p>
       </div>
       <div>
-        <label for="auth-kit-login-password">Password</label>
+        <label for="auth-kit-login-password">Contraseña</label>
         <input
           id="auth-kit-login-password"
           [type]="showPassword ? 'text' : 'password'"
@@ -34,7 +34,7 @@ import type { TurnstileFieldConfig } from '../../core/field-config.js';
           [value]="password"
           (input)="password = $any($event.target).value; clearError('password')" (blur)="validateField('password')"
         />
-        <button type="button" (click)="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }}</button>
+        <button type="button" (click)="showPassword = !showPassword">{{ showPassword ? 'Ocultar' : 'Mostrar' }}</button>
         <p *ngIf="fieldErrors['password']" role="alert">{{ fieldErrors['password'] }}</p>
       </div>
       <auth-kit-turnstile-widget
@@ -45,12 +45,12 @@ import type { TurnstileFieldConfig } from '../../core/field-config.js';
         (token)="turnstileToken = $event"
       ></auth-kit-turnstile-widget>
       <button type="submit" [disabled]="authKit.state().login.status === 'submitting'">
-        {{ authKit.state().login.status === 'submitting' ? 'Signing in…' : 'Sign in' }}
+        {{ authKit.state().login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión' }}
       </button>
       <p *ngIf="authKit.state().login.status === 'error' && authKit.state().login.error" role="alert">
         {{ authKit.state().login.error?.message }}
       </p>
-      <p *ngIf="authKit.state().login.status === 'success'">Signed in.</p>
+      <p *ngIf="authKit.state().login.status === 'success'">Sesión iniciada.</p>
     </form>
   `,
 })

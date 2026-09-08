@@ -35,8 +35,8 @@ function handleResendSubmit(): void {
 <template>
   <div>
     <div v-if="token" role="status">
-      <p v-if="authKit.state.value.verifyEmail.status === 'submitting'">Verifying your email…</p>
-      <p v-if="authKit.state.value.verifyEmail.status === 'success'">Your email is verified.</p>
+      <p v-if="authKit.state.value.verifyEmail.status === 'submitting'">Verificando tu email…</p>
+      <p v-if="authKit.state.value.verifyEmail.status === 'success'">Tu email está verificado.</p>
       <p v-if="authKit.state.value.verifyEmail.status === 'error' && authKit.state.value.verifyEmail.error" role="alert">
         {{ authKit.state.value.verifyEmail.error.message }}
       </p>
@@ -44,7 +44,7 @@ function handleResendSubmit(): void {
 
     <form novalidate @submit.prevent="handleResendSubmit">
       <div>
-        <label for="auth-kit-resend-email">Email</label>
+        <label for="auth-kit-resend-email">Correo electrónico</label>
         <input id="auth-kit-resend-email" v-model="email" type="email" autocomplete="email" />
         <p v-if="fieldErrors.email" role="alert">{{ fieldErrors.email }}</p>
       </div>
@@ -56,12 +56,12 @@ function handleResendSubmit(): void {
         @token="(t) => (turnstileToken = t)"
       />
       <button type="submit" :disabled="authKit.state.value.resendVerification.status === 'submitting'">
-        {{ authKit.state.value.resendVerification.status === 'submitting' ? 'Sending…' : 'Resend verification email' }}
+        {{ authKit.state.value.resendVerification.status === 'submitting' ? 'Enviando…' : 'Reenviar email de verificación' }}
       </button>
       <p v-if="authKit.state.value.resendVerification.status === 'error' && authKit.state.value.resendVerification.error" role="alert">
         {{ authKit.state.value.resendVerification.error.message }}
       </p>
-      <p v-if="authKit.state.value.resendVerification.status === 'success'">Verification email sent.</p>
+      <p v-if="authKit.state.value.resendVerification.status === 'success'">Email de verificación enviado.</p>
     </form>
   </div>
 </template>

@@ -25,15 +25,15 @@ export function VerifyEmailForm({ authKit, token, email: initialEmail, turnstile
     <div className="flex flex-col gap-4">
       {token && (
         <div role="status" className="text-sm">
-          {verifyFlow.status === 'submitting' && <p className="text-zinc-700">Verifying your email…</p>}
-          {verifyFlow.status === 'success' && <p className="text-green-600">Your email is verified.</p>}
+          {verifyFlow.status === 'submitting' && <p className="text-zinc-700">Verificando tu email…</p>}
+          {verifyFlow.status === 'success' && <p className="text-green-600">Tu email está verificado.</p>}
           {verifyFlow.status === 'error' && verifyFlow.error && <p className={errorClass}>{verifyFlow.error.message}</p>}
         </div>
       )}
 
       <form onSubmit={handleResendSubmit} noValidate className="flex flex-col gap-3">
         <label className={labelClass} htmlFor="auth-kit-resend-email">
-          Email
+          Correo electrónico
           <input
             id="auth-kit-resend-email"
             type="email"
@@ -57,10 +57,10 @@ export function VerifyEmailForm({ authKit, token, email: initialEmail, turnstile
           disabled={resendFlow.status === 'submitting'}
           className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50"
         >
-          {resendFlow.status === 'submitting' ? 'Sending…' : 'Resend verification email'}
+          {resendFlow.status === 'submitting' ? 'Enviando…' : 'Reenviar email de verificación'}
         </button>
         {resendFlow.status === 'error' && resendFlow.error && <p className={errorClass}>{resendFlow.error.message}</p>}
-        {resendFlow.status === 'success' && <p className="text-sm text-green-600">Verification email sent.</p>}
+        {resendFlow.status === 'success' && <p className="text-sm text-green-600">Email de verificación enviado.</p>}
       </form>
     </div>
   );

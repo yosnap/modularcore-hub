@@ -98,7 +98,7 @@ function handleSubmit(): void {
 <template>
   <form novalidate class="auth-kit-form" @submit.prevent="handleSubmit">
     <label class="auth-kit-field" for="auth-kit-register-email">
-      Email
+      Correo electrónico
       <input id="auth-kit-register-email" v-model="email" @input="clearError('email')" @blur="validateField('email')" type="email" autocomplete="email" class="auth-kit-input" />
     </label>
     <p v-if="fieldErrors.email" class="auth-kit-error">{{ fieldErrors.email }}</p>
@@ -129,7 +129,7 @@ function handleSubmit(): void {
     </label>
 
     <div class="auth-kit-field">
-      <label for="auth-kit-register-password">Password</label>
+      <label for="auth-kit-register-password">Contraseña</label>
       <div class="auth-kit-field__control">
         <input
           id="auth-kit-register-password"
@@ -140,7 +140,7 @@ function handleSubmit(): void {
         />
         <button
           type="button"
-          :aria-label="showPassword ? 'Hide password' : 'Show password'"
+          :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
           class="auth-kit-eye-button"
           @click="showPassword = !showPassword"
         >
@@ -160,7 +160,7 @@ function handleSubmit(): void {
     <p v-if="fieldErrors.password" class="auth-kit-error">{{ fieldErrors.password }}</p>
 
     <div class="auth-kit-field">
-      <label for="auth-kit-register-confirm-password">Confirm password</label>
+      <label for="auth-kit-register-confirm-password">Confirmar contraseña</label>
       <div class="auth-kit-field__control">
         <input
           id="auth-kit-register-confirm-password"
@@ -171,7 +171,7 @@ function handleSubmit(): void {
         />
         <button
           type="button"
-          :aria-label="showConfirm ? 'Hide password' : 'Show password'"
+          :aria-label="showConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'"
           class="auth-kit-eye-button"
           @click="showConfirm = !showConfirm"
         >
@@ -212,15 +212,15 @@ function handleSubmit(): void {
     />
 
     <button type="submit" :disabled="authKit.state.value.register.status === 'submitting'" class="auth-kit-button auth-kit-button--primary">
-      {{ authKit.state.value.register.status === 'submitting' ? 'Creating account…' : 'Create account' }}
+      {{ authKit.state.value.register.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta' }}
     </button>
     <p v-if="authKit.state.value.register.status === 'error' && authKit.state.value.register.error" class="auth-kit-error">
       {{ authKit.state.value.register.error.message }}
     </p>
-    <p v-if="authKit.state.value.register.status === 'success'" class="auth-kit-success">Account created.</p>
+    <p v-if="authKit.state.value.register.status === 'success'" class="auth-kit-success">Cuenta creada.</p>
 
     <p v-if="onNavigateToLogin" class="auth-kit-status">
-      Already have an account? <button type="button" class="auth-kit-button auth-kit-button--ghost" @click="onNavigateToLogin">Sign in</button>
+      ¿Ya tienes una cuenta? <button type="button" class="auth-kit-button auth-kit-button--ghost" @click="onNavigateToLogin">Iniciar sesión</button>
     </p>
   </form>
 </template>

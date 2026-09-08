@@ -25,7 +25,7 @@ const EYE_OFF_PATH =
   template: `
     <form novalidate class="flex flex-col gap-3" (submit)="handleSubmit($event)">
       <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-register-email">
-        Email
+        Correo electrónico
         <input id="auth-kit-register-email" type="email" autocomplete="email" [class]="inputClass" [value]="email" (input)="email = $any($event.target).value; clearError('email')" (blur)="validateField('email')" />
       </label>
       <p *ngIf="fieldErrors['email']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['email'] }}</p>
@@ -56,7 +56,7 @@ const EYE_OFF_PATH =
       </label>
 
       <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-register-password">
-        Password
+        Contraseña
         <div class="relative">
           <input
             id="auth-kit-register-password"
@@ -66,7 +66,7 @@ const EYE_OFF_PATH =
             [value]="password"
             (input)="password = $any($event.target).value; clearError('password')" (blur)="validateField('password')"
           />
-          <button type="button" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'" [class]="eyeButtonClass" (click)="showPassword = !showPassword">
+          <button type="button" [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'" [class]="eyeButtonClass" (click)="showPassword = !showPassword">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
               <ng-container *ngIf="showPassword; else eyeOpenReg">
                 <path [attr.d]="eyeOffPath" />
@@ -83,7 +83,7 @@ const EYE_OFF_PATH =
       <p *ngIf="fieldErrors['password']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['password'] }}</p>
 
       <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-register-confirm-password">
-        Confirm password
+        Confirmar contraseña
         <div class="relative">
           <input
             id="auth-kit-register-confirm-password"
@@ -93,7 +93,7 @@ const EYE_OFF_PATH =
             [value]="confirmPassword"
             (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')" (blur)="validateField('confirmPassword')"
           />
-          <button type="button" [attr.aria-label]="showConfirm ? 'Hide password' : 'Show password'" [class]="eyeButtonClass" (click)="showConfirm = !showConfirm">
+          <button type="button" [attr.aria-label]="showConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'" [class]="eyeButtonClass" (click)="showConfirm = !showConfirm">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
               <ng-container *ngIf="showConfirm; else eyeOpenConfirm">
                 <path [attr.d]="eyeOffPath" />
@@ -135,21 +135,21 @@ const EYE_OFF_PATH =
         [disabled]="authKit.state().register.status === 'submitting'"
         class="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
       >
-        {{ authKit.state().register.status === 'submitting' ? 'Creating account…' : 'Create account' }}
+        {{ authKit.state().register.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta' }}
       </button>
       <p *ngIf="authKit.state().register.status === 'error' && authKit.state().register.error" class="text-sm text-red-600 dark:text-red-400">
         {{ authKit.state().register.error?.message }}
       </p>
-      <p *ngIf="authKit.state().register.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Account created.</p>
+      <p *ngIf="authKit.state().register.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Cuenta creada.</p>
 
       <p *ngIf="onNavigateToLogin" class="text-center text-sm text-zinc-600 dark:text-zinc-400">
-        Already have an account?
+        ¿Ya tienes una cuenta?
         <button
           type="button"
           class="appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
           (click)="onNavigateToLogin()"
         >
-          Sign in
+          Iniciar sesión
         </button>
       </p>
     </form>

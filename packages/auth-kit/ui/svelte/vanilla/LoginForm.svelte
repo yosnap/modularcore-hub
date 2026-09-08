@@ -62,16 +62,16 @@
 <!-- Vanilla CSS variant — same props/behavior as headless, styled with `auth-kit-*` classes. -->
 <form onsubmit={handleSubmit} novalidate class="auth-kit-form">
   <label class="auth-kit-field" for="auth-kit-login-identifier">
-    Email or username
+    Correo electrónico o nombre de usuario
     <input id="auth-kit-login-identifier" type="text" bind:value={identifier} oninput={() => clearError('identifier')} onblur={() => validateField('identifier')} autocomplete="username" class="auth-kit-input" />
   </label>
   {#if fieldErrors.identifier}<p class="auth-kit-error">{fieldErrors.identifier}</p>{/if}
 
   <div class="auth-kit-field">
     <div style="display:flex;align-items:center;justify-content:space-between;">
-      <label for="auth-kit-login-password">Password</label>
+      <label for="auth-kit-login-password">Contraseña</label>
       {#if onNavigateToForgotPassword}
-        <button type="button" onclick={onNavigateToForgotPassword} class="auth-kit-button auth-kit-button--ghost">Forgot your password?</button>
+        <button type="button" onclick={onNavigateToForgotPassword} class="auth-kit-button auth-kit-button--ghost">¿Olvidaste tu contraseña?</button>
       {/if}
     </div>
     <div class="auth-kit-field__control">
@@ -85,7 +85,7 @@
       <button
         type="button"
         onclick={() => (showPassword = !showPassword)}
-        aria-label={showPassword ? 'Hide password' : 'Show password'}
+        aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
         class="auth-kit-eye-button"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -101,14 +101,14 @@
   {/if}
 
   <button type="submit" disabled={flow.status === 'submitting'} class="auth-kit-button auth-kit-button--primary">
-    {flow.status === 'submitting' ? 'Signing in…' : 'Sign in'}
+    {flow.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión'}
   </button>
   {#if flow.status === 'error' && flow.error}<p class="auth-kit-error">{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p class="auth-kit-success">Signed in.</p>{/if}
+  {#if flow.status === 'success'}<p class="auth-kit-success">Sesión iniciada.</p>{/if}
 
   {#if onNavigateToRegister}
     <p class="auth-kit-status">
-      Don't have an account yet? <button type="button" onclick={onNavigateToRegister} class="auth-kit-button auth-kit-button--ghost">Sign up</button>
+      ¿Aún no tienes una cuenta? <button type="button" onclick={onNavigateToRegister} class="auth-kit-button auth-kit-button--ghost">Registrarse</button>
     </p>
   {/if}
 </form>

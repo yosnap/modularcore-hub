@@ -58,10 +58,10 @@
 <!-- Tailwind variant — same props/behavior as headless, styled with the media-picker zinc palette. -->
 <form onsubmit={handleSubmit} novalidate class="flex flex-col gap-3">
   <label class={labelClass} for="auth-kit-change-current">
-    Current password
+    Contraseña actual
     <div class="relative">
       <input id="auth-kit-change-current" type={showCurrent ? 'text' : 'password'} bind:value={currentPassword} oninput={() => clearError('currentPassword')} onblur={() => validateField('currentPassword')} autocomplete="current-password" class="{inputClass} pr-9" />
-      <button type="button" onclick={() => (showCurrent = !showCurrent)} aria-label={showCurrent ? 'Hide password' : 'Show password'} class={eyeButtonClass}>
+      <button type="button" onclick={() => (showCurrent = !showCurrent)} aria-label={showCurrent ? 'Ocultar contraseña' : 'Mostrar contraseña'} class={eyeButtonClass}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
           {@html showCurrent ? EYE_OFF_PATH : EYE_PATH}
         </svg>
@@ -71,10 +71,10 @@
   {#if fieldErrors.currentPassword}<p class={errorClass}>{fieldErrors.currentPassword}</p>{/if}
 
   <label class={labelClass} for="auth-kit-change-new">
-    New password
+    Contraseña nueva
     <div class="relative">
       <input id="auth-kit-change-new" type={showNew ? 'text' : 'password'} bind:value={newPassword} oninput={() => clearError('newPassword')} onblur={() => validateField('newPassword')} autocomplete="new-password" class="{inputClass} pr-9" />
-      <button type="button" onclick={() => (showNew = !showNew)} aria-label={showNew ? 'Hide password' : 'Show password'} class={eyeButtonClass}>
+      <button type="button" onclick={() => (showNew = !showNew)} aria-label={showNew ? 'Ocultar contraseña' : 'Mostrar contraseña'} class={eyeButtonClass}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
           {@html showNew ? EYE_OFF_PATH : EYE_PATH}
         </svg>
@@ -84,7 +84,7 @@
   {#if fieldErrors.newPassword}<p class={errorClass}>{fieldErrors.newPassword}</p>{/if}
 
   <label class={labelClass} for="auth-kit-change-confirm">
-    Confirm new password
+    Confirmar contraseña nueva
     <input id="auth-kit-change-confirm" type={showNew ? 'text' : 'password'} bind:value={confirmPassword} oninput={() => clearError('confirmPassword')} onblur={() => validateField('confirmPassword')} autocomplete="new-password" class={inputClass} />
   </label>
   {#if fieldErrors.confirmPassword}<p class={errorClass}>{fieldErrors.confirmPassword}</p>{/if}
@@ -94,8 +94,8 @@
     disabled={flow.status === 'submitting'}
     class="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
   >
-    {flow.status === 'submitting' ? 'Updating…' : 'Update password'}
+    {flow.status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña'}
   </button>
   {#if flow.status === 'error' && flow.error}<p class={errorClass}>{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p class="text-sm text-green-600 dark:text-green-400">Password updated.</p>{/if}
+  {#if flow.status === 'success'}<p class="text-sm text-green-600 dark:text-green-400">Contraseña actualizada.</p>{/if}
 </form>

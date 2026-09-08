@@ -22,7 +22,7 @@ const EYE_OFF_PATH =
   template: `
     <form novalidate class="flex flex-col gap-3" (submit)="handleSubmit($event)">
       <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-reset-new">
-        New password
+        Contraseña nueva
         <div class="relative">
           <input
             id="auth-kit-reset-new"
@@ -32,7 +32,7 @@ const EYE_OFF_PATH =
             [value]="newPassword"
             (input)="newPassword = $any($event.target).value; clearError('newPassword')" (blur)="validateField('newPassword')"
           />
-          <button type="button" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'" [class]="eyeButtonClass" (click)="showPassword = !showPassword">
+          <button type="button" [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'" [class]="eyeButtonClass" (click)="showPassword = !showPassword">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
               <ng-container *ngIf="showPassword; else eyeOpenReset">
                 <path [attr.d]="eyeOffPath" />
@@ -49,7 +49,7 @@ const EYE_OFF_PATH =
       <p *ngIf="fieldErrors['newPassword']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['newPassword'] }}</p>
 
       <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-reset-confirm">
-        Confirm new password
+        Confirmar contraseña nueva
         <input
           id="auth-kit-reset-confirm"
           [type]="showPassword ? 'text' : 'password'"
@@ -66,12 +66,12 @@ const EYE_OFF_PATH =
         [disabled]="authKit.state().resetPassword.status === 'submitting'"
         class="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
       >
-        {{ authKit.state().resetPassword.status === 'submitting' ? 'Resetting…' : 'Reset password' }}
+        {{ authKit.state().resetPassword.status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña' }}
       </button>
       <p *ngIf="authKit.state().resetPassword.status === 'error' && authKit.state().resetPassword.error" class="text-sm text-red-600 dark:text-red-400">
         {{ authKit.state().resetPassword.error?.message }}
       </p>
-      <p *ngIf="authKit.state().resetPassword.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Password reset.</p>
+      <p *ngIf="authKit.state().resetPassword.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Contraseña restablecida.</p>
     </form>
   `,
 })

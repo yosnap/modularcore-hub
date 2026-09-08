@@ -54,7 +54,7 @@ function handleSubmit(): void {
 <template>
   <form novalidate class="auth-kit-form" @submit.prevent="handleSubmit">
     <label class="auth-kit-field" for="auth-kit-forgot-email">
-      Email
+      Correo electrónico
       <input id="auth-kit-forgot-email" v-model="email" @input="clearError('email')" @blur="validateField('email')" type="email" autocomplete="email" class="auth-kit-input" />
     </label>
     <p v-if="fieldErrors.email" class="auth-kit-error">{{ fieldErrors.email }}</p>
@@ -66,15 +66,15 @@ function handleSubmit(): void {
       @token="(t) => (turnstileToken = t)"
     />
     <button type="submit" :disabled="authKit.state.value.forgotPassword.status === 'submitting'" class="auth-kit-button auth-kit-button--primary">
-      {{ authKit.state.value.forgotPassword.status === 'submitting' ? 'Sending…' : 'Send reset link' }}
+      {{ authKit.state.value.forgotPassword.status === 'submitting' ? 'Enviando…' : 'Enviar enlace' }}
     </button>
     <p v-if="authKit.state.value.forgotPassword.status === 'error' && authKit.state.value.forgotPassword.error" class="auth-kit-error">
       {{ authKit.state.value.forgotPassword.error.message }}
     </p>
-    <p v-if="authKit.state.value.forgotPassword.status === 'success'" class="auth-kit-success">Check your email for a reset link.</p>
+    <p v-if="authKit.state.value.forgotPassword.status === 'success'" class="auth-kit-success">Revisa tu correo para ver el enlace de restablecimiento.</p>
 
     <p v-if="onNavigateToLogin" class="auth-kit-status">
-      Remembered your password? <button type="button" class="auth-kit-button auth-kit-button--ghost" @click="onNavigateToLogin">Sign in</button>
+      ¿Recordaste tu contraseña? <button type="button" class="auth-kit-button auth-kit-button--ghost" @click="onNavigateToLogin">Iniciar sesión</button>
     </p>
   </form>
 </template>

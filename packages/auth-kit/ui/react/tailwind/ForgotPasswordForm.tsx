@@ -24,7 +24,7 @@ export function ForgotPasswordForm({ authKit, turnstile, onNavigateToLogin }: Fo
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-3">
       <label className={labelClass} htmlFor="auth-kit-forgot-email">
-        Email
+        Correo electrónico
         <input
           id="auth-kit-forgot-email"
           type="email"
@@ -49,19 +49,19 @@ export function ForgotPasswordForm({ authKit, turnstile, onNavigateToLogin }: Fo
         disabled={flow.status === 'submitting'}
         className="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
       >
-        {flow.status === 'submitting' ? 'Sending…' : 'Send reset link'}
+        {flow.status === 'submitting' ? 'Enviando…' : 'Enviar enlace'}
       </button>
       {flow.status === 'error' && flow.error && <p className={errorClass}>{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="text-sm text-green-600 dark:text-green-400">Check your email for a reset link.</p>}
+      {flow.status === 'success' && <p className="text-sm text-green-600 dark:text-green-400">Revisa tu correo para ver el enlace de restablecimiento.</p>}
       {onNavigateToLogin && (
         <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-          Remembered your password?{' '}
+          ¿Recordaste tu contraseña?{' '}
           <button
             type="button"
             onClick={onNavigateToLogin}
             className="appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
           >
-            Sign in
+            Iniciar sesión
           </button>
         </p>
       )}

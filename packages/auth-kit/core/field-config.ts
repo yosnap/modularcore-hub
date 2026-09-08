@@ -20,7 +20,7 @@ export interface LegalConsentConfig {
   enabled: boolean;
   /** Defaults to required when enabled — a legal checkbox that can be skipped defeats its purpose. */
   required?: boolean;
-  /** Text shown before the links, e.g. "I accept the". */
+  /** Text shown before the links, e.g. "Acepto los". */
   text: string;
   links?: LegalConsentLink[];
 }
@@ -69,27 +69,27 @@ export function resolveFieldConfig(config: AuthKitFieldConfig = {}): ResolvedFie
     firstName: {
       enabled: config.firstName?.enabled ?? false,
       required: config.firstName?.required ?? false,
-      label: config.firstName?.label ?? 'First name',
+      label: config.firstName?.label ?? 'Nombre',
     },
     lastName: {
       enabled: config.lastName?.enabled ?? false,
       required: config.lastName?.required ?? false,
-      label: config.lastName?.label ?? 'Last name',
+      label: config.lastName?.label ?? 'Apellidos',
     },
     phone: {
       enabled: config.phone?.enabled ?? false,
       required: config.phone?.required ?? false,
-      label: config.phone?.label ?? 'Phone',
+      label: config.phone?.label ?? 'Teléfono',
     },
     legalConsent: {
       enabled: config.legalConsent?.enabled ?? false,
       required: config.legalConsent?.required ?? true,
-      text: config.legalConsent?.text ?? 'I accept the',
+      text: config.legalConsent?.text ?? 'Acepto los',
       links: config.legalConsent?.links ?? [],
     },
     profileType: {
       enabled: config.profileType?.enabled ?? false,
-      label: config.profileType?.label ?? 'Account type',
+      label: config.profileType?.label ?? 'Tipo de cuenta',
       options: config.profileType?.options ?? [],
       defaultValue: config.profileType?.defaultValue ?? config.profileType?.options?.[0]?.value ?? '',
     },

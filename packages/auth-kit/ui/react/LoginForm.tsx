@@ -24,7 +24,7 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
   return (
     <form onSubmit={handleSubmit} noValidate>
       <div>
-        <label htmlFor="auth-kit-login-identifier">Email or username</label>
+        <label htmlFor="auth-kit-login-identifier">Correo electrónico o nombre de usuario</label>
         <input
           id="auth-kit-login-identifier"
           type="text"
@@ -36,7 +36,7 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
         {fieldErrors.identifier && <p role="alert">{fieldErrors.identifier}</p>}
       </div>
       <div>
-        <label htmlFor="auth-kit-login-password">Password</label>
+        <label htmlFor="auth-kit-login-password">Contraseña</label>
         <input
           id="auth-kit-login-password"
           type={showPassword ? 'text' : 'password'}
@@ -46,7 +46,7 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
           autoComplete="current-password"
         />
         <button type="button" onClick={() => setShowPassword((value) => !value)}>
-          {showPassword ? 'Hide' : 'Show'}
+          {showPassword ? 'Ocultar' : 'Mostrar'}
         </button>
         {fieldErrors.password && <p role="alert">{fieldErrors.password}</p>}
       </div>
@@ -59,18 +59,18 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
         />
       )}
       <button type="submit" disabled={flow.status === 'submitting'}>
-        {flow.status === 'submitting' ? 'Signing in…' : 'Sign in'}
+        {flow.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión'}
       </button>
       {flow.status === 'error' && flow.error && <p role="alert">{flow.error.message}</p>}
-      {flow.status === 'success' && <p>Signed in.</p>}
+      {flow.status === 'success' && <p>Sesión iniciada.</p>}
       {onNavigateToForgotPassword && (
         <button type="button" onClick={onNavigateToForgotPassword}>
-          Forgot your password?
+          ¿Olvidaste tu contraseña?
         </button>
       )}
       {onNavigateToRegister && (
         <button type="button" onClick={onNavigateToRegister}>
-          Sign up
+          Registrarse
         </button>
       )}
     </form>

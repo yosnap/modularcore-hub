@@ -14,7 +14,7 @@ import type { PasswordPolicy } from '../../core/validation.js';
   template: `
     <form novalidate (submit)="handleSubmit($event)">
       <div>
-        <label for="auth-kit-change-current">Current password</label>
+        <label for="auth-kit-change-current">Contraseña actual</label>
         <input
           id="auth-kit-change-current"
           [type]="showCurrent ? 'text' : 'password'"
@@ -22,11 +22,11 @@ import type { PasswordPolicy } from '../../core/validation.js';
           [value]="currentPassword"
           (input)="currentPassword = $any($event.target).value; clearError('currentPassword')" (blur)="validateField('currentPassword')"
         />
-        <button type="button" (click)="showCurrent = !showCurrent">{{ showCurrent ? 'Hide' : 'Show' }}</button>
+        <button type="button" (click)="showCurrent = !showCurrent">{{ showCurrent ? 'Ocultar' : 'Mostrar' }}</button>
         <p *ngIf="fieldErrors['currentPassword']" role="alert">{{ fieldErrors['currentPassword'] }}</p>
       </div>
       <div>
-        <label for="auth-kit-change-new">New password</label>
+        <label for="auth-kit-change-new">Contraseña nueva</label>
         <input
           id="auth-kit-change-new"
           [type]="showNew ? 'text' : 'password'"
@@ -34,11 +34,11 @@ import type { PasswordPolicy } from '../../core/validation.js';
           [value]="newPassword"
           (input)="newPassword = $any($event.target).value; clearError('newPassword')" (blur)="validateField('newPassword')"
         />
-        <button type="button" (click)="showNew = !showNew">{{ showNew ? 'Hide' : 'Show' }}</button>
+        <button type="button" (click)="showNew = !showNew">{{ showNew ? 'Ocultar' : 'Mostrar' }}</button>
         <p *ngIf="fieldErrors['newPassword']" role="alert">{{ fieldErrors['newPassword'] }}</p>
       </div>
       <div>
-        <label for="auth-kit-change-confirm">Confirm new password</label>
+        <label for="auth-kit-change-confirm">Confirmar contraseña nueva</label>
         <input
           id="auth-kit-change-confirm"
           [type]="showNew ? 'text' : 'password'"
@@ -49,12 +49,12 @@ import type { PasswordPolicy } from '../../core/validation.js';
         <p *ngIf="fieldErrors['confirmPassword']" role="alert">{{ fieldErrors['confirmPassword'] }}</p>
       </div>
       <button type="submit" [disabled]="authKit.state().changePassword.status === 'submitting'">
-        {{ authKit.state().changePassword.status === 'submitting' ? 'Updating…' : 'Update password' }}
+        {{ authKit.state().changePassword.status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña' }}
       </button>
       <p *ngIf="authKit.state().changePassword.status === 'error' && authKit.state().changePassword.error" role="alert">
         {{ authKit.state().changePassword.error?.message }}
       </p>
-      <p *ngIf="authKit.state().changePassword.status === 'success'">Password updated.</p>
+      <p *ngIf="authKit.state().changePassword.status === 'success'">Contraseña actualizada.</p>
     </form>
   `,
 })

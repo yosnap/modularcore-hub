@@ -26,7 +26,7 @@ function strengthBarClass(index: number, score: number, total: number): string {
 function mountEyeToggle(input: HTMLInputElement): { wrapper: HTMLDivElement; button: HTMLButtonElement } {
   const button = el('button', {
     type: 'button',
-    'aria-label': 'Show password',
+    'aria-label': 'Mostrar contraseña',
     class: 'absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground',
   });
   button.innerHTML = eyeSvg(true);
@@ -34,7 +34,7 @@ function mountEyeToggle(input: HTMLInputElement): { wrapper: HTMLDivElement; but
     const showing = input.type === 'text';
     input.type = showing ? 'password' : 'text';
     button.innerHTML = eyeSvg(showing);
-    button.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    button.setAttribute('aria-label', showing ? 'Mostrar contraseña' : 'Ocultar contraseña');
   });
   const wrapper = el('div', { class: 'relative' }, [input, button]);
   return { wrapper, button };
@@ -43,7 +43,7 @@ function mountEyeToggle(input: HTMLInputElement): { wrapper: HTMLDivElement; but
 /** Shadcn variant — self-contained, styled shadcn-like via native elements + the shared design tokens. Same options/behavior as headless. */
 export function mountChangePasswordForm(container: HTMLElement, { authKit, passwordPolicy }: MountChangePasswordFormOptions): () => void {
   const current = field(
-    'Current password',
+    'Contraseña actual',
     { id: 'auth-kit-change-current', type: 'password', autocomplete: 'current-password' },
     { label: LABEL_CLASS, input: `${INPUT_CLASS} pr-9` },
   );
@@ -51,7 +51,7 @@ export function mountChangePasswordForm(container: HTMLElement, { authKit, passw
   const currentEye = mountEyeToggle(current.input);
 
   const next = field(
-    'New password',
+    'Contraseña nueva',
     { id: 'auth-kit-change-new', type: 'password', autocomplete: 'new-password' },
     { label: LABEL_CLASS, input: `${INPUT_CLASS} pr-9` },
   );
@@ -63,7 +63,7 @@ export function mountChangePasswordForm(container: HTMLElement, { authKit, passw
   strengthBlock.hidden = true;
 
   const confirm = field(
-    'Confirm new password',
+    'Confirmar contraseña nueva',
     { id: 'auth-kit-change-confirm', type: 'password', autocomplete: 'new-password' },
     { label: LABEL_CLASS, input: INPUT_CLASS },
   );
@@ -74,7 +74,7 @@ export function mountChangePasswordForm(container: HTMLElement, { authKit, passw
       type: 'submit',
       class: 'inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50',
     },
-    ['Update password'],
+    ['Actualizar contraseña'],
   );
   const submitError = errorText(ERROR_CLASS);
   const success = el('p', { class: 'text-sm text-green-600' });
@@ -112,10 +112,10 @@ export function mountChangePasswordForm(container: HTMLElement, { authKit, passw
   const unsubscribe = authKit.subscribe((state) => {
     const { status, error } = state.changePassword;
     submit.toggleAttribute('disabled', status === 'submitting');
-    submit.textContent = status === 'submitting' ? 'Updating…' : 'Update password';
+    submit.textContent = status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Password updated.' : '';
+    success.textContent = status === 'success' ? 'Contraseña actualizada.' : '';
   });
 
   const handleSubmit = (event: Event): void => {

@@ -53,7 +53,7 @@
 <!-- Vanilla CSS variant — same props/behavior as headless, styled with `auth-kit-*` classes. -->
 <form onsubmit={handleSubmit} novalidate class="auth-kit-form">
   <label class="auth-kit-field" for="auth-kit-forgot-email">
-    Email
+    Correo electrónico
     <input id="auth-kit-forgot-email" type="email" bind:value={email} oninput={() => clearError('email')} onblur={() => validateField('email')} autocomplete="email" class="auth-kit-input" />
   </label>
   {#if fieldErrors.email}<p class="auth-kit-error">{fieldErrors.email}</p>{/if}
@@ -61,14 +61,14 @@
     <TurnstileWidget siteKey={turnstile.siteKey} theme={turnstile.theme} mode={turnstile.mode} onToken={(t) => (turnstileToken = t)} />
   {/if}
   <button type="submit" disabled={flow.status === 'submitting'} class="auth-kit-button auth-kit-button--primary">
-    {flow.status === 'submitting' ? 'Sending…' : 'Send reset link'}
+    {flow.status === 'submitting' ? 'Enviando…' : 'Enviar enlace'}
   </button>
   {#if flow.status === 'error' && flow.error}<p class="auth-kit-error">{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p class="auth-kit-success">Check your email for a reset link.</p>{/if}
+  {#if flow.status === 'success'}<p class="auth-kit-success">Revisa tu correo para ver el enlace de restablecimiento.</p>{/if}
 
   {#if onNavigateToLogin}
     <p class="auth-kit-status">
-      Remembered your password? <button type="button" onclick={onNavigateToLogin} class="auth-kit-button auth-kit-button--ghost">Sign in</button>
+      ¿Recordaste tu contraseña? <button type="button" onclick={onNavigateToLogin} class="auth-kit-button auth-kit-button--ghost">Iniciar sesión</button>
     </p>
   {/if}
 </form>

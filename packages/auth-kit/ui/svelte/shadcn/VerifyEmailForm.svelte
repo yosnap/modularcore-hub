@@ -48,15 +48,15 @@
 <div class="flex flex-col gap-4">
   {#if token}
     <div role="status" class="text-sm">
-      {#if verifyFlow.status === 'submitting'}<p class="text-muted-foreground">Verifying your email…</p>{/if}
-      {#if verifyFlow.status === 'success'}<p class="text-green-600">Your email is verified.</p>{/if}
+      {#if verifyFlow.status === 'submitting'}<p class="text-muted-foreground">Verificando tu email…</p>{/if}
+      {#if verifyFlow.status === 'success'}<p class="text-green-600">Tu email está verificado.</p>{/if}
       {#if verifyFlow.status === 'error' && verifyFlow.error}<p class={errorClass}>{verifyFlow.error.message}</p>{/if}
     </div>
   {/if}
 
   <form onsubmit={handleResendSubmit} novalidate class="flex flex-col gap-4">
     <div class="flex flex-col gap-1.5">
-      <label class={labelClass} for="auth-kit-resend-email">Email</label>
+      <label class={labelClass} for="auth-kit-resend-email">Correo electrónico</label>
       <input id="auth-kit-resend-email" type="email" bind:value={email} autocomplete="email" class={inputClass} />
       {#if fieldErrors.email}<p class={errorClass}>{fieldErrors.email}</p>{/if}
     </div>
@@ -68,9 +68,9 @@
       disabled={resendFlow.status === 'submitting'}
       class="inline-flex h-9 items-center justify-center rounded-md border border-input px-4 text-sm font-medium shadow-sm hover:bg-accent disabled:opacity-50"
     >
-      {resendFlow.status === 'submitting' ? 'Sending…' : 'Resend verification email'}
+      {resendFlow.status === 'submitting' ? 'Enviando…' : 'Reenviar email de verificación'}
     </button>
     {#if resendFlow.status === 'error' && resendFlow.error}<p class={errorClass}>{resendFlow.error.message}</p>{/if}
-    {#if resendFlow.status === 'success'}<p class="text-sm text-green-600">Verification email sent.</p>{/if}
+    {#if resendFlow.status === 'success'}<p class="text-sm text-green-600">Email de verificación enviado.</p>{/if}
   </form>
 </div>

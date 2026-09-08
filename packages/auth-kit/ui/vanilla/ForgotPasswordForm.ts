@@ -12,9 +12,9 @@ export interface MountForgotPasswordFormOptions {
 
 /** Headless variant — no CSS classes, fully consumer-styleable. Same options/behavior across every presentation. */
 export function mountForgotPasswordForm(container: HTMLElement, { authKit, turnstile }: MountForgotPasswordFormOptions): () => void {
-  const email = field('Email', { id: 'auth-kit-forgot-email', type: 'email', autocomplete: 'email' });
+  const email = field('Correo electrónico', { id: 'auth-kit-forgot-email', type: 'email', autocomplete: 'email' });
   const emailError = errorText();
-  const submit = el('button', { type: 'submit' }, ['Send reset link']);
+  const submit = el('button', { type: 'submit' }, ['Enviar enlace']);
   const submitError = errorText();
   const success = el('p');
   success.hidden = true;
@@ -39,10 +39,10 @@ export function mountForgotPasswordForm(container: HTMLElement, { authKit, turns
   const unsubscribe = authKit.subscribe((state) => {
     const { status, error } = state.forgotPassword;
     submit.toggleAttribute('disabled', status === 'submitting');
-    submit.textContent = status === 'submitting' ? 'Sending…' : 'Send reset link';
+    submit.textContent = status === 'submitting' ? 'Enviando…' : 'Enviar enlace';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Check your email for a reset link.' : '';
+    success.textContent = status === 'success' ? 'Revisa tu correo para ver el enlace de restablecimiento.' : '';
   });
 
   const handleSubmit = (event: Event): void => {

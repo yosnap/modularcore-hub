@@ -23,29 +23,29 @@ export function mountRegisterForm(
 ): () => void {
   const fields = resolveFieldConfig(fieldConfig);
 
-  const email = field('Email', { id: 'auth-kit-register-email', type: 'email', autocomplete: 'email' }, { label: 'auth-kit-field', input: 'auth-kit-input' });
+  const email = field('Correo electrónico', { id: 'auth-kit-register-email', type: 'email', autocomplete: 'email' }, { label: 'auth-kit-field', input: 'auth-kit-input' });
   const emailError = errorText('auth-kit-error');
   const password = field(
-    'Password',
+    'Contraseña',
     { id: 'auth-kit-register-password', type: 'password', autocomplete: 'new-password' },
     { label: 'auth-kit-field', input: 'auth-kit-input' },
   );
   const passwordError = errorText('auth-kit-error');
-  const showPassword = el('button', { type: 'button', 'aria-label': 'Show password', class: 'auth-kit-eye-button' });
+  const showPassword = el('button', { type: 'button', 'aria-label': 'Mostrar contraseña', class: 'auth-kit-eye-button' });
   showPassword.innerHTML = eyeSvg(true);
   const passwordWrapper = el('div', { class: 'auth-kit-field__control' }, [password.input, showPassword]);
 
   const confirmPassword = field(
-    'Confirm password',
+    'Confirmar contraseña',
     { id: 'auth-kit-register-confirm-password', type: 'password', autocomplete: 'new-password' },
     { label: 'auth-kit-field', input: 'auth-kit-input' },
   );
   const confirmPasswordError = errorText('auth-kit-error');
-  const showConfirm = el('button', { type: 'button', 'aria-label': 'Show password', class: 'auth-kit-eye-button' });
+  const showConfirm = el('button', { type: 'button', 'aria-label': 'Mostrar contraseña', class: 'auth-kit-eye-button' });
   showConfirm.innerHTML = eyeSvg(true);
   const confirmPasswordWrapper = el('div', { class: 'auth-kit-field__control' }, [confirmPassword.input, showConfirm]);
 
-  const submit = el('button', { type: 'submit', class: 'auth-kit-button auth-kit-button--primary' }, ['Create account']);
+  const submit = el('button', { type: 'submit', class: 'auth-kit-button auth-kit-button--primary' }, ['Crear cuenta']);
   const submitError = errorText('auth-kit-error');
   const success = el('p', { class: 'auth-kit-success' });
   success.hidden = true;
@@ -113,8 +113,8 @@ export function mountRegisterForm(
 
   let loginLink: HTMLButtonElement | undefined;
   if (onNavigateToLogin) {
-    loginLink = el('button', { type: 'button', class: 'auth-kit-button auth-kit-button--ghost' }, ['Sign in']);
-    rows.push(el('p', { class: 'auth-kit-status' }, ['Already have an account? ', loginLink]));
+    loginLink = el('button', { type: 'button', class: 'auth-kit-button auth-kit-button--ghost' }, ['Iniciar sesión']);
+    rows.push(el('p', { class: 'auth-kit-status' }, ['¿Ya tienes una cuenta? ', loginLink]));
   }
 
   const form = el('form', { novalidate: '', class: 'auth-kit-form' }, rows);
@@ -124,23 +124,23 @@ export function mountRegisterForm(
     const showing = password.input.type === 'text';
     password.input.type = showing ? 'password' : 'text';
     showPassword.innerHTML = eyeSvg(showing);
-    showPassword.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    showPassword.setAttribute('aria-label', showing ? 'Mostrar contraseña' : 'Ocultar contraseña');
   });
   showConfirm.addEventListener('click', () => {
     const showing = confirmPassword.input.type === 'text';
     confirmPassword.input.type = showing ? 'password' : 'text';
     showConfirm.innerHTML = eyeSvg(showing);
-    showConfirm.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+    showConfirm.setAttribute('aria-label', showing ? 'Mostrar contraseña' : 'Ocultar contraseña');
   });
   loginLink?.addEventListener('click', () => onNavigateToLogin?.());
 
   const unsubscribe = authKit.subscribe((state) => {
     const { status, error } = state.register;
     submit.toggleAttribute('disabled', status === 'submitting');
-    submit.textContent = status === 'submitting' ? 'Creating account…' : 'Create account';
+    submit.textContent = status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Account created.' : '';
+    success.textContent = status === 'success' ? 'Cuenta creada.' : '';
   });
 
   const handleSubmit = (event: Event): void => {

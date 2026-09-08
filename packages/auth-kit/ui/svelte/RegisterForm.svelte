@@ -93,7 +93,7 @@
 <!-- Headless variant — no CSS classes, fully consumer-styleable. Same props/behavior across every presentation. -->
 <form onsubmit={handleSubmit} novalidate>
   <div>
-    <label for="auth-kit-register-email">Email</label>
+    <label for="auth-kit-register-email">Correo electrónico</label>
     <input id="auth-kit-register-email" type="email" bind:value={email} oninput={() => clearError('email')} onblur={() => validateField('email')} autocomplete="email" />
     {#if fieldErrors.email}<p role="alert">{fieldErrors.email}</p>{/if}
   </div>
@@ -134,26 +134,26 @@
   {/if}
 
   <div>
-    <label for="auth-kit-register-password">Password</label>
+    <label for="auth-kit-register-password">Contraseña</label>
     <input
       id="auth-kit-register-password"
       type={showPassword ? 'text' : 'password'}
       bind:value={password} oninput={() => clearError('password')} onblur={() => validateField('password')}
       autocomplete="new-password"
     />
-    <button type="button" onclick={() => (showPassword = !showPassword)}>{showPassword ? 'Hide' : 'Show'}</button>
+    <button type="button" onclick={() => (showPassword = !showPassword)}>{showPassword ? 'Ocultar' : 'Mostrar'}</button>
     {#if fieldErrors.password}<p role="alert">{fieldErrors.password}</p>{/if}
   </div>
 
   <div>
-    <label for="auth-kit-register-confirm-password">Confirm password</label>
+    <label for="auth-kit-register-confirm-password">Confirmar contraseña</label>
     <input
       id="auth-kit-register-confirm-password"
       type={showConfirm ? 'text' : 'password'}
       bind:value={confirmPassword} oninput={() => clearError('confirmPassword')} onblur={() => validateField('confirmPassword')}
       autocomplete="new-password"
     />
-    <button type="button" onclick={() => (showConfirm = !showConfirm)}>{showConfirm ? 'Hide' : 'Show'}</button>
+    <button type="button" onclick={() => (showConfirm = !showConfirm)}>{showConfirm ? 'Ocultar' : 'Mostrar'}</button>
     {#if fieldErrors.confirmPassword}<p role="alert">{fieldErrors.confirmPassword}</p>{/if}
   </div>
 
@@ -180,8 +180,8 @@
   {/if}
 
   <button type="submit" disabled={flow.status === 'submitting'}>
-    {flow.status === 'submitting' ? 'Creating account…' : 'Create account'}
+    {flow.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta'}
   </button>
   {#if flow.status === 'error' && flow.error}<p role="alert">{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p>Account created.</p>{/if}
+  {#if flow.status === 'success'}<p>Cuenta creada.</p>{/if}
 </form>

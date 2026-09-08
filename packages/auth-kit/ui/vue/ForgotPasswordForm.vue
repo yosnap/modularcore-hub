@@ -49,7 +49,7 @@ function handleSubmit(): void {
 <template>
   <form novalidate @submit.prevent="handleSubmit">
     <div>
-      <label for="auth-kit-forgot-email">Email</label>
+      <label for="auth-kit-forgot-email">Correo electrónico</label>
       <input id="auth-kit-forgot-email" v-model="email" @input="clearError('email')" @blur="validateField('email')" type="email" autocomplete="email" />
       <p v-if="fieldErrors.email" role="alert">{{ fieldErrors.email }}</p>
     </div>
@@ -61,11 +61,11 @@ function handleSubmit(): void {
       @token="(t) => (turnstileToken = t)"
     />
     <button type="submit" :disabled="authKit.state.value.forgotPassword.status === 'submitting'">
-      {{ authKit.state.value.forgotPassword.status === 'submitting' ? 'Sending…' : 'Send reset link' }}
+      {{ authKit.state.value.forgotPassword.status === 'submitting' ? 'Enviando…' : 'Enviar enlace' }}
     </button>
     <p v-if="authKit.state.value.forgotPassword.status === 'error' && authKit.state.value.forgotPassword.error" role="alert">
       {{ authKit.state.value.forgotPassword.error.message }}
     </p>
-    <p v-if="authKit.state.value.forgotPassword.status === 'success'">Check your email for a reset link.</p>
+    <p v-if="authKit.state.value.forgotPassword.status === 'success'">Revisa tu correo para ver el enlace de restablecimiento.</p>
   </form>
 </template>

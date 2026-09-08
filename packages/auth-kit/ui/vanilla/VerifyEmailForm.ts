@@ -15,10 +15,10 @@ export interface MountVerifyEmailFormOptions {
 /** Headless variant — no CSS classes, fully consumer-styleable. Same options/behavior across every presentation. */
 export function mountVerifyEmailForm(container: HTMLElement, { authKit, token, email: initialEmail, turnstile }: MountVerifyEmailFormOptions): () => void {
   const verifyStatus = statusText();
-  const email = field('Email', { id: 'auth-kit-resend-email', type: 'email', autocomplete: 'email' });
+  const email = field('Correo electrónico', { id: 'auth-kit-resend-email', type: 'email', autocomplete: 'email' });
   email.input.value = initialEmail ?? '';
   const emailError = errorText();
-  const submit = el('button', { type: 'submit' }, ['Resend verification email']);
+  const submit = el('button', { type: 'submit' }, ['Reenviar email de verificación']);
   const submitError = errorText();
   const success = el('p');
   success.hidden = true;
@@ -46,18 +46,18 @@ export function mountVerifyEmailForm(container: HTMLElement, { authKit, token, e
   const unsubscribe = authKit.subscribe((state) => {
     if (token) {
       const { status: verifyState, error: verifyError } = state.verifyEmail;
-      if (verifyState === 'submitting') verifyStatus.setText('Verifying your email…');
-      else if (verifyState === 'success') verifyStatus.setText('Your email is verified.');
+      if (verifyState === 'submitting') verifyStatus.setText('Verificando tu email…');
+      else if (verifyState === 'success') verifyStatus.setText('Tu email está verificado.');
       else if (verifyState === 'error') verifyStatus.setText(verifyError?.message);
       else verifyStatus.setText(null);
     }
 
     const { status, error } = state.resendVerification;
     submit.toggleAttribute('disabled', status === 'submitting');
-    submit.textContent = status === 'submitting' ? 'Sending…' : 'Resend verification email';
+    submit.textContent = status === 'submitting' ? 'Enviando…' : 'Reenviar email de verificación';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Verification email sent.' : '';
+    success.textContent = status === 'success' ? 'Email de verificación enviado.' : '';
   });
 
   if (token) void authKit.verifyEmail({ token }).catch(() => {});

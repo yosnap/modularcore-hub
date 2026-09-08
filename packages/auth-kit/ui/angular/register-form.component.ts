@@ -17,7 +17,7 @@ import type { PasswordPolicy } from '../../core/validation.js';
   template: `
     <form novalidate (submit)="handleSubmit($event)">
       <div>
-        <label for="auth-kit-register-email">Email</label>
+        <label for="auth-kit-register-email">Correo electrónico</label>
         <input id="auth-kit-register-email" type="email" autocomplete="email" [value]="email" (input)="email = $any($event.target).value; clearError('email')" (blur)="validateField('email')" />
         <p *ngIf="fieldErrors['email']" role="alert">{{ fieldErrors['email'] }}</p>
       </div>
@@ -48,7 +48,7 @@ import type { PasswordPolicy } from '../../core/validation.js';
       </div>
 
       <div>
-        <label for="auth-kit-register-password">Password</label>
+        <label for="auth-kit-register-password">Contraseña</label>
         <input
           id="auth-kit-register-password"
           [type]="showPassword ? 'text' : 'password'"
@@ -56,12 +56,12 @@ import type { PasswordPolicy } from '../../core/validation.js';
           [value]="password"
           (input)="password = $any($event.target).value; clearError('password')" (blur)="validateField('password')"
         />
-        <button type="button" (click)="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }}</button>
+        <button type="button" (click)="showPassword = !showPassword">{{ showPassword ? 'Ocultar' : 'Mostrar' }}</button>
         <p *ngIf="fieldErrors['password']" role="alert">{{ fieldErrors['password'] }}</p>
       </div>
 
       <div>
-        <label for="auth-kit-register-confirm-password">Confirm password</label>
+        <label for="auth-kit-register-confirm-password">Confirmar contraseña</label>
         <input
           id="auth-kit-register-confirm-password"
           [type]="showConfirm ? 'text' : 'password'"
@@ -69,7 +69,7 @@ import type { PasswordPolicy } from '../../core/validation.js';
           [value]="confirmPassword"
           (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')" (blur)="validateField('confirmPassword')"
         />
-        <button type="button" (click)="showConfirm = !showConfirm">{{ showConfirm ? 'Hide' : 'Show' }}</button>
+        <button type="button" (click)="showConfirm = !showConfirm">{{ showConfirm ? 'Ocultar' : 'Mostrar' }}</button>
         <p *ngIf="fieldErrors['confirmPassword']" role="alert">{{ fieldErrors['confirmPassword'] }}</p>
       </div>
 
@@ -98,12 +98,12 @@ import type { PasswordPolicy } from '../../core/validation.js';
       ></auth-kit-turnstile-widget>
 
       <button type="submit" [disabled]="authKit.state().register.status === 'submitting'">
-        {{ authKit.state().register.status === 'submitting' ? 'Creating account…' : 'Create account' }}
+        {{ authKit.state().register.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta' }}
       </button>
       <p *ngIf="authKit.state().register.status === 'error' && authKit.state().register.error" role="alert">
         {{ authKit.state().register.error?.message }}
       </p>
-      <p *ngIf="authKit.state().register.status === 'success'">Account created.</p>
+      <p *ngIf="authKit.state().register.status === 'success'">Cuenta creada.</p>
     </form>
   `,
 })

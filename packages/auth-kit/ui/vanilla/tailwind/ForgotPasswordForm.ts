@@ -22,7 +22,7 @@ export function mountForgotPasswordForm(
   container: HTMLElement,
   { authKit, turnstile, onNavigateToLogin }: MountForgotPasswordFormOptions,
 ): () => void {
-  const email = field('Email', { id: 'auth-kit-forgot-email', type: 'email', autocomplete: 'email' }, { label: LABEL_CLASS, input: INPUT_CLASS });
+  const email = field('Correo electrónico', { id: 'auth-kit-forgot-email', type: 'email', autocomplete: 'email' }, { label: LABEL_CLASS, input: INPUT_CLASS });
   const emailError = errorText(ERROR_CLASS);
   const submit = el(
     'button',
@@ -31,7 +31,7 @@ export function mountForgotPasswordForm(
       class:
         'rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300',
     },
-    ['Send reset link'],
+    ['Enviar enlace'],
   );
   const submitError = errorText(ERROR_CLASS);
   const success = el('p', { class: 'text-sm text-green-600 dark:text-green-400' });
@@ -56,9 +56,9 @@ export function mountForgotPasswordForm(
     loginLink = el(
       'button',
       { type: 'button', class: 'appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300' },
-      ['Sign in'],
+      ['Iniciar sesión'],
     );
-    rows.push(el('p', { class: 'text-center text-sm text-zinc-600 dark:text-zinc-400' }, ['Remembered your password? ', loginLink]));
+    rows.push(el('p', { class: 'text-center text-sm text-zinc-600 dark:text-zinc-400' }, ['¿Recordaste tu contraseña? ', loginLink]));
   }
 
   const form = el('form', { novalidate: '', class: 'flex flex-col gap-3' }, rows);
@@ -69,10 +69,10 @@ export function mountForgotPasswordForm(
   const unsubscribe = authKit.subscribe((state) => {
     const { status, error } = state.forgotPassword;
     submit.toggleAttribute('disabled', status === 'submitting');
-    submit.textContent = status === 'submitting' ? 'Sending…' : 'Send reset link';
+    submit.textContent = status === 'submitting' ? 'Enviando…' : 'Enviar enlace';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Check your email for a reset link.' : '';
+    success.textContent = status === 'success' ? 'Revisa tu correo para ver el enlace de restablecimiento.' : '';
   });
 
   const handleSubmit = (event: Event): void => {

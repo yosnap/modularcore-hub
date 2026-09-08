@@ -18,6 +18,15 @@
         "tailwind",
         "shadcn",
         "vanilla"
+      ],
+      "missing": [
+        "change-password-form",
+        "forgot-password-form",
+        "login-form",
+        "register-form",
+        "reset-password-form",
+        "turnstile-widget",
+        "verify-email-form"
       ]
     },
     "svelte": {
@@ -26,6 +35,16 @@
         "tailwind",
         "shadcn",
         "vanilla"
+      ],
+      "missing": [
+        "change-password-form",
+        "forgot-password-form",
+        "icons",
+        "login-form",
+        "register-form",
+        "reset-password-form",
+        "turnstile-widget",
+        "verify-email-form"
       ]
     },
     "vue": {
@@ -34,6 +53,16 @@
         "tailwind",
         "shadcn",
         "vanilla"
+      ],
+      "missing": [
+        "change-password-form",
+        "forgot-password-form",
+        "icons",
+        "login-form",
+        "register-form",
+        "reset-password-form",
+        "turnstile-widget",
+        "verify-email-form"
       ]
     },
     "angular": {
@@ -42,6 +71,16 @@
         "tailwind",
         "shadcn",
         "vanilla"
+      ],
+      "missing": [
+        "ChangePasswordForm",
+        "ForgotPasswordForm",
+        "LoginForm",
+        "RegisterForm",
+        "ResetPasswordForm",
+        "TurnstileWidget",
+        "VerifyEmailForm",
+        "icons"
       ]
     },
     "vanilla": {
@@ -50,6 +89,16 @@
         "tailwind",
         "shadcn",
         "vanilla"
+      ],
+      "missing": [
+        "TurnstileWidget",
+        "change-password-form",
+        "forgot-password-form",
+        "login-form",
+        "register-form",
+        "reset-password-form",
+        "turnstile-widget",
+        "verify-email-form"
       ]
     }
   },
@@ -63,12 +112,13 @@
     "@angular/common": ">=17",
     "@radix-ui/react-checkbox": ">=1",
     "@radix-ui/react-label": ">=2",
+    "@radix-ui/react-tabs": ">=1",
     "@radix-ui/react-select": ">=2"
   },
   "dependencies": [],
   "registryDependencies": [],
   "envVariables": [],
-  "description": "All-in-one auth component (login, register, change password, forgot/reset password, email verification + resend) with an opt-in Cloudflare Turnstile widget and declarative optional fields (first/last name, phone, legal consent, profile type). Headless core + hooks you wire to your own backend — no credentials or auth server ships with this component. React, Svelte, Vue, Angular and vanilla adapters, each with headless/tailwind/shadcn/vanilla presentations.",
+  "description": "Componente de autenticación todo en uno (login, registro, cambio de contraseña, olvido/restablecimiento de contraseña, verificación de email + reenvío) con un widget opcional de Cloudflare Turnstile y campos opcionales declarativos (nombre/apellidos, teléfono, consentimiento legal, tipo de perfil). Núcleo headless + hooks que conectas a tu propio backend — este componente no incluye credenciales ni servidor de autenticación. Adaptadores para React, Svelte, Vue, Angular y vanilla, cada uno con presentaciones headless/tailwind/shadcn/vanilla.",
   "files": [
     {
       "path": "adapters/angular/auth-kit.service.ts",
@@ -109,6 +159,12 @@
     {
       "path": "core/field-config.ts",
       "target": "src/modularcore/auth-kit/core/field-config.ts",
+      "type": "headless-core",
+      "encoding": "utf8"
+    },
+    {
+      "path": "core/password-strength.ts",
+      "target": "src/modularcore/auth-kit/core/password-strength.ts",
       "type": "headless-core",
       "encoding": "utf8"
     },
@@ -521,6 +577,12 @@
       "encoding": "utf8"
     },
     {
+      "path": "ui/svelte/icons.ts",
+      "target": "src/modularcore/auth-kit/ui/svelte/icons.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
       "path": "ui/svelte/shadcn/ChangePasswordForm.svelte",
       "target": "src/modularcore/auth-kit/ui/svelte/shadcn/ChangePasswordForm.svelte",
       "type": "ui",
@@ -667,6 +729,12 @@
     {
       "path": "ui/vanilla/VerifyEmailForm.ts",
       "target": "src/modularcore/auth-kit/ui/vanilla/VerifyEmailForm.ts",
+      "type": "ui",
+      "encoding": "utf8"
+    },
+    {
+      "path": "ui/vanilla/icons.ts",
+      "target": "src/modularcore/auth-kit/ui/vanilla/icons.ts",
       "type": "ui",
       "encoding": "utf8"
     },

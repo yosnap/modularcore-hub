@@ -50,10 +50,10 @@
 <!-- Vanilla CSS variant — same props/behavior as headless, styled with `auth-kit-*` classes. -->
 <form onsubmit={handleSubmit} novalidate class="auth-kit-form">
   <div class="auth-kit-field">
-    <label for="auth-kit-reset-new">New password</label>
+    <label for="auth-kit-reset-new">Contraseña nueva</label>
     <div class="auth-kit-field__control">
       <input id="auth-kit-reset-new" type={showPassword ? 'text' : 'password'} bind:value={newPassword} oninput={() => clearError('newPassword')} onblur={() => validateField('newPassword')} autocomplete="new-password" class="auth-kit-input" />
-      <button type="button" onclick={() => (showPassword = !showPassword)} aria-label={showPassword ? 'Hide password' : 'Show password'} class="auth-kit-eye-button">
+      <button type="button" onclick={() => (showPassword = !showPassword)} aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'} class="auth-kit-eye-button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           {@html showPassword ? EYE_OFF_PATH : EYE_PATH}
         </svg>
@@ -63,14 +63,14 @@
   {#if fieldErrors.newPassword}<p class="auth-kit-error">{fieldErrors.newPassword}</p>{/if}
 
   <label class="auth-kit-field" for="auth-kit-reset-confirm">
-    Confirm new password
+    Confirmar contraseña nueva
     <input id="auth-kit-reset-confirm" type={showPassword ? 'text' : 'password'} bind:value={confirmPassword} oninput={() => clearError('confirmPassword')} onblur={() => validateField('confirmPassword')} autocomplete="new-password" class="auth-kit-input" />
   </label>
   {#if fieldErrors.confirmPassword}<p class="auth-kit-error">{fieldErrors.confirmPassword}</p>{/if}
 
   <button type="submit" disabled={flow.status === 'submitting'} class="auth-kit-button auth-kit-button--primary">
-    {flow.status === 'submitting' ? 'Resetting…' : 'Reset password'}
+    {flow.status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña'}
   </button>
   {#if flow.status === 'error' && flow.error}<p class="auth-kit-error">{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p class="auth-kit-success">Password reset.</p>{/if}
+  {#if flow.status === 'success'}<p class="auth-kit-success">Contraseña restablecida.</p>{/if}
 </form>

@@ -48,19 +48,19 @@
 <!-- Headless variant — no CSS classes, fully consumer-styleable. Same props/behavior across every presentation. -->
 <form onsubmit={handleSubmit} novalidate>
   <div>
-    <label for="auth-kit-reset-new">New password</label>
+    <label for="auth-kit-reset-new">Contraseña nueva</label>
     <input id="auth-kit-reset-new" type={showPassword ? 'text' : 'password'} bind:value={newPassword} oninput={() => clearError('newPassword')} onblur={() => validateField('newPassword')} autocomplete="new-password" />
-    <button type="button" onclick={() => (showPassword = !showPassword)}>{showPassword ? 'Hide' : 'Show'}</button>
+    <button type="button" onclick={() => (showPassword = !showPassword)}>{showPassword ? 'Ocultar' : 'Mostrar'}</button>
     {#if fieldErrors.newPassword}<p role="alert">{fieldErrors.newPassword}</p>{/if}
   </div>
   <div>
-    <label for="auth-kit-reset-confirm">Confirm new password</label>
+    <label for="auth-kit-reset-confirm">Confirmar contraseña nueva</label>
     <input id="auth-kit-reset-confirm" type={showPassword ? 'text' : 'password'} bind:value={confirmPassword} oninput={() => clearError('confirmPassword')} onblur={() => validateField('confirmPassword')} autocomplete="new-password" />
     {#if fieldErrors.confirmPassword}<p role="alert">{fieldErrors.confirmPassword}</p>{/if}
   </div>
   <button type="submit" disabled={flow.status === 'submitting'}>
-    {flow.status === 'submitting' ? 'Resetting…' : 'Reset password'}
+    {flow.status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña'}
   </button>
   {#if flow.status === 'error' && flow.error}<p role="alert">{flow.error.message}</p>{/if}
-  {#if flow.status === 'success'}<p>Password reset.</p>{/if}
+  {#if flow.status === 'success'}<p>Contraseña restablecida.</p>{/if}
 </form>

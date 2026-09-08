@@ -60,7 +60,7 @@ function handleSubmit(): void {
 <template>
   <form novalidate class="flex flex-col gap-4" @submit.prevent="handleSubmit">
     <div class="flex flex-col gap-1.5">
-      <label :class="labelClass" for="auth-kit-forgot-email">Email</label>
+      <label :class="labelClass" for="auth-kit-forgot-email">Correo electrónico</label>
       <input id="auth-kit-forgot-email" v-model="email" @input="clearError('email')" @blur="validateField('email')" type="email" autocomplete="email" :class="inputClass" />
       <p v-if="fieldErrors.email" :class="errorClass">{{ fieldErrors.email }}</p>
     </div>
@@ -76,15 +76,15 @@ function handleSubmit(): void {
       :disabled="authKit.state.value.forgotPassword.status === 'submitting'"
       class="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
     >
-      {{ authKit.state.value.forgotPassword.status === 'submitting' ? 'Sending…' : 'Send reset link' }}
+      {{ authKit.state.value.forgotPassword.status === 'submitting' ? 'Enviando…' : 'Enviar enlace' }}
     </button>
     <p v-if="authKit.state.value.forgotPassword.status === 'error' && authKit.state.value.forgotPassword.error" :class="errorClass">
       {{ authKit.state.value.forgotPassword.error.message }}
     </p>
-    <p v-if="authKit.state.value.forgotPassword.status === 'success'" class="text-sm text-green-600">Check your email for a reset link.</p>
+    <p v-if="authKit.state.value.forgotPassword.status === 'success'" class="text-sm text-green-600">Revisa tu correo para ver el enlace de restablecimiento.</p>
 
     <p v-if="onNavigateToLogin" class="text-center text-sm text-muted-foreground">
-      Remembered your password? <button type="button" :class="linkClass" @click="onNavigateToLogin">Sign in</button>
+      ¿Recordaste tu contraseña? <button type="button" :class="linkClass" @click="onNavigateToLogin">Iniciar sesión</button>
     </p>
   </form>
 </template>

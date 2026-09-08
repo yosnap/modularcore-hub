@@ -22,15 +22,15 @@ export function VerifyEmailForm({ authKit, token, email: initialEmail, turnstile
     <div>
       {token && (
         <div role="status" className="auth-kit-status">
-          {verifyFlow.status === 'submitting' && <p>Verifying your email…</p>}
-          {verifyFlow.status === 'success' && <p className="auth-kit-success">Your email is verified.</p>}
+          {verifyFlow.status === 'submitting' && <p>Verificando tu email…</p>}
+          {verifyFlow.status === 'success' && <p className="auth-kit-success">Tu email está verificado.</p>}
           {verifyFlow.status === 'error' && verifyFlow.error && <p className="auth-kit-error">{verifyFlow.error.message}</p>}
         </div>
       )}
 
       <form onSubmit={handleResendSubmit} noValidate className="auth-kit-form">
         <label className="auth-kit-field" htmlFor="auth-kit-resend-email">
-          Email
+          Correo electrónico
           <input
             id="auth-kit-resend-email"
             type="email"
@@ -50,10 +50,10 @@ export function VerifyEmailForm({ authKit, token, email: initialEmail, turnstile
           />
         )}
         <button type="submit" disabled={resendFlow.status === 'submitting'} className="auth-kit-button">
-          {resendFlow.status === 'submitting' ? 'Sending…' : 'Resend verification email'}
+          {resendFlow.status === 'submitting' ? 'Enviando…' : 'Reenviar email de verificación'}
         </button>
         {resendFlow.status === 'error' && resendFlow.error && <p className="auth-kit-error">{resendFlow.error.message}</p>}
-        {resendFlow.status === 'success' && <p className="auth-kit-success">Verification email sent.</p>}
+        {resendFlow.status === 'success' && <p className="auth-kit-success">Email de verificación enviado.</p>}
       </form>
     </div>
   );

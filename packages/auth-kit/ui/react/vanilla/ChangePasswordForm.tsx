@@ -22,7 +22,7 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
   return (
     <form onSubmit={handleSubmit} noValidate className="auth-kit-form">
       <label className="auth-kit-field" htmlFor="auth-kit-change-current">
-        Current password
+        Contraseña actual
         <span className="auth-kit-field__row">
           <input
             id="auth-kit-change-current"
@@ -34,14 +34,14 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
             className="auth-kit-input"
           />
           <button type="button" onClick={() => setShowCurrent((value) => !value)} className="auth-kit-button auth-kit-button--ghost">
-            {showCurrent ? 'Hide' : 'Show'}
+            {showCurrent ? 'Ocultar' : 'Mostrar'}
           </button>
         </span>
       </label>
       {fieldErrors.currentPassword && <p className="auth-kit-error">{fieldErrors.currentPassword}</p>}
 
       <label className="auth-kit-field" htmlFor="auth-kit-change-new">
-        New password
+        Contraseña nueva
         <span className="auth-kit-field__row">
           <input
             id="auth-kit-change-new"
@@ -53,14 +53,14 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
             className="auth-kit-input"
           />
           <button type="button" onClick={() => setShowNew((value) => !value)} className="auth-kit-button auth-kit-button--ghost">
-            {showNew ? 'Hide' : 'Show'}
+            {showNew ? 'Ocultar' : 'Mostrar'}
           </button>
         </span>
       </label>
       {fieldErrors.newPassword && <p className="auth-kit-error">{fieldErrors.newPassword}</p>}
 
       <label className="auth-kit-field" htmlFor="auth-kit-change-confirm">
-        Confirm new password
+        Confirmar contraseña nueva
         <input
           id="auth-kit-change-confirm"
           type={showNew ? 'text' : 'password'}
@@ -74,10 +74,10 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
       {fieldErrors.confirmPassword && <p className="auth-kit-error">{fieldErrors.confirmPassword}</p>}
 
       <button type="submit" disabled={flow.status === 'submitting'} className="auth-kit-button auth-kit-button--primary">
-        {flow.status === 'submitting' ? 'Updating…' : 'Update password'}
+        {flow.status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña'}
       </button>
       {flow.status === 'error' && flow.error && <p className="auth-kit-error">{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="auth-kit-success">Password updated.</p>}
+      {flow.status === 'success' && <p className="auth-kit-success">Contraseña actualizada.</p>}
     </form>
   );
 }

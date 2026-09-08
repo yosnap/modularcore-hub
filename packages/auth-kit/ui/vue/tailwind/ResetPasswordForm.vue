@@ -59,7 +59,7 @@ function handleSubmit(): void {
 <template>
   <form novalidate class="flex flex-col gap-3" @submit.prevent="handleSubmit">
     <label :class="labelClass" for="auth-kit-reset-new">
-      New password
+      Contraseña nueva
       <div class="relative">
         <input
           id="auth-kit-reset-new"
@@ -70,7 +70,7 @@ function handleSubmit(): void {
         />
         <button
           type="button"
-          :aria-label="showPassword ? 'Hide password' : 'Show password'"
+          :aria-label="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
           :class="eyeButtonClass"
           @click="showPassword = !showPassword"
         >
@@ -99,7 +99,7 @@ function handleSubmit(): void {
     <p v-if="fieldErrors.newPassword" :class="errorClass">{{ fieldErrors.newPassword }}</p>
 
     <label :class="labelClass" for="auth-kit-reset-confirm">
-      Confirm new password
+      Confirmar contraseña nueva
       <input id="auth-kit-reset-confirm" v-model="confirmPassword" @input="clearError('confirmPassword')" @blur="validateField('confirmPassword')" :type="showPassword ? 'text' : 'password'" autocomplete="new-password" :class="inputClass" />
     </label>
     <p v-if="fieldErrors.confirmPassword" :class="errorClass">{{ fieldErrors.confirmPassword }}</p>
@@ -109,11 +109,11 @@ function handleSubmit(): void {
       :disabled="authKit.state.value.resetPassword.status === 'submitting'"
       class="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
     >
-      {{ authKit.state.value.resetPassword.status === 'submitting' ? 'Resetting…' : 'Reset password' }}
+      {{ authKit.state.value.resetPassword.status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña' }}
     </button>
     <p v-if="authKit.state.value.resetPassword.status === 'error' && authKit.state.value.resetPassword.error" :class="errorClass">
       {{ authKit.state.value.resetPassword.error.message }}
     </p>
-    <p v-if="authKit.state.value.resetPassword.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Password reset.</p>
+    <p v-if="authKit.state.value.resetPassword.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Contraseña restablecida.</p>
   </form>
 </template>

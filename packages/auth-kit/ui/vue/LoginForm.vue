@@ -53,14 +53,14 @@ function handleSubmit(): void {
 <template>
   <form novalidate @submit.prevent="handleSubmit">
     <div>
-      <label for="auth-kit-login-identifier">Email or username</label>
+      <label for="auth-kit-login-identifier">Correo electrónico o nombre de usuario</label>
       <input id="auth-kit-login-identifier" v-model="identifier" @input="clearError('identifier')" @blur="validateField('identifier')" type="text" autocomplete="username" />
       <p v-if="fieldErrors.identifier" role="alert">{{ fieldErrors.identifier }}</p>
     </div>
     <div>
-      <label for="auth-kit-login-password">Password</label>
+      <label for="auth-kit-login-password">Contraseña</label>
       <input id="auth-kit-login-password" v-model="password" @input="clearError('password')" @blur="validateField('password')" :type="showPassword ? 'text' : 'password'" autocomplete="current-password" />
-      <button type="button" @click="showPassword = !showPassword">{{ showPassword ? 'Hide' : 'Show' }}</button>
+      <button type="button" @click="showPassword = !showPassword">{{ showPassword ? 'Ocultar' : 'Mostrar' }}</button>
       <p v-if="fieldErrors.password" role="alert">{{ fieldErrors.password }}</p>
     </div>
     <TurnstileWidget
@@ -71,11 +71,11 @@ function handleSubmit(): void {
       @token="(t) => (turnstileToken = t)"
     />
     <button type="submit" :disabled="authKit.state.value.login.status === 'submitting'">
-      {{ authKit.state.value.login.status === 'submitting' ? 'Signing in…' : 'Sign in' }}
+      {{ authKit.state.value.login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión' }}
     </button>
     <p v-if="authKit.state.value.login.status === 'error' && authKit.state.value.login.error" role="alert">
       {{ authKit.state.value.login.error.message }}
     </p>
-    <p v-if="authKit.state.value.login.status === 'success'">Signed in.</p>
+    <p v-if="authKit.state.value.login.status === 'success'">Sesión iniciada.</p>
   </form>
 </template>
