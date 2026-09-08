@@ -1,5 +1,15 @@
 # @modularcore/modals
 
+## 0.3.1
+
+### Patch Changes
+
+- 93ce5bc: Traducir al español la descripción del componente en el catálogo y los dos textos que trae por
+  defecto: el `aria-label` de respaldo del overlay ("Dialog" → "Diálogo") y el del botón de cerrar
+  ("Close" → "Cerrar"), usados solo cuando quien consume el componente no indica los suyos propios.
+- Updated dependencies [93ce5bc]
+  - @modularcore/ai-chat@0.2.1
+
 ## 0.3.0
 
 ### Minor Changes

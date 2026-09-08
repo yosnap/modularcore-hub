@@ -1,5 +1,13 @@
 # @modularcore/cli
 
+## 0.5.1
+
+### Patch Changes
+
+- Updated dependencies [0a492a5]
+  - @modularcore/registry@0.5.1
+  - @modularcore/registry-client@0.4.1
+
 ## 0.5.0
 
 ### Minor Changes
