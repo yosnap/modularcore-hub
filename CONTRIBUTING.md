@@ -93,6 +93,7 @@ Espacios de trabajo definidos en [`pnpm-workspace.yaml`](./pnpm-workspace.yaml)
 | `packages/cli` | `@modularcore/cli` | ✅ | CLI thin-client: instala componentes por copy-code en el proyecto destino. |
 | `packages/mcp-server` | `@modularcore/mcp-server` | ✅ | Servidor MCP para buscar e instalar componentes desde agentes IA. |
 | `packages/media-picker` | `@modularcore/media-picker` | privado | Media Picker universal (adaptadores S3/Cloudinary, editor canvas). |
+| `packages/auth-kit` | `@modularcore/auth-kit` | privado | Auth todo-en-uno (login, registro, contraseña, verificación) contra el backend/librería de auth que elijas. |
 | `packages/ai-chat` | `@modularcore/ai-chat` | privado | Componente de AI Chat (OpenRouter, streaming). |
 | `packages/modals` | `@modularcore/modals` | privado | Componente de modales con variantes y playground. |
 | `packages/auto-seo` | `@modularcore/auto-seo` | privado | Generación de JSON-LD (SEO estructurado). |
