@@ -44,7 +44,7 @@ export function ModalOverlay({ config, onDismiss }: ModalOverlayProps) {
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-label={config.title ?? config.name ?? 'Dialog'}
+        aria-label={config.title ?? config.name ?? 'Diálogo'}
         className="modals-modal"
       >
         <OverlayBody

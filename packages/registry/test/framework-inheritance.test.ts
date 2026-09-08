@@ -35,12 +35,15 @@ describe('herencia entre frameworks', () => {
   });
 });
 
-describe('`vanilla` bajo ui/ es una presentación, no un framework', () => {
-  it('no clasifica ui/vanilla/ como framework', () => {
-    // Si lo hiciera, esos ficheros desaparecerían de toda instalación de React o Svelte, que es
+describe('`vanilla` bajo ui/ nombra dos ejes: el framework sin framework y la presentación CSS plano', () => {
+  it('ui/<framework>/vanilla/… es la presentación, nunca el framework', () => {
+    // Si lo fuera, esos ficheros desaparecerían de toda instalación de React o Svelte, que es
     // exactamente donde se usan.
-    expect(frameworkOfFile('ui/vanilla/Algo.tsx')).toBeNull();
     expect(frameworkOfFile('ui/react/vanilla/FolderSelect.tsx')).toBe('react');
+  });
+
+  it('ui/vanilla/… sí es el framework cuando trae UI de referencia propia (la trae auth-kit)', () => {
+    expect(frameworkOfFile('ui/vanilla/LoginForm.ts')).toBe('vanilla');
   });
 
   it('bajo adapters/ sí es el framework sin framework', () => {

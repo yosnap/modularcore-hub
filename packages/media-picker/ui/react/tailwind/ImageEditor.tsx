@@ -126,7 +126,7 @@ export function ImageEditor({ picker }: ImageEditorProps): JSX.Element {
         disabled={status !== 'idle'}
         className="w-fit rounded-md bg-zinc-900 px-4 py-2 text-sm text-white hover:bg-zinc-700 disabled:opacity-50"
       >
-        Apply crop
+        Aplicar recorte
       </button>
       {error ? (
         <p role="alert" className="text-sm text-red-600">
@@ -137,7 +137,7 @@ export function ImageEditor({ picker }: ImageEditorProps): JSX.Element {
         <div className="max-h-[70vh] max-w-full overflow-hidden rounded-md border border-zinc-200">
           <img
             src={previewUrl}
-            alt="Editor preview"
+            alt="Vista previa del editor"
             style={{ transform: `scale(${zoom})`, transformOrigin: 'center' }}
             className="block max-w-full"
           />

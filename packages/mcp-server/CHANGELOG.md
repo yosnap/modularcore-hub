@@ -1,5 +1,11 @@
 # @modularcore/mcp-server
 
+## 0.3.5
+
+### Patch Changes
+
+- @modularcore/registry-client@0.4.1
+
 ## 0.3.4
 
 ### Patch Changes

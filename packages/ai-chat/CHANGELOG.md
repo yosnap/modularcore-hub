@@ -1,5 +1,12 @@
 # @modularcore/ai-chat
 
+## 0.2.1
+
+### Patch Changes
+
+- 93ce5bc: Traducir al español la descripción del componente y sus variables de entorno en el catálogo. El
+  componente en sí es headless y no tiene UI propia, así que no había más texto que traducir.
+
 ## 0.2.0
 
 ### Minor Changes

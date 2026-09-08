@@ -32,6 +32,7 @@ export default defineConfig({
       components: {
         SiteTitle: './src/components/VersionSelect.astro',
         Footer: './src/components/Footer.astro',
+        ThemeSelect: './src/components/ThemeSelect.astro',
       },
       sidebar: [
         {
@@ -97,6 +98,7 @@ export default defineConfig({
                 { label: 'AI Chat', slug: 'referencia/componentes/ai-chat' },
                 { label: 'Auto-SEO', slug: 'referencia/componentes/auto-seo' },
                 { label: 'Media Picker', slug: 'referencia/componentes/media-picker' },
+                { label: 'Auth Kit', slug: 'referencia/componentes/auth-kit' },
                 { label: 'Modals', slug: 'referencia/componentes/modals' },
                 { label: 'Hello Core', slug: 'referencia/componentes/hello-core' },
               ],
@@ -108,6 +110,7 @@ export default defineConfig({
                 { label: 'AI Chat', slug: 'referencia/playground/ai-chat' },
                 { label: 'Auto-SEO', slug: 'referencia/playground/auto-seo' },
                 { label: 'Media Picker', slug: 'referencia/playground/media-picker' },
+                { label: 'Auth Kit', slug: 'referencia/playground/auth-kit' },
                 { label: 'Modals', slug: 'referencia/playground/modals' },
               ],
             },

@@ -38,10 +38,10 @@ export function FolderSelect({
         disabled={foldersLoading}
         onChange={onChange}
         options={[
-          { value: '', label: 'All folders' },
+          { value: '', label: 'Todas las carpetas' },
           ...folders.map((folder) => ({ value: folder.id, label: folder.name })),
         ]}
-        placeholder="All folders"
+        placeholder="Todas las carpetas"
       />
       {foldersError ? <p role="alert">{foldersError.message}</p> : null}
       {canCreate ? (
@@ -49,11 +49,11 @@ export function FolderSelect({
           <input
             type="text"
             value={newFolderName}
-            placeholder="New folder"
+            placeholder="Nueva carpeta"
             onChange={(event) => setNewFolderName(event.target.value)}
           />
           <button type="button" onClick={() => void handleCreate()}>
-            Create
+            Crear
           </button>
         </span>
       ) : null}

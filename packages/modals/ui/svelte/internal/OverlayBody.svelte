@@ -30,7 +30,7 @@
   style:color={textColor}
 >
   {#if showClose}
-    <button type="button" class="modals-close" aria-label="Close" onclick={() => ondismiss('close-button')}>×</button>
+    <button type="button" class="modals-close" aria-label="Cerrar" onclick={() => ondismiss('close-button')}>×</button>
   {/if}
   {#if imageSrc}
     <img class="modals-image" src={imageSrc} alt="" referrerpolicy="no-referrer" />

@@ -41,7 +41,7 @@
   bind:this={dialogEl}
   role="dialog"
   aria-modal="true"
-  aria-label={config.title ?? config.name ?? 'Dialog'}
+  aria-label={config.title ?? config.name ?? 'Diálogo'}
   class="modals-fullscreen{noMotionClass} fixed inset-0 z-50 overflow-y-auto bg-white{transitionClass}"
 >
   <div class="mx-auto flex min-h-full w-full max-w-3xl items-center justify-center p-6">

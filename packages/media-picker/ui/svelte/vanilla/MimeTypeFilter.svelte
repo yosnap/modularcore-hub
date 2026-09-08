@@ -20,7 +20,7 @@
   }
 </script>
 
-<div role="group" aria-label="Filter by file type" class="mc-mime-group">
+<div role="group" aria-label="Filtrar por tipo de archivo" class="mc-mime-group">
   {#each options as mimeType (mimeType)}
     <label class="mc-mime-pill">
       <input type="checkbox" checked={selected.includes(mimeType)} onchange={() => toggle(mimeType)} />

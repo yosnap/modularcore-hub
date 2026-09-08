@@ -36,7 +36,7 @@ export function OverlayBody({
       style={safeOverlayStyle(config)}
     >
       {showClose && (
-        <button type="button" className="modals-close" aria-label="Close" onClick={onClose}>
+        <button type="button" className="modals-close" aria-label="Cerrar" onClick={onClose}>
           ×
         </button>
       )}

@@ -36,12 +36,12 @@
   y el resto de la UI de Svelte de este paquete.
 -->
 <label class="mc-variant-filter">
-  Size
+  Tamaño
   <select value={selected ?? ''} onchange={handleChange}>
-    <option value="">All sizes</option>
+    <option value="">Todos los tamaños</option>
     {#each options as label (label)}
       <option value={label}>{label}</option>
     {/each}
-    <option value={NO_VARIANTS}>Without derived sizes</option>
+    <option value={NO_VARIANTS}>Sin tamaños derivados</option>
   </select>
 </label>

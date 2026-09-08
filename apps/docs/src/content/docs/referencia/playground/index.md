@@ -28,6 +28,7 @@ export const PLAYGROUNDS: readonly PlaygroundEntry[] = [
   { component: 'auto-seo', label: 'Auto SEO', href: '/playground/auto-seo' },
   { component: 'media-picker', label: 'Media Picker', href: '/playground/media-picker' },
   { component: 'modals', label: 'Modals', href: '/playground/modals' },
+  { component: 'auth-kit', label: 'Auth Kit', href: '/playground/auth-kit' },
 ];
 ```
 
@@ -55,9 +56,11 @@ Svelte 5) por su cuenta.
 
 ## Las demás demos
 
-Auto SEO, Media Picker y Modals no necesitan ningún backend propio: sus playgrounds ejecutan el
-core del paquete directamente en el navegador (Auto SEO genera JSON-LD sin red; Media Picker usa
-un `StorageProvider` en memoria; Modals usa su `core/providers/in-memory.ts`).
+Auto SEO, Media Picker, Modals y Auth Kit no necesitan ningún backend propio: sus playgrounds
+ejecutan el core del paquete directamente en el navegador (Auto SEO genera JSON-LD sin red; Media
+Picker usa un `StorageProvider` en memoria; Modals usa su `core/providers/in-memory.ts`; Auth Kit
+usa hooks simulados en memoria que aceptan cualquier email/contraseña tras un pequeño retardo
+artificial, para poder probar los siete flujos sin backend real).
 
 ## Páginas de cada playground
 
@@ -65,3 +68,4 @@ un `StorageProvider` en memoria; Modals usa su `core/providers/in-memory.ts`).
 - [Playground de Auto SEO](/referencia/playground/auto-seo/)
 - [Playground de Media Picker](/referencia/playground/media-picker/)
 - [Playground de Modals](/referencia/playground/modals/)
+- [Playground de Auth Kit](/referencia/playground/auth-kit/)

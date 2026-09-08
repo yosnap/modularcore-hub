@@ -50,7 +50,7 @@
     <button
       type="button"
       class="modals-close absolute right-3 top-3 rounded-md p-1 text-muted-foreground hover:text-foreground"
-      aria-label="Close"
+      aria-label="Cerrar"
       onclick={() => ondismiss('close-button')}
     >
       ×

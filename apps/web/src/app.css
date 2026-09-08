@@ -10,6 +10,15 @@
 @import 'tailwindcss/utilities' layer(utilities);
 
 /*
+ * The site's own theme switcher toggles a `.dark` class on <html> (see the shadcn `.dark {}`
+ * blocks below and in `ui/shadcn-theme.css`) rather than relying on the OS `prefers-color-scheme`
+ * media query. Tailwind v4's `dark:` variant defaults to that media query — without this,
+ * `dark:*` utility classes (used by the auth-kit/media-picker Tailwind-preset components) never
+ * activate no matter what the switcher does. This rebinds `dark:` to the same `.dark` class.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
  * Brand kit (docs/brand-guide.md is the source of truth). Imported for its --mc-font-* custom
  * properties, referenced directly below in @theme inline and @layer base. --mc-color-* tokens
  * are NOT re-used via var() here: the semantic tokens below (--primary, --ring, etc.) are
@@ -39,6 +48,8 @@
 @source '../../../packages/media-picker/ui/react';
 @source '../../../packages/media-picker/ui/svelte';
 @source '../../../packages/modals/ui/svelte';
+@source '../../../packages/auth-kit/ui/react';
+@source '../../../packages/auth-kit/ui/svelte';
 
 /*
  * Shadcn variant tokens, embedded directly rather than `@import`ed from

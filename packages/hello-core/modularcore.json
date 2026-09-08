@@ -18,7 +18,7 @@
   "dependencies": [],
   "registryDependencies": [],
   "envVariables": [],
-  "description": "Trivial framework-agnostic component used to spike the registry copy-code pipeline.",
+  "description": "Componente trivial, agnóstico de framework, usado para probar el pipeline de copia de código del registro.",
   "files": [
     {
       "path": "src/hello.ts",

@@ -33,8 +33,8 @@
     {value}
     disabled={picker.state.foldersLoading}
     onchange={onChange}
-    options={[{ value: '', label: 'All folders' }, ...picker.state.folders.map((folder) => ({ value: folder.id, label: folder.name }))]}
-    placeholder="All folders"
+    options={[{ value: '', label: 'Todas las carpetas' }, ...picker.state.folders.map((folder) => ({ value: folder.id, label: folder.name }))]}
+    placeholder="Todas las carpetas"
   />
   {#if picker.state.foldersError}
     <p role="alert" class="text-sm text-destructive">{picker.state.foldersError.message}</p>
@@ -44,7 +44,7 @@
       <input
         type="text"
         bind:value={newFolderName}
-        placeholder="New folder"
+        placeholder="Nueva carpeta"
         class="rounded-md border border-input bg-background px-2 py-1.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
       />
       <button
@@ -52,7 +52,7 @@
         onclick={handleCreate}
         class="rounded-md border border-input bg-secondary px-3 py-1.5 text-sm text-secondary-foreground hover:bg-accent"
       >
-        Create
+        Crear
       </button>
     </span>
   {/if}

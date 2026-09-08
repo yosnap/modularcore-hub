@@ -29,7 +29,7 @@ export function applyZoom(rect: CropRect, zoom: number): CropRect {
 /**
  * Minimal, unstyled controls for the rotate/flip/zoom/crop pipeline: each action calls the
  * corresponding `picker` method directly (rotate()/flip() apply immediately; the crop rect
- * is only sent on "Apply crop", composing on top of whatever rotate/flip already produced —
+ * is only sent on "Aplicar recorte", composing on top of whatever rotate/flip already produced —
  * same order a user would expect: straighten first, then frame).
  */
 export function ImageEditor({ picker }: ImageEditorProps): JSX.Element {
@@ -53,7 +53,7 @@ export function ImageEditor({ picker }: ImageEditorProps): JSX.Element {
   }, [blob]);
 
   // Without this, `rect` stayed at its hardcoded {100,100} default no matter how large the
-  // loaded image was — selecting an aspect ratio and clicking "Apply crop" against a
+  // loaded image was — selecting an aspect ratio and clicking "Aplicar recorte" against a
   // 1200×775 photo silently produced a ~100×56px sliver from the top-left corner, which reads
   // as "the aspect ratio doesn't do anything" even though the crop math is correct. Reset the
   // rect to the full decoded image whenever a new blob loads, so the default crop is
@@ -95,7 +95,7 @@ export function ImageEditor({ picker }: ImageEditorProps): JSX.Element {
       </div>
       <div>
         <label>
-          Aspect ratio
+          Relación de aspecto
           <ModernSelect
             value={String(aspect)}
             onChange={(value) => setAspect(value as AspectRatio)}
@@ -103,7 +103,7 @@ export function ImageEditor({ picker }: ImageEditorProps): JSX.Element {
               value: String(preset),
               label: String(preset),
             }))}
-            placeholder="Aspect ratio"
+            placeholder="Relación de aspecto"
           />
         </label>
         <label>
@@ -134,7 +134,7 @@ export function ImageEditor({ picker }: ImageEditorProps): JSX.Element {
           />
         </label>
         <button type="button" onClick={handleApplyCrop} disabled={status !== 'idle'}>
-          Apply crop
+          Aplicar recorte
         </button>
       </div>
       {error ? <p role="alert">{error.message}</p> : null}
@@ -145,7 +145,7 @@ export function ImageEditor({ picker }: ImageEditorProps): JSX.Element {
         <div style={{ overflow: 'hidden', maxWidth: '100%', maxHeight: '70vh' }}>
           <img
             src={previewUrl}
-            alt="Editor preview"
+            alt="Vista previa del editor"
             style={{
               transform: `scale(${zoom})`,
               transformOrigin: 'center',
