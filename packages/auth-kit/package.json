@@ -1,0 +1,121 @@
+{
+  "name": "@modularcore/auth-kit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/core/auth-kit.js",
+  "types": "./dist/core/auth-kit.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/core/auth-kit.d.ts",
+      "default": "./dist/core/auth-kit.js"
+    },
+    "./types": {
+      "types": "./dist/core/types.d.ts",
+      "default": "./dist/core/types.js"
+    },
+    "./field-config": {
+      "types": "./dist/core/field-config.d.ts",
+      "default": "./dist/core/field-config.js"
+    },
+    "./validation": {
+      "types": "./dist/core/validation.d.ts",
+      "default": "./dist/core/validation.js"
+    },
+    "./turnstile": {
+      "types": "./dist/core/turnstile.d.ts",
+      "default": "./dist/core/turnstile.js"
+    },
+    "./password-strength": {
+      "types": "./dist/core/password-strength.d.ts",
+      "default": "./dist/core/password-strength.js"
+    },
+    "./react": {
+      "types": "./dist/adapters/react/use-auth-kit.d.ts",
+      "default": "./dist/adapters/react/use-auth-kit.js"
+    },
+    "./svelte": {
+      "types": "./dist/adapters/svelte/create-auth-kit.svelte.d.ts",
+      "default": "./dist/adapters/svelte/create-auth-kit.svelte.js"
+    },
+    "./vue": {
+      "types": "./dist/adapters/vue/use-auth-kit.d.ts",
+      "default": "./dist/adapters/vue/use-auth-kit.js"
+    },
+    "./angular": {
+      "types": "./dist/adapters/angular/auth-kit.service.d.ts",
+      "default": "./dist/adapters/angular/auth-kit.service.js"
+    },
+    "./vanilla": {
+      "types": "./dist/adapters/vanilla/create-auth-kit-store.d.ts",
+      "default": "./dist/adapters/vanilla/create-auth-kit-store.js"
+    },
+    "./ui/react/*": "./ui/react/*",
+    "./ui/svelte/*": "./ui/svelte/*",
+    "./ui/vue/*": "./ui/vue/*",
+    "./ui/angular/*": "./ui/angular/*",
+    "./ui/vanilla/*": "./ui/vanilla/*",
+    "./ui/shadcn-theme.css": "./ui/shadcn-theme.css",
+    "./ui/vanilla-styles.css": "./ui/vanilla-styles.css"
+  },
+  "files": [
+    "dist",
+    "ui"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:ui": "vitest run --config vitest.ui.config.ts"
+  },
+  "peerDependencies": {
+    "zod": ">=4",
+    "react": ">=18",
+    "svelte": ">=5",
+    "vue": ">=3.3",
+    "@angular/core": ">=17",
+    "@angular/common": ">=17",
+    "better-auth": ">=1",
+    "@radix-ui/react-checkbox": ">=1",
+    "@radix-ui/react-label": ">=2",
+    "@radix-ui/react-tabs": ">=1",
+    "@radix-ui/react-select": ">=2"
+  },
+  "peerDependenciesMeta": {
+    "react": { "optional": true },
+    "svelte": { "optional": true },
+    "vue": { "optional": true },
+    "@angular/core": { "optional": true },
+    "@angular/common": { "optional": true },
+    "better-auth": { "optional": true },
+    "@radix-ui/react-checkbox": { "optional": true },
+    "@radix-ui/react-label": { "optional": true },
+    "@radix-ui/react-tabs": { "optional": true },
+    "@radix-ui/react-select": { "optional": true }
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@angular/common": "^22.1.4",
+    "@angular/core": "^22.1.4",
+    "@radix-ui/react-checkbox": "^1.1.4",
+    "@radix-ui/react-label": "^2.1.1",
+    "@radix-ui/react-select": "^2.1.4",
+    "@radix-ui/react-tabs": "^1.1.2",
+    "@sveltejs/vite-plugin-svelte": "^4.0.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/svelte": "^5.2.6",
+    "@testing-library/vue": "^8.1.0",
+    "@types/node": "^22.13.0",
+    "@types/react": "^19.2.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "jsdom": "^25.0.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "svelte": "^5.56.9",
+    "vue": "^3.5.42"
+  }
+}

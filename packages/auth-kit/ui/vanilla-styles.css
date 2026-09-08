@@ -1,0 +1,230 @@
+/**
+ * Shared plain CSS for the vanilla style variant, across every framework. No build step
+ * required — drop a `<link rel="stylesheet" href="vanilla-styles.css">` straight into your
+ * HTML. Classes are prefixed `auth-kit-` to avoid colliding with a consumer project's own
+ * class names (same convention as `packages/media-picker/ui/vanilla-styles.css`'s `mc-` prefix).
+ *
+ * Dark mode: since this file has no way to know a host app's own dark-mode convention, it
+ * reacts to BOTH signals — the OS-level `prefers-color-scheme: dark` media query, and a `.dark`
+ * class on any ancestor (the common manual-toggle convention, e.g. `<html class="dark">`). A
+ * host using a different convention (e.g. `data-theme="dark"`) should override these classes.
+ */
+
+.auth-kit-form,
+.auth-kit-form * {
+  box-sizing: border-box;
+}
+
+.auth-kit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 360px;
+}
+
+.auth-kit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: #3f3f46;
+}
+
+.auth-kit-field__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Wraps an input + the eye-toggle button so the button can sit inside the input's own box
+   (absolutely positioned) instead of stealing horizontal space as a sibling — the sibling
+   layout made password fields visibly narrower than every other field in the same form. */
+.auth-kit-field__control {
+  position: relative;
+  display: flex;
+}
+
+.auth-kit-input,
+.auth-kit-select {
+  width: 100%;
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 14px;
+  background: #fff;
+  color: #18181b;
+  flex: 1;
+}
+
+.auth-kit-field__control .auth-kit-input {
+  padding-right: 32px;
+}
+
+.auth-kit-eye-button {
+  position: absolute;
+  inset: 0 0 0 auto;
+  display: flex;
+  width: 32px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  appearance: none;
+  color: #71717a;
+  cursor: pointer;
+}
+
+.auth-kit-eye-button:hover {
+  color: #18181b;
+}
+
+.auth-kit-eye-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.auth-kit-button {
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+  background: #fff;
+  color: #18181b;
+  cursor: pointer;
+}
+
+.auth-kit-button:hover {
+  background: #fafafa;
+}
+
+.auth-kit-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.auth-kit-button--primary {
+  background: #18181b;
+  color: #fff;
+  border-color: #18181b;
+}
+
+.auth-kit-button--primary:hover {
+  background: #27272a;
+}
+
+.auth-kit-button--ghost {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 12px;
+  color: #71717a;
+  cursor: pointer;
+}
+
+.auth-kit-button--ghost:hover {
+  color: #18181b;
+}
+
+.auth-kit-checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  color: #3f3f46;
+}
+
+.auth-kit-error {
+  font-size: 14px;
+  color: #dc2626;
+  margin: 0;
+}
+
+.auth-kit-success {
+  font-size: 14px;
+  color: #16a34a;
+  margin: 0;
+}
+
+.auth-kit-status {
+  font-size: 14px;
+  color: #3f3f46;
+}
+
+@media (prefers-color-scheme: dark) {
+  .auth-kit-field,
+  .auth-kit-checkbox-row,
+  .auth-kit-status {
+    color: #d4d4d8;
+  }
+  .auth-kit-input,
+  .auth-kit-select,
+  .auth-kit-button {
+    background: transparent;
+    color: #f4f4f5;
+    border-color: #3f3f46;
+  }
+  .auth-kit-button:hover {
+    background: #27272a;
+  }
+  .auth-kit-button--primary {
+    background: #f4f4f5;
+    color: #18181b;
+    border-color: #f4f4f5;
+  }
+  .auth-kit-button--primary:hover {
+    background: #d4d4d8;
+  }
+  .auth-kit-button--ghost,
+  .auth-kit-eye-button {
+    color: #a1a1aa;
+  }
+  .auth-kit-button--ghost:hover,
+  .auth-kit-eye-button:hover {
+    color: #f4f4f5;
+  }
+  .auth-kit-error {
+    color: #f87171;
+  }
+  .auth-kit-success {
+    color: #4ade80;
+  }
+}
+
+.dark .auth-kit-field,
+.dark .auth-kit-checkbox-row,
+.dark .auth-kit-status {
+  color: #d4d4d8;
+}
+.dark .auth-kit-input,
+.dark .auth-kit-select,
+.dark .auth-kit-button {
+  background: transparent;
+  color: #f4f4f5;
+  border-color: #3f3f46;
+}
+.dark .auth-kit-button:hover {
+  background: #27272a;
+}
+.dark .auth-kit-button--primary {
+  background: #f4f4f5;
+  color: #18181b;
+  border-color: #f4f4f5;
+}
+.dark .auth-kit-button--primary:hover {
+  background: #d4d4d8;
+}
+.dark .auth-kit-button--ghost,
+.dark .auth-kit-eye-button {
+  color: #a1a1aa;
+}
+.dark .auth-kit-button--ghost:hover,
+.dark .auth-kit-eye-button:hover {
+  color: #f4f4f5;
+}
+.dark .auth-kit-error {
+  color: #f87171;
+}
+.dark .auth-kit-success {
+  color: #4ade80;
+}
