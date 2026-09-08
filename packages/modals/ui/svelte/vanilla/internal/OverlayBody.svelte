@@ -34,7 +34,7 @@
     <button
       type="button"
       class="modals-close mc-modals-close"
-      aria-label="Close"
+      aria-label="Cerrar"
       onclick={() => ondismiss('close-button')}
     >
       ×

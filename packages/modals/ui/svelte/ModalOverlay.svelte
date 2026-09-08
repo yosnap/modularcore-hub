@@ -43,7 +43,7 @@
 </script>
 
 <div class="modals-backdrop{noMotionClass}" role="presentation" onclick={onBackdropClick}>
-  <div bind:this={dialogEl} role="dialog" aria-modal="true" aria-label={config.title ?? config.name ?? 'Dialog'} class="modals-modal">
+  <div bind:this={dialogEl} role="dialog" aria-modal="true" aria-label={config.title ?? config.name ?? 'Diálogo'} class="modals-modal">
     <OverlayBody {config} {ondismiss} />
   </div>
 </div>

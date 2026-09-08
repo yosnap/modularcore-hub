@@ -21,7 +21,7 @@
   "dependencies": ["@modularcore/ai-chat"],
   "registryDependencies": [],
   "envVariables": [],
-  "description": "Headless overlay system (modal, fullscreen, top/bottom banner, slide-in, toast) with eligibility (targeting, date window, priority), client-side frequency capping, trigger scheduling and a provider pattern (no built-in DB/backend). React and Svelte adapters, mobile-first and accessible.",
+  "description": "Sistema de superposiciones headless (modal, pantalla completa, banner superior/inferior, panel lateral, toast) con elegibilidad (segmentación, ventana de fechas, prioridad), limitación de frecuencia en cliente, programación de disparadores y un patrón de proveedor (sin base de datos ni backend integrados). Adaptadores para React y Svelte, mobile-first y accesible.",
   "files": [
     {
       "path": "core/types.ts",

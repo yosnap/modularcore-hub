@@ -25,7 +25,7 @@ export function BulkActionsBar({
   return (
     <div
       role="toolbar"
-      aria-label="Bulk actions"
+      aria-label="Acciones en lote"
       className="flex items-center gap-3 rounded-md border border-border bg-card px-3 py-2"
     >
       <span className="text-sm text-muted-foreground">{selection.length} selected</span>
@@ -34,14 +34,14 @@ export function BulkActionsBar({
         onClick={handleConfirm}
         className="rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground hover:opacity-90"
       >
-        Confirm
+        Confirmar
       </button>
       <button
         type="button"
         onClick={() => picker.clearSelection()}
         className="rounded-md border border-input px-3 py-1.5 text-sm hover:bg-accent"
       >
-        Clear
+        Vaciar
       </button>
     </div>
   );

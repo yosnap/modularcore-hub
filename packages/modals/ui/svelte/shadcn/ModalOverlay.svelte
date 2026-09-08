@@ -52,7 +52,7 @@
     bind:this={dialogEl}
     role="dialog"
     aria-modal="true"
-    aria-label={config.title ?? config.name ?? 'Dialog'}
+    aria-label={config.title ?? config.name ?? 'Diálogo'}
     class="modals-modal{noMotionClass} w-full overflow-y-auto rounded-lg border border-border bg-background text-foreground shadow-xl{transitionClass}"
     style="max-height: calc(100vh - 2rem)"
   >

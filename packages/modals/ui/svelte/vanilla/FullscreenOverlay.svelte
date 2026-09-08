@@ -41,7 +41,7 @@
   bind:this={dialogEl}
   role="dialog"
   aria-modal="true"
-  aria-label={config.title ?? config.name ?? 'Dialog'}
+  aria-label={config.title ?? config.name ?? 'Diálogo'}
   class="modals-fullscreen mc-modals-fullscreen{noMotionClass}"
 >
   <OverlayBody {config} {ondismiss} />

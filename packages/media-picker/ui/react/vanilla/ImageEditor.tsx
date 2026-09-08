@@ -102,7 +102,7 @@ export function ImageEditor({ picker }: ImageEditorProps): JSX.Element {
         />
       </label>
       <button type="button" onClick={applyCrop} disabled={status !== 'idle'} className="mc-button">
-        Apply crop
+        Aplicar recorte
       </button>
       {error ? (
         <p role="alert" className="mc-alert">
@@ -113,7 +113,7 @@ export function ImageEditor({ picker }: ImageEditorProps): JSX.Element {
         <div className="mc-editor__preview">
           <img
             src={previewUrl}
-            alt="Editor preview"
+            alt="Vista previa del editor"
             style={{ transform: `scale(${zoom})`, transformOrigin: 'center' }}
           />
         </div>

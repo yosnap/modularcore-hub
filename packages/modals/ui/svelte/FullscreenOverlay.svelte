@@ -36,6 +36,6 @@
   const noMotionClass = $derived(prefersReducedMotion() ? ' modals-no-motion' : '');
 </script>
 
-<div bind:this={dialogEl} role="dialog" aria-modal="true" aria-label={config.title ?? config.name ?? 'Dialog'} class="modals-fullscreen{noMotionClass}">
+<div bind:this={dialogEl} role="dialog" aria-modal="true" aria-label={config.title ?? config.name ?? 'Diálogo'} class="modals-fullscreen{noMotionClass}">
   <OverlayBody {config} {ondismiss} />
 </div>

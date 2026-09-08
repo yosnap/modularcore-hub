@@ -10,7 +10,7 @@
   "dependencies": ["schema-dts@^2.0.0", "zod@^4.4.3"],
   "registryDependencies": [],
   "envVariables": [],
-  "description": "Headless, framework-agnostic core to generate Schema.org structured data as JSON-LD (Article, Product, Organization, BreadcrumbList, WebSite, LocalBusiness, FAQPage). No classes, no framework dependency. Scope (MVP, v1) is JSON-LD only — OpenGraph and social card previews are out of scope.",
+  "description": "Núcleo headless e independiente del framework para generar datos estructurados Schema.org como JSON-LD (Article, Product, Organization, BreadcrumbList, WebSite, LocalBusiness, FAQPage). Sin clases, sin dependencia de ningún framework. El alcance (MVP, v1) es solo JSON-LD — OpenGraph y las vistas previas de tarjetas sociales quedan fuera de alcance.",
   "files": [
     {
       "path": "core/index.ts",

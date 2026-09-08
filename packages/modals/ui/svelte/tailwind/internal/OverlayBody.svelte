@@ -49,7 +49,7 @@
     <button
       type="button"
       class="modals-close absolute right-3 top-3 rounded-md p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600"
-      aria-label="Close"
+      aria-label="Cerrar"
       onclick={() => ondismiss('close-button')}
     >
       ×

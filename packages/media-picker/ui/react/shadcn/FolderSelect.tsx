@@ -40,10 +40,10 @@ export function FolderSelect({
         disabled={foldersLoading}
         onChange={onChange}
         options={[
-          { value: '', label: 'All folders' },
+          { value: '', label: 'Todas las carpetas' },
           ...folders.map((folder) => ({ value: folder.id, label: folder.name })),
         ]}
-        placeholder="All folders"
+        placeholder="Todas las carpetas"
       />
       {foldersError ? (
         <p role="alert" className="text-sm text-destructive">
@@ -55,7 +55,7 @@ export function FolderSelect({
           <input
             type="text"
             value={newFolderName}
-            placeholder="New folder"
+            placeholder="Nueva carpeta"
             onChange={(event) => setNewFolderName(event.target.value)}
             className="rounded-md border border-input bg-background px-2 py-1.5 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           />
@@ -64,7 +64,7 @@ export function FolderSelect({
             onClick={() => void handleCreate()}
             className="rounded-md border border-input bg-secondary px-3 py-1.5 text-sm text-secondary-foreground hover:bg-accent"
           >
-            Create
+            Crear
           </button>
         </span>
       ) : null}

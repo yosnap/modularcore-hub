@@ -18,7 +18,7 @@ export function MimeTypeFilter({ options, selected, onChange }: MimeTypeFilterPr
   };
 
   return (
-    <div role="group" aria-label="Filter by file type">
+    <div role="group" aria-label="Filtrar por tipo de archivo">
       {options.map((mimeType) => (
         <label key={mimeType} style={{ marginRight: 8 }}>
           <input
