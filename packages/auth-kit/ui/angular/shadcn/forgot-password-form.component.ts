@@ -9,7 +9,8 @@ import type { TurnstileFieldConfig } from '../../../core/field-config.js';
 
 const INPUT_CLASS =
   'box-border flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm text-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
-const LINK_CLASS = 'text-xs font-medium appearance-none border-0 bg-transparent p-0 text-primary hover:underline';
+const LINK_CLASS =
+  'text-xs font-medium appearance-none border-0 bg-transparent p-0 text-primary hover:underline';
 
 /** Shadcn variant — self-contained, styled shadcn-like via native elements + the shared design tokens. Same props/behavior as headless. */
 @Component({
@@ -19,9 +20,21 @@ const LINK_CLASS = 'text-xs font-medium appearance-none border-0 bg-transparent 
   template: `
     <form novalidate class="flex flex-col gap-4" (submit)="handleSubmit($event)">
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-forgot-email">Correo electrónico</label>
-        <input id="auth-kit-forgot-email" type="email" autocomplete="email" [class]="inputClass" [value]="email" (input)="email = $any($event.target).value; clearError('email')" (blur)="validateField('email')" />
-        <p *ngIf="fieldErrors['email']" class="text-sm text-destructive">{{ fieldErrors['email'] }}</p>
+        <label class="text-sm font-medium leading-none" for="auth-kit-forgot-email"
+          >Correo electrónico</label
+        >
+        <input
+          id="auth-kit-forgot-email"
+          type="email"
+          autocomplete="email"
+          [class]="inputClass"
+          [value]="email"
+          (input)="email = $any($event.target).value; clearError('email')"
+          (blur)="validateField('email')"
+        />
+        <p *ngIf="fieldErrors['email']" class="text-sm text-destructive">
+          {{ fieldErrors['email'] }}
+        </p>
       </div>
       <auth-kit-turnstile-widget
         *ngIf="turnstile?.enabled"
@@ -37,13 +50,23 @@ const LINK_CLASS = 'text-xs font-medium appearance-none border-0 bg-transparent 
       >
         {{ authKit.state().forgotPassword.status === 'submitting' ? 'Enviando…' : 'Enviar enlace' }}
       </button>
-      <p *ngIf="authKit.state().forgotPassword.status === 'error' && authKit.state().forgotPassword.error" class="text-sm text-destructive">
+      <p
+        *ngIf="
+          authKit.state().forgotPassword.status === 'error' && authKit.state().forgotPassword.error
+        "
+        class="text-sm text-destructive"
+      >
         {{ authKit.state().forgotPassword.error?.message }}
       </p>
-      <p *ngIf="authKit.state().forgotPassword.status === 'success'" class="text-sm text-green-600">Revisa tu correo para ver el enlace de restablecimiento.</p>
+      <p *ngIf="authKit.state().forgotPassword.status === 'success'" class="text-sm text-green-600">
+        Revisa tu correo para ver el enlace de restablecimiento.
+      </p>
 
       <p *ngIf="onNavigateToLogin" class="text-center text-sm text-muted-foreground">
-        ¿Recordaste tu contraseña? <button type="button" [class]="linkClass" (click)="onNavigateToLogin()">Iniciar sesión</button>
+        ¿Recordaste tu contraseña?
+        <button type="button" [class]="linkClass" (click)="onNavigateToLogin()">
+          Iniciar sesión
+        </button>
       </p>
     </form>
   `,
@@ -61,7 +84,6 @@ export class ForgotPasswordFormComponent {
   turnstileToken: string | null = null;
   fieldErrors: Record<string, string> = {};
 
-  
   /** Clears a field's stale error message as soon as the user edits it, instead of leaving it displayed until the next submit. */
   clearError(key: string): void {
     if (key in this.fieldErrors) {
@@ -86,10 +108,14 @@ export class ForgotPasswordFormComponent {
     event.preventDefault();
     const result = buildForgotPasswordSchema().safeParse({ email: this.email });
     if (!result.success) {
-      this.fieldErrors = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      this.fieldErrors = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       return;
     }
     this.fieldErrors = {};
-    void this.authKit.forgotPassword({ email: this.email, turnstileToken: this.turnstileToken }).catch(() => {});
+    void this.authKit
+      .forgotPassword({ email: this.email, turnstileToken: this.turnstileToken })
+      .catch(() => {});
   }
 }

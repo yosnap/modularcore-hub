@@ -30,7 +30,11 @@ export function mountRegisterForm(
 ): () => void {
   const fields = resolveFieldConfig(fieldConfig);
 
-  const email = field('Correo electrónico', { id: 'auth-kit-register-email', type: 'email', autocomplete: 'email' }, { label: LABEL_CLASS, input: INPUT_CLASS });
+  const email = field(
+    'Correo electrónico',
+    { id: 'auth-kit-register-email', type: 'email', autocomplete: 'email' },
+    { label: LABEL_CLASS, input: INPUT_CLASS },
+  );
   const emailError = errorText(ERROR_CLASS);
   const password = field(
     'Contraseña',
@@ -38,7 +42,11 @@ export function mountRegisterForm(
     { label: LABEL_CLASS, input: `${INPUT_CLASS} pr-9` },
   );
   const passwordError = errorText(ERROR_CLASS);
-  const showPassword = el('button', { type: 'button', 'aria-label': 'Mostrar contraseña', class: EYE_BUTTON_CLASS });
+  const showPassword = el('button', {
+    type: 'button',
+    'aria-label': 'Mostrar contraseña',
+    class: EYE_BUTTON_CLASS,
+  });
   showPassword.innerHTML = eyeSvg(true);
   const passwordWrapper = el('div', { class: 'relative' }, [password.input, showPassword]);
 
@@ -48,9 +56,16 @@ export function mountRegisterForm(
     { label: LABEL_CLASS, input: `${INPUT_CLASS} pr-9` },
   );
   const confirmPasswordError = errorText(ERROR_CLASS);
-  const showConfirm = el('button', { type: 'button', 'aria-label': 'Mostrar contraseña', class: EYE_BUTTON_CLASS });
+  const showConfirm = el('button', {
+    type: 'button',
+    'aria-label': 'Mostrar contraseña',
+    class: EYE_BUTTON_CLASS,
+  });
   showConfirm.innerHTML = eyeSvg(true);
-  const confirmPasswordWrapper = el('div', { class: 'relative' }, [confirmPassword.input, showConfirm]);
+  const confirmPasswordWrapper = el('div', { class: 'relative' }, [
+    confirmPassword.input,
+    showConfirm,
+  ]);
 
   const submit = el(
     'button',
@@ -69,17 +84,29 @@ export function mountRegisterForm(
 
   let firstName: ReturnType<typeof field> | undefined;
   if (fields.firstName.enabled) {
-    firstName = field(fields.firstName.label, { id: 'auth-kit-register-firstname', type: 'text' }, { label: LABEL_CLASS, input: INPUT_CLASS });
+    firstName = field(
+      fields.firstName.label,
+      { id: 'auth-kit-register-firstname', type: 'text' },
+      { label: LABEL_CLASS, input: INPUT_CLASS },
+    );
     rows.push(firstName.label);
   }
   let lastName: ReturnType<typeof field> | undefined;
   if (fields.lastName.enabled) {
-    lastName = field(fields.lastName.label, { id: 'auth-kit-register-lastname', type: 'text' }, { label: LABEL_CLASS, input: INPUT_CLASS });
+    lastName = field(
+      fields.lastName.label,
+      { id: 'auth-kit-register-lastname', type: 'text' },
+      { label: LABEL_CLASS, input: INPUT_CLASS },
+    );
     rows.push(lastName.label);
   }
   let phone: ReturnType<typeof field> | undefined;
   if (fields.phone.enabled) {
-    phone = field(fields.phone.label, { id: 'auth-kit-register-phone', type: 'tel' }, { label: LABEL_CLASS, input: INPUT_CLASS });
+    phone = field(
+      fields.phone.label,
+      { id: 'auth-kit-register-phone', type: 'tel' },
+      { label: LABEL_CLASS, input: INPUT_CLASS },
+    );
     rows.push(phone.label);
   }
   let profileTypeSelect: HTMLSelectElement | undefined;
@@ -87,10 +114,17 @@ export function mountRegisterForm(
     profileTypeSelect = el(
       'select',
       { id: 'auth-kit-register-profile-type', class: `${INPUT_CLASS} dark:[color-scheme:dark]` },
-      fields.profileType.options.map((option) => el('option', { value: option.value }, [option.label])),
+      fields.profileType.options.map((option) =>
+        el('option', { value: option.value }, [option.label]),
+      ),
     );
     profileTypeSelect.value = fields.profileType.defaultValue;
-    rows.push(el('label', { for: 'auth-kit-register-profile-type', class: LABEL_CLASS }, [fields.profileType.label, profileTypeSelect]));
+    rows.push(
+      el('label', { for: 'auth-kit-register-profile-type', class: LABEL_CLASS }, [
+        fields.profileType.label,
+        profileTypeSelect,
+      ]),
+    );
   }
 
   rows.push(password.label, passwordWrapper, passwordError.node);
@@ -99,21 +133,32 @@ export function mountRegisterForm(
   let termsCheckbox: HTMLInputElement | undefined;
   const termsError = errorText(ERROR_CLASS);
   if (fields.legalConsent.enabled) {
-    termsCheckbox = el('input', { id: 'auth-kit-register-terms', type: 'checkbox', class: 'mt-0.5' });
+    termsCheckbox = el('input', {
+      id: 'auth-kit-register-terms',
+      type: 'checkbox',
+      class: 'mt-0.5',
+    });
     const links = fields.legalConsent.links.map((link, index) => {
       const anchor = el(
         'a',
-        { href: link.href, target: '_blank', rel: 'noreferrer', class: 'font-medium text-zinc-900 hover:underline dark:text-zinc-100' },
+        {
+          href: link.href,
+          target: '_blank',
+          rel: 'noreferrer',
+          class: 'font-medium text-zinc-900 hover:underline dark:text-zinc-100',
+        },
         [link.label],
       );
       return index > 0 ? el('span', {}, [' ', anchor]) : anchor;
     });
-    const label = el('label', { for: 'auth-kit-register-terms', class: 'flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300' }, [
-      termsCheckbox,
-      fields.legalConsent.text,
-      ' ',
-      ...links,
-    ]);
+    const label = el(
+      'label',
+      {
+        for: 'auth-kit-register-terms',
+        class: 'flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300',
+      },
+      [termsCheckbox, fields.legalConsent.text, ' ', ...links],
+    );
     rows.push(label, termsError.node);
   }
 
@@ -140,10 +185,17 @@ export function mountRegisterForm(
   if (onNavigateToLogin) {
     loginLink = el(
       'button',
-      { type: 'button', class: 'appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300' },
+      {
+        type: 'button',
+        class:
+          'appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300',
+      },
       ['Iniciar sesión'],
     );
-    loginFooter = el('p', { class: 'text-center text-sm text-zinc-600 dark:text-zinc-400' }, ['¿Ya tienes una cuenta? ', loginLink]);
+    loginFooter = el('p', { class: 'text-center text-sm text-zinc-600 dark:text-zinc-400' }, [
+      '¿Ya tienes una cuenta? ',
+      loginLink,
+    ]);
     rows.push(loginFooter);
   }
 
@@ -188,7 +240,9 @@ export function mountRegisterForm(
 
     const result = buildRegisterSchema(fields, { passwordPolicy }).safeParse(values);
     if (!result.success) {
-      const issues = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      const issues = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       emailError.setText(issues.email);
       passwordError.setText(issues.password);
       confirmPasswordError.setText(issues.confirmPassword);
@@ -213,7 +267,7 @@ export function mountRegisterForm(
       })
       .catch(() => {});
   };
-  
+
   function collectValues(): Record<string, unknown> {
     const values: Record<string, unknown> = {
       email: email.input.value,

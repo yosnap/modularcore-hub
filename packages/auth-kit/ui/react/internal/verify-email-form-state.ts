@@ -14,7 +14,11 @@ export interface UseVerifyEmailFormStateOptions {
 
 /** Owns both the auto-verify-on-mount flow and the resend sub-flow — kept together since a
  * failed/expired token is exactly when the resend form becomes relevant. */
-export function useVerifyEmailFormState({ authKit, token, email: initialEmail }: UseVerifyEmailFormStateOptions) {
+export function useVerifyEmailFormState({
+  authKit,
+  token,
+  email: initialEmail,
+}: UseVerifyEmailFormStateOptions) {
   const [email, setEmail] = useState(initialEmail ?? '');
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -31,7 +35,11 @@ export function useVerifyEmailFormState({ authKit, token, email: initialEmail }:
     event.preventDefault();
     const result = buildResendVerificationSchema().safeParse({ email });
     if (!result.success) {
-      setFieldErrors(Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message])));
+      setFieldErrors(
+        Object.fromEntries(
+          result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+        ),
+      );
       return;
     }
     setFieldErrors({});

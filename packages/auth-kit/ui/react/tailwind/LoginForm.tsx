@@ -26,9 +26,24 @@ const eyeButtonClass =
   'absolute inset-y-0 right-0 flex w-9 appearance-none items-center justify-center border-0 bg-transparent p-0 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100';
 
 /** Tailwind variant — same props/behavior as headless, styled with the media-picker zinc palette. */
-export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigateToForgotPassword }: LoginFormProps): JSX.Element {
-  const { identifier, setIdentifier, onIdentifierBlur, password, setPassword, onPasswordBlur, setTurnstileToken, fieldErrors, handleSubmit, flow } =
-    useLoginFormState({ authKit });
+export function LoginForm({
+  authKit,
+  turnstile,
+  onNavigateToRegister,
+  onNavigateToForgotPassword,
+}: LoginFormProps): JSX.Element {
+  const {
+    identifier,
+    setIdentifier,
+    onIdentifierBlur,
+    password,
+    setPassword,
+    onPasswordBlur,
+    setTurnstileToken,
+    fieldErrors,
+    handleSubmit,
+    flow,
+  } = useLoginFormState({ authKit });
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -49,7 +64,10 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
 
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between">
-          <label className="text-sm text-zinc-700 dark:text-zinc-300" htmlFor="auth-kit-login-password">
+          <label
+            className="text-sm text-zinc-700 dark:text-zinc-300"
+            htmlFor="auth-kit-login-password"
+          >
             Contraseña
           </label>
           {onNavigateToForgotPassword && (
@@ -97,7 +115,9 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
         {flow.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión'}
       </button>
       {flow.status === 'error' && flow.error && <p className={errorClass}>{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="text-sm text-green-600 dark:text-green-400">Sesión iniciada.</p>}
+      {flow.status === 'success' && (
+        <p className="text-sm text-green-600 dark:text-green-400">Sesión iniciada.</p>
+      )}
       {onNavigateToRegister && (
         <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
           ¿Aún no tienes una cuenta?{' '}

@@ -13,9 +13,24 @@ export interface ChangePasswordFormProps {
 }
 
 /** Vanilla CSS variant — same props/behavior as headless, styled with `auth-kit-*` classes. */
-export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFormProps): JSX.Element {
-  const { currentPassword, setCurrentPassword, onCurrentPasswordBlur, newPassword, setNewPassword, onNewPasswordBlur, confirmPassword, setConfirmPassword, onConfirmPasswordBlur, fieldErrors, handleSubmit, flow } =
-    useChangePasswordFormState({ authKit, passwordPolicy });
+export function ChangePasswordForm({
+  authKit,
+  passwordPolicy,
+}: ChangePasswordFormProps): JSX.Element {
+  const {
+    currentPassword,
+    setCurrentPassword,
+    onCurrentPasswordBlur,
+    newPassword,
+    setNewPassword,
+    onNewPasswordBlur,
+    confirmPassword,
+    setConfirmPassword,
+    onConfirmPasswordBlur,
+    fieldErrors,
+    handleSubmit,
+    flow,
+  } = useChangePasswordFormState({ authKit, passwordPolicy });
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
 
@@ -33,12 +48,18 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
             autoComplete="current-password"
             className="auth-kit-input"
           />
-          <button type="button" onClick={() => setShowCurrent((value) => !value)} className="auth-kit-button auth-kit-button--ghost">
+          <button
+            type="button"
+            onClick={() => setShowCurrent((value) => !value)}
+            className="auth-kit-button auth-kit-button--ghost"
+          >
             {showCurrent ? 'Ocultar' : 'Mostrar'}
           </button>
         </span>
       </label>
-      {fieldErrors.currentPassword && <p className="auth-kit-error">{fieldErrors.currentPassword}</p>}
+      {fieldErrors.currentPassword && (
+        <p className="auth-kit-error">{fieldErrors.currentPassword}</p>
+      )}
 
       <label className="auth-kit-field" htmlFor="auth-kit-change-new">
         Contraseña nueva
@@ -52,7 +73,11 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
             autoComplete="new-password"
             className="auth-kit-input"
           />
-          <button type="button" onClick={() => setShowNew((value) => !value)} className="auth-kit-button auth-kit-button--ghost">
+          <button
+            type="button"
+            onClick={() => setShowNew((value) => !value)}
+            className="auth-kit-button auth-kit-button--ghost"
+          >
             {showNew ? 'Ocultar' : 'Mostrar'}
           </button>
         </span>
@@ -71,12 +96,20 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
           className="auth-kit-input"
         />
       </label>
-      {fieldErrors.confirmPassword && <p className="auth-kit-error">{fieldErrors.confirmPassword}</p>}
+      {fieldErrors.confirmPassword && (
+        <p className="auth-kit-error">{fieldErrors.confirmPassword}</p>
+      )}
 
-      <button type="submit" disabled={flow.status === 'submitting'} className="auth-kit-button auth-kit-button--primary">
+      <button
+        type="submit"
+        disabled={flow.status === 'submitting'}
+        className="auth-kit-button auth-kit-button--primary"
+      >
         {flow.status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña'}
       </button>
-      {flow.status === 'error' && flow.error && <p className="auth-kit-error">{flow.error.message}</p>}
+      {flow.status === 'error' && flow.error && (
+        <p className="auth-kit-error">{flow.error.message}</p>
+      )}
       {flow.status === 'success' && <p className="auth-kit-success">Contraseña actualizada.</p>}
     </form>
   );

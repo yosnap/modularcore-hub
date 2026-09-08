@@ -15,9 +15,18 @@ import type { TurnstileFieldConfig } from '../../../core/field-config.js';
   template: `
     <div class="flex flex-col gap-4">
       <div *ngIf="token" role="status" class="text-sm">
-        <p *ngIf="authKit.state().verifyEmail.status === 'submitting'" class="text-zinc-700">Verificando tu email…</p>
-        <p *ngIf="authKit.state().verifyEmail.status === 'success'" class="text-green-600">Tu email está verificado.</p>
-        <p *ngIf="authKit.state().verifyEmail.status === 'error' && authKit.state().verifyEmail.error" class="text-red-600">
+        <p *ngIf="authKit.state().verifyEmail.status === 'submitting'" class="text-zinc-700">
+          Verificando tu email…
+        </p>
+        <p *ngIf="authKit.state().verifyEmail.status === 'success'" class="text-green-600">
+          Tu email está verificado.
+        </p>
+        <p
+          *ngIf="
+            authKit.state().verifyEmail.status === 'error' && authKit.state().verifyEmail.error
+          "
+          class="text-red-600"
+        >
           {{ authKit.state().verifyEmail.error?.message }}
         </p>
       </div>
@@ -25,7 +34,14 @@ import type { TurnstileFieldConfig } from '../../../core/field-config.js';
       <form novalidate class="flex flex-col gap-3" (submit)="handleResendSubmit($event)">
         <label class="flex flex-col gap-1 text-sm text-zinc-700" for="auth-kit-resend-email">
           Correo electrónico
-          <input id="auth-kit-resend-email" type="email" autocomplete="email" class="rounded-md border border-zinc-300 px-2 py-1.5 text-sm" [value]="resendEmail" (input)="resendEmail = $any($event.target).value" />
+          <input
+            id="auth-kit-resend-email"
+            type="email"
+            autocomplete="email"
+            class="rounded-md border border-zinc-300 px-2 py-1.5 text-sm"
+            [value]="resendEmail"
+            (input)="resendEmail = $any($event.target).value"
+          />
         </label>
         <p *ngIf="fieldErrors['email']" class="text-sm text-red-600">{{ fieldErrors['email'] }}</p>
         <auth-kit-turnstile-widget
@@ -40,12 +56,27 @@ import type { TurnstileFieldConfig } from '../../../core/field-config.js';
           [disabled]="authKit.state().resendVerification.status === 'submitting'"
           class="rounded-md border border-zinc-300 px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50"
         >
-          {{ authKit.state().resendVerification.status === 'submitting' ? 'Enviando…' : 'Reenviar email de verificación' }}
+          {{
+            authKit.state().resendVerification.status === 'submitting'
+              ? 'Enviando…'
+              : 'Reenviar email de verificación'
+          }}
         </button>
-        <p *ngIf="authKit.state().resendVerification.status === 'error' && authKit.state().resendVerification.error" class="text-sm text-red-600">
+        <p
+          *ngIf="
+            authKit.state().resendVerification.status === 'error' &&
+            authKit.state().resendVerification.error
+          "
+          class="text-sm text-red-600"
+        >
           {{ authKit.state().resendVerification.error?.message }}
         </p>
-        <p *ngIf="authKit.state().resendVerification.status === 'success'" class="text-sm text-green-600">Email de verificación enviado.</p>
+        <p
+          *ngIf="authKit.state().resendVerification.status === 'success'"
+          class="text-sm text-green-600"
+        >
+          Email de verificación enviado.
+        </p>
       </form>
     </div>
   `,
@@ -77,10 +108,14 @@ export class VerifyEmailFormComponent implements OnChanges {
     event.preventDefault();
     const result = buildResendVerificationSchema().safeParse({ email: this.resendEmail });
     if (!result.success) {
-      this.fieldErrors = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      this.fieldErrors = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       return;
     }
     this.fieldErrors = {};
-    void this.authKit.resendVerification({ email: this.resendEmail, turnstileToken: this.turnstileToken }).catch(() => {});
+    void this.authKit
+      .resendVerification({ email: this.resendEmail, turnstileToken: this.turnstileToken })
+      .catch(() => {});
   }
 }

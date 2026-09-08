@@ -28,7 +28,12 @@ const labelClass = 'text-sm font-medium leading-none';
 const errorClass = 'text-sm text-destructive';
 
 /** Shadcn variant — self-contained, styled shadcn-like via Radix primitives. Same props/behavior as headless. */
-export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateToLogin }: RegisterFormProps): JSX.Element {
+export function RegisterForm({
+  authKit,
+  fieldConfig,
+  passwordPolicy,
+  onNavigateToLogin,
+}: RegisterFormProps): JSX.Element {
   const state = useRegisterFormState({ authKit, fieldConfig, passwordPolicy });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -39,7 +44,10 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
     <form onSubmit={state.handleSubmit} noValidate className="flex flex-col gap-4">
       {fields.profileType.enabled && (
         <TabsPrimitive.Root value={state.profileType} onValueChange={state.setProfileType}>
-          <TabsPrimitive.List className="grid grid-cols-2 gap-1 rounded-md bg-muted p-1" aria-label={fields.profileType.label}>
+          <TabsPrimitive.List
+            className="grid grid-cols-2 gap-1 rounded-md bg-muted p-1"
+            aria-label={fields.profileType.label}
+          >
             {fields.profileType.options.map((option) => (
               <TabsPrimitive.Trigger
                 key={option.value}
@@ -167,7 +175,13 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
                   key={requirement.key}
                   className={`flex items-center gap-1 ${requirement.met ? 'text-green-600' : 'text-muted-foreground'}`}
                 >
-                  {requirement.met ? <CheckIcon className="h-3 w-3" /> : <span className="inline-block h-3 w-3" aria-hidden="true">·</span>}
+                  {requirement.met ? (
+                    <CheckIcon className="h-3 w-3" />
+                  ) : (
+                    <span className="inline-block h-3 w-3" aria-hidden="true">
+                      ·
+                    </span>
+                  )}
                   {requirement.label}
                 </li>
               ))}
@@ -216,12 +230,20 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
                 <CheckIcon className="h-3.5 w-3.5" />
               </CheckboxPrimitive.Indicator>
             </CheckboxPrimitive.Root>
-            <LabelPrimitive.Root htmlFor="auth-kit-register-terms" className="text-sm text-muted-foreground">
+            <LabelPrimitive.Root
+              htmlFor="auth-kit-register-terms"
+              className="text-sm text-muted-foreground"
+            >
               {fields.legalConsent.text}{' '}
               {fields.legalConsent.links.map((link, index) => (
                 <span key={link.href}>
                   {index > 0 && ' '}
-                  <a href={link.href} target="_blank" rel="noreferrer" className="font-medium text-foreground hover:underline">
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-foreground hover:underline"
+                  >
                     {link.label}
                   </a>
                 </span>
@@ -254,7 +276,11 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
       {onNavigateToLogin && (
         <p className="text-center text-sm text-muted-foreground">
           ¿Ya tienes una cuenta?{' '}
-          <button type="button" onClick={onNavigateToLogin} className="font-medium text-primary hover:underline">
+          <button
+            type="button"
+            onClick={onNavigateToLogin}
+            className="font-medium text-primary hover:underline"
+          >
             Iniciar sesión
           </button>
         </p>

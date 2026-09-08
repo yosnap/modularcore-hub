@@ -21,7 +21,6 @@ const showPassword = ref(false);
 const turnstileToken = ref<string | null>(null);
 const fieldErrors = ref<Record<string, string>>({});
 
-
 /** Clears a field's stale error message as soon as the user edits it, instead of leaving it displayed until the next submit. */
 function clearError(key: string): void {
   if (key in fieldErrors.value) {
@@ -33,7 +32,10 @@ function clearError(key: string): void {
 
 /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
 function validateField(key: string): void {
-  const result = buildLoginSchema().safeParse({ identifier: identifier.value, password: password.value });
+  const result = buildLoginSchema().safeParse({
+    identifier: identifier.value,
+    password: password.value,
+  });
   const message = extractFieldError(result, key);
   if (message) {
     fieldErrors.value = { ...fieldErrors.value, [key]: message };
@@ -43,14 +45,23 @@ function validateField(key: string): void {
 }
 
 function handleSubmit(): void {
-  const result = buildLoginSchema().safeParse({ identifier: identifier.value, password: password.value });
+  const result = buildLoginSchema().safeParse({
+    identifier: identifier.value,
+    password: password.value,
+  });
   if (!result.success) {
-    fieldErrors.value = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+    fieldErrors.value = Object.fromEntries(
+      result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+    );
     return;
   }
   fieldErrors.value = {};
   void props.authKit
-    .login({ identifier: identifier.value, password: password.value, turnstileToken: turnstileToken.value })
+    .login({
+      identifier: identifier.value,
+      password: password.value,
+      turnstileToken: turnstileToken.value,
+    })
     .catch(() => {});
 }
 </script>
@@ -60,21 +71,36 @@ function handleSubmit(): void {
   <form novalidate class="auth-kit-form" @submit.prevent="handleSubmit">
     <label class="auth-kit-field" for="auth-kit-login-identifier">
       Correo electrónico o nombre de usuario
-      <input id="auth-kit-login-identifier" v-model="identifier" @input="clearError('identifier')" @blur="validateField('identifier')" type="text" autocomplete="username" class="auth-kit-input" />
+      <input
+        id="auth-kit-login-identifier"
+        v-model="identifier"
+        @input="clearError('identifier')"
+        @blur="validateField('identifier')"
+        type="text"
+        autocomplete="username"
+        class="auth-kit-input"
+      />
     </label>
     <p v-if="fieldErrors.identifier" class="auth-kit-error">{{ fieldErrors.identifier }}</p>
 
     <div class="auth-kit-field">
       <div style="display: flex; align-items: center; justify-content: space-between">
         <label for="auth-kit-login-password">Contraseña</label>
-        <button v-if="onNavigateToForgotPassword" type="button" class="auth-kit-button auth-kit-button--ghost" @click="onNavigateToForgotPassword">
+        <button
+          v-if="onNavigateToForgotPassword"
+          type="button"
+          class="auth-kit-button auth-kit-button--ghost"
+          @click="onNavigateToForgotPassword"
+        >
           ¿Olvidaste tu contraseña?
         </button>
       </div>
       <div class="auth-kit-field__control">
         <input
           id="auth-kit-login-password"
-          v-model="password" @input="clearError('password')" @blur="validateField('password')"
+          v-model="password"
+          @input="clearError('password')"
+          @blur="validateField('password')"
           :type="showPassword ? 'text' : 'password'"
           autocomplete="current-password"
           class="auth-kit-input"
@@ -85,13 +111,29 @@ function handleSubmit(): void {
           class="auth-kit-eye-button"
           @click="showPassword = !showPassword"
         >
-          <svg v-if="showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            v-if="showPassword"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path
               d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a18.4 18.4 0 0 1 4.22-5.14M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
             />
             <path d="M1 1l22 22" />
           </svg>
-          <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            v-else
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z" />
             <circle cx="12" cy="12" r="3" />
           </svg>
@@ -108,16 +150,34 @@ function handleSubmit(): void {
       @token="(t) => (turnstileToken = t)"
     />
 
-    <button type="submit" :disabled="authKit.state.value.login.status === 'submitting'" class="auth-kit-button auth-kit-button--primary">
-      {{ authKit.state.value.login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión' }}
+    <button
+      type="submit"
+      :disabled="authKit.state.value.login.status === 'submitting'"
+      class="auth-kit-button auth-kit-button--primary"
+    >
+      {{
+        authKit.state.value.login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión'
+      }}
     </button>
-    <p v-if="authKit.state.value.login.status === 'error' && authKit.state.value.login.error" class="auth-kit-error">
+    <p
+      v-if="authKit.state.value.login.status === 'error' && authKit.state.value.login.error"
+      class="auth-kit-error"
+    >
       {{ authKit.state.value.login.error.message }}
     </p>
-    <p v-if="authKit.state.value.login.status === 'success'" class="auth-kit-success">Sesión iniciada.</p>
+    <p v-if="authKit.state.value.login.status === 'success'" class="auth-kit-success">
+      Sesión iniciada.
+    </p>
 
     <p v-if="onNavigateToRegister" class="auth-kit-status">
-      ¿Aún no tienes una cuenta? <button type="button" class="auth-kit-button auth-kit-button--ghost" @click="onNavigateToRegister">Registrarse</button>
+      ¿Aún no tienes una cuenta?
+      <button
+        type="button"
+        class="auth-kit-button auth-kit-button--ghost"
+        @click="onNavigateToRegister"
+      >
+        Registrarse
+      </button>
     </p>
   </form>
 </template>

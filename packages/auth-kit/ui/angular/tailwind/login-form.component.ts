@@ -24,7 +24,10 @@ const EYE_OFF_PATH =
   imports: [NgIf, TurnstileWidgetComponent],
   template: `
     <form novalidate class="flex flex-col gap-3" (submit)="handleSubmit($event)">
-      <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-login-identifier">
+      <label
+        class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300"
+        for="auth-kit-login-identifier"
+      >
         Correo electrónico o nombre de usuario
         <input
           id="auth-kit-login-identifier"
@@ -32,15 +35,25 @@ const EYE_OFF_PATH =
           autocomplete="username"
           [class]="inputClass"
           [value]="identifier"
-          (input)="identifier = $any($event.target).value; clearError('identifier')" (blur)="validateField('identifier')"
+          (input)="identifier = $any($event.target).value; clearError('identifier')"
+          (blur)="validateField('identifier')"
         />
       </label>
-      <p *ngIf="fieldErrors['identifier']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['identifier'] }}</p>
+      <p *ngIf="fieldErrors['identifier']" class="text-sm text-red-600 dark:text-red-400">
+        {{ fieldErrors['identifier'] }}
+      </p>
 
       <div class="flex flex-col gap-1">
         <div class="flex items-center justify-between">
-          <label class="text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-login-password">Contraseña</label>
-          <button *ngIf="onNavigateToForgotPassword" type="button" [class]="linkClass" (click)="onNavigateToForgotPassword()">
+          <label class="text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-login-password"
+            >Contraseña</label
+          >
+          <button
+            *ngIf="onNavigateToForgotPassword"
+            type="button"
+            [class]="linkClass"
+            (click)="onNavigateToForgotPassword()"
+          >
             ¿Olvidaste tu contraseña?
           </button>
         </div>
@@ -51,7 +64,8 @@ const EYE_OFF_PATH =
             autocomplete="current-password"
             [class]="inputClass + ' pr-9'"
             [value]="password"
-            (input)="password = $any($event.target).value; clearError('password')" (blur)="validateField('password')"
+            (input)="password = $any($event.target).value; clearError('password')"
+            (blur)="validateField('password')"
           />
           <button
             type="button"
@@ -59,7 +73,15 @@ const EYE_OFF_PATH =
             [class]="eyeButtonClass"
             (click)="showPassword = !showPassword"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
               <ng-container *ngIf="showPassword; else eyeOpen">
                 <path [attr.d]="eyeOffPath" />
                 <path d="M1 1l22 22" />
@@ -72,7 +94,9 @@ const EYE_OFF_PATH =
           </button>
         </div>
       </div>
-      <p *ngIf="fieldErrors['password']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['password'] }}</p>
+      <p *ngIf="fieldErrors['password']" class="text-sm text-red-600 dark:text-red-400">
+        {{ fieldErrors['password'] }}
+      </p>
 
       <auth-kit-turnstile-widget
         *ngIf="turnstile?.enabled"
@@ -89,10 +113,18 @@ const EYE_OFF_PATH =
       >
         {{ authKit.state().login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión' }}
       </button>
-      <p *ngIf="authKit.state().login.status === 'error' && authKit.state().login.error" class="text-sm text-red-600 dark:text-red-400">
+      <p
+        *ngIf="authKit.state().login.status === 'error' && authKit.state().login.error"
+        class="text-sm text-red-600 dark:text-red-400"
+      >
         {{ authKit.state().login.error?.message }}
       </p>
-      <p *ngIf="authKit.state().login.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Sesión iniciada.</p>
+      <p
+        *ngIf="authKit.state().login.status === 'success'"
+        class="text-sm text-green-600 dark:text-green-400"
+      >
+        Sesión iniciada.
+      </p>
 
       <p *ngIf="onNavigateToRegister" class="text-center text-sm text-zinc-600 dark:text-zinc-400">
         ¿Aún no tienes una cuenta?
@@ -126,7 +158,6 @@ export class LoginFormComponent {
   turnstileToken: string | null = null;
   fieldErrors: Record<string, string> = {};
 
-  
   /** Clears a field's stale error message as soon as the user edits it, instead of leaving it displayed until the next submit. */
   clearError(key: string): void {
     if (key in this.fieldErrors) {
@@ -138,7 +169,10 @@ export class LoginFormComponent {
 
   /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
   validateField(key: string): void {
-    const result = buildLoginSchema().safeParse({ identifier: this.identifier, password: this.password });
+    const result = buildLoginSchema().safeParse({
+      identifier: this.identifier,
+      password: this.password,
+    });
     const message = extractFieldError(result, key);
     if (message) {
       this.fieldErrors = { ...this.fieldErrors, [key]: message };
@@ -149,14 +183,23 @@ export class LoginFormComponent {
 
   handleSubmit(event: Event): void {
     event.preventDefault();
-    const result = buildLoginSchema().safeParse({ identifier: this.identifier, password: this.password });
+    const result = buildLoginSchema().safeParse({
+      identifier: this.identifier,
+      password: this.password,
+    });
     if (!result.success) {
-      this.fieldErrors = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      this.fieldErrors = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       return;
     }
     this.fieldErrors = {};
     void this.authKit
-      .login({ identifier: this.identifier, password: this.password, turnstileToken: this.turnstileToken })
+      .login({
+        identifier: this.identifier,
+        password: this.password,
+        turnstileToken: this.turnstileToken,
+      })
       .catch(() => {});
   }
 }

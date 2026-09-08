@@ -21,9 +21,24 @@ const labelClass = 'text-sm font-medium leading-none';
 const errorClass = 'text-sm text-destructive';
 
 /** Shadcn variant — self-contained, styled shadcn-like via Radix primitives. Same props/behavior as headless. */
-export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFormProps): JSX.Element {
-  const { currentPassword, setCurrentPassword, onCurrentPasswordBlur, newPassword, setNewPassword, onNewPasswordBlur, confirmPassword, setConfirmPassword, onConfirmPasswordBlur, fieldErrors, handleSubmit, flow } =
-    useChangePasswordFormState({ authKit, passwordPolicy });
+export function ChangePasswordForm({
+  authKit,
+  passwordPolicy,
+}: ChangePasswordFormProps): JSX.Element {
+  const {
+    currentPassword,
+    setCurrentPassword,
+    onCurrentPasswordBlur,
+    newPassword,
+    setNewPassword,
+    onNewPasswordBlur,
+    confirmPassword,
+    setConfirmPassword,
+    onConfirmPasswordBlur,
+    fieldErrors,
+    handleSubmit,
+    flow,
+  } = useChangePasswordFormState({ authKit, passwordPolicy });
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const strength = evaluatePasswordStrength(newPassword, passwordPolicy);
@@ -103,7 +118,13 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
                   key={requirement.key}
                   className={`flex items-center gap-1 ${requirement.met ? 'text-green-600' : 'text-muted-foreground'}`}
                 >
-                  {requirement.met ? <CheckIcon className="h-3 w-3" /> : <span className="inline-block h-3 w-3" aria-hidden="true">·</span>}
+                  {requirement.met ? (
+                    <CheckIcon className="h-3 w-3" />
+                  ) : (
+                    <span className="inline-block h-3 w-3" aria-hidden="true">
+                      ·
+                    </span>
+                  )}
                   {requirement.label}
                 </li>
               ))}
@@ -137,7 +158,9 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
         {flow.status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña'}
       </button>
       {flow.status === 'error' && flow.error && <p className={errorClass}>{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="text-sm text-green-600">Contraseña actualizada.</p>}
+      {flow.status === 'success' && (
+        <p className="text-sm text-green-600">Contraseña actualizada.</p>
+      )}
     </form>
   );
 }

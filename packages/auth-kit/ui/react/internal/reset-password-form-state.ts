@@ -12,7 +12,11 @@ export interface UseResetPasswordFormStateOptions {
   passwordPolicy?: PasswordPolicy;
 }
 
-export function useResetPasswordFormState({ authKit, token, passwordPolicy }: UseResetPasswordFormStateOptions) {
+export function useResetPasswordFormState({
+  authKit,
+  token,
+  passwordPolicy,
+}: UseResetPasswordFormStateOptions) {
   const [newPassword, setNewPasswordRaw] = useState('');
   const [confirmPassword, setConfirmPasswordRaw] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -38,7 +42,10 @@ export function useResetPasswordFormState({ authKit, token, passwordPolicy }: Us
 
   /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
   const validateField = (key: string): void => {
-    const result = buildResetPasswordSchema({ passwordPolicy }).safeParse({ newPassword, confirmPassword });
+    const result = buildResetPasswordSchema({ passwordPolicy }).safeParse({
+      newPassword,
+      confirmPassword,
+    });
     const message = extractFieldError(result, key);
     setFieldErrors((prev) => {
       if (!message) {
@@ -55,9 +62,16 @@ export function useResetPasswordFormState({ authKit, token, passwordPolicy }: Us
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    const result = buildResetPasswordSchema({ passwordPolicy }).safeParse({ newPassword, confirmPassword });
+    const result = buildResetPasswordSchema({ passwordPolicy }).safeParse({
+      newPassword,
+      confirmPassword,
+    });
     if (!result.success) {
-      setFieldErrors(Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message])));
+      setFieldErrors(
+        Object.fromEntries(
+          result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+        ),
+      );
       return;
     }
     setFieldErrors({});

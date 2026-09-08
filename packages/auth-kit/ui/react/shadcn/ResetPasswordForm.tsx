@@ -22,9 +22,22 @@ const labelClass = 'text-sm font-medium leading-none';
 const errorClass = 'text-sm text-destructive';
 
 /** Shadcn variant — self-contained, styled shadcn-like via Radix primitives. Same props/behavior as headless. */
-export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPasswordFormProps): JSX.Element {
-  const { newPassword, setNewPassword, onNewPasswordBlur, confirmPassword, setConfirmPassword, onConfirmPasswordBlur, fieldErrors, handleSubmit, flow } =
-    useResetPasswordFormState({ authKit, token, passwordPolicy });
+export function ResetPasswordForm({
+  authKit,
+  token,
+  passwordPolicy,
+}: ResetPasswordFormProps): JSX.Element {
+  const {
+    newPassword,
+    setNewPassword,
+    onNewPasswordBlur,
+    confirmPassword,
+    setConfirmPassword,
+    onConfirmPasswordBlur,
+    fieldErrors,
+    handleSubmit,
+    flow,
+  } = useResetPasswordFormState({ authKit, token, passwordPolicy });
   const [showPassword, setShowPassword] = useState(false);
   const strength = evaluatePasswordStrength(newPassword, passwordPolicy);
 
@@ -77,7 +90,13 @@ export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPassw
                   key={requirement.key}
                   className={`flex items-center gap-1 ${requirement.met ? 'text-green-600' : 'text-muted-foreground'}`}
                 >
-                  {requirement.met ? <CheckIcon className="h-3 w-3" /> : <span className="inline-block h-3 w-3" aria-hidden="true">·</span>}
+                  {requirement.met ? (
+                    <CheckIcon className="h-3 w-3" />
+                  ) : (
+                    <span className="inline-block h-3 w-3" aria-hidden="true">
+                      ·
+                    </span>
+                  )}
                   {requirement.label}
                 </li>
               ))}
@@ -111,7 +130,9 @@ export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPassw
         {flow.status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña'}
       </button>
       {flow.status === 'error' && flow.error && <p className={errorClass}>{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="text-sm text-green-600">Contraseña restablecida.</p>}
+      {flow.status === 'success' && (
+        <p className="text-sm text-green-600">Contraseña restablecida.</p>
+      )}
     </form>
   );
 }

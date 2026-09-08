@@ -19,14 +19,21 @@ const EYE_BUTTON_CLASS =
   'absolute inset-y-0 right-0 flex w-9 appearance-none items-center justify-center border-0 bg-transparent p-0 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100';
 
 /** Tailwind variant — same options/behavior as headless, styled with the media-picker zinc palette. */
-export function mountResetPasswordForm(container: HTMLElement, { authKit, token, passwordPolicy }: MountResetPasswordFormOptions): () => void {
+export function mountResetPasswordForm(
+  container: HTMLElement,
+  { authKit, token, passwordPolicy }: MountResetPasswordFormOptions,
+): () => void {
   const next = field(
     'Contraseña nueva',
     { id: 'auth-kit-reset-new', type: 'password', autocomplete: 'new-password' },
     { label: LABEL_CLASS, input: `${INPUT_CLASS} pr-9` },
   );
   const nextError = errorText(ERROR_CLASS);
-  const showPassword = el('button', { type: 'button', 'aria-label': 'Mostrar contraseña', class: EYE_BUTTON_CLASS });
+  const showPassword = el('button', {
+    type: 'button',
+    'aria-label': 'Mostrar contraseña',
+    class: EYE_BUTTON_CLASS,
+  });
   showPassword.innerHTML = eyeSvg(true);
   const nextWrapper = el('div', { class: 'relative' }, [next.input, showPassword]);
 
@@ -83,7 +90,9 @@ export function mountResetPasswordForm(container: HTMLElement, { authKit, token,
     const values = { newPassword: next.input.value, confirmPassword: confirm.input.value };
     const result = buildResetPasswordSchema({ passwordPolicy }).safeParse(values);
     if (!result.success) {
-      const issues = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      const issues = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       nextError.setText(issues.newPassword);
       confirmError.setText(issues.confirmPassword);
       return;
@@ -92,14 +101,20 @@ export function mountResetPasswordForm(container: HTMLElement, { authKit, token,
     confirmError.setText(null);
     void authKit.resetPassword({ token, newPassword: values.newPassword }).catch(() => {});
   };
-  
+
   next.input.addEventListener('blur', () => {
-    const result = buildResetPasswordSchema({ passwordPolicy }).safeParse({ newPassword: next.input.value, confirmPassword: confirm.input.value });
+    const result = buildResetPasswordSchema({ passwordPolicy }).safeParse({
+      newPassword: next.input.value,
+      confirmPassword: confirm.input.value,
+    });
     nextError.setText(extractFieldError(result, 'newPassword'));
   });
   next.input.addEventListener('input', () => nextError.setText(null));
   confirm.input.addEventListener('blur', () => {
-    const result = buildResetPasswordSchema({ passwordPolicy }).safeParse({ newPassword: next.input.value, confirmPassword: confirm.input.value });
+    const result = buildResetPasswordSchema({ passwordPolicy }).safeParse({
+      newPassword: next.input.value,
+      confirmPassword: confirm.input.value,
+    });
     confirmError.setText(extractFieldError(result, 'confirmPassword'));
   });
   confirm.input.addEventListener('input', () => confirmError.setText(null));

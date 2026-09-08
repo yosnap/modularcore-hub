@@ -24,38 +24,104 @@ const EYE_OFF_PATH =
   imports: [NgIf, NgFor, TurnstileWidgetComponent],
   template: `
     <form novalidate class="flex flex-col gap-3" (submit)="handleSubmit($event)">
-      <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-register-email">
+      <label
+        class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300"
+        for="auth-kit-register-email"
+      >
         Correo electrónico
-        <input id="auth-kit-register-email" type="email" autocomplete="email" [class]="inputClass" [value]="email" (input)="email = $any($event.target).value; clearError('email')" (blur)="validateField('email')" />
+        <input
+          id="auth-kit-register-email"
+          type="email"
+          autocomplete="email"
+          [class]="inputClass"
+          [value]="email"
+          (input)="email = $any($event.target).value; clearError('email')"
+          (blur)="validateField('email')"
+        />
       </label>
-      <p *ngIf="fieldErrors['email']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['email'] }}</p>
+      <p *ngIf="fieldErrors['email']" class="text-sm text-red-600 dark:text-red-400">
+        {{ fieldErrors['email'] }}
+      </p>
 
-      <label *ngIf="fields.firstName.enabled" class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-register-firstname">
+      <label
+        *ngIf="fields.firstName.enabled"
+        class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300"
+        for="auth-kit-register-firstname"
+      >
         {{ fields.firstName.label }}
-        <input id="auth-kit-register-firstname" type="text" [class]="inputClass" [value]="firstName" (input)="firstName = $any($event.target).value; clearError('firstName')" (blur)="validateField('firstName')" />
+        <input
+          id="auth-kit-register-firstname"
+          type="text"
+          [class]="inputClass"
+          [value]="firstName"
+          (input)="firstName = $any($event.target).value; clearError('firstName')"
+          (blur)="validateField('firstName')"
+        />
       </label>
-      <p *ngIf="fieldErrors['firstName']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['firstName'] }}</p>
+      <p *ngIf="fieldErrors['firstName']" class="text-sm text-red-600 dark:text-red-400">
+        {{ fieldErrors['firstName'] }}
+      </p>
 
-      <label *ngIf="fields.lastName.enabled" class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-register-lastname">
+      <label
+        *ngIf="fields.lastName.enabled"
+        class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300"
+        for="auth-kit-register-lastname"
+      >
         {{ fields.lastName.label }}
-        <input id="auth-kit-register-lastname" type="text" [class]="inputClass" [value]="lastName" (input)="lastName = $any($event.target).value; clearError('lastName')" (blur)="validateField('lastName')" />
+        <input
+          id="auth-kit-register-lastname"
+          type="text"
+          [class]="inputClass"
+          [value]="lastName"
+          (input)="lastName = $any($event.target).value; clearError('lastName')"
+          (blur)="validateField('lastName')"
+        />
       </label>
-      <p *ngIf="fieldErrors['lastName']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['lastName'] }}</p>
+      <p *ngIf="fieldErrors['lastName']" class="text-sm text-red-600 dark:text-red-400">
+        {{ fieldErrors['lastName'] }}
+      </p>
 
-      <label *ngIf="fields.phone.enabled" class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-register-phone">
+      <label
+        *ngIf="fields.phone.enabled"
+        class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300"
+        for="auth-kit-register-phone"
+      >
         {{ fields.phone.label }}
-        <input id="auth-kit-register-phone" type="tel" [class]="inputClass" [value]="phone" (input)="phone = $any($event.target).value; clearError('phone')" (blur)="validateField('phone')" />
+        <input
+          id="auth-kit-register-phone"
+          type="tel"
+          [class]="inputClass"
+          [value]="phone"
+          (input)="phone = $any($event.target).value; clearError('phone')"
+          (blur)="validateField('phone')"
+        />
       </label>
-      <p *ngIf="fieldErrors['phone']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['phone'] }}</p>
+      <p *ngIf="fieldErrors['phone']" class="text-sm text-red-600 dark:text-red-400">
+        {{ fieldErrors['phone'] }}
+      </p>
 
-      <label *ngIf="fields.profileType.enabled" class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-register-profile-type">
+      <label
+        *ngIf="fields.profileType.enabled"
+        class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300"
+        for="auth-kit-register-profile-type"
+      >
         {{ fields.profileType.label }}
-        <select id="auth-kit-register-profile-type" [class]="inputClass + ' dark:[color-scheme:dark]'" [value]="profileType" (change)="profileType = $any($event.target).value">
-          <option *ngFor="let option of fields.profileType.options" [value]="option.value">{{ option.label }}</option>
+        <select
+          id="auth-kit-register-profile-type"
+          [class]="inputClass + ' dark:[color-scheme:dark]'"
+          [value]="profileType"
+          (change)="profileType = $any($event.target).value"
+        >
+          <option *ngFor="let option of fields.profileType.options" [value]="option.value">
+            {{ option.label }}
+          </option>
         </select>
       </label>
 
-      <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-register-password">
+      <label
+        class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300"
+        for="auth-kit-register-password"
+      >
         Contraseña
         <div class="relative">
           <input
@@ -64,10 +130,24 @@ const EYE_OFF_PATH =
             autocomplete="new-password"
             [class]="inputClass + ' pr-9'"
             [value]="password"
-            (input)="password = $any($event.target).value; clearError('password')" (blur)="validateField('password')"
+            (input)="password = $any($event.target).value; clearError('password')"
+            (blur)="validateField('password')"
           />
-          <button type="button" [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'" [class]="eyeButtonClass" (click)="showPassword = !showPassword">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+          <button
+            type="button"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            [class]="eyeButtonClass"
+            (click)="showPassword = !showPassword"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
               <ng-container *ngIf="showPassword; else eyeOpenReg">
                 <path [attr.d]="eyeOffPath" />
                 <path d="M1 1l22 22" />
@@ -80,9 +160,14 @@ const EYE_OFF_PATH =
           </button>
         </div>
       </label>
-      <p *ngIf="fieldErrors['password']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['password'] }}</p>
+      <p *ngIf="fieldErrors['password']" class="text-sm text-red-600 dark:text-red-400">
+        {{ fieldErrors['password'] }}
+      </p>
 
-      <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-register-confirm-password">
+      <label
+        class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300"
+        for="auth-kit-register-confirm-password"
+      >
         Confirmar contraseña
         <div class="relative">
           <input
@@ -91,10 +176,24 @@ const EYE_OFF_PATH =
             autocomplete="new-password"
             [class]="inputClass + ' pr-9'"
             [value]="confirmPassword"
-            (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')" (blur)="validateField('confirmPassword')"
+            (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')"
+            (blur)="validateField('confirmPassword')"
           />
-          <button type="button" [attr.aria-label]="showConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'" [class]="eyeButtonClass" (click)="showConfirm = !showConfirm">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+          <button
+            type="button"
+            [attr.aria-label]="showConfirm ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            [class]="eyeButtonClass"
+            (click)="showConfirm = !showConfirm"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
               <ng-container *ngIf="showConfirm; else eyeOpenConfirm">
                 <path [attr.d]="eyeOffPath" />
                 <path d="M1 1l22 22" />
@@ -107,19 +206,39 @@ const EYE_OFF_PATH =
           </button>
         </div>
       </label>
-      <p *ngIf="fieldErrors['confirmPassword']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['confirmPassword'] }}</p>
+      <p *ngIf="fieldErrors['confirmPassword']" class="text-sm text-red-600 dark:text-red-400">
+        {{ fieldErrors['confirmPassword'] }}
+      </p>
 
       <div *ngIf="fields.legalConsent.enabled">
-        <label class="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-register-terms">
-          <input id="auth-kit-register-terms" type="checkbox" class="mt-0.5" [checked]="termsAccepted" (change)="termsAccepted = $any($event.target).checked; clearError('termsAccepted')" />
+        <label
+          class="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+          for="auth-kit-register-terms"
+        >
+          <input
+            id="auth-kit-register-terms"
+            type="checkbox"
+            class="mt-0.5"
+            [checked]="termsAccepted"
+            (change)="termsAccepted = $any($event.target).checked; clearError('termsAccepted')"
+          />
           <span>
             {{ fields.legalConsent.text }}
             <span *ngFor="let link of fields.legalConsent.links; let i = index">
-              {{ i > 0 ? ' ' : '' }}<a [href]="link.href" target="_blank" rel="noreferrer" class="font-medium text-zinc-900 hover:underline dark:text-zinc-100">{{ link.label }}</a>
+              {{ i > 0 ? ' ' : ''
+              }}<a
+                [href]="link.href"
+                target="_blank"
+                rel="noreferrer"
+                class="font-medium text-zinc-900 hover:underline dark:text-zinc-100"
+                >{{ link.label }}</a
+              >
             </span>
           </span>
         </label>
-        <p *ngIf="fieldErrors['termsAccepted']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['termsAccepted'] }}</p>
+        <p *ngIf="fieldErrors['termsAccepted']" class="text-sm text-red-600 dark:text-red-400">
+          {{ fieldErrors['termsAccepted'] }}
+        </p>
       </div>
 
       <auth-kit-turnstile-widget
@@ -137,10 +256,18 @@ const EYE_OFF_PATH =
       >
         {{ authKit.state().register.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta' }}
       </button>
-      <p *ngIf="authKit.state().register.status === 'error' && authKit.state().register.error" class="text-sm text-red-600 dark:text-red-400">
+      <p
+        *ngIf="authKit.state().register.status === 'error' && authKit.state().register.error"
+        class="text-sm text-red-600 dark:text-red-400"
+      >
         {{ authKit.state().register.error?.message }}
       </p>
-      <p *ngIf="authKit.state().register.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Cuenta creada.</p>
+      <p
+        *ngIf="authKit.state().register.status === 'success'"
+        class="text-sm text-green-600 dark:text-green-400"
+      >
+        Cuenta creada.
+      </p>
 
       <p *ngIf="onNavigateToLogin" class="text-center text-sm text-zinc-600 dark:text-zinc-400">
         ¿Ya tienes una cuenta?
@@ -187,15 +314,19 @@ export class RegisterFormComponent implements OnChanges {
     if (!this.profileType) this.profileType = this.fields.profileType.defaultValue;
   }
 
-  
   collectValues(): Record<string, unknown> {
     const f = this.fields;
-    const values: Record<string, unknown> = { email: this.email, password: this.password, confirmPassword: this.confirmPassword };
+    const values: Record<string, unknown> = {
+      email: this.email,
+      password: this.password,
+      confirmPassword: this.confirmPassword,
+    };
     if (f.firstName.enabled) values.firstName = this.firstName;
     if (f.lastName.enabled) values.lastName = this.lastName;
     if (f.phone.enabled) values.phone = this.phone;
     if (f.profileType.enabled) values.profileType = this.profileType;
-    if (f.legalConsent.enabled && f.legalConsent.required) values.termsAccepted = this.termsAccepted;
+    if (f.legalConsent.enabled && f.legalConsent.required)
+      values.termsAccepted = this.termsAccepted;
     return values;
   }
 
@@ -210,7 +341,9 @@ export class RegisterFormComponent implements OnChanges {
 
   /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
   validateField(key: string): void {
-    const result = buildRegisterSchema(this.fields, { passwordPolicy: this.passwordPolicy }).safeParse(this.collectValues());
+    const result = buildRegisterSchema(this.fields, {
+      passwordPolicy: this.passwordPolicy,
+    }).safeParse(this.collectValues());
     const message = extractFieldError(result, key);
     if (message) {
       this.fieldErrors = { ...this.fieldErrors, [key]: message };
@@ -222,16 +355,25 @@ export class RegisterFormComponent implements OnChanges {
   handleSubmit(event: Event): void {
     event.preventDefault();
     const f = this.fields;
-    const values: Record<string, unknown> = { email: this.email, password: this.password, confirmPassword: this.confirmPassword };
+    const values: Record<string, unknown> = {
+      email: this.email,
+      password: this.password,
+      confirmPassword: this.confirmPassword,
+    };
     if (f.firstName.enabled) values.firstName = this.firstName;
     if (f.lastName.enabled) values.lastName = this.lastName;
     if (f.phone.enabled) values.phone = this.phone;
     if (f.profileType.enabled) values.profileType = this.profileType;
-    if (f.legalConsent.enabled && f.legalConsent.required) values.termsAccepted = this.termsAccepted;
+    if (f.legalConsent.enabled && f.legalConsent.required)
+      values.termsAccepted = this.termsAccepted;
 
-    const result = buildRegisterSchema(f, { passwordPolicy: this.passwordPolicy }).safeParse(values);
+    const result = buildRegisterSchema(f, { passwordPolicy: this.passwordPolicy }).safeParse(
+      values,
+    );
     if (!result.success) {
-      this.fieldErrors = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      this.fieldErrors = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       return;
     }
     this.fieldErrors = {};

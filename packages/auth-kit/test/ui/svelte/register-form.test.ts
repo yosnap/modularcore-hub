@@ -12,7 +12,9 @@ describe('RegisterForm.svelte (headless)', () => {
 
     await fireEvent.input(screen.getByLabelText('Email'), { target: { value: 'a@b.com' } });
     await fireEvent.input(screen.getByLabelText('Password'), { target: { value: 'Aa1!aaaa' } });
-    await fireEvent.input(screen.getByLabelText('Confirm password'), { target: { value: 'Aa1!aaaa' } });
+    await fireEvent.input(screen.getByLabelText('Confirm password'), {
+      target: { value: 'Aa1!aaaa' },
+    });
     await fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
     await waitFor(() =>
@@ -32,11 +34,16 @@ describe('RegisterForm.svelte (headless)', () => {
   it('blocks submit until a required, enabled optional field (legal consent) is filled', async () => {
     const onRegister = vi.fn().mockResolvedValue(undefined);
     const authKit = createAuthKit({ onLogin: vi.fn(), onRegister });
-    render(RegisterForm, { authKit, fieldConfig: { legalConsent: { enabled: true, text: 'I accept the' } } });
+    render(RegisterForm, {
+      authKit,
+      fieldConfig: { legalConsent: { enabled: true, text: 'I accept the' } },
+    });
 
     await fireEvent.input(screen.getByLabelText('Email'), { target: { value: 'a@b.com' } });
     await fireEvent.input(screen.getByLabelText('Password'), { target: { value: 'Aa1!aaaa' } });
-    await fireEvent.input(screen.getByLabelText('Confirm password'), { target: { value: 'Aa1!aaaa' } });
+    await fireEvent.input(screen.getByLabelText('Confirm password'), {
+      target: { value: 'Aa1!aaaa' },
+    });
     await fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
     expect(onRegister).not.toHaveBeenCalled();
@@ -45,6 +52,8 @@ describe('RegisterForm.svelte (headless)', () => {
     await fireEvent.click(screen.getByRole('checkbox'));
     await fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
-    await waitFor(() => expect(onRegister).toHaveBeenCalledWith(expect.objectContaining({ termsAccepted: true })));
+    await waitFor(() =>
+      expect(onRegister).toHaveBeenCalledWith(expect.objectContaining({ termsAccepted: true })),
+    );
   });
 });

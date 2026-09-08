@@ -33,7 +33,9 @@ export interface UseAuthKitResult<TSession = unknown> {
  * action just forwards to the core instance, which owns the per-flow state machine and notifies
  * this composable via `subscribe`. Same split as `useMediaPicker`.
  */
-export function useAuthKit<TSession = unknown>(hooks: AuthKitHooks<TSession>): UseAuthKitResult<TSession> {
+export function useAuthKit<TSession = unknown>(
+  hooks: AuthKitHooks<TSession>,
+): UseAuthKitResult<TSession> {
   const kit = new AuthKit<TSession>(hooks);
   const state = shallowRef<AuthKitState>(kit.getState());
 

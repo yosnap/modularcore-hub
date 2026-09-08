@@ -25,7 +25,10 @@ function strengthBarClass(index: number, score: number, total: number): string {
 }
 
 /** Shadcn variant — self-contained, styled shadcn-like via native elements + the shared design tokens. Same options/behavior as headless. */
-export function mountResetPasswordForm(container: HTMLElement, { authKit, token, passwordPolicy }: MountResetPasswordFormOptions): () => void {
+export function mountResetPasswordForm(
+  container: HTMLElement,
+  { authKit, token, passwordPolicy }: MountResetPasswordFormOptions,
+): () => void {
   const next = field(
     'Contraseña nueva',
     { id: 'auth-kit-reset-new', type: 'password', autocomplete: 'new-password' },
@@ -35,7 +38,8 @@ export function mountResetPasswordForm(container: HTMLElement, { authKit, token,
   const showPassword = el('button', {
     type: 'button',
     'aria-label': 'Mostrar contraseña',
-    class: 'absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground',
+    class:
+      'absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground',
   });
   showPassword.innerHTML = eyeSvg(true);
   const nextWrapper = el('div', { class: 'relative' }, [next.input, showPassword]);
@@ -54,7 +58,8 @@ export function mountResetPasswordForm(container: HTMLElement, { authKit, token,
     'button',
     {
       type: 'submit',
-      class: 'inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50',
+      class:
+        'inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50',
     },
     ['Restablecer contraseña'],
   );
@@ -63,7 +68,12 @@ export function mountResetPasswordForm(container: HTMLElement, { authKit, token,
   success.hidden = true;
 
   const form = el('form', { novalidate: '', class: 'flex flex-col gap-4' }, [
-    el('div', { class: 'flex flex-col gap-1.5' }, [next.label, nextWrapper, strengthBlock, nextError.node]),
+    el('div', { class: 'flex flex-col gap-1.5' }, [
+      next.label,
+      nextWrapper,
+      strengthBlock,
+      nextError.node,
+    ]),
     el('div', { class: 'flex flex-col gap-1.5' }, [confirm.label, confirmError.node]),
     submit,
     submitError.node,
@@ -78,12 +88,20 @@ export function mountResetPasswordForm(container: HTMLElement, { authKit, token,
     const strength = evaluatePasswordStrength(value, passwordPolicy);
     strengthBars.innerHTML = '';
     for (let index = 0; index < strength.total; index += 1) {
-      strengthBars.append(el('span', { class: `h-1 flex-1 rounded-full ${strengthBarClass(index, strength.score, strength.total)}` }));
+      strengthBars.append(
+        el('span', {
+          class: `h-1 flex-1 rounded-full ${strengthBarClass(index, strength.score, strength.total)}`,
+        }),
+      );
     }
     strengthList.innerHTML = '';
     for (const requirement of strength.requirements) {
-      const item = el('li', { class: `flex items-center gap-1 ${requirement.met ? 'text-green-600' : 'text-muted-foreground'}` });
-      item.innerHTML = requirement.met ? checkSvg() : '<span class="inline-block h-3 w-3" aria-hidden="true">·</span>';
+      const item = el('li', {
+        class: `flex items-center gap-1 ${requirement.met ? 'text-green-600' : 'text-muted-foreground'}`,
+      });
+      item.innerHTML = requirement.met
+        ? checkSvg()
+        : '<span class="inline-block h-3 w-3" aria-hidden="true">·</span>';
       item.append(requirement.label);
       strengthList.append(item);
     }
@@ -111,7 +129,9 @@ export function mountResetPasswordForm(container: HTMLElement, { authKit, token,
     const values = { newPassword: next.input.value, confirmPassword: confirm.input.value };
     const result = buildResetPasswordSchema({ passwordPolicy }).safeParse(values);
     if (!result.success) {
-      const issues = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      const issues = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       nextError.setText(issues.newPassword);
       confirmError.setText(issues.confirmPassword);
       return;
@@ -120,14 +140,20 @@ export function mountResetPasswordForm(container: HTMLElement, { authKit, token,
     confirmError.setText(null);
     void authKit.resetPassword({ token, newPassword: values.newPassword }).catch(() => {});
   };
-  
+
   next.input.addEventListener('blur', () => {
-    const result = buildResetPasswordSchema({ passwordPolicy }).safeParse({ newPassword: next.input.value, confirmPassword: confirm.input.value });
+    const result = buildResetPasswordSchema({ passwordPolicy }).safeParse({
+      newPassword: next.input.value,
+      confirmPassword: confirm.input.value,
+    });
     nextError.setText(extractFieldError(result, 'newPassword'));
   });
   next.input.addEventListener('input', () => nextError.setText(null));
   confirm.input.addEventListener('blur', () => {
-    const result = buildResetPasswordSchema({ passwordPolicy }).safeParse({ newPassword: next.input.value, confirmPassword: confirm.input.value });
+    const result = buildResetPasswordSchema({ passwordPolicy }).safeParse({
+      newPassword: next.input.value,
+      confirmPassword: confirm.input.value,
+    });
     confirmError.setText(extractFieldError(result, 'confirmPassword'));
   });
   confirm.input.addEventListener('input', () => confirmError.setText(null));

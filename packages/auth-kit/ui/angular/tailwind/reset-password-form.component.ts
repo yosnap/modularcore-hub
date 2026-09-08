@@ -21,7 +21,10 @@ const EYE_OFF_PATH =
   imports: [NgIf],
   template: `
     <form novalidate class="flex flex-col gap-3" (submit)="handleSubmit($event)">
-      <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-reset-new">
+      <label
+        class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300"
+        for="auth-kit-reset-new"
+      >
         Contraseña nueva
         <div class="relative">
           <input
@@ -30,10 +33,24 @@ const EYE_OFF_PATH =
             autocomplete="new-password"
             [class]="inputClass + ' pr-9'"
             [value]="newPassword"
-            (input)="newPassword = $any($event.target).value; clearError('newPassword')" (blur)="validateField('newPassword')"
+            (input)="newPassword = $any($event.target).value; clearError('newPassword')"
+            (blur)="validateField('newPassword')"
           />
-          <button type="button" [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'" [class]="eyeButtonClass" (click)="showPassword = !showPassword">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+          <button
+            type="button"
+            [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            [class]="eyeButtonClass"
+            (click)="showPassword = !showPassword"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
               <ng-container *ngIf="showPassword; else eyeOpenReset">
                 <path [attr.d]="eyeOffPath" />
                 <path d="M1 1l22 22" />
@@ -46,9 +63,14 @@ const EYE_OFF_PATH =
           </button>
         </div>
       </label>
-      <p *ngIf="fieldErrors['newPassword']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['newPassword'] }}</p>
+      <p *ngIf="fieldErrors['newPassword']" class="text-sm text-red-600 dark:text-red-400">
+        {{ fieldErrors['newPassword'] }}
+      </p>
 
-      <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-reset-confirm">
+      <label
+        class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300"
+        for="auth-kit-reset-confirm"
+      >
         Confirmar contraseña nueva
         <input
           id="auth-kit-reset-confirm"
@@ -56,22 +78,39 @@ const EYE_OFF_PATH =
           autocomplete="new-password"
           [class]="inputClass"
           [value]="confirmPassword"
-          (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')" (blur)="validateField('confirmPassword')"
+          (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')"
+          (blur)="validateField('confirmPassword')"
         />
       </label>
-      <p *ngIf="fieldErrors['confirmPassword']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['confirmPassword'] }}</p>
+      <p *ngIf="fieldErrors['confirmPassword']" class="text-sm text-red-600 dark:text-red-400">
+        {{ fieldErrors['confirmPassword'] }}
+      </p>
 
       <button
         type="submit"
         [disabled]="authKit.state().resetPassword.status === 'submitting'"
         class="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
       >
-        {{ authKit.state().resetPassword.status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña' }}
+        {{
+          authKit.state().resetPassword.status === 'submitting'
+            ? 'Restableciendo…'
+            : 'Restablecer contraseña'
+        }}
       </button>
-      <p *ngIf="authKit.state().resetPassword.status === 'error' && authKit.state().resetPassword.error" class="text-sm text-red-600 dark:text-red-400">
+      <p
+        *ngIf="
+          authKit.state().resetPassword.status === 'error' && authKit.state().resetPassword.error
+        "
+        class="text-sm text-red-600 dark:text-red-400"
+      >
         {{ authKit.state().resetPassword.error?.message }}
       </p>
-      <p *ngIf="authKit.state().resetPassword.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Contraseña restablecida.</p>
+      <p
+        *ngIf="authKit.state().resetPassword.status === 'success'"
+        class="text-sm text-green-600 dark:text-green-400"
+      >
+        Contraseña restablecida.
+      </p>
     </form>
   `,
 })
@@ -90,7 +129,6 @@ export class ResetPasswordFormComponent {
   showPassword = false;
   fieldErrors: Record<string, string> = {};
 
-  
   /** Clears a field's stale error message as soon as the user edits it, instead of leaving it displayed until the next submit. */
   clearError(key: string): void {
     if (key in this.fieldErrors) {
@@ -102,7 +140,10 @@ export class ResetPasswordFormComponent {
 
   /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
   validateField(key: string): void {
-    const result = buildResetPasswordSchema({ passwordPolicy: this.passwordPolicy }).safeParse({ newPassword: this.newPassword, confirmPassword: this.confirmPassword });
+    const result = buildResetPasswordSchema({ passwordPolicy: this.passwordPolicy }).safeParse({
+      newPassword: this.newPassword,
+      confirmPassword: this.confirmPassword,
+    });
     const message = extractFieldError(result, key);
     if (message) {
       this.fieldErrors = { ...this.fieldErrors, [key]: message };
@@ -118,10 +159,14 @@ export class ResetPasswordFormComponent {
       confirmPassword: this.confirmPassword,
     });
     if (!result.success) {
-      this.fieldErrors = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      this.fieldErrors = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       return;
     }
     this.fieldErrors = {};
-    void this.authKit.resetPassword({ token: this.token, newPassword: this.newPassword }).catch(() => {});
+    void this.authKit
+      .resetPassword({ token: this.token, newPassword: this.newPassword })
+      .catch(() => {});
   }
 }

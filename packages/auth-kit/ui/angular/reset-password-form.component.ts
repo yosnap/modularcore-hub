@@ -20,9 +20,12 @@ import type { PasswordPolicy } from '../../core/validation.js';
           [type]="showPassword ? 'text' : 'password'"
           autocomplete="new-password"
           [value]="newPassword"
-          (input)="newPassword = $any($event.target).value; clearError('newPassword')" (blur)="validateField('newPassword')"
+          (input)="newPassword = $any($event.target).value; clearError('newPassword')"
+          (blur)="validateField('newPassword')"
         />
-        <button type="button" (click)="showPassword = !showPassword">{{ showPassword ? 'Ocultar' : 'Mostrar' }}</button>
+        <button type="button" (click)="showPassword = !showPassword">
+          {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+        </button>
         <p *ngIf="fieldErrors['newPassword']" role="alert">{{ fieldErrors['newPassword'] }}</p>
       </div>
       <div>
@@ -32,14 +35,26 @@ import type { PasswordPolicy } from '../../core/validation.js';
           [type]="showPassword ? 'text' : 'password'"
           autocomplete="new-password"
           [value]="confirmPassword"
-          (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')" (blur)="validateField('confirmPassword')"
+          (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')"
+          (blur)="validateField('confirmPassword')"
         />
-        <p *ngIf="fieldErrors['confirmPassword']" role="alert">{{ fieldErrors['confirmPassword'] }}</p>
+        <p *ngIf="fieldErrors['confirmPassword']" role="alert">
+          {{ fieldErrors['confirmPassword'] }}
+        </p>
       </div>
       <button type="submit" [disabled]="authKit.state().resetPassword.status === 'submitting'">
-        {{ authKit.state().resetPassword.status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña' }}
+        {{
+          authKit.state().resetPassword.status === 'submitting'
+            ? 'Restableciendo…'
+            : 'Restablecer contraseña'
+        }}
       </button>
-      <p *ngIf="authKit.state().resetPassword.status === 'error' && authKit.state().resetPassword.error" role="alert">
+      <p
+        *ngIf="
+          authKit.state().resetPassword.status === 'error' && authKit.state().resetPassword.error
+        "
+        role="alert"
+      >
         {{ authKit.state().resetPassword.error?.message }}
       </p>
       <p *ngIf="authKit.state().resetPassword.status === 'success'">Contraseña restablecida.</p>
@@ -56,7 +71,6 @@ export class ResetPasswordFormComponent {
   showPassword = false;
   fieldErrors: Record<string, string> = {};
 
-  
   /** Clears a field's stale error message as soon as the user edits it, instead of leaving it displayed until the next submit. */
   clearError(key: string): void {
     if (key in this.fieldErrors) {
@@ -68,7 +82,10 @@ export class ResetPasswordFormComponent {
 
   /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
   validateField(key: string): void {
-    const result = buildResetPasswordSchema({ passwordPolicy: this.passwordPolicy }).safeParse({ newPassword: this.newPassword, confirmPassword: this.confirmPassword });
+    const result = buildResetPasswordSchema({ passwordPolicy: this.passwordPolicy }).safeParse({
+      newPassword: this.newPassword,
+      confirmPassword: this.confirmPassword,
+    });
     const message = extractFieldError(result, key);
     if (message) {
       this.fieldErrors = { ...this.fieldErrors, [key]: message };
@@ -84,10 +101,14 @@ export class ResetPasswordFormComponent {
       confirmPassword: this.confirmPassword,
     });
     if (!result.success) {
-      this.fieldErrors = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      this.fieldErrors = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       return;
     }
     this.fieldErrors = {};
-    void this.authKit.resetPassword({ token: this.token, newPassword: this.newPassword }).catch(() => {});
+    void this.authKit
+      .resetPassword({ token: this.token, newPassword: this.newPassword })
+      .catch(() => {});
   }
 }

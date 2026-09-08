@@ -21,7 +21,8 @@ const INPUT_CLASS =
   'box-border flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm text-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
 const LABEL_CLASS = 'text-sm font-medium leading-none';
 const ERROR_CLASS = 'text-sm text-destructive';
-const LINK_CLASS = 'text-xs font-medium appearance-none border-0 bg-transparent p-0 text-primary hover:underline';
+const LINK_CLASS =
+  'text-xs font-medium appearance-none border-0 bg-transparent p-0 text-primary hover:underline';
 
 function strengthBarClass(index: number, score: number, total: number): string {
   if (index >= score) return 'bg-muted';
@@ -37,7 +38,11 @@ export function mountRegisterForm(
 ): () => void {
   const fields = resolveFieldConfig(fieldConfig);
 
-  const email = field('Correo electrónico', { id: 'auth-kit-register-email', type: 'email', autocomplete: 'email' }, { label: LABEL_CLASS, input: INPUT_CLASS });
+  const email = field(
+    'Correo electrónico',
+    { id: 'auth-kit-register-email', type: 'email', autocomplete: 'email' },
+    { label: LABEL_CLASS, input: INPUT_CLASS },
+  );
   const emailError = errorText(ERROR_CLASS);
   const password = field(
     'Contraseña',
@@ -48,7 +53,8 @@ export function mountRegisterForm(
   const showPassword = el('button', {
     type: 'button',
     'aria-label': 'Mostrar contraseña',
-    class: 'absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground',
+    class:
+      'absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground',
   });
   showPassword.innerHTML = eyeSvg(true);
   const passwordWrapper = el('div', { class: 'relative' }, [password.input, showPassword]);
@@ -66,16 +72,21 @@ export function mountRegisterForm(
   const showConfirm = el('button', {
     type: 'button',
     'aria-label': 'Mostrar contraseña',
-    class: 'absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground',
+    class:
+      'absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground',
   });
   showConfirm.innerHTML = eyeSvg(true);
-  const confirmPasswordWrapper = el('div', { class: 'relative' }, [confirmPassword.input, showConfirm]);
+  const confirmPasswordWrapper = el('div', { class: 'relative' }, [
+    confirmPassword.input,
+    showConfirm,
+  ]);
 
   const submit = el(
     'button',
     {
       type: 'submit',
-      class: 'inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50',
+      class:
+        'inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50',
     },
     ['Crear cuenta'],
   );
@@ -97,9 +108,15 @@ export function mountRegisterForm(
     }
   }
   if (fields.profileType.enabled) {
-    const tablist = el('div', { class: 'grid grid-cols-2 gap-1 rounded-md bg-muted p-1', role: 'tablist', 'aria-label': fields.profileType.label });
+    const tablist = el('div', {
+      class: 'grid grid-cols-2 gap-1 rounded-md bg-muted p-1',
+      role: 'tablist',
+      'aria-label': fields.profileType.label,
+    });
     for (const option of fields.profileType.options) {
-      const button = el('button', { type: 'button', role: 'tab', 'data-value': option.value }, [option.label]);
+      const button = el('button', { type: 'button', role: 'tab', 'data-value': option.value }, [
+        option.label,
+      ]);
       button.addEventListener('click', () => {
         profileType = option.value;
         renderProfileTypeTabs();
@@ -115,24 +132,47 @@ export function mountRegisterForm(
 
   let firstName: ReturnType<typeof field> | undefined;
   if (fields.firstName.enabled) {
-    firstName = field(fields.firstName.label, { id: 'auth-kit-register-firstname', type: 'text' }, { label: LABEL_CLASS, input: INPUT_CLASS });
+    firstName = field(
+      fields.firstName.label,
+      { id: 'auth-kit-register-firstname', type: 'text' },
+      { label: LABEL_CLASS, input: INPUT_CLASS },
+    );
     rows.push(el('div', { class: 'flex flex-col gap-1.5' }, [firstName.label]));
   }
   let lastName: ReturnType<typeof field> | undefined;
   if (fields.lastName.enabled) {
-    lastName = field(fields.lastName.label, { id: 'auth-kit-register-lastname', type: 'text' }, { label: LABEL_CLASS, input: INPUT_CLASS });
+    lastName = field(
+      fields.lastName.label,
+      { id: 'auth-kit-register-lastname', type: 'text' },
+      { label: LABEL_CLASS, input: INPUT_CLASS },
+    );
     rows.push(el('div', { class: 'flex flex-col gap-1.5' }, [lastName.label]));
   }
   let phone: ReturnType<typeof field> | undefined;
   if (fields.phone.enabled) {
-    phone = field(fields.phone.label, { id: 'auth-kit-register-phone', type: 'tel' }, { label: LABEL_CLASS, input: INPUT_CLASS });
+    phone = field(
+      fields.phone.label,
+      { id: 'auth-kit-register-phone', type: 'tel' },
+      { label: LABEL_CLASS, input: INPUT_CLASS },
+    );
     rows.push(el('div', { class: 'flex flex-col gap-1.5' }, [phone.label]));
   }
 
   rows.push(
-    el('div', { class: 'flex flex-col gap-1.5' }, [password.label, passwordWrapper, strengthBlock, passwordError.node]),
+    el('div', { class: 'flex flex-col gap-1.5' }, [
+      password.label,
+      passwordWrapper,
+      strengthBlock,
+      passwordError.node,
+    ]),
   );
-  rows.push(el('div', { class: 'flex flex-col gap-1.5' }, [confirmPassword.label, confirmPasswordWrapper, confirmPasswordError.node]));
+  rows.push(
+    el('div', { class: 'flex flex-col gap-1.5' }, [
+      confirmPassword.label,
+      confirmPasswordWrapper,
+      confirmPasswordError.node,
+    ]),
+  );
 
   let termsCheckbox: HTMLInputElement | undefined;
   const termsError = errorText(ERROR_CLASS);
@@ -143,13 +183,29 @@ export function mountRegisterForm(
       class: 'mt-0.5 h-4 w-4 shrink-0 rounded-sm border border-primary',
     });
     const links = fields.legalConsent.links.map((link, index) => {
-      const anchor = el('a', { href: link.href, target: '_blank', rel: 'noreferrer', class: 'font-medium text-foreground hover:underline' }, [
-        link.label,
-      ]);
+      const anchor = el(
+        'a',
+        {
+          href: link.href,
+          target: '_blank',
+          rel: 'noreferrer',
+          class: 'font-medium text-foreground hover:underline',
+        },
+        [link.label],
+      );
       return index > 0 ? el('span', {}, [' ', anchor]) : anchor;
     });
-    const label = el('label', { for: 'auth-kit-register-terms', class: 'text-sm text-muted-foreground' }, [fields.legalConsent.text, ' ', ...links]);
-    rows.push(el('div', {}, [el('div', { class: 'flex items-start gap-2' }, [termsCheckbox, label]), termsError.node]));
+    const label = el(
+      'label',
+      { for: 'auth-kit-register-terms', class: 'text-sm text-muted-foreground' },
+      [fields.legalConsent.text, ' ', ...links],
+    );
+    rows.push(
+      el('div', {}, [
+        el('div', { class: 'flex items-start gap-2' }, [termsCheckbox, label]),
+        termsError.node,
+      ]),
+    );
   }
 
   let turnstileToken: string | null = null;
@@ -174,7 +230,10 @@ export function mountRegisterForm(
   let loginLink: HTMLButtonElement | undefined;
   if (onNavigateToLogin) {
     loginLink = el('button', { type: 'button', class: LINK_CLASS }, ['Iniciar sesión']);
-    loginFooter = el('p', { class: 'text-center text-sm text-muted-foreground' }, ['¿Ya tienes una cuenta? ', loginLink]);
+    loginFooter = el('p', { class: 'text-center text-sm text-muted-foreground' }, [
+      '¿Ya tienes una cuenta? ',
+      loginLink,
+    ]);
     rows.push(loginFooter);
   }
 
@@ -188,12 +247,20 @@ export function mountRegisterForm(
     const strength = evaluatePasswordStrength(value, passwordPolicy);
     strengthBars.innerHTML = '';
     for (let index = 0; index < strength.total; index += 1) {
-      strengthBars.append(el('span', { class: `h-1 flex-1 rounded-full ${strengthBarClass(index, strength.score, strength.total)}` }));
+      strengthBars.append(
+        el('span', {
+          class: `h-1 flex-1 rounded-full ${strengthBarClass(index, strength.score, strength.total)}`,
+        }),
+      );
     }
     strengthList.innerHTML = '';
     for (const requirement of strength.requirements) {
-      const item = el('li', { class: `flex items-center gap-1 ${requirement.met ? 'text-green-600' : 'text-muted-foreground'}` });
-      item.innerHTML = requirement.met ? checkSvg() : '<span class="inline-block h-3 w-3" aria-hidden="true">·</span>';
+      const item = el('li', {
+        class: `flex items-center gap-1 ${requirement.met ? 'text-green-600' : 'text-muted-foreground'}`,
+      });
+      item.innerHTML = requirement.met
+        ? checkSvg()
+        : '<span class="inline-block h-3 w-3" aria-hidden="true">·</span>';
       item.append(requirement.label);
       strengthList.append(item);
     }
@@ -238,7 +305,9 @@ export function mountRegisterForm(
 
     const result = buildRegisterSchema(fields, { passwordPolicy }).safeParse(values);
     if (!result.success) {
-      const issues = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      const issues = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       emailError.setText(issues.email);
       passwordError.setText(issues.password);
       confirmPasswordError.setText(issues.confirmPassword);
@@ -263,7 +332,7 @@ export function mountRegisterForm(
       })
       .catch(() => {});
   };
-  
+
   function collectValues(): Record<string, unknown> {
     const values: Record<string, unknown> = {
       email: email.input.value,

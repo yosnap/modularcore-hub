@@ -6,7 +6,13 @@ import { RegisterForm } from '../../../ui/react/RegisterForm.js';
 
 import type { AuthKitFieldConfig } from '../../../core/field-config.js';
 
-function Harness({ onRegister, fieldConfig }: { onRegister: (payload: unknown) => Promise<unknown>; fieldConfig?: AuthKitFieldConfig }) {
+function Harness({
+  onRegister,
+  fieldConfig,
+}: {
+  onRegister: (payload: unknown) => Promise<unknown>;
+  fieldConfig?: AuthKitFieldConfig;
+}) {
   const authKit = useAuthKit({ onLogin: vi.fn(), onRegister: onRegister as never });
   return <RegisterForm authKit={authKit} fieldConfig={fieldConfig} />;
 }
@@ -41,7 +47,12 @@ describe('RegisterForm (headless)', () => {
 
   it('blocks submit until a required, enabled optional field (legal consent) is filled', async () => {
     const onRegister = vi.fn().mockResolvedValue(undefined);
-    render(<Harness onRegister={onRegister} fieldConfig={{ legalConsent: { enabled: true, text: 'I accept the' } }} />);
+    render(
+      <Harness
+        onRegister={onRegister}
+        fieldConfig={{ legalConsent: { enabled: true, text: 'I accept the' } }}
+      />,
+    );
 
     fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'a@b.com' } });
     fillPasswords();
@@ -53,6 +64,8 @@ describe('RegisterForm (headless)', () => {
     fireEvent.click(screen.getByRole('checkbox'));
     fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
-    await waitFor(() => expect(onRegister).toHaveBeenCalledWith(expect.objectContaining({ termsAccepted: true })));
+    await waitFor(() =>
+      expect(onRegister).toHaveBeenCalledWith(expect.objectContaining({ termsAccepted: true })),
+    );
   });
 });

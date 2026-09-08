@@ -18,7 +18,12 @@ export interface RegisterFormProps {
 }
 
 /** Vanilla CSS variant — same props/behavior as headless, styled with `auth-kit-*` classes. */
-export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateToLogin }: RegisterFormProps): JSX.Element {
+export function RegisterForm({
+  authKit,
+  fieldConfig,
+  passwordPolicy,
+  onNavigateToLogin,
+}: RegisterFormProps): JSX.Element {
   const state = useRegisterFormState({ authKit, fieldConfig, passwordPolicy });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -115,7 +120,11 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
             autoComplete="new-password"
             className="auth-kit-input"
           />
-          <button type="button" onClick={() => setShowPassword((value) => !value)} className="auth-kit-button auth-kit-button--ghost">
+          <button
+            type="button"
+            onClick={() => setShowPassword((value) => !value)}
+            className="auth-kit-button auth-kit-button--ghost"
+          >
             {showPassword ? 'Ocultar' : 'Mostrar'}
           </button>
         </span>
@@ -134,12 +143,18 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
             autoComplete="new-password"
             className="auth-kit-input"
           />
-          <button type="button" onClick={() => setShowConfirm((value) => !value)} className="auth-kit-button auth-kit-button--ghost">
+          <button
+            type="button"
+            onClick={() => setShowConfirm((value) => !value)}
+            className="auth-kit-button auth-kit-button--ghost"
+          >
             {showConfirm ? 'Ocultar' : 'Mostrar'}
           </button>
         </span>
       </label>
-      {fieldErrors.confirmPassword && <p className="auth-kit-error">{fieldErrors.confirmPassword}</p>}
+      {fieldErrors.confirmPassword && (
+        <p className="auth-kit-error">{fieldErrors.confirmPassword}</p>
+      )}
 
       {fields.legalConsent.enabled && (
         <div>
@@ -162,7 +177,9 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
               ))}
             </span>
           </label>
-          {fieldErrors.termsAccepted && <p className="auth-kit-error">{fieldErrors.termsAccepted}</p>}
+          {fieldErrors.termsAccepted && (
+            <p className="auth-kit-error">{fieldErrors.termsAccepted}</p>
+          )}
         </div>
       )}
 
@@ -175,13 +192,23 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
         />
       )}
 
-      <button type="submit" disabled={flow.status === 'submitting'} className="auth-kit-button auth-kit-button--primary">
+      <button
+        type="submit"
+        disabled={flow.status === 'submitting'}
+        className="auth-kit-button auth-kit-button--primary"
+      >
         {flow.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta'}
       </button>
-      {flow.status === 'error' && flow.error && <p className="auth-kit-error">{flow.error.message}</p>}
+      {flow.status === 'error' && flow.error && (
+        <p className="auth-kit-error">{flow.error.message}</p>
+      )}
       {flow.status === 'success' && <p className="auth-kit-success">Cuenta creada.</p>}
       {onNavigateToLogin && (
-        <button type="button" onClick={onNavigateToLogin} className="auth-kit-button auth-kit-button--ghost">
+        <button
+          type="button"
+          onClick={onNavigateToLogin}
+          className="auth-kit-button auth-kit-button--ghost"
+        >
           Iniciar sesión
         </button>
       )}

@@ -82,16 +82,36 @@
     "@radix-ui/react-select": ">=2"
   },
   "peerDependenciesMeta": {
-    "react": { "optional": true },
-    "svelte": { "optional": true },
-    "vue": { "optional": true },
-    "@angular/core": { "optional": true },
-    "@angular/common": { "optional": true },
-    "better-auth": { "optional": true },
-    "@radix-ui/react-checkbox": { "optional": true },
-    "@radix-ui/react-label": { "optional": true },
-    "@radix-ui/react-tabs": { "optional": true },
-    "@radix-ui/react-select": { "optional": true }
+    "react": {
+      "optional": true
+    },
+    "svelte": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    },
+    "@angular/core": {
+      "optional": true
+    },
+    "@angular/common": {
+      "optional": true
+    },
+    "better-auth": {
+      "optional": true
+    },
+    "@radix-ui/react-checkbox": {
+      "optional": true
+    },
+    "@radix-ui/react-label": {
+      "optional": true
+    },
+    "@radix-ui/react-tabs": {
+      "optional": true
+    },
+    "@radix-ui/react-select": {
+      "optional": true
+    }
   },
   "dependencies": {
     "zod": "^4.4.3"

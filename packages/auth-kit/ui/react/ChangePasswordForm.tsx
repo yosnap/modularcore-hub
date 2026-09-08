@@ -12,9 +12,24 @@ export interface ChangePasswordFormProps {
 }
 
 /** Headless variant — no CSS classes, fully consumer-styleable. Same props/behavior across every presentation. */
-export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFormProps): JSX.Element {
-  const { currentPassword, setCurrentPassword, onCurrentPasswordBlur, newPassword, setNewPassword, onNewPasswordBlur, confirmPassword, setConfirmPassword, onConfirmPasswordBlur, fieldErrors, handleSubmit, flow } =
-    useChangePasswordFormState({ authKit, passwordPolicy });
+export function ChangePasswordForm({
+  authKit,
+  passwordPolicy,
+}: ChangePasswordFormProps): JSX.Element {
+  const {
+    currentPassword,
+    setCurrentPassword,
+    onCurrentPasswordBlur,
+    newPassword,
+    setNewPassword,
+    onNewPasswordBlur,
+    confirmPassword,
+    setConfirmPassword,
+    onConfirmPasswordBlur,
+    fieldErrors,
+    handleSubmit,
+    flow,
+  } = useChangePasswordFormState({ authKit, passwordPolicy });
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
 
@@ -27,7 +42,7 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
           type={showCurrent ? 'text' : 'password'}
           value={currentPassword}
           onChange={(event) => setCurrentPassword(event.target.value)}
-            onBlur={onCurrentPasswordBlur}
+          onBlur={onCurrentPasswordBlur}
           autoComplete="current-password"
         />
         <button type="button" onClick={() => setShowCurrent((value) => !value)}>
@@ -42,7 +57,7 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
           type={showNew ? 'text' : 'password'}
           value={newPassword}
           onChange={(event) => setNewPassword(event.target.value)}
-            onBlur={onNewPasswordBlur}
+          onBlur={onNewPasswordBlur}
           autoComplete="new-password"
         />
         <button type="button" onClick={() => setShowNew((value) => !value)}>

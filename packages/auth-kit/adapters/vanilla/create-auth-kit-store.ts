@@ -34,7 +34,9 @@ export interface AuthKitStore<TSession = unknown> {
  * Rails, or any framework-less page. No framework here, so cleanup is left to the caller: call
  * `destroy()` when the island/page/widget unmounts. Same shape/rationale as `createMediaPickerStore`.
  */
-export function createAuthKitStore<TSession = unknown>(hooks: AuthKitHooks<TSession>): AuthKitStore<TSession> {
+export function createAuthKitStore<TSession = unknown>(
+  hooks: AuthKitHooks<TSession>,
+): AuthKitStore<TSession> {
   const kit = new AuthKit<TSession>(hooks);
   const unsubscribes = new Set<() => void>();
 

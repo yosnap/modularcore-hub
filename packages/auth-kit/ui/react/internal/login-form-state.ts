@@ -56,7 +56,11 @@ export function useLoginFormState({ authKit }: UseLoginFormStateOptions) {
     event.preventDefault();
     const result = buildLoginSchema().safeParse({ identifier, password });
     if (!result.success) {
-      setFieldErrors(Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message])));
+      setFieldErrors(
+        Object.fromEntries(
+          result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+        ),
+      );
       return;
     }
     setFieldErrors({});

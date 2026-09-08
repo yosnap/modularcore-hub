@@ -1,4 +1,13 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 
 import { mountTurnstileWidget, TurnstileController } from '../../core/turnstile.js';
 
@@ -25,7 +34,11 @@ export class TurnstileWidgetComponent implements OnInit, OnDestroy {
   private unmountWidget?: () => void;
 
   ngOnInit(): void {
-    this.controller = new TurnstileController({ siteKey: this.siteKey, theme: this.theme, mode: this.mode });
+    this.controller = new TurnstileController({
+      siteKey: this.siteKey,
+      theme: this.theme,
+      mode: this.mode,
+    });
     this.unsubscribe = this.controller.subscribe((state) => this.token.emit(state.token));
     this.unmountWidget = mountTurnstileWidget(this.containerRef.nativeElement, this.controller);
   }

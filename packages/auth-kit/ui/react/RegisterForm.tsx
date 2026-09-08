@@ -17,7 +17,12 @@ export interface RegisterFormProps {
 }
 
 /** Headless variant — no CSS classes, fully consumer-styleable. Same props/behavior across every presentation. */
-export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateToLogin }: RegisterFormProps): JSX.Element {
+export function RegisterForm({
+  authKit,
+  fieldConfig,
+  passwordPolicy,
+  onNavigateToLogin,
+}: RegisterFormProps): JSX.Element {
   const state = useRegisterFormState({ authKit, fieldConfig, passwordPolicy });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -104,7 +109,7 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
           type={showPassword ? 'text' : 'password'}
           value={state.password}
           onChange={(event) => state.setPassword(event.target.value)}
-            onBlur={state.onPasswordBlur}
+          onBlur={state.onPasswordBlur}
           autoComplete="new-password"
         />
         <button type="button" onClick={() => setShowPassword((value) => !value)}>
@@ -120,7 +125,7 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
           type={showConfirm ? 'text' : 'password'}
           value={state.confirmPassword}
           onChange={(event) => state.setConfirmPassword(event.target.value)}
-            onBlur={state.onConfirmPasswordBlur}
+          onBlur={state.onConfirmPasswordBlur}
           autoComplete="new-password"
         />
         <button type="button" onClick={() => setShowConfirm((value) => !value)}>

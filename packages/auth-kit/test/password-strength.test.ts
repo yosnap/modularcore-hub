@@ -16,7 +16,11 @@ describe('evaluatePasswordStrength', () => {
   });
 
   it('shrinks total when the policy disables a requirement', () => {
-    const result = evaluatePasswordStrength('abc123', { requireUppercase: false, requireSpecial: false, minLength: 6 });
+    const result = evaluatePasswordStrength('abc123', {
+      requireUppercase: false,
+      requireSpecial: false,
+      minLength: 6,
+    });
     expect(result.total).toBe(3);
     expect(result.score).toBe(3);
   });

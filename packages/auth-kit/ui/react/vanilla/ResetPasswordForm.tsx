@@ -14,9 +14,22 @@ export interface ResetPasswordFormProps {
 }
 
 /** Vanilla CSS variant — same props/behavior as headless, styled with `auth-kit-*` classes. */
-export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPasswordFormProps): JSX.Element {
-  const { newPassword, setNewPassword, onNewPasswordBlur, confirmPassword, setConfirmPassword, onConfirmPasswordBlur, fieldErrors, handleSubmit, flow } =
-    useResetPasswordFormState({ authKit, token, passwordPolicy });
+export function ResetPasswordForm({
+  authKit,
+  token,
+  passwordPolicy,
+}: ResetPasswordFormProps): JSX.Element {
+  const {
+    newPassword,
+    setNewPassword,
+    onNewPasswordBlur,
+    confirmPassword,
+    setConfirmPassword,
+    onConfirmPasswordBlur,
+    fieldErrors,
+    handleSubmit,
+    flow,
+  } = useResetPasswordFormState({ authKit, token, passwordPolicy });
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -33,7 +46,11 @@ export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPassw
             autoComplete="new-password"
             className="auth-kit-input"
           />
-          <button type="button" onClick={() => setShowPassword((value) => !value)} className="auth-kit-button auth-kit-button--ghost">
+          <button
+            type="button"
+            onClick={() => setShowPassword((value) => !value)}
+            className="auth-kit-button auth-kit-button--ghost"
+          >
             {showPassword ? 'Ocultar' : 'Mostrar'}
           </button>
         </span>
@@ -52,12 +69,20 @@ export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPassw
           className="auth-kit-input"
         />
       </label>
-      {fieldErrors.confirmPassword && <p className="auth-kit-error">{fieldErrors.confirmPassword}</p>}
+      {fieldErrors.confirmPassword && (
+        <p className="auth-kit-error">{fieldErrors.confirmPassword}</p>
+      )}
 
-      <button type="submit" disabled={flow.status === 'submitting'} className="auth-kit-button auth-kit-button--primary">
+      <button
+        type="submit"
+        disabled={flow.status === 'submitting'}
+        className="auth-kit-button auth-kit-button--primary"
+      >
         {flow.status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña'}
       </button>
-      {flow.status === 'error' && flow.error && <p className="auth-kit-error">{flow.error.message}</p>}
+      {flow.status === 'error' && flow.error && (
+        <p className="auth-kit-error">{flow.error.message}</p>
+      )}
       {flow.status === 'success' && <p className="auth-kit-success">Contraseña restablecida.</p>}
     </form>
   );

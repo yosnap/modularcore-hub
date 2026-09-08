@@ -14,8 +14,13 @@ export interface ForgotPasswordFormProps {
 }
 
 /** Vanilla CSS variant — same props/behavior as headless, styled with `auth-kit-*` classes. */
-export function ForgotPasswordForm({ authKit, turnstile, onNavigateToLogin }: ForgotPasswordFormProps): JSX.Element {
-  const { email, setEmail, onEmailBlur, setTurnstileToken, fieldErrors, handleSubmit, flow } = useForgotPasswordFormState({ authKit });
+export function ForgotPasswordForm({
+  authKit,
+  turnstile,
+  onNavigateToLogin,
+}: ForgotPasswordFormProps): JSX.Element {
+  const { email, setEmail, onEmailBlur, setTurnstileToken, fieldErrors, handleSubmit, flow } =
+    useForgotPasswordFormState({ authKit });
 
   return (
     <form onSubmit={handleSubmit} noValidate className="auth-kit-form">
@@ -40,13 +45,25 @@ export function ForgotPasswordForm({ authKit, turnstile, onNavigateToLogin }: Fo
           onToken={setTurnstileToken}
         />
       )}
-      <button type="submit" disabled={flow.status === 'submitting'} className="auth-kit-button auth-kit-button--primary">
+      <button
+        type="submit"
+        disabled={flow.status === 'submitting'}
+        className="auth-kit-button auth-kit-button--primary"
+      >
         {flow.status === 'submitting' ? 'Enviando…' : 'Enviar enlace'}
       </button>
-      {flow.status === 'error' && flow.error && <p className="auth-kit-error">{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="auth-kit-success">Revisa tu correo para ver el enlace de restablecimiento.</p>}
+      {flow.status === 'error' && flow.error && (
+        <p className="auth-kit-error">{flow.error.message}</p>
+      )}
+      {flow.status === 'success' && (
+        <p className="auth-kit-success">Revisa tu correo para ver el enlace de restablecimiento.</p>
+      )}
       {onNavigateToLogin && (
-        <button type="button" onClick={onNavigateToLogin} className="auth-kit-button auth-kit-button--ghost">
+        <button
+          type="button"
+          onClick={onNavigateToLogin}
+          className="auth-kit-button auth-kit-button--ghost"
+        >
           Iniciar sesión
         </button>
       )}

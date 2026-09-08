@@ -11,7 +11,11 @@ const props = defineProps<{
 const emit = defineEmits<{ token: [token: string | null] }>();
 
 const container = ref<HTMLDivElement | null>(null);
-const controller = new TurnstileController({ siteKey: props.siteKey, theme: props.theme, mode: props.mode });
+const controller = new TurnstileController({
+  siteKey: props.siteKey,
+  theme: props.theme,
+  mode: props.mode,
+});
 let unmountWidget: (() => void) | undefined;
 
 const unsubscribe = controller.subscribe((state) => emit('token', state.token));

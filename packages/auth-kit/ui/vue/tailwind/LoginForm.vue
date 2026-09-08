@@ -29,7 +29,6 @@ const showPassword = ref(false);
 const turnstileToken = ref<string | null>(null);
 const fieldErrors = ref<Record<string, string>>({});
 
-
 /** Clears a field's stale error message as soon as the user edits it, instead of leaving it displayed until the next submit. */
 function clearError(key: string): void {
   if (key in fieldErrors.value) {
@@ -41,7 +40,10 @@ function clearError(key: string): void {
 
 /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
 function validateField(key: string): void {
-  const result = buildLoginSchema().safeParse({ identifier: identifier.value, password: password.value });
+  const result = buildLoginSchema().safeParse({
+    identifier: identifier.value,
+    password: password.value,
+  });
   const message = extractFieldError(result, key);
   if (message) {
     fieldErrors.value = { ...fieldErrors.value, [key]: message };
@@ -51,14 +53,23 @@ function validateField(key: string): void {
 }
 
 function handleSubmit(): void {
-  const result = buildLoginSchema().safeParse({ identifier: identifier.value, password: password.value });
+  const result = buildLoginSchema().safeParse({
+    identifier: identifier.value,
+    password: password.value,
+  });
   if (!result.success) {
-    fieldErrors.value = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+    fieldErrors.value = Object.fromEntries(
+      result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+    );
     return;
   }
   fieldErrors.value = {};
   void props.authKit
-    .login({ identifier: identifier.value, password: password.value, turnstileToken: turnstileToken.value })
+    .login({
+      identifier: identifier.value,
+      password: password.value,
+      turnstileToken: turnstileToken.value,
+    })
     .catch(() => {});
 }
 </script>
@@ -68,21 +79,38 @@ function handleSubmit(): void {
   <form novalidate class="flex flex-col gap-3" @submit.prevent="handleSubmit">
     <label :class="labelClass" for="auth-kit-login-identifier">
       Correo electrónico o nombre de usuario
-      <input id="auth-kit-login-identifier" v-model="identifier" @input="clearError('identifier')" @blur="validateField('identifier')" type="text" autocomplete="username" :class="inputClass" />
+      <input
+        id="auth-kit-login-identifier"
+        v-model="identifier"
+        @input="clearError('identifier')"
+        @blur="validateField('identifier')"
+        type="text"
+        autocomplete="username"
+        :class="inputClass"
+      />
     </label>
     <p v-if="fieldErrors.identifier" :class="errorClass">{{ fieldErrors.identifier }}</p>
 
     <div class="flex flex-col gap-1">
       <div class="flex items-center justify-between">
-        <label class="text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-login-password">Contraseña</label>
-        <button v-if="onNavigateToForgotPassword" type="button" :class="linkClass" @click="onNavigateToForgotPassword">
+        <label class="text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-login-password"
+          >Contraseña</label
+        >
+        <button
+          v-if="onNavigateToForgotPassword"
+          type="button"
+          :class="linkClass"
+          @click="onNavigateToForgotPassword"
+        >
           ¿Olvidaste tu contraseña?
         </button>
       </div>
       <div class="relative">
         <input
           id="auth-kit-login-password"
-          v-model="password" @input="clearError('password')" @blur="validateField('password')"
+          v-model="password"
+          @input="clearError('password')"
+          @blur="validateField('password')"
           :type="showPassword ? 'text' : 'password'"
           autocomplete="current-password"
           :class="`${inputClass} pr-9`"
@@ -108,7 +136,16 @@ function handleSubmit(): void {
             />
             <path d="M1 1l22 22" />
           </svg>
-          <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+          <svg
+            v-else
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-4 w-4"
+          >
             <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z" />
             <circle cx="12" cy="12" r="3" />
           </svg>
@@ -130,12 +167,22 @@ function handleSubmit(): void {
       :disabled="authKit.state.value.login.status === 'submitting'"
       class="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
     >
-      {{ authKit.state.value.login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión' }}
+      {{
+        authKit.state.value.login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión'
+      }}
     </button>
-    <p v-if="authKit.state.value.login.status === 'error' && authKit.state.value.login.error" :class="errorClass">
+    <p
+      v-if="authKit.state.value.login.status === 'error' && authKit.state.value.login.error"
+      :class="errorClass"
+    >
       {{ authKit.state.value.login.error.message }}
     </p>
-    <p v-if="authKit.state.value.login.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Sesión iniciada.</p>
+    <p
+      v-if="authKit.state.value.login.status === 'success'"
+      class="text-sm text-green-600 dark:text-green-400"
+    >
+      Sesión iniciada.
+    </p>
 
     <p v-if="onNavigateToRegister" class="text-center text-sm text-zinc-600 dark:text-zinc-400">
       ¿Aún no tienes una cuenta?

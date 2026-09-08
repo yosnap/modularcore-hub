@@ -6,7 +6,11 @@ import { buildResetPasswordSchema, extractFieldError } from '../../../core/valid
 import type { UseAuthKitResult } from '../../../adapters/vue/use-auth-kit.js';
 import type { PasswordPolicy } from '../../../core/validation.js';
 
-const props = defineProps<{ authKit: UseAuthKitResult; token: string; passwordPolicy?: PasswordPolicy }>();
+const props = defineProps<{
+  authKit: UseAuthKitResult;
+  token: string;
+  passwordPolicy?: PasswordPolicy;
+}>();
 
 const inputClass =
   'box-border w-full rounded-md border border-zinc-300 bg-transparent px-2 py-1.5 text-sm text-zinc-900 dark:border-zinc-700 dark:text-zinc-100';
@@ -20,7 +24,6 @@ const confirmPassword = ref('');
 const showPassword = ref(false);
 const fieldErrors = ref<Record<string, string>>({});
 
-
 /** Clears a field's stale error message as soon as the user edits it, instead of leaving it displayed until the next submit. */
 function clearError(key: string): void {
   if (key in fieldErrors.value) {
@@ -32,7 +35,10 @@ function clearError(key: string): void {
 
 /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
 function validateField(key: string): void {
-  const result = buildResetPasswordSchema({ passwordPolicy: props.passwordPolicy }).safeParse({ newPassword: newPassword.value, confirmPassword: confirmPassword.value });
+  const result = buildResetPasswordSchema({ passwordPolicy: props.passwordPolicy }).safeParse({
+    newPassword: newPassword.value,
+    confirmPassword: confirmPassword.value,
+  });
   const message = extractFieldError(result, key);
   if (message) {
     fieldErrors.value = { ...fieldErrors.value, [key]: message };
@@ -47,11 +53,15 @@ function handleSubmit(): void {
     confirmPassword: confirmPassword.value,
   });
   if (!result.success) {
-    fieldErrors.value = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+    fieldErrors.value = Object.fromEntries(
+      result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+    );
     return;
   }
   fieldErrors.value = {};
-  void props.authKit.resetPassword({ token: props.token, newPassword: newPassword.value }).catch(() => {});
+  void props.authKit
+    .resetPassword({ token: props.token, newPassword: newPassword.value })
+    .catch(() => {});
 }
 </script>
 
@@ -63,7 +73,9 @@ function handleSubmit(): void {
       <div class="relative">
         <input
           id="auth-kit-reset-new"
-          v-model="newPassword" @input="clearError('newPassword')" @blur="validateField('newPassword')"
+          v-model="newPassword"
+          @input="clearError('newPassword')"
+          @blur="validateField('newPassword')"
           :type="showPassword ? 'text' : 'password'"
           autocomplete="new-password"
           :class="`${inputClass} pr-9`"
@@ -89,7 +101,16 @@ function handleSubmit(): void {
             />
             <path d="M1 1l22 22" />
           </svg>
-          <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+          <svg
+            v-else
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-4 w-4"
+          >
             <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z" />
             <circle cx="12" cy="12" r="3" />
           </svg>
@@ -100,7 +121,15 @@ function handleSubmit(): void {
 
     <label :class="labelClass" for="auth-kit-reset-confirm">
       Confirmar contraseña nueva
-      <input id="auth-kit-reset-confirm" v-model="confirmPassword" @input="clearError('confirmPassword')" @blur="validateField('confirmPassword')" :type="showPassword ? 'text' : 'password'" autocomplete="new-password" :class="inputClass" />
+      <input
+        id="auth-kit-reset-confirm"
+        v-model="confirmPassword"
+        @input="clearError('confirmPassword')"
+        @blur="validateField('confirmPassword')"
+        :type="showPassword ? 'text' : 'password'"
+        autocomplete="new-password"
+        :class="inputClass"
+      />
     </label>
     <p v-if="fieldErrors.confirmPassword" :class="errorClass">{{ fieldErrors.confirmPassword }}</p>
 
@@ -109,11 +138,26 @@ function handleSubmit(): void {
       :disabled="authKit.state.value.resetPassword.status === 'submitting'"
       class="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
     >
-      {{ authKit.state.value.resetPassword.status === 'submitting' ? 'Restableciendo…' : 'Restablecer contraseña' }}
+      {{
+        authKit.state.value.resetPassword.status === 'submitting'
+          ? 'Restableciendo…'
+          : 'Restablecer contraseña'
+      }}
     </button>
-    <p v-if="authKit.state.value.resetPassword.status === 'error' && authKit.state.value.resetPassword.error" :class="errorClass">
+    <p
+      v-if="
+        authKit.state.value.resetPassword.status === 'error' &&
+        authKit.state.value.resetPassword.error
+      "
+      :class="errorClass"
+    >
       {{ authKit.state.value.resetPassword.error.message }}
     </p>
-    <p v-if="authKit.state.value.resetPassword.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Contraseña restablecida.</p>
+    <p
+      v-if="authKit.state.value.resetPassword.status === 'success'"
+      class="text-sm text-green-600 dark:text-green-400"
+    >
+      Contraseña restablecida.
+    </p>
   </form>
 </template>

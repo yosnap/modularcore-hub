@@ -17,11 +17,24 @@ const INPUT_CLASS =
   imports: [NgIf, TurnstileWidgetComponent],
   template: `
     <form novalidate class="flex flex-col gap-3" (submit)="handleSubmit($event)">
-      <label class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300" for="auth-kit-forgot-email">
+      <label
+        class="flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300"
+        for="auth-kit-forgot-email"
+      >
         Correo electrónico
-        <input id="auth-kit-forgot-email" type="email" autocomplete="email" [class]="inputClass" [value]="email" (input)="email = $any($event.target).value; clearError('email')" (blur)="validateField('email')" />
+        <input
+          id="auth-kit-forgot-email"
+          type="email"
+          autocomplete="email"
+          [class]="inputClass"
+          [value]="email"
+          (input)="email = $any($event.target).value; clearError('email')"
+          (blur)="validateField('email')"
+        />
       </label>
-      <p *ngIf="fieldErrors['email']" class="text-sm text-red-600 dark:text-red-400">{{ fieldErrors['email'] }}</p>
+      <p *ngIf="fieldErrors['email']" class="text-sm text-red-600 dark:text-red-400">
+        {{ fieldErrors['email'] }}
+      </p>
       <auth-kit-turnstile-widget
         *ngIf="turnstile?.enabled"
         [siteKey]="turnstile?.siteKey"
@@ -36,10 +49,20 @@ const INPUT_CLASS =
       >
         {{ authKit.state().forgotPassword.status === 'submitting' ? 'Enviando…' : 'Enviar enlace' }}
       </button>
-      <p *ngIf="authKit.state().forgotPassword.status === 'error' && authKit.state().forgotPassword.error" class="text-sm text-red-600 dark:text-red-400">
+      <p
+        *ngIf="
+          authKit.state().forgotPassword.status === 'error' && authKit.state().forgotPassword.error
+        "
+        class="text-sm text-red-600 dark:text-red-400"
+      >
         {{ authKit.state().forgotPassword.error?.message }}
       </p>
-      <p *ngIf="authKit.state().forgotPassword.status === 'success'" class="text-sm text-green-600 dark:text-green-400">Revisa tu correo para ver el enlace de restablecimiento.</p>
+      <p
+        *ngIf="authKit.state().forgotPassword.status === 'success'"
+        class="text-sm text-green-600 dark:text-green-400"
+      >
+        Revisa tu correo para ver el enlace de restablecimiento.
+      </p>
 
       <p *ngIf="onNavigateToLogin" class="text-center text-sm text-zinc-600 dark:text-zinc-400">
         ¿Recordaste tu contraseña?
@@ -66,7 +89,6 @@ export class ForgotPasswordFormComponent {
   turnstileToken: string | null = null;
   fieldErrors: Record<string, string> = {};
 
-  
   /** Clears a field's stale error message as soon as the user edits it, instead of leaving it displayed until the next submit. */
   clearError(key: string): void {
     if (key in this.fieldErrors) {
@@ -91,10 +113,14 @@ export class ForgotPasswordFormComponent {
     event.preventDefault();
     const result = buildForgotPasswordSchema().safeParse({ email: this.email });
     if (!result.success) {
-      this.fieldErrors = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      this.fieldErrors = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       return;
     }
     this.fieldErrors = {};
-    void this.authKit.forgotPassword({ email: this.email, turnstileToken: this.turnstileToken }).catch(() => {});
+    void this.authKit
+      .forgotPassword({ email: this.email, turnstileToken: this.turnstileToken })
+      .catch(() => {});
   }
 }

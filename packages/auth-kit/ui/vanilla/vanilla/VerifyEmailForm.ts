@@ -13,12 +13,21 @@ export interface MountVerifyEmailFormOptions {
 }
 
 /** Vanilla CSS variant — same options/behavior as headless, styled with `auth-kit-*` classes. */
-export function mountVerifyEmailForm(container: HTMLElement, { authKit, token, email: initialEmail, turnstile }: MountVerifyEmailFormOptions): () => void {
+export function mountVerifyEmailForm(
+  container: HTMLElement,
+  { authKit, token, email: initialEmail, turnstile }: MountVerifyEmailFormOptions,
+): () => void {
   const verifyStatus = statusText();
-  const email = field('Correo electrónico', { id: 'auth-kit-resend-email', type: 'email', autocomplete: 'email' }, { label: 'auth-kit-field', input: 'auth-kit-input' });
+  const email = field(
+    'Correo electrónico',
+    { id: 'auth-kit-resend-email', type: 'email', autocomplete: 'email' },
+    { label: 'auth-kit-field', input: 'auth-kit-input' },
+  );
   email.input.value = initialEmail ?? '';
   const emailError = errorText('auth-kit-error');
-  const submit = el('button', { type: 'submit', class: 'auth-kit-button' }, ['Reenviar email de verificación']);
+  const submit = el('button', { type: 'submit', class: 'auth-kit-button' }, [
+    'Reenviar email de verificación',
+  ]);
   const submitError = errorText('auth-kit-error');
   const success = el('p', { class: 'auth-kit-success' });
   success.hidden = true;
@@ -29,7 +38,11 @@ export function mountVerifyEmailForm(container: HTMLElement, { authKit, token, e
   let unmountTurnstile: (() => void) | undefined;
   if (turnstile?.enabled) {
     const turnstileContainer = el('div');
-    const controller = new TurnstileController({ siteKey: turnstile.siteKey, theme: turnstile.theme, mode: turnstile.mode });
+    const controller = new TurnstileController({
+      siteKey: turnstile.siteKey,
+      theme: turnstile.theme,
+      mode: turnstile.mode,
+    });
     controller.subscribe((state) => {
       turnstileToken = state.token;
     });
@@ -39,7 +52,9 @@ export function mountVerifyEmailForm(container: HTMLElement, { authKit, token, e
   rows.push(submit, submitError.node, success);
 
   const resendForm = el('form', { novalidate: '', class: 'auth-kit-form' }, rows);
-  const verifyStatusWrapper = el('div', { role: 'status', class: 'auth-kit-status' }, [verifyStatus.node]);
+  const verifyStatusWrapper = el('div', { role: 'status', class: 'auth-kit-status' }, [
+    verifyStatus.node,
+  ]);
   const root = el('div', {}, token ? [verifyStatusWrapper, resendForm] : [resendForm]);
   container.append(root);
 

@@ -29,28 +29,52 @@ export function mountLoginForm(
     { id: 'auth-kit-login-password', type: 'password', autocomplete: 'current-password' },
     { label: 'auth-kit-field', input: 'auth-kit-input' },
   );
-  const eyeButton = el('button', { type: 'button', 'aria-label': 'Mostrar contraseña', class: 'auth-kit-eye-button' });
+  const eyeButton = el('button', {
+    type: 'button',
+    'aria-label': 'Mostrar contraseña',
+    class: 'auth-kit-eye-button',
+  });
   eyeButton.innerHTML = eyeSvg(true);
-  const passwordWrapper = el('div', { class: 'auth-kit-field__control' }, [password.input, eyeButton]);
+  const passwordWrapper = el('div', { class: 'auth-kit-field__control' }, [
+    password.input,
+    eyeButton,
+  ]);
   const identifierError = errorText('auth-kit-error');
   const passwordError = errorText('auth-kit-error');
   const submitError = errorText('auth-kit-error');
   const success = el('p', { class: 'auth-kit-success' });
   success.hidden = true;
-  const submit = el('button', { type: 'submit', class: 'auth-kit-button auth-kit-button--primary' }, ['Iniciar sesión']);
+  const submit = el(
+    'button',
+    { type: 'submit', class: 'auth-kit-button auth-kit-button--primary' },
+    ['Iniciar sesión'],
+  );
 
-  const passwordLabelRow = el('div', { class: 'auth-kit-field__row', style: 'justify-content: space-between' }, [password.label]);
+  const passwordLabelRow = el(
+    'div',
+    { class: 'auth-kit-field__row', style: 'justify-content: space-between' },
+    [password.label],
+  );
   let forgotLink: HTMLButtonElement | undefined;
   if (onNavigateToForgotPassword) {
-    forgotLink = el('button', { type: 'button', class: 'auth-kit-button auth-kit-button--ghost' }, ['¿Olvidaste tu contraseña?']);
+    forgotLink = el('button', { type: 'button', class: 'auth-kit-button auth-kit-button--ghost' }, [
+      '¿Olvidaste tu contraseña?',
+    ]);
     passwordLabelRow.append(forgotLink);
   }
 
   let registerFooter: HTMLParagraphElement | undefined;
   let registerLink: HTMLButtonElement | undefined;
   if (onNavigateToRegister) {
-    registerLink = el('button', { type: 'button', class: 'auth-kit-button auth-kit-button--ghost' }, ['Registrarse']);
-    registerFooter = el('p', { class: 'auth-kit-status' }, ["¿Aún no tienes una cuenta? ", registerLink]);
+    registerLink = el(
+      'button',
+      { type: 'button', class: 'auth-kit-button auth-kit-button--ghost' },
+      ['Registrarse'],
+    );
+    registerFooter = el('p', { class: 'auth-kit-status' }, [
+      '¿Aún no tienes una cuenta? ',
+      registerLink,
+    ]);
   }
 
   let turnstileToken: string | null = null;
@@ -58,7 +82,11 @@ export function mountLoginForm(
   let turnstileContainer: HTMLDivElement | undefined;
   if (turnstile?.enabled) {
     turnstileContainer = el('div');
-    const controller = new TurnstileController({ siteKey: turnstile.siteKey, theme: turnstile.theme, mode: turnstile.mode });
+    const controller = new TurnstileController({
+      siteKey: turnstile.siteKey,
+      theme: turnstile.theme,
+      mode: turnstile.mode,
+    });
     controller.subscribe((state) => {
       turnstileToken = state.token;
     });
@@ -102,7 +130,9 @@ export function mountLoginForm(
     const values = { identifier: identifier.input.value, password: password.input.value };
     const result = buildLoginSchema().safeParse(values);
     if (!result.success) {
-      const issues = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      const issues = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       identifierError.setText(issues.identifier);
       passwordError.setText(issues.password);
       return;
@@ -111,14 +141,20 @@ export function mountLoginForm(
     passwordError.setText(null);
     void authKit.login({ ...values, turnstileToken }).catch(() => {});
   };
-  
+
   identifier.input.addEventListener('blur', () => {
-    const result = buildLoginSchema().safeParse({ identifier: identifier.input.value, password: password.input.value });
+    const result = buildLoginSchema().safeParse({
+      identifier: identifier.input.value,
+      password: password.input.value,
+    });
     identifierError.setText(extractFieldError(result, 'identifier'));
   });
   identifier.input.addEventListener('input', () => identifierError.setText(null));
   password.input.addEventListener('blur', () => {
-    const result = buildLoginSchema().safeParse({ identifier: identifier.input.value, password: password.input.value });
+    const result = buildLoginSchema().safeParse({
+      identifier: identifier.input.value,
+      password: password.input.value,
+    });
     passwordError.setText(extractFieldError(result, 'password'));
   });
   password.input.addEventListener('input', () => passwordError.setText(null));

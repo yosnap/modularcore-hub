@@ -18,14 +18,21 @@ const EYE_BUTTON_CLASS =
   'absolute inset-y-0 right-0 flex w-9 appearance-none items-center justify-center border-0 bg-transparent p-0 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100';
 
 /** Tailwind variant — same options/behavior as headless, styled with the media-picker zinc palette. */
-export function mountChangePasswordForm(container: HTMLElement, { authKit, passwordPolicy }: MountChangePasswordFormOptions): () => void {
+export function mountChangePasswordForm(
+  container: HTMLElement,
+  { authKit, passwordPolicy }: MountChangePasswordFormOptions,
+): () => void {
   const current = field(
     'Contraseña actual',
     { id: 'auth-kit-change-current', type: 'password', autocomplete: 'current-password' },
     { label: LABEL_CLASS, input: `${INPUT_CLASS} pr-9` },
   );
   const currentError = errorText(ERROR_CLASS);
-  const showCurrent = el('button', { type: 'button', 'aria-label': 'Mostrar contraseña', class: EYE_BUTTON_CLASS });
+  const showCurrent = el('button', {
+    type: 'button',
+    'aria-label': 'Mostrar contraseña',
+    class: EYE_BUTTON_CLASS,
+  });
   showCurrent.innerHTML = eyeSvg(true);
   const currentWrapper = el('div', { class: 'relative' }, [current.input, showCurrent]);
 
@@ -35,7 +42,11 @@ export function mountChangePasswordForm(container: HTMLElement, { authKit, passw
     { label: LABEL_CLASS, input: `${INPUT_CLASS} pr-9` },
   );
   const nextError = errorText(ERROR_CLASS);
-  const showNew = el('button', { type: 'button', 'aria-label': 'Mostrar contraseña', class: EYE_BUTTON_CLASS });
+  const showNew = el('button', {
+    type: 'button',
+    'aria-label': 'Mostrar contraseña',
+    class: EYE_BUTTON_CLASS,
+  });
   showNew.innerHTML = eyeSvg(true);
   const nextWrapper = el('div', { class: 'relative' }, [next.input, showNew]);
 
@@ -98,10 +109,16 @@ export function mountChangePasswordForm(container: HTMLElement, { authKit, passw
 
   const handleSubmit = (event: Event): void => {
     event.preventDefault();
-    const values = { currentPassword: current.input.value, newPassword: next.input.value, confirmPassword: confirm.input.value };
+    const values = {
+      currentPassword: current.input.value,
+      newPassword: next.input.value,
+      confirmPassword: confirm.input.value,
+    };
     const result = buildChangePasswordSchema({ passwordPolicy }).safeParse(values);
     if (!result.success) {
-      const issues = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      const issues = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       currentError.setText(issues.currentPassword);
       nextError.setText(issues.newPassword);
       confirmError.setText(issues.confirmPassword);
@@ -110,21 +127,35 @@ export function mountChangePasswordForm(container: HTMLElement, { authKit, passw
     currentError.setText(null);
     nextError.setText(null);
     confirmError.setText(null);
-    void authKit.changePassword({ currentPassword: values.currentPassword, newPassword: values.newPassword }).catch(() => {});
+    void authKit
+      .changePassword({ currentPassword: values.currentPassword, newPassword: values.newPassword })
+      .catch(() => {});
   };
-  
+
   current.input.addEventListener('blur', () => {
-    const result = buildChangePasswordSchema({ passwordPolicy }).safeParse({ currentPassword: current.input.value, newPassword: next.input.value, confirmPassword: confirm.input.value });
+    const result = buildChangePasswordSchema({ passwordPolicy }).safeParse({
+      currentPassword: current.input.value,
+      newPassword: next.input.value,
+      confirmPassword: confirm.input.value,
+    });
     currentError.setText(extractFieldError(result, 'currentPassword'));
   });
   current.input.addEventListener('input', () => currentError.setText(null));
   next.input.addEventListener('blur', () => {
-    const result = buildChangePasswordSchema({ passwordPolicy }).safeParse({ currentPassword: current.input.value, newPassword: next.input.value, confirmPassword: confirm.input.value });
+    const result = buildChangePasswordSchema({ passwordPolicy }).safeParse({
+      currentPassword: current.input.value,
+      newPassword: next.input.value,
+      confirmPassword: confirm.input.value,
+    });
     nextError.setText(extractFieldError(result, 'newPassword'));
   });
   next.input.addEventListener('input', () => nextError.setText(null));
   confirm.input.addEventListener('blur', () => {
-    const result = buildChangePasswordSchema({ passwordPolicy }).safeParse({ currentPassword: current.input.value, newPassword: next.input.value, confirmPassword: confirm.input.value });
+    const result = buildChangePasswordSchema({ passwordPolicy }).safeParse({
+      currentPassword: current.input.value,
+      newPassword: next.input.value,
+      confirmPassword: confirm.input.value,
+    });
     confirmError.setText(extractFieldError(result, 'confirmPassword'));
   });
   confirm.input.addEventListener('input', () => confirmError.setText(null));

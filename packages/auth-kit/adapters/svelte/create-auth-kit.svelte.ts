@@ -31,7 +31,9 @@ export interface AuthKitRune<TSession = unknown> {
  * `$state` mirror kept in sync via `kit.subscribe`, every action just forwards. Same split as
  * `createMediaPicker`.
  */
-export function createAuthKit<TSession = unknown>(hooks: AuthKitHooks<TSession>): AuthKitRune<TSession> {
+export function createAuthKit<TSession = unknown>(
+  hooks: AuthKitHooks<TSession>,
+): AuthKitRune<TSession> {
   const kit = new AuthKit<TSession>(hooks);
   let state = $state<AuthKitState>(kit.getState());
 

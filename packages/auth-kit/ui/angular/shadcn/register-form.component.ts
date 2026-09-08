@@ -13,7 +13,8 @@ import type { PasswordPolicy } from '../../../core/validation.js';
 
 const INPUT_CLASS =
   'box-border flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm text-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
-const LINK_CLASS = 'text-xs font-medium appearance-none border-0 bg-transparent p-0 text-primary hover:underline';
+const LINK_CLASS =
+  'text-xs font-medium appearance-none border-0 bg-transparent p-0 text-primary hover:underline';
 const EYE_PATH = 'M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z';
 const EYE_OFF_PATH =
   'M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a18.4 18.4 0 0 1 4.22-5.14M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24';
@@ -26,14 +27,23 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
   imports: [NgIf, NgFor, TurnstileWidgetComponent],
   template: `
     <form novalidate class="flex flex-col gap-4" (submit)="handleSubmit($event)">
-      <div *ngIf="fields.profileType.enabled" class="grid grid-cols-2 gap-1 rounded-md bg-muted p-1" role="tablist" [attr.aria-label]="fields.profileType.label">
+      <div
+        *ngIf="fields.profileType.enabled"
+        class="grid grid-cols-2 gap-1 rounded-md bg-muted p-1"
+        role="tablist"
+        [attr.aria-label]="fields.profileType.label"
+      >
         <button
           *ngFor="let option of fields.profileType.options"
           type="button"
           role="tab"
           [attr.aria-selected]="profileType === option.value"
           class="rounded-sm px-3 py-1.5 text-sm font-medium transition-colors"
-          [class]="profileType === option.value ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'"
+          [class]="
+            profileType === option.value
+              ? 'bg-background text-foreground shadow-sm'
+              : 'text-muted-foreground'
+          "
           (click)="profileType = option.value"
         >
           {{ option.label }}
@@ -41,31 +51,78 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-register-email">Correo electrónico</label>
-        <input id="auth-kit-register-email" type="email" autocomplete="email" [class]="inputClass" [value]="email" (input)="email = $any($event.target).value; clearError('email')" (blur)="validateField('email')" />
-        <p *ngIf="fieldErrors['email']" class="text-sm text-destructive">{{ fieldErrors['email'] }}</p>
+        <label class="text-sm font-medium leading-none" for="auth-kit-register-email"
+          >Correo electrónico</label
+        >
+        <input
+          id="auth-kit-register-email"
+          type="email"
+          autocomplete="email"
+          [class]="inputClass"
+          [value]="email"
+          (input)="email = $any($event.target).value; clearError('email')"
+          (blur)="validateField('email')"
+        />
+        <p *ngIf="fieldErrors['email']" class="text-sm text-destructive">
+          {{ fieldErrors['email'] }}
+        </p>
       </div>
 
       <div *ngIf="fields.firstName.enabled" class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-register-firstname">{{ fields.firstName.label }}</label>
-        <input id="auth-kit-register-firstname" type="text" [class]="inputClass" [value]="firstName" (input)="firstName = $any($event.target).value; clearError('firstName')" (blur)="validateField('firstName')" />
-        <p *ngIf="fieldErrors['firstName']" class="text-sm text-destructive">{{ fieldErrors['firstName'] }}</p>
+        <label class="text-sm font-medium leading-none" for="auth-kit-register-firstname">{{
+          fields.firstName.label
+        }}</label>
+        <input
+          id="auth-kit-register-firstname"
+          type="text"
+          [class]="inputClass"
+          [value]="firstName"
+          (input)="firstName = $any($event.target).value; clearError('firstName')"
+          (blur)="validateField('firstName')"
+        />
+        <p *ngIf="fieldErrors['firstName']" class="text-sm text-destructive">
+          {{ fieldErrors['firstName'] }}
+        </p>
       </div>
 
       <div *ngIf="fields.lastName.enabled" class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-register-lastname">{{ fields.lastName.label }}</label>
-        <input id="auth-kit-register-lastname" type="text" [class]="inputClass" [value]="lastName" (input)="lastName = $any($event.target).value; clearError('lastName')" (blur)="validateField('lastName')" />
-        <p *ngIf="fieldErrors['lastName']" class="text-sm text-destructive">{{ fieldErrors['lastName'] }}</p>
+        <label class="text-sm font-medium leading-none" for="auth-kit-register-lastname">{{
+          fields.lastName.label
+        }}</label>
+        <input
+          id="auth-kit-register-lastname"
+          type="text"
+          [class]="inputClass"
+          [value]="lastName"
+          (input)="lastName = $any($event.target).value; clearError('lastName')"
+          (blur)="validateField('lastName')"
+        />
+        <p *ngIf="fieldErrors['lastName']" class="text-sm text-destructive">
+          {{ fieldErrors['lastName'] }}
+        </p>
       </div>
 
       <div *ngIf="fields.phone.enabled" class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-register-phone">{{ fields.phone.label }}</label>
-        <input id="auth-kit-register-phone" type="tel" [class]="inputClass" [value]="phone" (input)="phone = $any($event.target).value; clearError('phone')" (blur)="validateField('phone')" />
-        <p *ngIf="fieldErrors['phone']" class="text-sm text-destructive">{{ fieldErrors['phone'] }}</p>
+        <label class="text-sm font-medium leading-none" for="auth-kit-register-phone">{{
+          fields.phone.label
+        }}</label>
+        <input
+          id="auth-kit-register-phone"
+          type="tel"
+          [class]="inputClass"
+          [value]="phone"
+          (input)="phone = $any($event.target).value; clearError('phone')"
+          (blur)="validateField('phone')"
+        />
+        <p *ngIf="fieldErrors['phone']" class="text-sm text-destructive">
+          {{ fieldErrors['phone'] }}
+        </p>
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-register-password">Contraseña</label>
+        <label class="text-sm font-medium leading-none" for="auth-kit-register-password"
+          >Contraseña</label
+        >
         <div class="relative">
           <input
             id="auth-kit-register-password"
@@ -73,7 +130,8 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
             autocomplete="new-password"
             [class]="inputClass + ' pr-9'"
             [value]="password"
-            (input)="password = $any($event.target).value; clearError('password')" (blur)="validateField('password')"
+            (input)="password = $any($event.target).value; clearError('password')"
+            (blur)="validateField('password')"
           />
           <button
             type="button"
@@ -81,7 +139,15 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
             class="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
             (click)="showPassword = !showPassword"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
               <ng-container *ngIf="showPassword; else eyeOpenReg">
                 <path [attr.d]="eyeOffPath" />
                 <path d="M1 1l22 22" />
@@ -108,18 +174,31 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
               [class]="requirement.met ? 'text-green-600' : 'text-muted-foreground'"
             >
               <svg *ngIf="requirement.met" viewBox="0 0 11 11" class="h-3 w-3">
-                <path [attr.d]="checkPath" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                <path
+                  [attr.d]="checkPath"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  fill="none"
+                />
               </svg>
-              <span *ngIf="!requirement.met" class="inline-block h-3 w-3" aria-hidden="true">·</span>
+              <span *ngIf="!requirement.met" class="inline-block h-3 w-3" aria-hidden="true"
+                >·</span
+              >
               {{ requirement.label }}
             </li>
           </ul>
         </div>
-        <p *ngIf="fieldErrors['password']" class="text-sm text-destructive">{{ fieldErrors['password'] }}</p>
+        <p *ngIf="fieldErrors['password']" class="text-sm text-destructive">
+          {{ fieldErrors['password'] }}
+        </p>
       </div>
 
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-register-confirm-password">Confirmar contraseña</label>
+        <label class="text-sm font-medium leading-none" for="auth-kit-register-confirm-password"
+          >Confirmar contraseña</label
+        >
         <div class="relative">
           <input
             id="auth-kit-register-confirm-password"
@@ -127,7 +206,8 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
             autocomplete="new-password"
             [class]="inputClass + ' pr-9'"
             [value]="confirmPassword"
-            (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')" (blur)="validateField('confirmPassword')"
+            (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')"
+            (blur)="validateField('confirmPassword')"
           />
           <button
             type="button"
@@ -135,7 +215,15 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
             class="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
             (click)="showConfirm = !showConfirm"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
               <ng-container *ngIf="showConfirm; else eyeOpenConfirm">
                 <path [attr.d]="eyeOffPath" />
                 <path d="M1 1l22 22" />
@@ -147,7 +235,9 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
             </svg>
           </button>
         </div>
-        <p *ngIf="fieldErrors['confirmPassword']" class="text-sm text-destructive">{{ fieldErrors['confirmPassword'] }}</p>
+        <p *ngIf="fieldErrors['confirmPassword']" class="text-sm text-destructive">
+          {{ fieldErrors['confirmPassword'] }}
+        </p>
       </div>
 
       <div *ngIf="fields.legalConsent.enabled">
@@ -162,11 +252,20 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
           <label for="auth-kit-register-terms" class="text-sm text-muted-foreground">
             {{ fields.legalConsent.text }}
             <span *ngFor="let link of fields.legalConsent.links; let i = index">
-              {{ i > 0 ? ' ' : '' }}<a [href]="link.href" target="_blank" rel="noreferrer" class="font-medium text-foreground hover:underline">{{ link.label }}</a>
+              {{ i > 0 ? ' ' : ''
+              }}<a
+                [href]="link.href"
+                target="_blank"
+                rel="noreferrer"
+                class="font-medium text-foreground hover:underline"
+                >{{ link.label }}</a
+              >
             </span>
           </label>
         </div>
-        <p *ngIf="fieldErrors['termsAccepted']" class="text-sm text-destructive">{{ fieldErrors['termsAccepted'] }}</p>
+        <p *ngIf="fieldErrors['termsAccepted']" class="text-sm text-destructive">
+          {{ fieldErrors['termsAccepted'] }}
+        </p>
       </div>
 
       <auth-kit-turnstile-widget
@@ -184,13 +283,21 @@ const CHECK_PATH = 'M3 8.5l3 3 7-7';
       >
         {{ authKit.state().register.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta' }}
       </button>
-      <p *ngIf="authKit.state().register.status === 'error' && authKit.state().register.error" class="text-sm text-destructive">
+      <p
+        *ngIf="authKit.state().register.status === 'error' && authKit.state().register.error"
+        class="text-sm text-destructive"
+      >
         {{ authKit.state().register.error?.message }}
       </p>
-      <p *ngIf="authKit.state().register.status === 'success'" class="text-sm text-green-600">Cuenta creada.</p>
+      <p *ngIf="authKit.state().register.status === 'success'" class="text-sm text-green-600">
+        Cuenta creada.
+      </p>
 
       <p *ngIf="onNavigateToLogin" class="text-center text-sm text-muted-foreground">
-        ¿Ya tienes una cuenta? <button type="button" [class]="linkClass" (click)="onNavigateToLogin()">Iniciar sesión</button>
+        ¿Ya tienes una cuenta?
+        <button type="button" [class]="linkClass" (click)="onNavigateToLogin()">
+          Iniciar sesión
+        </button>
       </p>
     </form>
   `,
@@ -240,15 +347,19 @@ export class RegisterFormComponent implements OnChanges {
     return 'bg-destructive';
   }
 
-  
   collectValues(): Record<string, unknown> {
     const f = this.fields;
-    const values: Record<string, unknown> = { email: this.email, password: this.password, confirmPassword: this.confirmPassword };
+    const values: Record<string, unknown> = {
+      email: this.email,
+      password: this.password,
+      confirmPassword: this.confirmPassword,
+    };
     if (f.firstName.enabled) values.firstName = this.firstName;
     if (f.lastName.enabled) values.lastName = this.lastName;
     if (f.phone.enabled) values.phone = this.phone;
     if (f.profileType.enabled) values.profileType = this.profileType;
-    if (f.legalConsent.enabled && f.legalConsent.required) values.termsAccepted = this.termsAccepted;
+    if (f.legalConsent.enabled && f.legalConsent.required)
+      values.termsAccepted = this.termsAccepted;
     return values;
   }
 
@@ -263,7 +374,9 @@ export class RegisterFormComponent implements OnChanges {
 
   /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
   validateField(key: string): void {
-    const result = buildRegisterSchema(this.fields, { passwordPolicy: this.passwordPolicy }).safeParse(this.collectValues());
+    const result = buildRegisterSchema(this.fields, {
+      passwordPolicy: this.passwordPolicy,
+    }).safeParse(this.collectValues());
     const message = extractFieldError(result, key);
     if (message) {
       this.fieldErrors = { ...this.fieldErrors, [key]: message };
@@ -275,16 +388,25 @@ export class RegisterFormComponent implements OnChanges {
   handleSubmit(event: Event): void {
     event.preventDefault();
     const f = this.fields;
-    const values: Record<string, unknown> = { email: this.email, password: this.password, confirmPassword: this.confirmPassword };
+    const values: Record<string, unknown> = {
+      email: this.email,
+      password: this.password,
+      confirmPassword: this.confirmPassword,
+    };
     if (f.firstName.enabled) values.firstName = this.firstName;
     if (f.lastName.enabled) values.lastName = this.lastName;
     if (f.phone.enabled) values.phone = this.phone;
     if (f.profileType.enabled) values.profileType = this.profileType;
-    if (f.legalConsent.enabled && f.legalConsent.required) values.termsAccepted = this.termsAccepted;
+    if (f.legalConsent.enabled && f.legalConsent.required)
+      values.termsAccepted = this.termsAccepted;
 
-    const result = buildRegisterSchema(f, { passwordPolicy: this.passwordPolicy }).safeParse(values);
+    const result = buildRegisterSchema(f, { passwordPolicy: this.passwordPolicy }).safeParse(
+      values,
+    );
     if (!result.success) {
-      this.fieldErrors = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      this.fieldErrors = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       return;
     }
     this.fieldErrors = {};

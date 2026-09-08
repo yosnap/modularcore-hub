@@ -14,7 +14,8 @@ export function el<K extends keyof HTMLElementTagNameMap>(
     if (key === 'class') node.className = value;
     else node.setAttribute(key, value);
   }
-  for (const child of children) node.append(typeof child === 'string' ? document.createTextNode(child) : child);
+  for (const child of children)
+    node.append(typeof child === 'string' ? document.createTextNode(child) : child);
   return node;
 }
 
@@ -25,15 +26,19 @@ export function field(
   classes: { label?: string; input?: string } = {},
 ): { label: HTMLLabelElement; input: HTMLInputElement } {
   const input = el('input', { ...inputAttrs, ...(classes.input ? { class: classes.input } : {}) });
-  const label = el('label', classes.label ? { for: inputAttrs.id, class: classes.label } : { for: inputAttrs.id }, [
-    labelText,
-    input,
-  ]);
+  const label = el(
+    'label',
+    classes.label ? { for: inputAttrs.id, class: classes.label } : { for: inputAttrs.id },
+    [labelText, input],
+  );
   return { label, input };
 }
 
 /** A `role="alert"` paragraph, hidden (via `hidden` attribute) until `setText` is called with non-empty text. */
-export function errorText(className?: string): { node: HTMLParagraphElement; setText: (text: string | null | undefined) => void } {
+export function errorText(className?: string): {
+  node: HTMLParagraphElement;
+  setText: (text: string | null | undefined) => void;
+} {
   const node = el('p', className ? { role: 'alert', class: className } : { role: 'alert' });
   node.hidden = true;
   return {
@@ -46,7 +51,10 @@ export function errorText(className?: string): { node: HTMLParagraphElement; set
 }
 
 /** A status paragraph (no `role="alert"`), same hidden-until-set behavior as `errorText`. */
-export function statusText(className?: string): { node: HTMLParagraphElement; setText: (text: string | null | undefined) => void } {
+export function statusText(className?: string): {
+  node: HTMLParagraphElement;
+  setText: (text: string | null | undefined) => void;
+} {
   const node = el('p', className ? { class: className } : {});
   node.hidden = true;
   return {

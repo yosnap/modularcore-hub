@@ -21,7 +21,8 @@ import type { TurnstileFieldConfig } from '../../core/field-config.js';
           type="text"
           autocomplete="username"
           [value]="identifier"
-          (input)="identifier = $any($event.target).value; clearError('identifier')" (blur)="validateField('identifier')"
+          (input)="identifier = $any($event.target).value; clearError('identifier')"
+          (blur)="validateField('identifier')"
         />
         <p *ngIf="fieldErrors['identifier']" role="alert">{{ fieldErrors['identifier'] }}</p>
       </div>
@@ -32,9 +33,12 @@ import type { TurnstileFieldConfig } from '../../core/field-config.js';
           [type]="showPassword ? 'text' : 'password'"
           autocomplete="current-password"
           [value]="password"
-          (input)="password = $any($event.target).value; clearError('password')" (blur)="validateField('password')"
+          (input)="password = $any($event.target).value; clearError('password')"
+          (blur)="validateField('password')"
         />
-        <button type="button" (click)="showPassword = !showPassword">{{ showPassword ? 'Ocultar' : 'Mostrar' }}</button>
+        <button type="button" (click)="showPassword = !showPassword">
+          {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+        </button>
         <p *ngIf="fieldErrors['password']" role="alert">{{ fieldErrors['password'] }}</p>
       </div>
       <auth-kit-turnstile-widget
@@ -47,7 +51,10 @@ import type { TurnstileFieldConfig } from '../../core/field-config.js';
       <button type="submit" [disabled]="authKit.state().login.status === 'submitting'">
         {{ authKit.state().login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión' }}
       </button>
-      <p *ngIf="authKit.state().login.status === 'error' && authKit.state().login.error" role="alert">
+      <p
+        *ngIf="authKit.state().login.status === 'error' && authKit.state().login.error"
+        role="alert"
+      >
         {{ authKit.state().login.error?.message }}
       </p>
       <p *ngIf="authKit.state().login.status === 'success'">Sesión iniciada.</p>
@@ -64,7 +71,6 @@ export class LoginFormComponent {
   turnstileToken: string | null = null;
   fieldErrors: Record<string, string> = {};
 
-  
   /** Clears a field's stale error message as soon as the user edits it, instead of leaving it displayed until the next submit. */
   clearError(key: string): void {
     if (key in this.fieldErrors) {
@@ -76,7 +82,10 @@ export class LoginFormComponent {
 
   /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
   validateField(key: string): void {
-    const result = buildLoginSchema().safeParse({ identifier: this.identifier, password: this.password });
+    const result = buildLoginSchema().safeParse({
+      identifier: this.identifier,
+      password: this.password,
+    });
     const message = extractFieldError(result, key);
     if (message) {
       this.fieldErrors = { ...this.fieldErrors, [key]: message };
@@ -87,14 +96,23 @@ export class LoginFormComponent {
 
   handleSubmit(event: Event): void {
     event.preventDefault();
-    const result = buildLoginSchema().safeParse({ identifier: this.identifier, password: this.password });
+    const result = buildLoginSchema().safeParse({
+      identifier: this.identifier,
+      password: this.password,
+    });
     if (!result.success) {
-      this.fieldErrors = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      this.fieldErrors = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       return;
     }
     this.fieldErrors = {};
     void this.authKit
-      .login({ identifier: this.identifier, password: this.password, turnstileToken: this.turnstileToken })
+      .login({
+        identifier: this.identifier,
+        password: this.password,
+        turnstileToken: this.turnstileToken,
+      })
       .catch(() => {});
   }
 }

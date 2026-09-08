@@ -4,21 +4,10 @@
   "title": "Auth Kit",
   "type": "headless-core",
   "category": "auth",
-  "frameworks": [
-    "react",
-    "svelte",
-    "vue",
-    "angular",
-    "vanilla"
-  ],
+  "frameworks": ["react", "svelte", "vue", "angular", "vanilla"],
   "ui": {
     "react": {
-      "presentations": [
-        "headless",
-        "tailwind",
-        "shadcn",
-        "vanilla"
-      ],
+      "presentations": ["headless", "tailwind", "shadcn", "vanilla"],
       "missing": [
         "change-password-form",
         "forgot-password-form",
@@ -30,12 +19,7 @@
       ]
     },
     "svelte": {
-      "presentations": [
-        "headless",
-        "tailwind",
-        "shadcn",
-        "vanilla"
-      ],
+      "presentations": ["headless", "tailwind", "shadcn", "vanilla"],
       "missing": [
         "change-password-form",
         "forgot-password-form",
@@ -48,12 +32,7 @@
       ]
     },
     "vue": {
-      "presentations": [
-        "headless",
-        "tailwind",
-        "shadcn",
-        "vanilla"
-      ],
+      "presentations": ["headless", "tailwind", "shadcn", "vanilla"],
       "missing": [
         "change-password-form",
         "forgot-password-form",
@@ -66,12 +45,7 @@
       ]
     },
     "angular": {
-      "presentations": [
-        "headless",
-        "tailwind",
-        "shadcn",
-        "vanilla"
-      ],
+      "presentations": ["headless", "tailwind", "shadcn", "vanilla"],
       "missing": [
         "ChangePasswordForm",
         "ForgotPasswordForm",
@@ -84,12 +58,7 @@
       ]
     },
     "vanilla": {
-      "presentations": [
-        "headless",
-        "tailwind",
-        "shadcn",
-        "vanilla"
-      ],
+      "presentations": ["headless", "tailwind", "shadcn", "vanilla"],
       "missing": [
         "TurnstileWidget",
         "change-password-form",

@@ -25,7 +25,12 @@ const eyeButtonClass =
   'absolute inset-y-0 right-0 flex w-9 appearance-none items-center justify-center border-0 bg-transparent p-0 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100';
 
 /** Tailwind variant — same props/behavior as headless, styled with the media-picker zinc palette. */
-export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateToLogin }: RegisterFormProps): JSX.Element {
+export function RegisterForm({
+  authKit,
+  fieldConfig,
+  passwordPolicy,
+  onNavigateToLogin,
+}: RegisterFormProps): JSX.Element {
   const state = useRegisterFormState({ authKit, fieldConfig, passwordPolicy });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -160,7 +165,10 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
 
       {fields.legalConsent.enabled && (
         <div>
-          <label className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300" htmlFor="auth-kit-register-terms">
+          <label
+            className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+            htmlFor="auth-kit-register-terms"
+          >
             <input
               id="auth-kit-register-terms"
               type="checkbox"
@@ -173,7 +181,12 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
               {fields.legalConsent.links.map((link, index) => (
                 <span key={link.href}>
                   {index > 0 && ' '}
-                  <a href={link.href} target="_blank" rel="noreferrer" className="font-medium text-zinc-900 hover:underline dark:text-zinc-100">
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-zinc-900 hover:underline dark:text-zinc-100"
+                  >
                     {link.label}
                   </a>
                 </span>
@@ -201,7 +214,9 @@ export function RegisterForm({ authKit, fieldConfig, passwordPolicy, onNavigateT
         {flow.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta'}
       </button>
       {flow.status === 'error' && flow.error && <p className={errorClass}>{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="text-sm text-green-600 dark:text-green-400">Cuenta creada.</p>}
+      {flow.status === 'success' && (
+        <p className="text-sm text-green-600 dark:text-green-400">Cuenta creada.</p>
+      )}
       {onNavigateToLogin && (
         <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
           ¿Ya tienes una cuenta?{' '}

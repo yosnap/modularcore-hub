@@ -17,9 +17,24 @@ export interface LoginFormProps {
 }
 
 /** Vanilla CSS variant — same props/behavior as headless, styled with `auth-kit-*` classes. */
-export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigateToForgotPassword }: LoginFormProps): JSX.Element {
-  const { identifier, setIdentifier, onIdentifierBlur, password, setPassword, onPasswordBlur, setTurnstileToken, fieldErrors, handleSubmit, flow } =
-    useLoginFormState({ authKit });
+export function LoginForm({
+  authKit,
+  turnstile,
+  onNavigateToRegister,
+  onNavigateToForgotPassword,
+}: LoginFormProps): JSX.Element {
+  const {
+    identifier,
+    setIdentifier,
+    onIdentifierBlur,
+    password,
+    setPassword,
+    onPasswordBlur,
+    setTurnstileToken,
+    fieldErrors,
+    handleSubmit,
+    flow,
+  } = useLoginFormState({ authKit });
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -50,7 +65,11 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
             autoComplete="current-password"
             className="auth-kit-input"
           />
-          <button type="button" onClick={() => setShowPassword((value) => !value)} className="auth-kit-button auth-kit-button--ghost">
+          <button
+            type="button"
+            onClick={() => setShowPassword((value) => !value)}
+            className="auth-kit-button auth-kit-button--ghost"
+          >
             {showPassword ? 'Ocultar' : 'Mostrar'}
           </button>
         </span>
@@ -66,18 +85,32 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
         />
       )}
 
-      <button type="submit" disabled={flow.status === 'submitting'} className="auth-kit-button auth-kit-button--primary">
+      <button
+        type="submit"
+        disabled={flow.status === 'submitting'}
+        className="auth-kit-button auth-kit-button--primary"
+      >
         {flow.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión'}
       </button>
-      {flow.status === 'error' && flow.error && <p className="auth-kit-error">{flow.error.message}</p>}
+      {flow.status === 'error' && flow.error && (
+        <p className="auth-kit-error">{flow.error.message}</p>
+      )}
       {flow.status === 'success' && <p className="auth-kit-success">Sesión iniciada.</p>}
       {onNavigateToForgotPassword && (
-        <button type="button" onClick={onNavigateToForgotPassword} className="auth-kit-button auth-kit-button--ghost">
+        <button
+          type="button"
+          onClick={onNavigateToForgotPassword}
+          className="auth-kit-button auth-kit-button--ghost"
+        >
           ¿Olvidaste tu contraseña?
         </button>
       )}
       {onNavigateToRegister && (
-        <button type="button" onClick={onNavigateToRegister} className="auth-kit-button auth-kit-button--ghost">
+        <button
+          type="button"
+          onClick={onNavigateToRegister}
+          className="auth-kit-button auth-kit-button--ghost"
+        >
           Registrarse
         </button>
       )}

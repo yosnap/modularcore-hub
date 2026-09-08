@@ -20,8 +20,12 @@ describe('useAuthKit', () => {
   });
 
   it('gives two independent hook instances isolated state', () => {
-    const { result: first } = renderHook(() => useAuthKit({ onLogin: vi.fn(), onRegister: vi.fn() }));
-    const { result: second } = renderHook(() => useAuthKit({ onLogin: vi.fn(), onRegister: vi.fn() }));
+    const { result: first } = renderHook(() =>
+      useAuthKit({ onLogin: vi.fn(), onRegister: vi.fn() }),
+    );
+    const { result: second } = renderHook(() =>
+      useAuthKit({ onLogin: vi.fn(), onRegister: vi.fn() }),
+    );
 
     expect(first.current.state).not.toBe(second.current.state);
   });

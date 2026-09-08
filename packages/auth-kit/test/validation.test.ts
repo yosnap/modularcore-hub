@@ -11,34 +11,52 @@ describe('buildPasswordSchema', () => {
   });
 
   it('relaxes requirements per policy', () => {
-    const schema = buildPasswordSchema({ requireSpecial: false, requireUppercase: false, minLength: 6 });
+    const schema = buildPasswordSchema({
+      requireSpecial: false,
+      requireUppercase: false,
+      minLength: 6,
+    });
     expect(schema.safeParse('abc123').success).toBe(true);
   });
 });
 
 describe('buildLoginSchema', () => {
   it('accepts a plain identifier + password', () => {
-    expect(buildLoginSchema().safeParse({ identifier: 'a@b.com', password: 'x' }).success).toBe(true);
+    expect(buildLoginSchema().safeParse({ identifier: 'a@b.com', password: 'x' }).success).toBe(
+      true,
+    );
   });
 });
 
 describe('buildRegisterSchema', () => {
   it('accepts email+password only when no optional field is enabled', () => {
     const schema = buildRegisterSchema(resolveFieldConfig());
-    const result = schema.safeParse({ email: 'a@b.com', password: 'Aa1!aaaa', confirmPassword: 'Aa1!aaaa' });
+    const result = schema.safeParse({
+      email: 'a@b.com',
+      password: 'Aa1!aaaa',
+      confirmPassword: 'Aa1!aaaa',
+    });
     expect(result.success).toBe(true);
   });
 
   it('rejects a password/confirmPassword mismatch', () => {
     const schema = buildRegisterSchema(resolveFieldConfig());
-    const result = schema.safeParse({ email: 'a@b.com', password: 'Aa1!aaaa', confirmPassword: 'different' });
+    const result = schema.safeParse({
+      email: 'a@b.com',
+      password: 'Aa1!aaaa',
+      confirmPassword: 'different',
+    });
     expect(result.success).toBe(false);
   });
 
   it('requires termsAccepted=true when legalConsent is enabled and required', () => {
     const fields = resolveFieldConfig({ legalConsent: { enabled: true, text: 'I accept the' } });
     const schema = buildRegisterSchema(fields);
-    const missing = schema.safeParse({ email: 'a@b.com', password: 'Aa1!aaaa', confirmPassword: 'Aa1!aaaa' });
+    const missing = schema.safeParse({
+      email: 'a@b.com',
+      password: 'Aa1!aaaa',
+      confirmPassword: 'Aa1!aaaa',
+    });
     expect(missing.success).toBe(false);
 
     const present = schema.safeParse({
@@ -52,7 +70,13 @@ describe('buildRegisterSchema', () => {
 
   it('restricts profileType to the configured option values', () => {
     const fields = resolveFieldConfig({
-      profileType: { enabled: true, options: [{ value: 'user', label: 'User' }, { value: 'collaborator', label: 'Collaborator' }] },
+      profileType: {
+        enabled: true,
+        options: [
+          { value: 'user', label: 'User' },
+          { value: 'collaborator', label: 'Collaborator' },
+        ],
+      },
     });
     const schema = buildRegisterSchema(fields);
     const valid = schema.safeParse({

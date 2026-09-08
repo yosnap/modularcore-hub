@@ -22,7 +22,11 @@ export function mountForgotPasswordForm(
   container: HTMLElement,
   { authKit, turnstile, onNavigateToLogin }: MountForgotPasswordFormOptions,
 ): () => void {
-  const email = field('Correo electrónico', { id: 'auth-kit-forgot-email', type: 'email', autocomplete: 'email' }, { label: LABEL_CLASS, input: INPUT_CLASS });
+  const email = field(
+    'Correo electrónico',
+    { id: 'auth-kit-forgot-email', type: 'email', autocomplete: 'email' },
+    { label: LABEL_CLASS, input: INPUT_CLASS },
+  );
   const emailError = errorText(ERROR_CLASS);
   const submit = el(
     'button',
@@ -42,7 +46,11 @@ export function mountForgotPasswordForm(
   const rows: HTMLElement[] = [email.label, emailError.node];
   if (turnstile?.enabled) {
     const turnstileContainer = el('div');
-    const controller = new TurnstileController({ siteKey: turnstile.siteKey, theme: turnstile.theme, mode: turnstile.mode });
+    const controller = new TurnstileController({
+      siteKey: turnstile.siteKey,
+      theme: turnstile.theme,
+      mode: turnstile.mode,
+    });
     controller.subscribe((state) => {
       turnstileToken = state.token;
     });
@@ -55,10 +63,19 @@ export function mountForgotPasswordForm(
   if (onNavigateToLogin) {
     loginLink = el(
       'button',
-      { type: 'button', class: 'appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300' },
+      {
+        type: 'button',
+        class:
+          'appearance-none border-0 bg-transparent p-0 font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300',
+      },
       ['Iniciar sesión'],
     );
-    rows.push(el('p', { class: 'text-center text-sm text-zinc-600 dark:text-zinc-400' }, ['¿Recordaste tu contraseña? ', loginLink]));
+    rows.push(
+      el('p', { class: 'text-center text-sm text-zinc-600 dark:text-zinc-400' }, [
+        '¿Recordaste tu contraseña? ',
+        loginLink,
+      ]),
+    );
   }
 
   const form = el('form', { novalidate: '', class: 'flex flex-col gap-3' }, rows);
@@ -72,7 +89,8 @@ export function mountForgotPasswordForm(
     submit.textContent = status === 'submitting' ? 'Enviando…' : 'Enviar enlace';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Revisa tu correo para ver el enlace de restablecimiento.' : '';
+    success.textContent =
+      status === 'success' ? 'Revisa tu correo para ver el enlace de restablecimiento.' : '';
   });
 
   const handleSubmit = (event: Event): void => {
@@ -85,7 +103,7 @@ export function mountForgotPasswordForm(
     emailError.setText(null);
     void authKit.forgotPassword({ email: email.input.value, turnstileToken }).catch(() => {});
   };
-  
+
   email.input.addEventListener('blur', () => {
     const result = buildForgotPasswordSchema().safeParse({ email: email.input.value });
     emailError.setText(extractFieldError(result, 'email'));

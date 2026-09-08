@@ -9,7 +9,8 @@ import type { TurnstileFieldConfig } from '../../../core/field-config.js';
 
 const INPUT_CLASS =
   'box-border flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm text-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
-const LINK_CLASS = 'text-xs font-medium appearance-none border-0 bg-transparent p-0 text-primary hover:underline';
+const LINK_CLASS =
+  'text-xs font-medium appearance-none border-0 bg-transparent p-0 text-primary hover:underline';
 const EYE_PATH = 'M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z';
 const EYE_OFF_PATH =
   'M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a18.4 18.4 0 0 1 4.22-5.14M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24';
@@ -22,15 +23,34 @@ const EYE_OFF_PATH =
   template: `
     <form novalidate class="flex flex-col gap-4" (submit)="handleSubmit($event)">
       <div class="flex flex-col gap-1.5">
-        <label class="text-sm font-medium leading-none" for="auth-kit-login-identifier">Correo electrónico o nombre de usuario</label>
-        <input id="auth-kit-login-identifier" type="text" autocomplete="username" [class]="inputClass" [value]="identifier" (input)="identifier = $any($event.target).value; clearError('identifier')" (blur)="validateField('identifier')" />
-        <p *ngIf="fieldErrors['identifier']" class="text-sm text-destructive">{{ fieldErrors['identifier'] }}</p>
+        <label class="text-sm font-medium leading-none" for="auth-kit-login-identifier"
+          >Correo electrónico o nombre de usuario</label
+        >
+        <input
+          id="auth-kit-login-identifier"
+          type="text"
+          autocomplete="username"
+          [class]="inputClass"
+          [value]="identifier"
+          (input)="identifier = $any($event.target).value; clearError('identifier')"
+          (blur)="validateField('identifier')"
+        />
+        <p *ngIf="fieldErrors['identifier']" class="text-sm text-destructive">
+          {{ fieldErrors['identifier'] }}
+        </p>
       </div>
 
       <div class="flex flex-col gap-1.5">
         <div class="flex items-center justify-between">
-          <label class="text-sm font-medium leading-none" for="auth-kit-login-password">Contraseña</label>
-          <button *ngIf="onNavigateToForgotPassword" type="button" [class]="linkClass" (click)="onNavigateToForgotPassword()">
+          <label class="text-sm font-medium leading-none" for="auth-kit-login-password"
+            >Contraseña</label
+          >
+          <button
+            *ngIf="onNavigateToForgotPassword"
+            type="button"
+            [class]="linkClass"
+            (click)="onNavigateToForgotPassword()"
+          >
             ¿Olvidaste tu contraseña?
           </button>
         </div>
@@ -41,7 +61,8 @@ const EYE_OFF_PATH =
             autocomplete="current-password"
             [class]="inputClass + ' pr-9'"
             [value]="password"
-            (input)="password = $any($event.target).value; clearError('password')" (blur)="validateField('password')"
+            (input)="password = $any($event.target).value; clearError('password')"
+            (blur)="validateField('password')"
           />
           <button
             type="button"
@@ -49,7 +70,15 @@ const EYE_OFF_PATH =
             class="absolute inset-y-0 right-0 flex w-9 items-center justify-center appearance-none border-0 bg-transparent p-0 text-muted-foreground hover:text-foreground"
             (click)="showPassword = !showPassword"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="h-4 w-4"
+            >
               <ng-container *ngIf="showPassword; else eyeOpen">
                 <path [attr.d]="eyeOffPath" />
                 <path d="M1 1l22 22" />
@@ -61,7 +90,9 @@ const EYE_OFF_PATH =
             </svg>
           </button>
         </div>
-        <p *ngIf="fieldErrors['password']" class="text-sm text-destructive">{{ fieldErrors['password'] }}</p>
+        <p *ngIf="fieldErrors['password']" class="text-sm text-destructive">
+          {{ fieldErrors['password'] }}
+        </p>
       </div>
 
       <auth-kit-turnstile-widget
@@ -79,13 +110,21 @@ const EYE_OFF_PATH =
       >
         {{ authKit.state().login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión' }}
       </button>
-      <p *ngIf="authKit.state().login.status === 'error' && authKit.state().login.error" class="text-sm text-destructive">
+      <p
+        *ngIf="authKit.state().login.status === 'error' && authKit.state().login.error"
+        class="text-sm text-destructive"
+      >
         {{ authKit.state().login.error?.message }}
       </p>
-      <p *ngIf="authKit.state().login.status === 'success'" class="text-sm text-green-600">Sesión iniciada.</p>
+      <p *ngIf="authKit.state().login.status === 'success'" class="text-sm text-green-600">
+        Sesión iniciada.
+      </p>
 
       <p *ngIf="onNavigateToRegister" class="text-center text-sm text-muted-foreground">
-        ¿Aún no tienes una cuenta? <button type="button" [class]="linkClass" (click)="onNavigateToRegister()">Registrarse</button>
+        ¿Aún no tienes una cuenta?
+        <button type="button" [class]="linkClass" (click)="onNavigateToRegister()">
+          Registrarse
+        </button>
       </p>
     </form>
   `,
@@ -108,7 +147,6 @@ export class LoginFormComponent {
   turnstileToken: string | null = null;
   fieldErrors: Record<string, string> = {};
 
-  
   /** Clears a field's stale error message as soon as the user edits it, instead of leaving it displayed until the next submit. */
   clearError(key: string): void {
     if (key in this.fieldErrors) {
@@ -120,7 +158,10 @@ export class LoginFormComponent {
 
   /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
   validateField(key: string): void {
-    const result = buildLoginSchema().safeParse({ identifier: this.identifier, password: this.password });
+    const result = buildLoginSchema().safeParse({
+      identifier: this.identifier,
+      password: this.password,
+    });
     const message = extractFieldError(result, key);
     if (message) {
       this.fieldErrors = { ...this.fieldErrors, [key]: message };
@@ -131,14 +172,23 @@ export class LoginFormComponent {
 
   handleSubmit(event: Event): void {
     event.preventDefault();
-    const result = buildLoginSchema().safeParse({ identifier: this.identifier, password: this.password });
+    const result = buildLoginSchema().safeParse({
+      identifier: this.identifier,
+      password: this.password,
+    });
     if (!result.success) {
-      this.fieldErrors = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      this.fieldErrors = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       return;
     }
     this.fieldErrors = {};
     void this.authKit
-      .login({ identifier: this.identifier, password: this.password, turnstileToken: this.turnstileToken })
+      .login({
+        identifier: this.identifier,
+        password: this.password,
+        turnstileToken: this.turnstileToken,
+      })
       .catch(() => {});
   }
 }

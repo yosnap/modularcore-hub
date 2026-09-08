@@ -25,8 +25,14 @@ class TestDestroyRef implements DestroyRef {
 
 describe('createAuthKitService', () => {
   it('keeps state isolated for each standalone owner', async () => {
-    const first = createAuthKitService(new TestDestroyRef(), { onLogin: vi.fn().mockResolvedValue({ id: '1' }), onRegister: vi.fn() });
-    const second = createAuthKitService(new TestDestroyRef(), { onLogin: vi.fn(), onRegister: vi.fn() });
+    const first = createAuthKitService(new TestDestroyRef(), {
+      onLogin: vi.fn().mockResolvedValue({ id: '1' }),
+      onRegister: vi.fn(),
+    });
+    const second = createAuthKitService(new TestDestroyRef(), {
+      onLogin: vi.fn(),
+      onRegister: vi.fn(),
+    });
 
     await first.login({ identifier: 'a@b.com', password: 'x' });
 
@@ -36,7 +42,10 @@ describe('createAuthKitService', () => {
 
   it('stops reflecting core state after its DestroyRef is destroyed', async () => {
     const destroyRef = new TestDestroyRef();
-    const service = createAuthKitService(destroyRef, { onLogin: vi.fn().mockRejectedValue(new Error('nope')), onRegister: vi.fn() });
+    const service = createAuthKitService(destroyRef, {
+      onLogin: vi.fn().mockRejectedValue(new Error('nope')),
+      onRegister: vi.fn(),
+    });
 
     destroyRef.destroy();
     await expect(service.login({ identifier: 'a@b.com', password: 'x' })).rejects.toThrow('nope');

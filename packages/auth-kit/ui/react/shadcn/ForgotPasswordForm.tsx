@@ -21,8 +21,13 @@ const labelClass = 'text-sm font-medium leading-none';
 const errorClass = 'text-sm text-destructive';
 
 /** Shadcn variant — self-contained, styled shadcn-like via Radix primitives. Same props/behavior as headless. */
-export function ForgotPasswordForm({ authKit, turnstile, onNavigateToLogin }: ForgotPasswordFormProps): JSX.Element {
-  const { email, setEmail, onEmailBlur, setTurnstileToken, fieldErrors, handleSubmit, flow } = useForgotPasswordFormState({ authKit });
+export function ForgotPasswordForm({
+  authKit,
+  turnstile,
+  onNavigateToLogin,
+}: ForgotPasswordFormProps): JSX.Element {
+  const { email, setEmail, onEmailBlur, setTurnstileToken, fieldErrors, handleSubmit, flow } =
+    useForgotPasswordFormState({ authKit });
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
@@ -57,12 +62,20 @@ export function ForgotPasswordForm({ authKit, turnstile, onNavigateToLogin }: Fo
         {flow.status === 'submitting' ? 'Enviando…' : 'Enviar enlace'}
       </button>
       {flow.status === 'error' && flow.error && <p className={errorClass}>{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="text-sm text-green-600">Revisa tu correo para ver el enlace de restablecimiento.</p>}
+      {flow.status === 'success' && (
+        <p className="text-sm text-green-600">
+          Revisa tu correo para ver el enlace de restablecimiento.
+        </p>
+      )}
 
       {onNavigateToLogin && (
         <p className="text-center text-sm text-muted-foreground">
           ¿Recordaste tu contraseña?{' '}
-          <button type="button" onClick={onNavigateToLogin} className="font-medium text-primary hover:underline">
+          <button
+            type="button"
+            onClick={onNavigateToLogin}
+            className="font-medium text-primary hover:underline"
+          >
             Iniciar sesión
           </button>
         </p>

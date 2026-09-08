@@ -7,7 +7,12 @@ import TurnstileWidget from '../TurnstileWidget.vue';
 import type { UseAuthKitResult } from '../../../adapters/vue/use-auth-kit.js';
 import type { TurnstileFieldConfig } from '../../../core/field-config.js';
 
-const props = defineProps<{ authKit: UseAuthKitResult; token?: string; email?: string; turnstile?: TurnstileFieldConfig }>();
+const props = defineProps<{
+  authKit: UseAuthKitResult;
+  token?: string;
+  email?: string;
+  turnstile?: TurnstileFieldConfig;
+}>();
 
 const inputClass = 'rounded-md border border-zinc-300 px-2 py-1.5 text-sm';
 const labelClass = 'flex flex-col gap-1 text-sm text-zinc-700';
@@ -27,11 +32,15 @@ watchEffect(() => {
 function handleResendSubmit(): void {
   const result = buildResendVerificationSchema().safeParse({ email: email.value });
   if (!result.success) {
-    fieldErrors.value = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+    fieldErrors.value = Object.fromEntries(
+      result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+    );
     return;
   }
   fieldErrors.value = {};
-  void props.authKit.resendVerification({ email: email.value, turnstileToken: turnstileToken.value }).catch(() => {});
+  void props.authKit
+    .resendVerification({ email: email.value, turnstileToken: turnstileToken.value })
+    .catch(() => {});
 }
 </script>
 
@@ -39,9 +48,19 @@ function handleResendSubmit(): void {
 <template>
   <div class="flex flex-col gap-4">
     <div v-if="token" role="status" class="text-sm">
-      <p v-if="authKit.state.value.verifyEmail.status === 'submitting'" class="text-zinc-700">Verificando tu email…</p>
-      <p v-if="authKit.state.value.verifyEmail.status === 'success'" class="text-green-600">Tu email está verificado.</p>
-      <p v-if="authKit.state.value.verifyEmail.status === 'error' && authKit.state.value.verifyEmail.error" :class="errorClass">
+      <p v-if="authKit.state.value.verifyEmail.status === 'submitting'" class="text-zinc-700">
+        Verificando tu email…
+      </p>
+      <p v-if="authKit.state.value.verifyEmail.status === 'success'" class="text-green-600">
+        Tu email está verificado.
+      </p>
+      <p
+        v-if="
+          authKit.state.value.verifyEmail.status === 'error' &&
+          authKit.state.value.verifyEmail.error
+        "
+        :class="errorClass"
+      >
         {{ authKit.state.value.verifyEmail.error.message }}
       </p>
     </div>
@@ -49,7 +68,13 @@ function handleResendSubmit(): void {
     <form novalidate class="flex flex-col gap-3" @submit.prevent="handleResendSubmit">
       <label :class="labelClass" for="auth-kit-resend-email">
         Correo electrónico
-        <input id="auth-kit-resend-email" v-model="email" type="email" autocomplete="email" :class="inputClass" />
+        <input
+          id="auth-kit-resend-email"
+          v-model="email"
+          type="email"
+          autocomplete="email"
+          :class="inputClass"
+        />
       </label>
       <p v-if="fieldErrors.email" :class="errorClass">{{ fieldErrors.email }}</p>
       <TurnstileWidget
@@ -64,12 +89,27 @@ function handleResendSubmit(): void {
         :disabled="authKit.state.value.resendVerification.status === 'submitting'"
         class="rounded-md border border-zinc-300 px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50"
       >
-        {{ authKit.state.value.resendVerification.status === 'submitting' ? 'Enviando…' : 'Reenviar email de verificación' }}
+        {{
+          authKit.state.value.resendVerification.status === 'submitting'
+            ? 'Enviando…'
+            : 'Reenviar email de verificación'
+        }}
       </button>
-      <p v-if="authKit.state.value.resendVerification.status === 'error' && authKit.state.value.resendVerification.error" :class="errorClass">
+      <p
+        v-if="
+          authKit.state.value.resendVerification.status === 'error' &&
+          authKit.state.value.resendVerification.error
+        "
+        :class="errorClass"
+      >
         {{ authKit.state.value.resendVerification.error.message }}
       </p>
-      <p v-if="authKit.state.value.resendVerification.status === 'success'" class="text-sm text-green-600">Email de verificación enviado.</p>
+      <p
+        v-if="authKit.state.value.resendVerification.status === 'success'"
+        class="text-sm text-green-600"
+      >
+        Email de verificación enviado.
+      </p>
     </form>
   </div>
 </template>

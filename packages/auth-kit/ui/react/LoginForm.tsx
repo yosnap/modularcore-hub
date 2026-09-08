@@ -16,9 +16,24 @@ export interface LoginFormProps {
 }
 
 /** Headless variant — no CSS classes, fully consumer-styleable. Same props/behavior across every presentation. */
-export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigateToForgotPassword }: LoginFormProps): JSX.Element {
-  const { identifier, setIdentifier, onIdentifierBlur, password, setPassword, onPasswordBlur, setTurnstileToken, fieldErrors, handleSubmit, flow } =
-    useLoginFormState({ authKit });
+export function LoginForm({
+  authKit,
+  turnstile,
+  onNavigateToRegister,
+  onNavigateToForgotPassword,
+}: LoginFormProps): JSX.Element {
+  const {
+    identifier,
+    setIdentifier,
+    onIdentifierBlur,
+    password,
+    setPassword,
+    onPasswordBlur,
+    setTurnstileToken,
+    fieldErrors,
+    handleSubmit,
+    flow,
+  } = useLoginFormState({ authKit });
   const [showPassword, setShowPassword] = useState(false);
 
   return (

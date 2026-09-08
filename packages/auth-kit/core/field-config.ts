@@ -91,7 +91,8 @@ export function resolveFieldConfig(config: AuthKitFieldConfig = {}): ResolvedFie
       enabled: config.profileType?.enabled ?? false,
       label: config.profileType?.label ?? 'Tipo de cuenta',
       options: config.profileType?.options ?? [],
-      defaultValue: config.profileType?.defaultValue ?? config.profileType?.options?.[0]?.value ?? '',
+      defaultValue:
+        config.profileType?.defaultValue ?? config.profileType?.options?.[0]?.value ?? '',
     },
     turnstile: {
       enabled: config.turnstile?.enabled ?? false,

@@ -18,32 +18,63 @@ import type { PasswordPolicy } from '../../core/validation.js';
     <form novalidate (submit)="handleSubmit($event)">
       <div>
         <label for="auth-kit-register-email">Correo electrónico</label>
-        <input id="auth-kit-register-email" type="email" autocomplete="email" [value]="email" (input)="email = $any($event.target).value; clearError('email')" (blur)="validateField('email')" />
+        <input
+          id="auth-kit-register-email"
+          type="email"
+          autocomplete="email"
+          [value]="email"
+          (input)="email = $any($event.target).value; clearError('email')"
+          (blur)="validateField('email')"
+        />
         <p *ngIf="fieldErrors['email']" role="alert">{{ fieldErrors['email'] }}</p>
       </div>
 
       <div *ngIf="fields.firstName.enabled">
         <label for="auth-kit-register-firstname">{{ fields.firstName.label }}</label>
-        <input id="auth-kit-register-firstname" type="text" [value]="firstName" (input)="firstName = $any($event.target).value; clearError('firstName')" (blur)="validateField('firstName')" />
+        <input
+          id="auth-kit-register-firstname"
+          type="text"
+          [value]="firstName"
+          (input)="firstName = $any($event.target).value; clearError('firstName')"
+          (blur)="validateField('firstName')"
+        />
         <p *ngIf="fieldErrors['firstName']" role="alert">{{ fieldErrors['firstName'] }}</p>
       </div>
 
       <div *ngIf="fields.lastName.enabled">
         <label for="auth-kit-register-lastname">{{ fields.lastName.label }}</label>
-        <input id="auth-kit-register-lastname" type="text" [value]="lastName" (input)="lastName = $any($event.target).value; clearError('lastName')" (blur)="validateField('lastName')" />
+        <input
+          id="auth-kit-register-lastname"
+          type="text"
+          [value]="lastName"
+          (input)="lastName = $any($event.target).value; clearError('lastName')"
+          (blur)="validateField('lastName')"
+        />
         <p *ngIf="fieldErrors['lastName']" role="alert">{{ fieldErrors['lastName'] }}</p>
       </div>
 
       <div *ngIf="fields.phone.enabled">
         <label for="auth-kit-register-phone">{{ fields.phone.label }}</label>
-        <input id="auth-kit-register-phone" type="tel" [value]="phone" (input)="phone = $any($event.target).value; clearError('phone')" (blur)="validateField('phone')" />
+        <input
+          id="auth-kit-register-phone"
+          type="tel"
+          [value]="phone"
+          (input)="phone = $any($event.target).value; clearError('phone')"
+          (blur)="validateField('phone')"
+        />
         <p *ngIf="fieldErrors['phone']" role="alert">{{ fieldErrors['phone'] }}</p>
       </div>
 
       <div *ngIf="fields.profileType.enabled">
         <label for="auth-kit-register-profile-type">{{ fields.profileType.label }}</label>
-        <select id="auth-kit-register-profile-type" [value]="profileType" (change)="profileType = $any($event.target).value">
-          <option *ngFor="let option of fields.profileType.options" [value]="option.value">{{ option.label }}</option>
+        <select
+          id="auth-kit-register-profile-type"
+          [value]="profileType"
+          (change)="profileType = $any($event.target).value"
+        >
+          <option *ngFor="let option of fields.profileType.options" [value]="option.value">
+            {{ option.label }}
+          </option>
         </select>
       </div>
 
@@ -54,9 +85,12 @@ import type { PasswordPolicy } from '../../core/validation.js';
           [type]="showPassword ? 'text' : 'password'"
           autocomplete="new-password"
           [value]="password"
-          (input)="password = $any($event.target).value; clearError('password')" (blur)="validateField('password')"
+          (input)="password = $any($event.target).value; clearError('password')"
+          (blur)="validateField('password')"
         />
-        <button type="button" (click)="showPassword = !showPassword">{{ showPassword ? 'Ocultar' : 'Mostrar' }}</button>
+        <button type="button" (click)="showPassword = !showPassword">
+          {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+        </button>
         <p *ngIf="fieldErrors['password']" role="alert">{{ fieldErrors['password'] }}</p>
       </div>
 
@@ -67,10 +101,15 @@ import type { PasswordPolicy } from '../../core/validation.js';
           [type]="showConfirm ? 'text' : 'password'"
           autocomplete="new-password"
           [value]="confirmPassword"
-          (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')" (blur)="validateField('confirmPassword')"
+          (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')"
+          (blur)="validateField('confirmPassword')"
         />
-        <button type="button" (click)="showConfirm = !showConfirm">{{ showConfirm ? 'Ocultar' : 'Mostrar' }}</button>
-        <p *ngIf="fieldErrors['confirmPassword']" role="alert">{{ fieldErrors['confirmPassword'] }}</p>
+        <button type="button" (click)="showConfirm = !showConfirm">
+          {{ showConfirm ? 'Ocultar' : 'Mostrar' }}
+        </button>
+        <p *ngIf="fieldErrors['confirmPassword']" role="alert">
+          {{ fieldErrors['confirmPassword'] }}
+        </p>
       </div>
 
       <div *ngIf="fields.legalConsent.enabled">
@@ -83,7 +122,8 @@ import type { PasswordPolicy } from '../../core/validation.js';
           />
           {{ fields.legalConsent.text }}
           <span *ngFor="let link of fields.legalConsent.links; let i = index">
-            {{ i > 0 ? ' ' : '' }}<a [href]="link.href" target="_blank" rel="noreferrer">{{ link.label }}</a>
+            {{ i > 0 ? ' ' : ''
+            }}<a [href]="link.href" target="_blank" rel="noreferrer">{{ link.label }}</a>
           </span>
         </label>
         <p *ngIf="fieldErrors['termsAccepted']" role="alert">{{ fieldErrors['termsAccepted'] }}</p>
@@ -100,7 +140,10 @@ import type { PasswordPolicy } from '../../core/validation.js';
       <button type="submit" [disabled]="authKit.state().register.status === 'submitting'">
         {{ authKit.state().register.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta' }}
       </button>
-      <p *ngIf="authKit.state().register.status === 'error' && authKit.state().register.error" role="alert">
+      <p
+        *ngIf="authKit.state().register.status === 'error' && authKit.state().register.error"
+        role="alert"
+      >
         {{ authKit.state().register.error?.message }}
       </p>
       <p *ngIf="authKit.state().register.status === 'success'">Cuenta creada.</p>
@@ -132,15 +175,19 @@ export class RegisterFormComponent implements OnChanges {
     if (!this.profileType) this.profileType = this.fields.profileType.defaultValue;
   }
 
-  
   collectValues(): Record<string, unknown> {
     const f = this.fields;
-    const values: Record<string, unknown> = { email: this.email, password: this.password, confirmPassword: this.confirmPassword };
+    const values: Record<string, unknown> = {
+      email: this.email,
+      password: this.password,
+      confirmPassword: this.confirmPassword,
+    };
     if (f.firstName.enabled) values.firstName = this.firstName;
     if (f.lastName.enabled) values.lastName = this.lastName;
     if (f.phone.enabled) values.phone = this.phone;
     if (f.profileType.enabled) values.profileType = this.profileType;
-    if (f.legalConsent.enabled && f.legalConsent.required) values.termsAccepted = this.termsAccepted;
+    if (f.legalConsent.enabled && f.legalConsent.required)
+      values.termsAccepted = this.termsAccepted;
     return values;
   }
 
@@ -155,7 +202,9 @@ export class RegisterFormComponent implements OnChanges {
 
   /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
   validateField(key: string): void {
-    const result = buildRegisterSchema(this.fields, { passwordPolicy: this.passwordPolicy }).safeParse(this.collectValues());
+    const result = buildRegisterSchema(this.fields, {
+      passwordPolicy: this.passwordPolicy,
+    }).safeParse(this.collectValues());
     const message = extractFieldError(result, key);
     if (message) {
       this.fieldErrors = { ...this.fieldErrors, [key]: message };
@@ -167,16 +216,25 @@ export class RegisterFormComponent implements OnChanges {
   handleSubmit(event: Event): void {
     event.preventDefault();
     const f = this.fields;
-    const values: Record<string, unknown> = { email: this.email, password: this.password, confirmPassword: this.confirmPassword };
+    const values: Record<string, unknown> = {
+      email: this.email,
+      password: this.password,
+      confirmPassword: this.confirmPassword,
+    };
     if (f.firstName.enabled) values.firstName = this.firstName;
     if (f.lastName.enabled) values.lastName = this.lastName;
     if (f.phone.enabled) values.phone = this.phone;
     if (f.profileType.enabled) values.profileType = this.profileType;
-    if (f.legalConsent.enabled && f.legalConsent.required) values.termsAccepted = this.termsAccepted;
+    if (f.legalConsent.enabled && f.legalConsent.required)
+      values.termsAccepted = this.termsAccepted;
 
-    const result = buildRegisterSchema(f, { passwordPolicy: this.passwordPolicy }).safeParse(values);
+    const result = buildRegisterSchema(f, { passwordPolicy: this.passwordPolicy }).safeParse(
+      values,
+    );
     if (!result.success) {
-      this.fieldErrors = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      this.fieldErrors = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       return;
     }
     this.fieldErrors = {};

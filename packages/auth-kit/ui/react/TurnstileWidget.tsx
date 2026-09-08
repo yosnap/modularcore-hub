@@ -17,10 +17,16 @@ export interface TurnstileWidgetProps {
  * itself renders its own UI (an iframe), so there's nothing presentation-specific to restyle
  * here, same reasoning as `ModernSelect` living directly under `ui/react/` in media-picker.
  */
-export function TurnstileWidget({ siteKey, theme, mode, onToken }: TurnstileWidgetProps): JSX.Element | null {
+export function TurnstileWidget({
+  siteKey,
+  theme,
+  mode,
+  onToken,
+}: TurnstileWidgetProps): JSX.Element | null {
   const containerRef = useRef<HTMLDivElement>(null);
   const controllerRef = useRef<TurnstileController | null>(null);
-  if (!controllerRef.current) controllerRef.current = new TurnstileController({ siteKey, theme, mode });
+  if (!controllerRef.current)
+    controllerRef.current = new TurnstileController({ siteKey, theme, mode });
   const controller = controllerRef.current;
 
   useEffect(() => controller.subscribe((state) => onToken(state.token)), [controller, onToken]);

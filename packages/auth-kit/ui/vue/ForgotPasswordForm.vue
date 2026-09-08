@@ -13,7 +13,6 @@ const email = ref('');
 const turnstileToken = ref<string | null>(null);
 const fieldErrors = ref<Record<string, string>>({});
 
-
 /** Clears a field's stale error message as soon as the user edits it, instead of leaving it displayed until the next submit. */
 function clearError(key: string): void {
   if (key in fieldErrors.value) {
@@ -37,11 +36,15 @@ function validateField(key: string): void {
 function handleSubmit(): void {
   const result = buildForgotPasswordSchema().safeParse({ email: email.value });
   if (!result.success) {
-    fieldErrors.value = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+    fieldErrors.value = Object.fromEntries(
+      result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+    );
     return;
   }
   fieldErrors.value = {};
-  void props.authKit.forgotPassword({ email: email.value, turnstileToken: turnstileToken.value }).catch(() => {});
+  void props.authKit
+    .forgotPassword({ email: email.value, turnstileToken: turnstileToken.value })
+    .catch(() => {});
 }
 </script>
 
@@ -50,7 +53,14 @@ function handleSubmit(): void {
   <form novalidate @submit.prevent="handleSubmit">
     <div>
       <label for="auth-kit-forgot-email">Correo electrónico</label>
-      <input id="auth-kit-forgot-email" v-model="email" @input="clearError('email')" @blur="validateField('email')" type="email" autocomplete="email" />
+      <input
+        id="auth-kit-forgot-email"
+        v-model="email"
+        @input="clearError('email')"
+        @blur="validateField('email')"
+        type="email"
+        autocomplete="email"
+      />
       <p v-if="fieldErrors.email" role="alert">{{ fieldErrors.email }}</p>
     </div>
     <TurnstileWidget
@@ -61,11 +71,21 @@ function handleSubmit(): void {
       @token="(t) => (turnstileToken = t)"
     />
     <button type="submit" :disabled="authKit.state.value.forgotPassword.status === 'submitting'">
-      {{ authKit.state.value.forgotPassword.status === 'submitting' ? 'Enviando…' : 'Enviar enlace' }}
+      {{
+        authKit.state.value.forgotPassword.status === 'submitting' ? 'Enviando…' : 'Enviar enlace'
+      }}
     </button>
-    <p v-if="authKit.state.value.forgotPassword.status === 'error' && authKit.state.value.forgotPassword.error" role="alert">
+    <p
+      v-if="
+        authKit.state.value.forgotPassword.status === 'error' &&
+        authKit.state.value.forgotPassword.error
+      "
+      role="alert"
+    >
       {{ authKit.state.value.forgotPassword.error.message }}
     </p>
-    <p v-if="authKit.state.value.forgotPassword.status === 'success'">Revisa tu correo para ver el enlace de restablecimiento.</p>
+    <p v-if="authKit.state.value.forgotPassword.status === 'success'">
+      Revisa tu correo para ver el enlace de restablecimiento.
+    </p>
   </form>
 </template>

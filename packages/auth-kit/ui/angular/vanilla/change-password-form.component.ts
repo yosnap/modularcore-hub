@@ -22,12 +22,21 @@ import type { PasswordPolicy } from '../../../core/validation.js';
             autocomplete="current-password"
             class="auth-kit-input"
             [value]="currentPassword"
-            (input)="currentPassword = $any($event.target).value; clearError('currentPassword')" (blur)="validateField('currentPassword')"
+            (input)="currentPassword = $any($event.target).value; clearError('currentPassword')"
+            (blur)="validateField('currentPassword')"
           />
-          <button type="button" class="auth-kit-button auth-kit-button--ghost" (click)="showCurrent = !showCurrent">{{ showCurrent ? 'Ocultar' : 'Mostrar' }}</button>
+          <button
+            type="button"
+            class="auth-kit-button auth-kit-button--ghost"
+            (click)="showCurrent = !showCurrent"
+          >
+            {{ showCurrent ? 'Ocultar' : 'Mostrar' }}
+          </button>
         </span>
       </label>
-      <p *ngIf="fieldErrors['currentPassword']" class="auth-kit-error">{{ fieldErrors['currentPassword'] }}</p>
+      <p *ngIf="fieldErrors['currentPassword']" class="auth-kit-error">
+        {{ fieldErrors['currentPassword'] }}
+      </p>
 
       <label class="auth-kit-field" for="auth-kit-change-new">
         Contraseña nueva
@@ -38,12 +47,21 @@ import type { PasswordPolicy } from '../../../core/validation.js';
             autocomplete="new-password"
             class="auth-kit-input"
             [value]="newPassword"
-            (input)="newPassword = $any($event.target).value; clearError('newPassword')" (blur)="validateField('newPassword')"
+            (input)="newPassword = $any($event.target).value; clearError('newPassword')"
+            (blur)="validateField('newPassword')"
           />
-          <button type="button" class="auth-kit-button auth-kit-button--ghost" (click)="showNew = !showNew">{{ showNew ? 'Ocultar' : 'Mostrar' }}</button>
+          <button
+            type="button"
+            class="auth-kit-button auth-kit-button--ghost"
+            (click)="showNew = !showNew"
+          >
+            {{ showNew ? 'Ocultar' : 'Mostrar' }}
+          </button>
         </span>
       </label>
-      <p *ngIf="fieldErrors['newPassword']" class="auth-kit-error">{{ fieldErrors['newPassword'] }}</p>
+      <p *ngIf="fieldErrors['newPassword']" class="auth-kit-error">
+        {{ fieldErrors['newPassword'] }}
+      </p>
 
       <label class="auth-kit-field" for="auth-kit-change-confirm">
         Confirmar contraseña nueva
@@ -53,18 +71,36 @@ import type { PasswordPolicy } from '../../../core/validation.js';
           autocomplete="new-password"
           class="auth-kit-input"
           [value]="confirmPassword"
-          (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')" (blur)="validateField('confirmPassword')"
+          (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')"
+          (blur)="validateField('confirmPassword')"
         />
       </label>
-      <p *ngIf="fieldErrors['confirmPassword']" class="auth-kit-error">{{ fieldErrors['confirmPassword'] }}</p>
+      <p *ngIf="fieldErrors['confirmPassword']" class="auth-kit-error">
+        {{ fieldErrors['confirmPassword'] }}
+      </p>
 
-      <button type="submit" [disabled]="authKit.state().changePassword.status === 'submitting'" class="auth-kit-button auth-kit-button--primary">
-        {{ authKit.state().changePassword.status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña' }}
+      <button
+        type="submit"
+        [disabled]="authKit.state().changePassword.status === 'submitting'"
+        class="auth-kit-button auth-kit-button--primary"
+      >
+        {{
+          authKit.state().changePassword.status === 'submitting'
+            ? 'Actualizando…'
+            : 'Actualizar contraseña'
+        }}
       </button>
-      <p *ngIf="authKit.state().changePassword.status === 'error' && authKit.state().changePassword.error" class="auth-kit-error">
+      <p
+        *ngIf="
+          authKit.state().changePassword.status === 'error' && authKit.state().changePassword.error
+        "
+        class="auth-kit-error"
+      >
         {{ authKit.state().changePassword.error?.message }}
       </p>
-      <p *ngIf="authKit.state().changePassword.status === 'success'" class="auth-kit-success">Contraseña actualizada.</p>
+      <p *ngIf="authKit.state().changePassword.status === 'success'" class="auth-kit-success">
+        Contraseña actualizada.
+      </p>
     </form>
   `,
 })
@@ -79,7 +115,6 @@ export class ChangePasswordFormComponent {
   showNew = false;
   fieldErrors: Record<string, string> = {};
 
-  
   /** Clears a field's stale error message as soon as the user edits it, instead of leaving it displayed until the next submit. */
   clearError(key: string): void {
     if (key in this.fieldErrors) {
@@ -91,7 +126,11 @@ export class ChangePasswordFormComponent {
 
   /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
   validateField(key: string): void {
-    const result = buildChangePasswordSchema({ passwordPolicy: this.passwordPolicy }).safeParse({ currentPassword: this.currentPassword, newPassword: this.newPassword, confirmPassword: this.confirmPassword });
+    const result = buildChangePasswordSchema({ passwordPolicy: this.passwordPolicy }).safeParse({
+      currentPassword: this.currentPassword,
+      newPassword: this.newPassword,
+      confirmPassword: this.confirmPassword,
+    });
     const message = extractFieldError(result, key);
     if (message) {
       this.fieldErrors = { ...this.fieldErrors, [key]: message };
@@ -108,10 +147,14 @@ export class ChangePasswordFormComponent {
       confirmPassword: this.confirmPassword,
     });
     if (!result.success) {
-      this.fieldErrors = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      this.fieldErrors = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       return;
     }
     this.fieldErrors = {};
-    void this.authKit.changePassword({ currentPassword: this.currentPassword, newPassword: this.newPassword }).catch(() => {});
+    void this.authKit
+      .changePassword({ currentPassword: this.currentPassword, newPassword: this.newPassword })
+      .catch(() => {});
   }
 }

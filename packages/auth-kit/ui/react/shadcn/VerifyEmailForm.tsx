@@ -21,17 +21,35 @@ const labelClass = 'text-sm font-medium leading-none';
 const errorClass = 'text-sm text-destructive';
 
 /** Shadcn variant — self-contained, styled shadcn-like via Radix primitives. Same props/behavior as headless. */
-export function VerifyEmailForm({ authKit, token, email: initialEmail, turnstile }: VerifyEmailFormProps): JSX.Element {
-  const { email, setEmail, setTurnstileToken, fieldErrors, handleResendSubmit, verifyFlow, resendFlow } =
-    useVerifyEmailFormState({ authKit, token, email: initialEmail });
+export function VerifyEmailForm({
+  authKit,
+  token,
+  email: initialEmail,
+  turnstile,
+}: VerifyEmailFormProps): JSX.Element {
+  const {
+    email,
+    setEmail,
+    setTurnstileToken,
+    fieldErrors,
+    handleResendSubmit,
+    verifyFlow,
+    resendFlow,
+  } = useVerifyEmailFormState({ authKit, token, email: initialEmail });
 
   return (
     <div className="flex flex-col gap-4">
       {token && (
         <div role="status" className="text-sm">
-          {verifyFlow.status === 'submitting' && <p className="text-muted-foreground">Verificando tu email…</p>}
-          {verifyFlow.status === 'success' && <p className="text-green-600">Tu email está verificado.</p>}
-          {verifyFlow.status === 'error' && verifyFlow.error && <p className={errorClass}>{verifyFlow.error.message}</p>}
+          {verifyFlow.status === 'submitting' && (
+            <p className="text-muted-foreground">Verificando tu email…</p>
+          )}
+          {verifyFlow.status === 'success' && (
+            <p className="text-green-600">Tu email está verificado.</p>
+          )}
+          {verifyFlow.status === 'error' && verifyFlow.error && (
+            <p className={errorClass}>{verifyFlow.error.message}</p>
+          )}
         </div>
       )}
 
@@ -65,8 +83,12 @@ export function VerifyEmailForm({ authKit, token, email: initialEmail, turnstile
         >
           {resendFlow.status === 'submitting' ? 'Enviando…' : 'Reenviar email de verificación'}
         </button>
-        {resendFlow.status === 'error' && resendFlow.error && <p className={errorClass}>{resendFlow.error.message}</p>}
-        {resendFlow.status === 'success' && <p className="text-sm text-green-600">Email de verificación enviado.</p>}
+        {resendFlow.status === 'error' && resendFlow.error && (
+          <p className={errorClass}>{resendFlow.error.message}</p>
+        )}
+        {resendFlow.status === 'success' && (
+          <p className="text-sm text-green-600">Email de verificación enviado.</p>
+        )}
       </form>
     </div>
   );

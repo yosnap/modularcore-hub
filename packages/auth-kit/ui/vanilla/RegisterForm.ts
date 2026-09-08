@@ -14,15 +14,30 @@ export interface MountRegisterFormOptions {
 }
 
 /** Headless variant — no CSS classes, fully consumer-styleable. Same options/behavior across every presentation. */
-export function mountRegisterForm(container: HTMLElement, { authKit, fieldConfig, passwordPolicy }: MountRegisterFormOptions): () => void {
+export function mountRegisterForm(
+  container: HTMLElement,
+  { authKit, fieldConfig, passwordPolicy }: MountRegisterFormOptions,
+): () => void {
   const fields = resolveFieldConfig(fieldConfig);
 
-  const email = field('Correo electrónico', { id: 'auth-kit-register-email', type: 'email', autocomplete: 'email' });
+  const email = field('Correo electrónico', {
+    id: 'auth-kit-register-email',
+    type: 'email',
+    autocomplete: 'email',
+  });
   const emailError = errorText();
-  const password = field('Contraseña', { id: 'auth-kit-register-password', type: 'password', autocomplete: 'new-password' });
+  const password = field('Contraseña', {
+    id: 'auth-kit-register-password',
+    type: 'password',
+    autocomplete: 'new-password',
+  });
   const passwordError = errorText();
   const showPassword = el('button', { type: 'button' }, ['Mostrar']);
-  const confirmPassword = field('Confirmar contraseña', { id: 'auth-kit-register-confirm-password', type: 'password', autocomplete: 'new-password' });
+  const confirmPassword = field('Confirmar contraseña', {
+    id: 'auth-kit-register-confirm-password',
+    type: 'password',
+    autocomplete: 'new-password',
+  });
   const confirmPasswordError = errorText();
   const showConfirm = el('button', { type: 'button' }, ['Mostrar']);
   const submit = el('button', { type: 'submit' }, ['Crear cuenta']);
@@ -52,25 +67,39 @@ export function mountRegisterForm(container: HTMLElement, { authKit, fieldConfig
     profileTypeSelect = el(
       'select',
       { id: 'auth-kit-register-profile-type' },
-      fields.profileType.options.map((option) => el('option', { value: option.value }, [option.label])),
+      fields.profileType.options.map((option) =>
+        el('option', { value: option.value }, [option.label]),
+      ),
     );
     profileTypeSelect.value = fields.profileType.defaultValue;
-    const label = el('label', { for: 'auth-kit-register-profile-type' }, [fields.profileType.label, profileTypeSelect]);
+    const label = el('label', { for: 'auth-kit-register-profile-type' }, [
+      fields.profileType.label,
+      profileTypeSelect,
+    ]);
     rows.push(el('div', {}, [label]));
   }
 
   rows.push(el('div', {}, [el('div', {}, [password.label, showPassword]), passwordError.node]));
-  rows.push(el('div', {}, [el('div', {}, [confirmPassword.label, showConfirm]), confirmPasswordError.node]));
+  rows.push(
+    el('div', {}, [el('div', {}, [confirmPassword.label, showConfirm]), confirmPasswordError.node]),
+  );
 
   let termsCheckbox: HTMLInputElement | undefined;
   const termsError = errorText();
   if (fields.legalConsent.enabled) {
     termsCheckbox = el('input', { id: 'auth-kit-register-terms', type: 'checkbox' });
     const links = fields.legalConsent.links.map((link, index) => {
-      const anchor = el('a', { href: link.href, target: '_blank', rel: 'noreferrer' }, [link.label]);
+      const anchor = el('a', { href: link.href, target: '_blank', rel: 'noreferrer' }, [
+        link.label,
+      ]);
       return index > 0 ? el('span', {}, [' ', anchor]) : anchor;
     });
-    const label = el('label', { for: 'auth-kit-register-terms' }, [termsCheckbox, fields.legalConsent.text, ' ', ...links]);
+    const label = el('label', { for: 'auth-kit-register-terms' }, [
+      termsCheckbox,
+      fields.legalConsent.text,
+      ' ',
+      ...links,
+    ]);
     rows.push(el('div', {}, [label, termsError.node]));
   }
 
@@ -129,7 +158,9 @@ export function mountRegisterForm(container: HTMLElement, { authKit, fieldConfig
 
     const result = buildRegisterSchema(fields, { passwordPolicy }).safeParse(values);
     if (!result.success) {
-      const issues = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      const issues = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       emailError.setText(issues.email);
       passwordError.setText(issues.password);
       confirmPasswordError.setText(issues.confirmPassword);
@@ -154,7 +185,7 @@ export function mountRegisterForm(container: HTMLElement, { authKit, fieldConfig
       })
       .catch(() => {});
   };
-  
+
   function collectValues(): Record<string, unknown> {
     const values: Record<string, unknown> = {
       email: email.input.value,

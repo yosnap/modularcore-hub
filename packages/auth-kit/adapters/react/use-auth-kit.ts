@@ -32,7 +32,9 @@ export interface UseAuthKitResult<TSession = unknown> {
  * just forwards to the core instance, which owns the per-flow state machine and notifies this
  * hook via `subscribe`. Same split as `useMediaPicker` in `packages/media-picker`.
  */
-export function useAuthKit<TSession = unknown>(hooks: AuthKitHooks<TSession>): UseAuthKitResult<TSession> {
+export function useAuthKit<TSession = unknown>(
+  hooks: AuthKitHooks<TSession>,
+): UseAuthKitResult<TSession> {
   const kitRef = useRef<AuthKit<TSession> | null>(null);
   if (!kitRef.current) kitRef.current = new AuthKit<TSession>(hooks);
   const kit = kitRef.current;

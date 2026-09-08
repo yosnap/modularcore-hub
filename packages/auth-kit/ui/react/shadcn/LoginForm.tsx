@@ -23,9 +23,24 @@ const inputClass =
 const labelClass = 'text-sm font-medium leading-none';
 
 /** Shadcn variant — self-contained, styled shadcn-like via Radix primitives (no assumption the consumer has shadcn/ui installed). Same props/behavior as headless. */
-export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigateToForgotPassword }: LoginFormProps): JSX.Element {
-  const { identifier, setIdentifier, onIdentifierBlur, password, setPassword, onPasswordBlur, setTurnstileToken, fieldErrors, handleSubmit, flow } =
-    useLoginFormState({ authKit });
+export function LoginForm({
+  authKit,
+  turnstile,
+  onNavigateToRegister,
+  onNavigateToForgotPassword,
+}: LoginFormProps): JSX.Element {
+  const {
+    identifier,
+    setIdentifier,
+    onIdentifierBlur,
+    password,
+    setPassword,
+    onPasswordBlur,
+    setTurnstileToken,
+    fieldErrors,
+    handleSubmit,
+    flow,
+  } = useLoginFormState({ authKit });
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -43,7 +58,9 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
           autoComplete="username"
           className={inputClass}
         />
-        {fieldErrors.identifier && <p className="text-sm text-destructive">{fieldErrors.identifier}</p>}
+        {fieldErrors.identifier && (
+          <p className="text-sm text-destructive">{fieldErrors.identifier}</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-1.5">
@@ -99,13 +116,19 @@ export function LoginForm({ authKit, turnstile, onNavigateToRegister, onNavigate
       >
         {flow.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión'}
       </button>
-      {flow.status === 'error' && flow.error && <p className="text-sm text-destructive">{flow.error.message}</p>}
+      {flow.status === 'error' && flow.error && (
+        <p className="text-sm text-destructive">{flow.error.message}</p>
+      )}
       {flow.status === 'success' && <p className="text-sm text-green-600">Sesión iniciada.</p>}
 
       {onNavigateToRegister && (
         <p className="text-center text-sm text-muted-foreground">
           ¿Aún no tienes una cuenta?{' '}
-          <button type="button" onClick={onNavigateToRegister} className="font-medium text-primary hover:underline">
+          <button
+            type="button"
+            onClick={onNavigateToRegister}
+            className="font-medium text-primary hover:underline"
+          >
             Registrarse
           </button>
         </p>

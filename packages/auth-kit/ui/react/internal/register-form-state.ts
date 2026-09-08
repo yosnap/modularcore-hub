@@ -15,7 +15,11 @@ export interface UseRegisterFormStateOptions {
 }
 
 /** Shared logic behind every RegisterForm presentation — only markup/classes differ between them. */
-export function useRegisterFormState({ authKit, fieldConfig, passwordPolicy }: UseRegisterFormStateOptions) {
+export function useRegisterFormState({
+  authKit,
+  fieldConfig,
+  passwordPolicy,
+}: UseRegisterFormStateOptions) {
   const fields = useMemo(() => resolveFieldConfig(fieldConfig), [fieldConfig]);
 
   const [email, setEmailRaw] = useState('');
@@ -70,7 +74,8 @@ export function useRegisterFormState({ authKit, fieldConfig, passwordPolicy }: U
     if (fields.lastName.enabled) values.lastName = lastName;
     if (fields.phone.enabled) values.phone = phone;
     if (fields.profileType.enabled) values.profileType = profileType;
-    if (fields.legalConsent.enabled && fields.legalConsent.required) values.termsAccepted = termsAccepted;
+    if (fields.legalConsent.enabled && fields.legalConsent.required)
+      values.termsAccepted = termsAccepted;
     return values;
   };
 
@@ -99,20 +104,26 @@ export function useRegisterFormState({ authKit, fieldConfig, passwordPolicy }: U
     event.preventDefault();
     const result = buildRegisterSchema(fields, { passwordPolicy }).safeParse(collectValues());
     if (!result.success) {
-      setFieldErrors(Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message])));
+      setFieldErrors(
+        Object.fromEntries(
+          result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+        ),
+      );
       return;
     }
     setFieldErrors({});
-    void authKit.register({
-      email,
-      password,
-      firstName: fields.firstName.enabled ? firstName : undefined,
-      lastName: fields.lastName.enabled ? lastName : undefined,
-      phone: fields.phone.enabled ? phone : undefined,
-      profileType: fields.profileType.enabled ? profileType : undefined,
-      termsAccepted: fields.legalConsent.enabled ? termsAccepted : undefined,
-      turnstileToken,
-    }).catch(() => {});
+    void authKit
+      .register({
+        email,
+        password,
+        firstName: fields.firstName.enabled ? firstName : undefined,
+        lastName: fields.lastName.enabled ? lastName : undefined,
+        phone: fields.phone.enabled ? phone : undefined,
+        profileType: fields.profileType.enabled ? profileType : undefined,
+        termsAccepted: fields.legalConsent.enabled ? termsAccepted : undefined,
+        turnstileToken,
+      })
+      .catch(() => {});
   };
 
   return {

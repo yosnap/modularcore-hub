@@ -13,9 +13,16 @@ export interface MountVerifyEmailFormOptions {
 }
 
 /** Headless variant — no CSS classes, fully consumer-styleable. Same options/behavior across every presentation. */
-export function mountVerifyEmailForm(container: HTMLElement, { authKit, token, email: initialEmail, turnstile }: MountVerifyEmailFormOptions): () => void {
+export function mountVerifyEmailForm(
+  container: HTMLElement,
+  { authKit, token, email: initialEmail, turnstile }: MountVerifyEmailFormOptions,
+): () => void {
   const verifyStatus = statusText();
-  const email = field('Correo electrónico', { id: 'auth-kit-resend-email', type: 'email', autocomplete: 'email' });
+  const email = field('Correo electrónico', {
+    id: 'auth-kit-resend-email',
+    type: 'email',
+    autocomplete: 'email',
+  });
   email.input.value = initialEmail ?? '';
   const emailError = errorText();
   const submit = el('button', { type: 'submit' }, ['Reenviar email de verificación']);
@@ -29,7 +36,11 @@ export function mountVerifyEmailForm(container: HTMLElement, { authKit, token, e
   let unmountTurnstile: (() => void) | undefined;
   if (turnstile?.enabled) {
     const turnstileContainer = el('div');
-    const controller = new TurnstileController({ siteKey: turnstile.siteKey, theme: turnstile.theme, mode: turnstile.mode });
+    const controller = new TurnstileController({
+      siteKey: turnstile.siteKey,
+      theme: turnstile.theme,
+      mode: turnstile.mode,
+    });
     controller.subscribe((state) => {
       turnstileToken = state.token;
     });

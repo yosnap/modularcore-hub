@@ -81,7 +81,10 @@ export class TurnstileController {
  * immediately) when `controller.siteKey` is unset, so dev environments without Cloudflare keys
  * still pass the gate — same behavior the reference hand-rolled widget used.
  */
-export function mountTurnstileWidget(container: HTMLElement, controller: TurnstileController): () => void {
+export function mountTurnstileWidget(
+  container: HTMLElement,
+  controller: TurnstileController,
+): () => void {
   if (!controller.siteKey) {
     controller.setToken('');
     return () => {};

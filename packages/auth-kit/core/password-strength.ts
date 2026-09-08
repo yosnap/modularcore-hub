@@ -27,15 +27,38 @@ const DEFAULT_POLICY: Required<PasswordPolicy> = {
  * requirement checklist next to a password field — kept in core so the five UI layers never
  * duplicate (or silently diverge on) what counts as "strong enough".
  */
-export function evaluatePasswordStrength(password: string, policy: PasswordPolicy = {}): PasswordStrength {
+export function evaluatePasswordStrength(
+  password: string,
+  policy: PasswordPolicy = {},
+): PasswordStrength {
   const p = { ...DEFAULT_POLICY, ...policy };
   const requirements: PasswordRequirement[] = [
-    { key: 'minLength', label: `Al menos ${p.minLength} caracteres`, met: password.length >= p.minLength },
+    {
+      key: 'minLength',
+      label: `Al menos ${p.minLength} caracteres`,
+      met: password.length >= p.minLength,
+    },
   ];
-  if (p.requireUppercase) requirements.push({ key: 'uppercase', label: 'Una letra mayúscula', met: /[A-Z]/.test(password) });
-  if (p.requireLowercase) requirements.push({ key: 'lowercase', label: 'Una letra minúscula', met: /[a-z]/.test(password) });
-  if (p.requireNumber) requirements.push({ key: 'number', label: 'Un número', met: /\d/.test(password) });
-  if (p.requireSpecial) requirements.push({ key: 'special', label: 'Un carácter especial', met: /[^A-Za-z0-9]/.test(password) });
+  if (p.requireUppercase)
+    requirements.push({
+      key: 'uppercase',
+      label: 'Una letra mayúscula',
+      met: /[A-Z]/.test(password),
+    });
+  if (p.requireLowercase)
+    requirements.push({
+      key: 'lowercase',
+      label: 'Una letra minúscula',
+      met: /[a-z]/.test(password),
+    });
+  if (p.requireNumber)
+    requirements.push({ key: 'number', label: 'Un número', met: /\d/.test(password) });
+  if (p.requireSpecial)
+    requirements.push({
+      key: 'special',
+      label: 'Un carácter especial',
+      met: /[^A-Za-z0-9]/.test(password),
+    });
 
   const score = requirements.filter((r) => r.met).length;
   return { score, total: requirements.length, requirements };

@@ -18,8 +18,13 @@ const labelClass = 'flex flex-col gap-1 text-sm text-zinc-700 dark:text-zinc-300
 const errorClass = 'text-sm text-red-600 dark:text-red-400';
 
 /** Tailwind variant — same props/behavior as headless, styled with the media-picker zinc palette. */
-export function ForgotPasswordForm({ authKit, turnstile, onNavigateToLogin }: ForgotPasswordFormProps): JSX.Element {
-  const { email, setEmail, onEmailBlur, setTurnstileToken, fieldErrors, handleSubmit, flow } = useForgotPasswordFormState({ authKit });
+export function ForgotPasswordForm({
+  authKit,
+  turnstile,
+  onNavigateToLogin,
+}: ForgotPasswordFormProps): JSX.Element {
+  const { email, setEmail, onEmailBlur, setTurnstileToken, fieldErrors, handleSubmit, flow } =
+    useForgotPasswordFormState({ authKit });
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-3">
@@ -52,7 +57,11 @@ export function ForgotPasswordForm({ authKit, turnstile, onNavigateToLogin }: Fo
         {flow.status === 'submitting' ? 'Enviando…' : 'Enviar enlace'}
       </button>
       {flow.status === 'error' && flow.error && <p className={errorClass}>{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="text-sm text-green-600 dark:text-green-400">Revisa tu correo para ver el enlace de restablecimiento.</p>}
+      {flow.status === 'success' && (
+        <p className="text-sm text-green-600 dark:text-green-400">
+          Revisa tu correo para ver el enlace de restablecimiento.
+        </p>
+      )}
       {onNavigateToLogin && (
         <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
           ¿Recordaste tu contraseña?{' '}

@@ -102,7 +102,11 @@ export class AuthKit<TSession = unknown> {
     for (const listener of this.listeners) listener(this.state);
   }
 
-  private async run<T>(flow: FlowName, hook: ((payload: never) => Promise<T>) | undefined, payload: unknown): Promise<T> {
+  private async run<T>(
+    flow: FlowName,
+    hook: ((payload: never) => Promise<T>) | undefined,
+    payload: unknown,
+  ): Promise<T> {
     if (!hook) {
       const error = new Error(
         `auth-kit: the "${flow}" flow was called but no ${hookName(flow)} hook was configured.`,
@@ -115,7 +119,8 @@ export class AuthKit<TSession = unknown> {
     this.setFlowState(flow, { status: 'submitting', error: null });
     try {
       const result = await hook(payload as never);
-      if (gen === this.generations[flow]) this.setFlowState(flow, { status: 'success', error: null });
+      if (gen === this.generations[flow])
+        this.setFlowState(flow, { status: 'success', error: null });
       return result;
     } catch (cause) {
       if (gen !== this.generations[flow]) throw cause; // superseded — don't report a stale error

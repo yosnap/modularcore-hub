@@ -28,7 +28,9 @@ describe('AuthKit', () => {
     const onLogin = vi.fn().mockRejectedValue(new Error('bad credentials'));
     const kit = new AuthKit({ onLogin, onRegister: vi.fn() });
 
-    await expect(kit.login({ identifier: 'a@b.com', password: 'x' })).rejects.toThrow('bad credentials');
+    await expect(kit.login({ identifier: 'a@b.com', password: 'x' })).rejects.toThrow(
+      'bad credentials',
+    );
     expect(kit.getState().login.status).toBe('error');
     expect(kit.getState().login.error?.message).toBe('bad credentials');
   });
@@ -46,7 +48,12 @@ describe('AuthKit', () => {
     let resolveFirst!: (value: { id: string }) => void;
     const onLogin = vi
       .fn()
-      .mockImplementationOnce(() => new Promise((resolve) => { resolveFirst = resolve; }))
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            resolveFirst = resolve;
+          }),
+      )
       .mockResolvedValueOnce({ id: 'second' });
     const kit = new AuthKit({ onLogin, onRegister: vi.fn() });
 

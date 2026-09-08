@@ -6,7 +6,10 @@ import { useAuthKit } from '../../../adapters/vue/use-auth-kit.js';
 
 import type { AuthKitFieldConfig } from '../../../core/field-config.js';
 
-function renderWithAuthKit(onRegister: (payload: unknown) => Promise<unknown>, fieldConfig?: AuthKitFieldConfig) {
+function renderWithAuthKit(
+  onRegister: (payload: unknown) => Promise<unknown>,
+  fieldConfig?: AuthKitFieldConfig,
+) {
   const authKit = useAuthKit({ onLogin: vi.fn(), onRegister: onRegister as never });
   return render(RegisterForm, { props: { authKit, fieldConfig } });
 }
@@ -50,6 +53,8 @@ describe('RegisterForm.vue (headless)', () => {
     await fireEvent.click(screen.getByRole('checkbox'));
     await fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
-    await waitFor(() => expect(onRegister).toHaveBeenCalledWith(expect.objectContaining({ termsAccepted: true })));
+    await waitFor(() =>
+      expect(onRegister).toHaveBeenCalledWith(expect.objectContaining({ termsAccepted: true })),
+    );
   });
 });

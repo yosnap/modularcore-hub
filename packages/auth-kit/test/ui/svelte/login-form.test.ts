@@ -10,11 +10,19 @@ describe('LoginForm.svelte (headless)', () => {
     const authKit = createAuthKit({ onLogin, onRegister: vi.fn() });
     render(LoginForm, { authKit });
 
-    await fireEvent.input(screen.getByLabelText('Email or username'), { target: { value: 'a@b.com' } });
+    await fireEvent.input(screen.getByLabelText('Email or username'), {
+      target: { value: 'a@b.com' },
+    });
     await fireEvent.input(screen.getByLabelText('Password'), { target: { value: 'secret' } });
     await fireEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 
-    await waitFor(() => expect(onLogin).toHaveBeenCalledWith({ identifier: 'a@b.com', password: 'secret', turnstileToken: null }));
+    await waitFor(() =>
+      expect(onLogin).toHaveBeenCalledWith({
+        identifier: 'a@b.com',
+        password: 'secret',
+        turnstileToken: null,
+      }),
+    );
     await screen.findByText('Signed in.');
   });
 

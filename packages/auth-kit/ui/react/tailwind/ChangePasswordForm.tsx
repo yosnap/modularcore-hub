@@ -20,9 +20,24 @@ const eyeButtonClass =
   'absolute inset-y-0 right-0 flex w-9 appearance-none items-center justify-center border-0 bg-transparent p-0 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100';
 
 /** Tailwind variant — same props/behavior as headless, styled with the media-picker zinc palette. */
-export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFormProps): JSX.Element {
-  const { currentPassword, setCurrentPassword, onCurrentPasswordBlur, newPassword, setNewPassword, onNewPasswordBlur, confirmPassword, setConfirmPassword, onConfirmPasswordBlur, fieldErrors, handleSubmit, flow } =
-    useChangePasswordFormState({ authKit, passwordPolicy });
+export function ChangePasswordForm({
+  authKit,
+  passwordPolicy,
+}: ChangePasswordFormProps): JSX.Element {
+  const {
+    currentPassword,
+    setCurrentPassword,
+    onCurrentPasswordBlur,
+    newPassword,
+    setNewPassword,
+    onNewPasswordBlur,
+    confirmPassword,
+    setConfirmPassword,
+    onConfirmPasswordBlur,
+    fieldErrors,
+    handleSubmit,
+    flow,
+  } = useChangePasswordFormState({ authKit, passwordPolicy });
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
 
@@ -98,7 +113,9 @@ export function ChangePasswordForm({ authKit, passwordPolicy }: ChangePasswordFo
         {flow.status === 'submitting' ? 'Actualizando…' : 'Actualizar contraseña'}
       </button>
       {flow.status === 'error' && flow.error && <p className={errorClass}>{flow.error.message}</p>}
-      {flow.status === 'success' && <p className="text-sm text-green-600 dark:text-green-400">Contraseña actualizada.</p>}
+      {flow.status === 'success' && (
+        <p className="text-sm text-green-600 dark:text-green-400">Contraseña actualizada.</p>
+      )}
     </form>
   );
 }

@@ -16,20 +16,26 @@ const INPUT_CLASS =
   'box-border flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm text-foreground shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
 const LABEL_CLASS = 'text-sm font-medium leading-none';
 const ERROR_CLASS = 'text-sm text-destructive';
-const LINK_CLASS = 'text-xs font-medium appearance-none border-0 bg-transparent p-0 text-primary hover:underline';
+const LINK_CLASS =
+  'text-xs font-medium appearance-none border-0 bg-transparent p-0 text-primary hover:underline';
 
 /** Shadcn variant — self-contained, styled shadcn-like via native elements + the shared design tokens. Same options/behavior as headless. */
 export function mountForgotPasswordForm(
   container: HTMLElement,
   { authKit, turnstile, onNavigateToLogin }: MountForgotPasswordFormOptions,
 ): () => void {
-  const email = field('Correo electrónico', { id: 'auth-kit-forgot-email', type: 'email', autocomplete: 'email' }, { label: LABEL_CLASS, input: INPUT_CLASS });
+  const email = field(
+    'Correo electrónico',
+    { id: 'auth-kit-forgot-email', type: 'email', autocomplete: 'email' },
+    { label: LABEL_CLASS, input: INPUT_CLASS },
+  );
   const emailError = errorText(ERROR_CLASS);
   const submit = el(
     'button',
     {
       type: 'submit',
-      class: 'inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50',
+      class:
+        'inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50',
     },
     ['Enviar enlace'],
   );
@@ -39,10 +45,16 @@ export function mountForgotPasswordForm(
 
   let turnstileToken: string | null = null;
   let unmountTurnstile: (() => void) | undefined;
-  const rows: HTMLElement[] = [el('div', { class: 'flex flex-col gap-1.5' }, [email.label, emailError.node])];
+  const rows: HTMLElement[] = [
+    el('div', { class: 'flex flex-col gap-1.5' }, [email.label, emailError.node]),
+  ];
   if (turnstile?.enabled) {
     const turnstileContainer = el('div');
-    const controller = new TurnstileController({ siteKey: turnstile.siteKey, theme: turnstile.theme, mode: turnstile.mode });
+    const controller = new TurnstileController({
+      siteKey: turnstile.siteKey,
+      theme: turnstile.theme,
+      mode: turnstile.mode,
+    });
     controller.subscribe((state) => {
       turnstileToken = state.token;
     });
@@ -54,7 +66,12 @@ export function mountForgotPasswordForm(
   let loginLink: HTMLButtonElement | undefined;
   if (onNavigateToLogin) {
     loginLink = el('button', { type: 'button', class: LINK_CLASS }, ['Iniciar sesión']);
-    rows.push(el('p', { class: 'text-center text-sm text-muted-foreground' }, ['¿Recordaste tu contraseña? ', loginLink]));
+    rows.push(
+      el('p', { class: 'text-center text-sm text-muted-foreground' }, [
+        '¿Recordaste tu contraseña? ',
+        loginLink,
+      ]),
+    );
   }
 
   const form = el('form', { novalidate: '', class: 'flex flex-col gap-4' }, rows);
@@ -68,7 +85,8 @@ export function mountForgotPasswordForm(
     submit.textContent = status === 'submitting' ? 'Enviando…' : 'Enviar enlace';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Revisa tu correo para ver el enlace de restablecimiento.' : '';
+    success.textContent =
+      status === 'success' ? 'Revisa tu correo para ver el enlace de restablecimiento.' : '';
   });
 
   const handleSubmit = (event: Event): void => {
@@ -81,7 +99,7 @@ export function mountForgotPasswordForm(
     emailError.setText(null);
     void authKit.forgotPassword({ email: email.input.value, turnstileToken }).catch(() => {});
   };
-  
+
   email.input.addEventListener('blur', () => {
     const result = buildForgotPasswordSchema().safeParse({ email: email.input.value });
     emailError.setText(extractFieldError(result, 'email'));

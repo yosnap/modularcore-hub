@@ -15,7 +15,6 @@ const showPassword = ref(false);
 const turnstileToken = ref<string | null>(null);
 const fieldErrors = ref<Record<string, string>>({});
 
-
 /** Clears a field's stale error message as soon as the user edits it, instead of leaving it displayed until the next submit. */
 function clearError(key: string): void {
   if (key in fieldErrors.value) {
@@ -27,7 +26,10 @@ function clearError(key: string): void {
 
 /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
 function validateField(key: string): void {
-  const result = buildLoginSchema().safeParse({ identifier: identifier.value, password: password.value });
+  const result = buildLoginSchema().safeParse({
+    identifier: identifier.value,
+    password: password.value,
+  });
   const message = extractFieldError(result, key);
   if (message) {
     fieldErrors.value = { ...fieldErrors.value, [key]: message };
@@ -37,14 +39,23 @@ function validateField(key: string): void {
 }
 
 function handleSubmit(): void {
-  const result = buildLoginSchema().safeParse({ identifier: identifier.value, password: password.value });
+  const result = buildLoginSchema().safeParse({
+    identifier: identifier.value,
+    password: password.value,
+  });
   if (!result.success) {
-    fieldErrors.value = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+    fieldErrors.value = Object.fromEntries(
+      result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+    );
     return;
   }
   fieldErrors.value = {};
   void props.authKit
-    .login({ identifier: identifier.value, password: password.value, turnstileToken: turnstileToken.value })
+    .login({
+      identifier: identifier.value,
+      password: password.value,
+      turnstileToken: turnstileToken.value,
+    })
     .catch(() => {});
 }
 </script>
@@ -54,13 +65,29 @@ function handleSubmit(): void {
   <form novalidate @submit.prevent="handleSubmit">
     <div>
       <label for="auth-kit-login-identifier">Correo electrónico o nombre de usuario</label>
-      <input id="auth-kit-login-identifier" v-model="identifier" @input="clearError('identifier')" @blur="validateField('identifier')" type="text" autocomplete="username" />
+      <input
+        id="auth-kit-login-identifier"
+        v-model="identifier"
+        @input="clearError('identifier')"
+        @blur="validateField('identifier')"
+        type="text"
+        autocomplete="username"
+      />
       <p v-if="fieldErrors.identifier" role="alert">{{ fieldErrors.identifier }}</p>
     </div>
     <div>
       <label for="auth-kit-login-password">Contraseña</label>
-      <input id="auth-kit-login-password" v-model="password" @input="clearError('password')" @blur="validateField('password')" :type="showPassword ? 'text' : 'password'" autocomplete="current-password" />
-      <button type="button" @click="showPassword = !showPassword">{{ showPassword ? 'Ocultar' : 'Mostrar' }}</button>
+      <input
+        id="auth-kit-login-password"
+        v-model="password"
+        @input="clearError('password')"
+        @blur="validateField('password')"
+        :type="showPassword ? 'text' : 'password'"
+        autocomplete="current-password"
+      />
+      <button type="button" @click="showPassword = !showPassword">
+        {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+      </button>
       <p v-if="fieldErrors.password" role="alert">{{ fieldErrors.password }}</p>
     </div>
     <TurnstileWidget
@@ -71,9 +98,14 @@ function handleSubmit(): void {
       @token="(t) => (turnstileToken = t)"
     />
     <button type="submit" :disabled="authKit.state.value.login.status === 'submitting'">
-      {{ authKit.state.value.login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión' }}
+      {{
+        authKit.state.value.login.status === 'submitting' ? 'Iniciando sesión…' : 'Iniciar sesión'
+      }}
     </button>
-    <p v-if="authKit.state.value.login.status === 'error' && authKit.state.value.login.error" role="alert">
+    <p
+      v-if="authKit.state.value.login.status === 'error' && authKit.state.value.login.error"
+      role="alert"
+    >
       {{ authKit.state.value.login.error.message }}
     </p>
     <p v-if="authKit.state.value.login.status === 'success'">Sesión iniciada.</p>

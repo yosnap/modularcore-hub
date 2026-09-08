@@ -11,7 +11,10 @@ export interface UseChangePasswordFormStateOptions {
   passwordPolicy?: PasswordPolicy;
 }
 
-export function useChangePasswordFormState({ authKit, passwordPolicy }: UseChangePasswordFormStateOptions) {
+export function useChangePasswordFormState({
+  authKit,
+  passwordPolicy,
+}: UseChangePasswordFormStateOptions) {
   const [currentPassword, setCurrentPasswordRaw] = useState('');
   const [newPassword, setNewPasswordRaw] = useState('');
   const [confirmPassword, setConfirmPasswordRaw] = useState('');
@@ -42,7 +45,11 @@ export function useChangePasswordFormState({ authKit, passwordPolicy }: UseChang
 
   /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
   const validateField = (key: string): void => {
-    const result = buildChangePasswordSchema({ passwordPolicy }).safeParse({ currentPassword, newPassword, confirmPassword });
+    const result = buildChangePasswordSchema({ passwordPolicy }).safeParse({
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    });
     const message = extractFieldError(result, key);
     setFieldErrors((prev) => {
       if (!message) {
@@ -66,7 +73,11 @@ export function useChangePasswordFormState({ authKit, passwordPolicy }: UseChang
       confirmPassword,
     });
     if (!result.success) {
-      setFieldErrors(Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message])));
+      setFieldErrors(
+        Object.fromEntries(
+          result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+        ),
+      );
       return;
     }
     setFieldErrors({});

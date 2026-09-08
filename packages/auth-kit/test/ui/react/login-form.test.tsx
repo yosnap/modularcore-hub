@@ -18,7 +18,13 @@ describe('LoginForm (headless)', () => {
     fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'secret' } });
     fireEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 
-    await waitFor(() => expect(onLogin).toHaveBeenCalledWith({ identifier: 'a@b.com', password: 'secret', turnstileToken: null }));
+    await waitFor(() =>
+      expect(onLogin).toHaveBeenCalledWith({
+        identifier: 'a@b.com',
+        password: 'secret',
+        turnstileToken: null,
+      }),
+    );
     await screen.findByText('Signed in.');
   });
 

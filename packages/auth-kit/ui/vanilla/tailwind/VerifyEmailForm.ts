@@ -17,14 +17,25 @@ const LABEL_CLASS = 'flex flex-col gap-1 text-sm text-zinc-700';
 const ERROR_CLASS = 'text-sm text-red-600';
 
 /** Tailwind variant — same options/behavior as headless, styled with the media-picker zinc palette. */
-export function mountVerifyEmailForm(container: HTMLElement, { authKit, token, email: initialEmail, turnstile }: MountVerifyEmailFormOptions): () => void {
+export function mountVerifyEmailForm(
+  container: HTMLElement,
+  { authKit, token, email: initialEmail, turnstile }: MountVerifyEmailFormOptions,
+): () => void {
   const verifyStatus = statusText('text-zinc-700');
-  const email = field('Correo electrónico', { id: 'auth-kit-resend-email', type: 'email', autocomplete: 'email' }, { label: LABEL_CLASS, input: INPUT_CLASS });
+  const email = field(
+    'Correo electrónico',
+    { id: 'auth-kit-resend-email', type: 'email', autocomplete: 'email' },
+    { label: LABEL_CLASS, input: INPUT_CLASS },
+  );
   email.input.value = initialEmail ?? '';
   const emailError = errorText(ERROR_CLASS);
   const submit = el(
     'button',
-    { type: 'submit', class: 'rounded-md border border-zinc-300 px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50' },
+    {
+      type: 'submit',
+      class:
+        'rounded-md border border-zinc-300 px-3 py-1.5 text-sm hover:bg-zinc-50 disabled:opacity-50',
+    },
     ['Reenviar email de verificación'],
   );
   const submitError = errorText(ERROR_CLASS);
@@ -37,7 +48,11 @@ export function mountVerifyEmailForm(container: HTMLElement, { authKit, token, e
   let unmountTurnstile: (() => void) | undefined;
   if (turnstile?.enabled) {
     const turnstileContainer = el('div');
-    const controller = new TurnstileController({ siteKey: turnstile.siteKey, theme: turnstile.theme, mode: turnstile.mode });
+    const controller = new TurnstileController({
+      siteKey: turnstile.siteKey,
+      theme: turnstile.theme,
+      mode: turnstile.mode,
+    });
     controller.subscribe((state) => {
       turnstileToken = state.token;
     });
@@ -48,7 +63,11 @@ export function mountVerifyEmailForm(container: HTMLElement, { authKit, token, e
 
   const resendForm = el('form', { novalidate: '', class: 'flex flex-col gap-3' }, rows);
   const verifyStatusWrapper = el('div', { role: 'status', class: 'text-sm' }, [verifyStatus.node]);
-  const root = el('div', { class: 'flex flex-col gap-4' }, token ? [verifyStatusWrapper, resendForm] : [resendForm]);
+  const root = el(
+    'div',
+    { class: 'flex flex-col gap-4' },
+    token ? [verifyStatusWrapper, resendForm] : [resendForm],
+  );
   container.append(root);
 
   const unsubscribe = authKit.subscribe((state) => {

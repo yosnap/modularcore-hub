@@ -14,9 +14,22 @@ export interface ResetPasswordFormProps {
 }
 
 /** Headless variant — no CSS classes, fully consumer-styleable. Same props/behavior across every presentation. */
-export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPasswordFormProps): JSX.Element {
-  const { newPassword, setNewPassword, onNewPasswordBlur, confirmPassword, setConfirmPassword, onConfirmPasswordBlur, fieldErrors, handleSubmit, flow } =
-    useResetPasswordFormState({ authKit, token, passwordPolicy });
+export function ResetPasswordForm({
+  authKit,
+  token,
+  passwordPolicy,
+}: ResetPasswordFormProps): JSX.Element {
+  const {
+    newPassword,
+    setNewPassword,
+    onNewPasswordBlur,
+    confirmPassword,
+    setConfirmPassword,
+    onConfirmPasswordBlur,
+    fieldErrors,
+    handleSubmit,
+    flow,
+  } = useResetPasswordFormState({ authKit, token, passwordPolicy });
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -28,7 +41,7 @@ export function ResetPasswordForm({ authKit, token, passwordPolicy }: ResetPassw
           type={showPassword ? 'text' : 'password'}
           value={newPassword}
           onChange={(event) => setNewPassword(event.target.value)}
-            onBlur={onNewPasswordBlur}
+          onBlur={onNewPasswordBlur}
           autoComplete="new-password"
         />
         <button type="button" onClick={() => setShowPassword((value) => !value)}>

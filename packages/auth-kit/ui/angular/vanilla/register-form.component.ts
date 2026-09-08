@@ -18,32 +18,80 @@ import type { PasswordPolicy } from '../../../core/validation.js';
     <form novalidate class="auth-kit-form" (submit)="handleSubmit($event)">
       <label class="auth-kit-field" for="auth-kit-register-email">
         Correo electrónico
-        <input id="auth-kit-register-email" type="email" autocomplete="email" class="auth-kit-input" [value]="email" (input)="email = $any($event.target).value; clearError('email')" (blur)="validateField('email')" />
+        <input
+          id="auth-kit-register-email"
+          type="email"
+          autocomplete="email"
+          class="auth-kit-input"
+          [value]="email"
+          (input)="email = $any($event.target).value; clearError('email')"
+          (blur)="validateField('email')"
+        />
       </label>
       <p *ngIf="fieldErrors['email']" class="auth-kit-error">{{ fieldErrors['email'] }}</p>
 
-      <label *ngIf="fields.firstName.enabled" class="auth-kit-field" for="auth-kit-register-firstname">
+      <label
+        *ngIf="fields.firstName.enabled"
+        class="auth-kit-field"
+        for="auth-kit-register-firstname"
+      >
         {{ fields.firstName.label }}
-        <input id="auth-kit-register-firstname" type="text" class="auth-kit-input" [value]="firstName" (input)="firstName = $any($event.target).value; clearError('firstName')" (blur)="validateField('firstName')" />
+        <input
+          id="auth-kit-register-firstname"
+          type="text"
+          class="auth-kit-input"
+          [value]="firstName"
+          (input)="firstName = $any($event.target).value; clearError('firstName')"
+          (blur)="validateField('firstName')"
+        />
       </label>
       <p *ngIf="fieldErrors['firstName']" class="auth-kit-error">{{ fieldErrors['firstName'] }}</p>
 
-      <label *ngIf="fields.lastName.enabled" class="auth-kit-field" for="auth-kit-register-lastname">
+      <label
+        *ngIf="fields.lastName.enabled"
+        class="auth-kit-field"
+        for="auth-kit-register-lastname"
+      >
         {{ fields.lastName.label }}
-        <input id="auth-kit-register-lastname" type="text" class="auth-kit-input" [value]="lastName" (input)="lastName = $any($event.target).value; clearError('lastName')" (blur)="validateField('lastName')" />
+        <input
+          id="auth-kit-register-lastname"
+          type="text"
+          class="auth-kit-input"
+          [value]="lastName"
+          (input)="lastName = $any($event.target).value; clearError('lastName')"
+          (blur)="validateField('lastName')"
+        />
       </label>
       <p *ngIf="fieldErrors['lastName']" class="auth-kit-error">{{ fieldErrors['lastName'] }}</p>
 
       <label *ngIf="fields.phone.enabled" class="auth-kit-field" for="auth-kit-register-phone">
         {{ fields.phone.label }}
-        <input id="auth-kit-register-phone" type="tel" class="auth-kit-input" [value]="phone" (input)="phone = $any($event.target).value; clearError('phone')" (blur)="validateField('phone')" />
+        <input
+          id="auth-kit-register-phone"
+          type="tel"
+          class="auth-kit-input"
+          [value]="phone"
+          (input)="phone = $any($event.target).value; clearError('phone')"
+          (blur)="validateField('phone')"
+        />
       </label>
       <p *ngIf="fieldErrors['phone']" class="auth-kit-error">{{ fieldErrors['phone'] }}</p>
 
-      <label *ngIf="fields.profileType.enabled" class="auth-kit-field" for="auth-kit-register-profile-type">
+      <label
+        *ngIf="fields.profileType.enabled"
+        class="auth-kit-field"
+        for="auth-kit-register-profile-type"
+      >
         {{ fields.profileType.label }}
-        <select id="auth-kit-register-profile-type" class="auth-kit-select" [value]="profileType" (change)="profileType = $any($event.target).value">
-          <option *ngFor="let option of fields.profileType.options" [value]="option.value">{{ option.label }}</option>
+        <select
+          id="auth-kit-register-profile-type"
+          class="auth-kit-select"
+          [value]="profileType"
+          (change)="profileType = $any($event.target).value"
+        >
+          <option *ngFor="let option of fields.profileType.options" [value]="option.value">
+            {{ option.label }}
+          </option>
         </select>
       </label>
 
@@ -56,9 +104,16 @@ import type { PasswordPolicy } from '../../../core/validation.js';
             autocomplete="new-password"
             class="auth-kit-input"
             [value]="password"
-            (input)="password = $any($event.target).value; clearError('password')" (blur)="validateField('password')"
+            (input)="password = $any($event.target).value; clearError('password')"
+            (blur)="validateField('password')"
           />
-          <button type="button" class="auth-kit-button auth-kit-button--ghost" (click)="showPassword = !showPassword">{{ showPassword ? 'Ocultar' : 'Mostrar' }}</button>
+          <button
+            type="button"
+            class="auth-kit-button auth-kit-button--ghost"
+            (click)="showPassword = !showPassword"
+          >
+            {{ showPassword ? 'Ocultar' : 'Mostrar' }}
+          </button>
         </span>
       </label>
       <p *ngIf="fieldErrors['password']" class="auth-kit-error">{{ fieldErrors['password'] }}</p>
@@ -72,24 +127,41 @@ import type { PasswordPolicy } from '../../../core/validation.js';
             autocomplete="new-password"
             class="auth-kit-input"
             [value]="confirmPassword"
-            (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')" (blur)="validateField('confirmPassword')"
+            (input)="confirmPassword = $any($event.target).value; clearError('confirmPassword')"
+            (blur)="validateField('confirmPassword')"
           />
-          <button type="button" class="auth-kit-button auth-kit-button--ghost" (click)="showConfirm = !showConfirm">{{ showConfirm ? 'Ocultar' : 'Mostrar' }}</button>
+          <button
+            type="button"
+            class="auth-kit-button auth-kit-button--ghost"
+            (click)="showConfirm = !showConfirm"
+          >
+            {{ showConfirm ? 'Ocultar' : 'Mostrar' }}
+          </button>
         </span>
       </label>
-      <p *ngIf="fieldErrors['confirmPassword']" class="auth-kit-error">{{ fieldErrors['confirmPassword'] }}</p>
+      <p *ngIf="fieldErrors['confirmPassword']" class="auth-kit-error">
+        {{ fieldErrors['confirmPassword'] }}
+      </p>
 
       <div *ngIf="fields.legalConsent.enabled">
         <label class="auth-kit-checkbox-row" for="auth-kit-register-terms">
-          <input id="auth-kit-register-terms" type="checkbox" [checked]="termsAccepted" (change)="termsAccepted = $any($event.target).checked; clearError('termsAccepted')" />
+          <input
+            id="auth-kit-register-terms"
+            type="checkbox"
+            [checked]="termsAccepted"
+            (change)="termsAccepted = $any($event.target).checked; clearError('termsAccepted')"
+          />
           <span>
             {{ fields.legalConsent.text }}
             <span *ngFor="let link of fields.legalConsent.links; let i = index">
-              {{ i > 0 ? ' ' : '' }}<a [href]="link.href" target="_blank" rel="noreferrer">{{ link.label }}</a>
+              {{ i > 0 ? ' ' : ''
+              }}<a [href]="link.href" target="_blank" rel="noreferrer">{{ link.label }}</a>
             </span>
           </span>
         </label>
-        <p *ngIf="fieldErrors['termsAccepted']" class="auth-kit-error">{{ fieldErrors['termsAccepted'] }}</p>
+        <p *ngIf="fieldErrors['termsAccepted']" class="auth-kit-error">
+          {{ fieldErrors['termsAccepted'] }}
+        </p>
       </div>
 
       <auth-kit-turnstile-widget
@@ -100,13 +172,22 @@ import type { PasswordPolicy } from '../../../core/validation.js';
         (token)="turnstileToken = $event"
       ></auth-kit-turnstile-widget>
 
-      <button type="submit" [disabled]="authKit.state().register.status === 'submitting'" class="auth-kit-button auth-kit-button--primary">
+      <button
+        type="submit"
+        [disabled]="authKit.state().register.status === 'submitting'"
+        class="auth-kit-button auth-kit-button--primary"
+      >
         {{ authKit.state().register.status === 'submitting' ? 'Creando cuenta…' : 'Crear cuenta' }}
       </button>
-      <p *ngIf="authKit.state().register.status === 'error' && authKit.state().register.error" class="auth-kit-error">
+      <p
+        *ngIf="authKit.state().register.status === 'error' && authKit.state().register.error"
+        class="auth-kit-error"
+      >
         {{ authKit.state().register.error?.message }}
       </p>
-      <p *ngIf="authKit.state().register.status === 'success'" class="auth-kit-success">Cuenta creada.</p>
+      <p *ngIf="authKit.state().register.status === 'success'" class="auth-kit-success">
+        Cuenta creada.
+      </p>
     </form>
   `,
 })
@@ -135,15 +216,19 @@ export class RegisterFormComponent implements OnChanges {
     if (!this.profileType) this.profileType = this.fields.profileType.defaultValue;
   }
 
-  
   collectValues(): Record<string, unknown> {
     const f = this.fields;
-    const values: Record<string, unknown> = { email: this.email, password: this.password, confirmPassword: this.confirmPassword };
+    const values: Record<string, unknown> = {
+      email: this.email,
+      password: this.password,
+      confirmPassword: this.confirmPassword,
+    };
     if (f.firstName.enabled) values.firstName = this.firstName;
     if (f.lastName.enabled) values.lastName = this.lastName;
     if (f.phone.enabled) values.phone = this.phone;
     if (f.profileType.enabled) values.profileType = this.profileType;
-    if (f.legalConsent.enabled && f.legalConsent.required) values.termsAccepted = this.termsAccepted;
+    if (f.legalConsent.enabled && f.legalConsent.required)
+      values.termsAccepted = this.termsAccepted;
     return values;
   }
 
@@ -158,7 +243,9 @@ export class RegisterFormComponent implements OnChanges {
 
   /** Validates a single field on blur — shows that field's error immediately instead of waiting for submit. */
   validateField(key: string): void {
-    const result = buildRegisterSchema(this.fields, { passwordPolicy: this.passwordPolicy }).safeParse(this.collectValues());
+    const result = buildRegisterSchema(this.fields, {
+      passwordPolicy: this.passwordPolicy,
+    }).safeParse(this.collectValues());
     const message = extractFieldError(result, key);
     if (message) {
       this.fieldErrors = { ...this.fieldErrors, [key]: message };
@@ -170,16 +257,25 @@ export class RegisterFormComponent implements OnChanges {
   handleSubmit(event: Event): void {
     event.preventDefault();
     const f = this.fields;
-    const values: Record<string, unknown> = { email: this.email, password: this.password, confirmPassword: this.confirmPassword };
+    const values: Record<string, unknown> = {
+      email: this.email,
+      password: this.password,
+      confirmPassword: this.confirmPassword,
+    };
     if (f.firstName.enabled) values.firstName = this.firstName;
     if (f.lastName.enabled) values.lastName = this.lastName;
     if (f.phone.enabled) values.phone = this.phone;
     if (f.profileType.enabled) values.profileType = this.profileType;
-    if (f.legalConsent.enabled && f.legalConsent.required) values.termsAccepted = this.termsAccepted;
+    if (f.legalConsent.enabled && f.legalConsent.required)
+      values.termsAccepted = this.termsAccepted;
 
-    const result = buildRegisterSchema(f, { passwordPolicy: this.passwordPolicy }).safeParse(values);
+    const result = buildRegisterSchema(f, { passwordPolicy: this.passwordPolicy }).safeParse(
+      values,
+    );
     if (!result.success) {
-      this.fieldErrors = Object.fromEntries(result.error.issues.map((issue) => [String(issue.path[0]), issue.message]));
+      this.fieldErrors = Object.fromEntries(
+        result.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+      );
       return;
     }
     this.fieldErrors = {};

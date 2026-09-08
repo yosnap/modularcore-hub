@@ -18,7 +18,13 @@ describe('LoginForm.vue (headless)', () => {
     await fireEvent.update(screen.getByLabelText('Password'), 'secret');
     await fireEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 
-    await waitFor(() => expect(onLogin).toHaveBeenCalledWith({ identifier: 'a@b.com', password: 'secret', turnstileToken: null }));
+    await waitFor(() =>
+      expect(onLogin).toHaveBeenCalledWith({
+        identifier: 'a@b.com',
+        password: 'secret',
+        turnstileToken: null,
+      }),
+    );
     await screen.findByText('Signed in.');
   });
 

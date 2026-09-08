@@ -18,16 +18,24 @@ const LABEL_CLASS = 'text-sm font-medium leading-none';
 const ERROR_CLASS = 'text-sm text-destructive';
 
 /** Shadcn variant — self-contained, styled shadcn-like via native elements + the shared design tokens. Same options/behavior as headless. */
-export function mountVerifyEmailForm(container: HTMLElement, { authKit, token, email: initialEmail, turnstile }: MountVerifyEmailFormOptions): () => void {
+export function mountVerifyEmailForm(
+  container: HTMLElement,
+  { authKit, token, email: initialEmail, turnstile }: MountVerifyEmailFormOptions,
+): () => void {
   const verifyStatus = statusText('text-muted-foreground');
-  const email = field('Correo electrónico', { id: 'auth-kit-resend-email', type: 'email', autocomplete: 'email' }, { label: LABEL_CLASS, input: INPUT_CLASS });
+  const email = field(
+    'Correo electrónico',
+    { id: 'auth-kit-resend-email', type: 'email', autocomplete: 'email' },
+    { label: LABEL_CLASS, input: INPUT_CLASS },
+  );
   email.input.value = initialEmail ?? '';
   const emailError = errorText(ERROR_CLASS);
   const submit = el(
     'button',
     {
       type: 'submit',
-      class: 'inline-flex h-9 items-center justify-center rounded-md border border-input px-4 text-sm font-medium shadow-sm hover:bg-accent disabled:opacity-50',
+      class:
+        'inline-flex h-9 items-center justify-center rounded-md border border-input px-4 text-sm font-medium shadow-sm hover:bg-accent disabled:opacity-50',
     },
     ['Reenviar email de verificación'],
   );
@@ -35,13 +43,19 @@ export function mountVerifyEmailForm(container: HTMLElement, { authKit, token, e
   const success = el('p', { class: 'text-sm text-green-600' });
   success.hidden = true;
 
-  const rows: HTMLElement[] = [el('div', { class: 'flex flex-col gap-1.5' }, [email.label, emailError.node])];
+  const rows: HTMLElement[] = [
+    el('div', { class: 'flex flex-col gap-1.5' }, [email.label, emailError.node]),
+  ];
 
   let turnstileToken: string | null = null;
   let unmountTurnstile: (() => void) | undefined;
   if (turnstile?.enabled) {
     const turnstileContainer = el('div');
-    const controller = new TurnstileController({ siteKey: turnstile.siteKey, theme: turnstile.theme, mode: turnstile.mode });
+    const controller = new TurnstileController({
+      siteKey: turnstile.siteKey,
+      theme: turnstile.theme,
+      mode: turnstile.mode,
+    });
     controller.subscribe((state) => {
       turnstileToken = state.token;
     });
@@ -52,7 +66,11 @@ export function mountVerifyEmailForm(container: HTMLElement, { authKit, token, e
 
   const resendForm = el('form', { novalidate: '', class: 'flex flex-col gap-4' }, rows);
   const verifyStatusWrapper = el('div', { role: 'status', class: 'text-sm' }, [verifyStatus.node]);
-  const root = el('div', { class: 'flex flex-col gap-4' }, token ? [verifyStatusWrapper, resendForm] : [resendForm]);
+  const root = el(
+    'div',
+    { class: 'flex flex-col gap-4' },
+    token ? [verifyStatusWrapper, resendForm] : [resendForm],
+  );
   container.append(root);
 
   const unsubscribe = authKit.subscribe((state) => {

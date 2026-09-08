@@ -13,8 +13,13 @@ export interface ForgotPasswordFormProps {
 }
 
 /** Headless variant — no CSS classes, fully consumer-styleable. Same props/behavior across every presentation. */
-export function ForgotPasswordForm({ authKit, turnstile, onNavigateToLogin }: ForgotPasswordFormProps): JSX.Element {
-  const { email, setEmail, onEmailBlur, setTurnstileToken, fieldErrors, handleSubmit, flow } = useForgotPasswordFormState({ authKit });
+export function ForgotPasswordForm({
+  authKit,
+  turnstile,
+  onNavigateToLogin,
+}: ForgotPasswordFormProps): JSX.Element {
+  const { email, setEmail, onEmailBlur, setTurnstileToken, fieldErrors, handleSubmit, flow } =
+    useForgotPasswordFormState({ authKit });
 
   return (
     <form onSubmit={handleSubmit} noValidate>

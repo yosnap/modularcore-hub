@@ -11,8 +11,15 @@ export interface MountForgotPasswordFormOptions {
 }
 
 /** Headless variant — no CSS classes, fully consumer-styleable. Same options/behavior across every presentation. */
-export function mountForgotPasswordForm(container: HTMLElement, { authKit, turnstile }: MountForgotPasswordFormOptions): () => void {
-  const email = field('Correo electrónico', { id: 'auth-kit-forgot-email', type: 'email', autocomplete: 'email' });
+export function mountForgotPasswordForm(
+  container: HTMLElement,
+  { authKit, turnstile }: MountForgotPasswordFormOptions,
+): () => void {
+  const email = field('Correo electrónico', {
+    id: 'auth-kit-forgot-email',
+    type: 'email',
+    autocomplete: 'email',
+  });
   const emailError = errorText();
   const submit = el('button', { type: 'submit' }, ['Enviar enlace']);
   const submitError = errorText();
@@ -24,7 +31,11 @@ export function mountForgotPasswordForm(container: HTMLElement, { authKit, turns
   const rows: HTMLElement[] = [el('div', {}, [email.label, emailError.node])];
   if (turnstile?.enabled) {
     const turnstileContainer = el('div');
-    const controller = new TurnstileController({ siteKey: turnstile.siteKey, theme: turnstile.theme, mode: turnstile.mode });
+    const controller = new TurnstileController({
+      siteKey: turnstile.siteKey,
+      theme: turnstile.theme,
+      mode: turnstile.mode,
+    });
     controller.subscribe((state) => {
       turnstileToken = state.token;
     });
@@ -42,7 +53,8 @@ export function mountForgotPasswordForm(container: HTMLElement, { authKit, turns
     submit.textContent = status === 'submitting' ? 'Enviando…' : 'Enviar enlace';
     submitError.setText(status === 'error' ? error?.message : null);
     success.hidden = status !== 'success';
-    success.textContent = status === 'success' ? 'Revisa tu correo para ver el enlace de restablecimiento.' : '';
+    success.textContent =
+      status === 'success' ? 'Revisa tu correo para ver el enlace de restablecimiento.' : '';
   });
 
   const handleSubmit = (event: Event): void => {
@@ -55,7 +67,7 @@ export function mountForgotPasswordForm(container: HTMLElement, { authKit, turns
     emailError.setText(null);
     void authKit.forgotPassword({ email: email.input.value, turnstileToken }).catch(() => {});
   };
-  
+
   email.input.addEventListener('blur', () => {
     const result = buildForgotPasswordSchema().safeParse({ email: email.input.value });
     emailError.setText(extractFieldError(result, 'email'));
