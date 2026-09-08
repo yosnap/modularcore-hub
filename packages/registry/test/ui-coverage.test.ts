@@ -92,10 +92,16 @@ describe('findCoverageMismatches', () => {
     expect(problems[0]?.problem).toContain('ausente de "ui"');
   });
 
-  it('no pide UI a blade ni a vanilla: se sirven con snippets', () => {
-    expect(
-      findCoverageMismatches(declared, files, ['react', 'svelte', 'blade', 'vanilla']),
-    ).toEqual([]);
+  it('no pide UI a blade: se sirve con snippets', () => {
+    expect(findCoverageMismatches(declared, files, ['react', 'svelte', 'blade'])).toEqual([]);
+  });
+
+  it('sí pide UI a vanilla: a diferencia de blade, puede traer la suya (la trae auth-kit)', () => {
+    const problems = findCoverageMismatches(declared, files, ['react', 'svelte', 'vanilla']);
+
+    expect(problems).toHaveLength(1);
+    expect(problems[0]?.framework).toBe('vanilla');
+    expect(problems[0]?.problem).toContain('ausente de "ui"');
   });
 
   it('caza los ficheros de un framework que no está declarado en ninguna parte', () => {
